@@ -15,12 +15,12 @@ export default function Navbar() {
         onClick={() => navigate("/")}
         className="flex items-center gap-2 group"
       >
-        <div
-          className="w-8 h-8 rounded-md flex items-center justify-center text-sm font-bold"
-          style={{ background: "#6AAE6F", color: "#fff" }}
-        >
-          SC
-        </div>
+        <img
+          src="/favicon.svg"
+          alt="Step Into Code"
+          className="w-8 h-8"
+          style={{ borderRadius: 6 }}
+        />
         <span
           className="font-bold text-lg tracking-wide"
           style={{ color: "#F7F3E9", fontFamily: "'Courier New', monospace" }}
