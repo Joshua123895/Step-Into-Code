@@ -1,16 +1,101 @@
-# React + Vite
+# Step Into Code
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+is an open, beginner-friendly coding education platform. It requires no account registration and is completely free to use. Anyone can jump straight in and start learning.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- No sign-up or account required
+- Completely free
+- Clean, responsive UI built with Tailwind CSS
+- Client-side routing with React Router
+- Fast development and production builds via Vite
+- Deployed on Vercel
 
-## React Compiler
+## Tech Stack
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+| Layer | Technology |
+|-------|-----------|
+| UI Framework | React 19 |
+| Build Tool | Vite 8 |
+| Styling | Tailwind CSS 4 |
+| Routing | React Router DOM 7 |
+| Linting | ESLint 10 |
+| Deployment | Vercel |
 
-## Expanding the ESLint configuration
+## Getting Started
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+### Prerequisites
+
+- Node.js (v18 or higher recommended)
+- npm
+
+### Installation
+
+```bash
+# Clone the repository
+git clone https://github.com/Joshua123895/Step-Into-Code.git
+cd Step-Into-Code
+
+# Install dependencies
+npm install
+```
+
+### Development
+
+```bash
+npm run dev
+```
+
+The app will be available at `http://localhost:5173` by default.
+
+### Build
+
+```bash
+npm run build
+```
+
+### Preview Production Build
+
+```bash
+npm run preview
+```
+
+### Lint
+
+```bash
+npm run lint
+```
+
+## Project Structure
+
+```
+Step-Into-Code/
+├── public/          # Static assets
+├── src/             # Application source code
+├── index.html       # HTML entry point
+├── vite.config.js   # Vite configuration
+├── tailwind.config.js
+├── postcss.config.js
+├── eslint.config.js
+└── vercel.json      # Vercel deployment config
+```
+
+## Deployment
+
+This project is configured for deployment on [Vercel](https://vercel.com). The `vercel.json` file handles routing so that React Router works correctly in production.
+
+To deploy your own instance:
+
+1. Fork this repository
+2. Import the project into Vercel
+3. Deploy. No additional configuration needed
+
+## Contributing
+
+Contributions are welcome! Feel free to open an issue or submit a pull request.
+
+1. Fork the project
+2. Create a feature branch (`git checkout -b feature/my-feature`)
+3. Commit your changes (`git commit -m 'Add my feature'`)
+4. Push to the branch (`git push origin feature/my-feature`)
+5. Open a Pull Request
