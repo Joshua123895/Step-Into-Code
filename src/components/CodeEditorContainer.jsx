@@ -1,4 +1,16 @@
-export default function CodeEditorContainer({ code, setCode }) {
+import { useRef, useEffect } from "react";
+
+export default function CodeEditorContainer({ code, setCode, language }) {
+  const textareaRef = useRef(null);
+
+  useEffect(() => {
+    const el = textareaRef.current;
+    if (el) {
+      el.style.height = "auto";
+      el.style.height = el.scrollHeight + "px";
+    }
+  }, [code]);
+
   return (
     <div
       className="rounded-xl overflow-hidden"
@@ -30,13 +42,13 @@ export default function CodeEditorContainer({ code, setCode }) {
           className="text-xs px-2 py-0.5 rounded"
           style={{ background: "#6AAE6F20", color: "#6AAE6F" }}
         >
-          Python
+          {language}
         </div>
       </div>
 
       <div
-        className="flex"
-        style={{ background: "#1a1b2e", minHeight: 240 }}
+        className="flex overflow-y-auto"
+        style={{ background: "#1a1b2e", minHeight: 240, maxHeight: "calc(100vh - 16rem)" }}
       >
         <div
           className="px-3 pt-4 text-right select-none"
@@ -54,7 +66,8 @@ export default function CodeEditorContainer({ code, setCode }) {
           ))}
         </div>
         <textarea
-          className="flex-1 p-4 resize-none outline-none bg-transparent"
+          ref={textareaRef}
+          className="flex-1 p-4 resize-none outline-none bg-transparent overflow-hidden"
           style={{
             color: "#CDD6F4",
             fontFamily: "'Courier New', monospace",

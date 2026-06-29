@@ -73,7 +73,7 @@ export default function LevelPage() {
         />
       )}
 
-      <div key={levelId} className="min-h-screen pt-24 pb-8 px-4 relative z-10">
+      <div key={levelId} className="h-screen pt-24 pb-8 px-4 relative z-10 overflow-hidden">
         <div className="max-w-6xl mx-auto">
           <button
             onClick={() => navigate(`/tracks/${trackName}/chapters/${chapterId}`)}
@@ -86,8 +86,8 @@ export default function LevelPage() {
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
             <div className="lg:col-span-3">
               <div
-                className="rounded-2xl p-5 sticky top-24"
-                style={{ background: "#fff", border: "2px solid #E5E7EB" }}
+                className="rounded-2xl p-5 overflow-y-auto"
+                style={{ background: "#fff", border: "2px solid #E5E7EB", maxHeight: "calc(100vh - 10rem)" }}
               >
                 <div
                   className="text-xs font-bold uppercase tracking-wider mb-3"
@@ -182,7 +182,7 @@ export default function LevelPage() {
             </div>
 
             <div className="lg:col-span-6">
-              <CodeEditorContainer code={code} setCode={setCode} />
+              <CodeEditorContainer code={code} setCode={setCode} language={track.name.split(" ")[0]} />
 
               <p className="text-xs mt-2 text-center" style={{ color: "#D1D5DB" }}>
                 Write your code above, then click Run Code to check your answer.
@@ -191,56 +191,61 @@ export default function LevelPage() {
 
             <div className="lg:col-span-3">
               <div
-                className="rounded-2xl p-5 mb-4"
-                style={{ background: "#fff", border: "2px solid #E5E7EB" }}
+                className="overflow-y-auto space-y-4"
+                style={{ maxHeight: "calc(100vh - 10rem)" }}
               >
                 <div
-                  className="text-xs font-bold uppercase tracking-wider mb-3"
-                  style={{ color: "#9CA3AF" }}
-                >
-                  Chapter Progress
-                </div>
-                <ProgressBar value={progress} showLabel={false} />
-                <p className="text-xs mt-2" style={{ color: "#9CA3AF" }}>
-                  {completedCount} of {chapter.levels.length} levels complete
-                </p>
-
-                <div
-                  className="mt-4 pt-4"
-                  style={{ borderTop: "1px solid #F3F4F6" }}
+                  className="rounded-2xl p-5"
+                  style={{ background: "#fff", border: "2px solid #E5E7EB" }}
                 >
                   <div
-                    className="text-xs font-bold uppercase tracking-wider mb-1"
+                    className="text-xs font-bold uppercase tracking-wider mb-3"
                     style={{ color: "#9CA3AF" }}
                   >
-                    Current Chapter
+                    Chapter Progress
                   </div>
-                  <div className="flex items-center gap-2">
-                    <Icon src={chapter.icon} alt={chapter.name} size={28} />
-                    <span
-                      className="text-sm font-bold"
-                      style={{ color: "#2F2F2F", fontFamily: "'Courier New', monospace" }}
-                    >
-                      {chapter.name}
-                    </span>
-                  </div>
-                </div>
-              </div>
+                  <ProgressBar value={progress} showLabel={false} />
+                  <p className="text-xs mt-2" style={{ color: "#9CA3AF" }}>
+                    {completedCount} of {chapter.levels.length} levels complete
+                  </p>
 
-              <div
-                className="rounded-2xl p-5"
-                style={{ background: "#fff", border: "2px solid #E5E7EB" }}
-              >
-                <div
-                  className="text-xs font-bold uppercase tracking-wider mb-3"
-                  style={{ color: "#9CA3AF" }}
-                >
-                  Badges Earned
+                  <div
+                    className="mt-4 pt-4"
+                    style={{ borderTop: "1px solid #F3F4F6" }}
+                  >
+                    <div
+                      className="text-xs font-bold uppercase tracking-wider mb-1"
+                      style={{ color: "#9CA3AF" }}
+                    >
+                      Current Chapter
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Icon src={chapter.icon} alt={chapter.name} size={28} />
+                      <span
+                        className="text-sm font-bold"
+                        style={{ color: "#2F2F2F", fontFamily: "'Courier New', monospace" }}
+                      >
+                        {chapter.name}
+                      </span>
+                    </div>
+                  </div>
                 </div>
-                <div className="grid grid-cols-2 gap-2">
-                  {badgesWithStatus.map((b, i) => (
-                    <Badge key={i} badge={b} />
-                  ))}
+
+                <div
+                  className="rounded-2xl p-5"
+                  style={{ background: "#fff", border: "2px solid #E5E7EB" }}
+                >
+                  <div
+                    className="text-xs font-bold uppercase tracking-wider mb-3"
+                    style={{ color: "#9CA3AF" }}
+                  >
+                    Badges Earned
+                  </div>
+                  <div className="grid grid-cols-2 gap-2">
+                    {badgesWithStatus.map((b, i) => (
+                      <Badge key={i} badge={b} />
+                    ))}
+                  </div>
                 </div>
               </div>
             </div>
