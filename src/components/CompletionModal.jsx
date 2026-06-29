@@ -1,7 +1,7 @@
 import PixelButton from "./PixelButton";
-import Icon from "./Icon";
+import StarIcon from "./StarIcon";
 
-export default function CompletionModal({ level, onContinue }) {
+export default function CompletionModal({ level, stars, onContinue }) {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       <div
@@ -17,18 +17,16 @@ export default function CompletionModal({ level, onContinue }) {
           boxShadow: "0 20px 60px rgba(0,0,0,0.3)",
         }}
       >
-        <div className="flex justify-center gap-2 mb-4">
-          {["⭐", "⭐", "⭐"].map((s, i) => (
-            <span key={i} className="text-3xl star-pop" style={{ animationDelay: `${i * 0.1}s` }}>
-              {s}
+        <div className="flex justify-center gap-2 mb-4" style={{ minHeight: 48 }}>
+          {[1, 2, 3].map((s) => (
+            <span key={s} className="text-3xl" style={{ animationDelay: `${s * 0.1}s` }}>
+              <StarIcon filled={s <= stars} className="text-3xl" />
             </span>
           ))}
         </div>
 
-        <h2
-          className="text-2xl font-bold mb-1"
-          style={{ color: "#2F2F2F", fontFamily: "'Courier New', monospace" }}
-        >
+        <h2 className="text-2xl font-bold mb-1"
+          style={{ color: "#2F2F2F", fontFamily: "'Courier New', monospace" }}>
           Quest Complete!
         </h2>
         <p className="text-sm mb-5" style={{ color: "#6B7280" }}>
@@ -37,36 +35,16 @@ export default function CompletionModal({ level, onContinue }) {
 
         <div
           className="rounded-xl p-4 mb-4"
-          style={{ background: "#6AAE6F15", border: "2px solid #6AAE6F30" }}
+          style={{ background: "#E9B44C15", border: "2px solid #E9B44C40" }}
         >
-          <div
-            className="text-3xl font-bold mb-1"
-            style={{ color: "#6AAE6F", fontFamily: "'Courier New', monospace" }}
-          >
-            +{level.xp} XP
+          <div className="text-3xl font-bold mb-1"
+            style={{ color: "#E9B44C", fontFamily: "'Courier New', monospace" }}>
+            {stars} / 3
           </div>
           <div className="text-xs" style={{ color: "#6B7280" }}>
-            Experience Earned
+            Stars Earned
           </div>
         </div>
-
-        {level.badge && (
-          <div
-            className="rounded-xl p-4 mb-6"
-            style={{ background: "#E9B44C15", border: "2px solid #E9B44C40" }}
-          >
-            <Icon src={level.badge.icon} alt={level.badge.name} size={40} />
-            <div
-              className="font-bold text-sm mt-2 mb-0.5"
-              style={{ color: "#2F2F2F", fontFamily: "'Courier New', monospace" }}
-            >
-              Badge Unlocked
-            </div>
-            <div className="text-xs font-medium" style={{ color: "#E9B44C" }}>
-              {level.badge.name}
-            </div>
-          </div>
-        )}
 
         <PixelButton onClick={onContinue} size="lg">
           Continue →

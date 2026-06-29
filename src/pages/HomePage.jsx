@@ -8,7 +8,8 @@ export default function HomePage() {
   const { getTrackProgress } = useProgress();
 
   const track = TRACKS[0];
-  const progress = track ? getTrackProgress(track.slug) : 0;
+  const totalLevels = track ? track.chapters.reduce((s, ch) => s + ch.levels.length, 0) : 0;
+  const progress = track ? getTrackProgress(track.slug, totalLevels) : 0;
   const totalChapters = track ? track.chapters.length : 0;
 
   return (
@@ -20,7 +21,7 @@ export default function HomePage() {
         >
           <span>🗺️</span>
           <span className="text-sm font-medium" style={{ color: "#6AAE6F" }}>
-            v1.0 — Variables Valley
+            v1.0 — Python Fundamentals
           </span>
         </div>
 

@@ -30,7 +30,7 @@ export default function ChallengeCard({ challenge, onClick }) {
             {challenge.name}
           </div>
           <div className="text-xs mt-1" style={{ color: "#9CA3AF" }}>
-            Optional · +{challenge.xp} XP reward
+            Optional
           </div>
         </div>
         <div

@@ -59,7 +59,8 @@ export default function ChaptersPage() {
 
       <div className="flex flex-col gap-4">
         {track.chapters.map((chapter, i) => {
-          const progress = getTrackProgress(track.slug);
+          const totalLevels = track.chapters.reduce((s, ch) => s + ch.levels.length, 0);
+          const progress = getTrackProgress(track.slug, totalLevels);
           const done = getCompletedCount(track.slug);
 
           return (
@@ -118,7 +119,7 @@ export default function ChaptersPage() {
                       className="text-lg font-bold"
                       style={{ color: "#E9B44C", fontFamily: "'Courier New', monospace" }}
                     >
-                      {chapter.challenges.length}
+                      {chapter.challenges?.length || 0}
                     </div>
                     <div className="text-xs" style={{ color: "#9CA3AF" }}>
                       Challenges

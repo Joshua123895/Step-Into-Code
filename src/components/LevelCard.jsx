@@ -1,4 +1,6 @@
-export default function LevelCard({ level, onClick }) {
+import StarIcon from "./StarIcon";
+
+export default function LevelCard({ level, onClick, stars }) {
   const isCompleted = level.status === "completed";
   const isLocked = level.status === "locked";
   const isUnlocked = level.status === "unlocked";
@@ -41,11 +43,9 @@ export default function LevelCard({ level, onClick }) {
         >
           {isCompleted ? "✓" : isLocked ? "🔒" : level.id}
         </div>
+
         <div className="flex-1 min-w-0">
-          <div
-            className="text-xs font-medium mb-0.5"
-            style={{ color: "#9CA3AF" }}
-          >
+          <div className="text-xs font-medium mb-0.5" style={{ color: "#9CA3AF" }}>
             Level {level.id}
           </div>
           <div
@@ -58,22 +58,32 @@ export default function LevelCard({ level, onClick }) {
             {level.name}
           </div>
         </div>
-        {isCompleted && (
-          <div
-            className="text-xs font-bold px-2 py-0.5 rounded-full"
-            style={{ background: "#67C58720", color: "#67C587" }}
-          >
-            Done
-          </div>
-        )}
-        {isUnlocked && (
-          <div
-            className="text-xs font-bold px-2 py-0.5 rounded-full"
-            style={{ background: "#7AA2F720", color: "#7AA2F7" }}
-          >
-            Play →
-          </div>
-        )}
+
+        <div className="flex items-center gap-2">
+          {isCompleted && stars > 0 && (
+            <div className="flex gap-0.5">
+              {[1, 2, 3].map((s) => (
+                <StarIcon key={s} filled={s <= stars} className="text-sm" />
+              ))}
+            </div>
+          )}
+          {isCompleted && (
+            <div
+              className="text-xs font-bold px-2 py-0.5 rounded-full"
+              style={{ background: "#67C58720", color: "#67C587" }}
+            >
+              Done
+            </div>
+          )}
+          {isUnlocked && (
+            <div
+              className="text-xs font-bold px-2 py-0.5 rounded-full"
+              style={{ background: "#7AA2F720", color: "#7AA2F7" }}
+            >
+              Play →
+            </div>
+          )}
+        </div>
       </div>
     </button>
   );

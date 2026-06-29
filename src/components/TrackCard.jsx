@@ -40,7 +40,7 @@ export default function TrackCard({ track }) {
         <p className="text-sm mb-4" style={{ color: "#6B7280" }}>
           {track.description}
         </p>
-        <ProgressBar value={getTrackProgress(track.slug)} />
+        <ProgressBar value={getTrackProgress(track.slug, track.chapters.reduce((s, ch) => s + ch.levels.length, 0))} />
         <div className="mt-4 flex items-center justify-between">
           <div className="flex gap-4">
             <div className="text-center">

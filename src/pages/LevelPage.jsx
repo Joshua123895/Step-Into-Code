@@ -6,13 +6,13 @@ import CompletionModal from "../components/CompletionModal";
 import CodeEditorContainer from "../components/CodeEditorContainer";
 import ProgressBar from "../components/ProgressBar";
 import PixelButton from "../components/PixelButton";
-import Badge from "../components/Badge";
 import Icon from "../components/Icon";
+import StarIcon from "../components/StarIcon";
 
 export default function LevelPage() {
   const { trackName, chapterId, levelId } = useParams();
   const navigate = useNavigate();
-  const { getLevelStatus, isBadgeEarned, completeLevel } = useProgress();
+  const { getLevelStatus, getStars, completeLevel, getTotalStars } = useProgress();
 
   const track = TRACKS.find((t) => t.slug === trackName);
   const chapter = track?.chapters.find((c) => c.id === Number(chapterId));
@@ -22,12 +22,33 @@ export default function LevelPage() {
   const [code, setCode] = useState(level?.startingCode ?? "x = ");
   const [showModal, setShowModal] = useState(false);
   const [showHint, setShowHint] = useState(false);
+  const [earnedStars, setEarnedStars] = useState(0);
+  const [hintUsed, setHintUsed] = useState(false);
 
   const handleRun = () => {
-    if (level && code.trim() === level.solution) {
-      completeLevel(trackName, level.id);
+    if (!level) return;
+    const normalize = (s) => s.trim().replace(/\r\n/g, "\n");
+    const userCode = normalize(code);
+    const solution = normalize(level.solution);
+    const start = normalize(level.startingCode || "");
+
+    const matches = start
+      ? userCode === start + "\n" + solution || userCode === start + solution
+      : userCode === solution;
+
+    if (matches) {
+      const stars = hintUsed ? 2 : 3;
+      completeLevel(trackName, level.id, stars);
+      setEarnedStars(stars);
       setShowModal(true);
     }
+  };
+
+  const handleHintToggle = () => {
+    setShowHint((prev) => {
+      if (!prev) setHintUsed(true);
+      return !prev;
+    });
   };
 
   if (!track || !chapter || !level) {
@@ -53,19 +74,15 @@ export default function LevelPage() {
   ).length;
   const progress = Math.round((completedCount / chapter.levels.length) * 100);
   const isCompleted = status === "completed";
-  const badgesWithStatus = chapter.levels
-    .filter((l) => l.badge)
-    .map((l) => ({
-      ...l.badge,
-      earned: isBadgeEarned(track.slug, l.badge.name),
-    }))
-    .filter((b, i, arr) => arr.findIndex((x) => x.name === b.name) === i);
+  const currentStars = getStars(track.slug, level.id);
+  const totalStars = getTotalStars(track.slug);
 
   return (
     <>
       {showModal && (
         <CompletionModal
           level={level}
+          stars={earnedStars}
           onContinue={() => {
             setShowModal(false);
             navigate(`/tracks/${trackName}/chapters/${chapterId}`);
@@ -101,6 +118,17 @@ export default function LevelPage() {
                 >
                   {level.name}
                 </h2>
+
+                {isCompleted && currentStars > 0 && (
+                  <div
+                    className="rounded-xl p-3 mb-4 flex items-center justify-center gap-1"
+                    style={{ background: "#E9B44C10", border: "1.5px solid #E9B44C40" }}
+                  >
+                    {[1, 2, 3].map((s) => (
+                      <StarIcon key={s} filled={s <= currentStars} className="text-xl" />
+                    ))}
+                  </div>
+                )}
 
                 <div
                   className="rounded-xl p-4 mb-4"
@@ -163,7 +191,7 @@ export default function LevelPage() {
                     ▶ Run Code
                   </PixelButton>
                   <PixelButton
-                    onClick={() => setShowHint(!showHint)}
+                    onClick={handleHintToggle}
                     size="md"
                     variant="accent"
                   >
@@ -239,13 +267,20 @@ export default function LevelPage() {
                     className="text-xs font-bold uppercase tracking-wider mb-3"
                     style={{ color: "#9CA3AF" }}
                   >
-                    Badges Earned
+                    Total Stars
                   </div>
-                  <div className="grid grid-cols-2 gap-2">
-                    {badgesWithStatus.map((b, i) => (
-                      <Badge key={i} badge={b} />
-                    ))}
+                  <div className="flex items-center gap-2">
+                    <span
+                      className="text-2xl font-black"
+                      style={{ color: "#E9B44C", fontFamily: "'Courier New', monospace" }}
+                    >
+                      {totalStars}
+                    </span>
+                    <StarIcon filled className="text-lg" />
                   </div>
+                  <p className="text-xs mt-1" style={{ color: "#9CA3AF" }}>
+                    across {completedCount} completed levels
+                  </p>
                 </div>
               </div>
             </div>

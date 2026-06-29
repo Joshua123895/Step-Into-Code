@@ -27,6 +27,27 @@ export default function App() {
         .star-pop {
           animation: starPop 0.4s ease-out both;
         }
+        .star-container {
+          position: relative;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+        }
+        .star-base {
+          position: relative;
+          z-index: 1;
+          color: #D1D5DB;
+          transition: color 0.2s;
+        }
+        .star-base.star-filled {
+          color: #E9B44C;
+          animation: starScaleIn 0.4s ease-out both;
+        }
+        @keyframes starScaleIn {
+          0% { transform: scale(0) rotate(-20deg); opacity: 0; }
+          60% { transform: scale(1.3) rotate(5deg); opacity: 1; }
+          100% { transform: scale(1) rotate(0deg); opacity: 1; }
+        }
         textarea { tab-size: 2; }
       `}</style>
 
