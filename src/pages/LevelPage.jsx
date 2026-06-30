@@ -81,9 +81,9 @@ export default function LevelPage() {
       setResultInfo({ lineCount, maxLines, execTime, maxTime });
       setShowModal(true);
     } else {
-      const needsInput = code.includes("input(") || code.includes("input (");
+      const solutionHasPrint = level.solution.includes("print(");
 
-      if (!needsInput) {
+      if (solutionHasPrint) {
         const fullSolution = (level.startingCode || "") + level.solution;
         const [actualOutput, expectedOutput] = await Promise.all([
           runPythonWithIO(code, []),
@@ -108,25 +108,44 @@ export default function LevelPage() {
         return;
       }
 
-      const normalize = (s) =>
-        s
-          .replace(/\r\n/g, "\n")
-          .split("\n")
-          .map((l) => l.trimEnd())
-          .join("\n")
-          .replace(/^\s*\n/, "")
-          .replace(/\n\s*$/, "")
-          .replace(/\n{3,}/g, "\n\n")
-          .trim();
-      const userCode = normalize(code);
-      const solution = normalize(level.solution);
-      const start = normalize(level.startingCode || "");
+      const varMatch = level.solution.match(/^\s*(\w+)\s*=\s*/m);
+      if (varMatch) {
+        const varName = varMatch[1];
+        const needsInput = code.includes("input(") || code.includes("input (");
+        const inputs = needsInput ? ["test"] : [];
+        const inputDisplay = needsInput ? "test" : "";
 
-      const matches = start
-        ? userCode === start + "\n" + solution || userCode === start + solution
-        : userCode === solution;
+        const solutionCode = (level.startingCode || "") + level.solution;
+        const actualOutput = await runPythonWithIO(code + "\nprint(" + varName + ")", inputs);
+        const expectedOutput = await runPythonWithIO(solutionCode + "\nprint(" + varName + ")", inputs);
 
-      if (matches) {
+        execTime = (performance.now() - startTime) / 1000;
+
+        if (actualOutput === expectedOutput) {
+          completeAudioRef.current?.play();
+          let stars = 1;
+          if (lineCount <= maxLines) stars++;
+          if (execTime <= maxTime) stars++;
+          completeLevel(trackName, level.id, stars);
+          setEarnedStars(stars);
+          setResultInfo({ lineCount, maxLines, execTime, maxTime });
+          setShowModal(true);
+        } else {
+          wrongAudioRef.current?.play();
+          setTestFailure({ input: inputDisplay, expected: expectedOutput, actual: actualOutput });
+        }
+        return;
+      }
+
+      const fullSolution = (level.startingCode || "") + level.solution;
+      const [actualOutput, expectedOutput] = await Promise.all([
+        runPythonWithIO(code, []),
+        runPythonWithIO(fullSolution, []),
+      ]);
+
+      execTime = (performance.now() - startTime) / 1000;
+
+      if (actualOutput === expectedOutput) {
         completeAudioRef.current?.play();
         let stars = 1;
         if (lineCount <= maxLines) stars++;
@@ -137,6 +156,7 @@ export default function LevelPage() {
         setShowModal(true);
       } else {
         wrongAudioRef.current?.play();
+        setTestFailure({ input: "", expected: expectedOutput, actual: actualOutput });
       }
     }
   };
@@ -159,11 +179,6 @@ export default function LevelPage() {
         </button>
       </div>
     );
-  }
-
-  if (status === "locked") {
-    navigate(`/tracks/${trackName}/chapters/${chapterId}`);
-    return null;
   }
 
   const completedCount = chapter.levels.filter(

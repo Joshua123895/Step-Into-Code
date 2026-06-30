@@ -52,9 +52,7 @@ export function useProgress() {
     (trackSlug, levelId) => {
       const track = progress[trackSlug] || {};
       if (track[levelId]) return "completed";
-      if (levelId === 1) return "unlocked";
-      if (track[levelId - 1]) return "unlocked";
-      return "locked";
+      return "unlocked";
     },
     [progress],
   );
