@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { TRACKS } from "../data/tracks";
 import { useProgress } from "../hooks/useProgress";
+import { runPythonWithIO } from "../utils/pythonRunner";
 import CompletionModal from "../components/CompletionModal";
 import CodeEditorContainer from "../components/CodeEditorContainer";
 import ProgressBar from "../components/ProgressBar";
@@ -24,23 +25,49 @@ export default function LevelPage() {
   const [showHint, setShowHint] = useState(false);
   const [earnedStars, setEarnedStars] = useState(0);
   const [hintUsed, setHintUsed] = useState(false);
+  const [testing, setTesting] = useState(false);
+  const [testFailure, setTestFailure] = useState(null);
 
-  const handleRun = () => {
+  const handleRun = async () => {
     if (!level) return;
-    const normalize = (s) => s.trim().replace(/\r\n/g, "\n");
-    const userCode = normalize(code);
-    const solution = normalize(level.solution);
-    const start = normalize(level.startingCode || "");
+    setTestFailure(null);
 
-    const matches = start
-      ? userCode === start + "\n" + solution || userCode === start + solution
-      : userCode === solution;
+    const hasTests = level.tests && level.tests.length > 0;
 
-    if (matches) {
+    if (hasTests) {
+      setTesting(true);
+
+      for (const test of level.tests) {
+        const inputs = test.input ? (Array.isArray(test.input) ? test.input : [test.input]) : [];
+        const output = await runPythonWithIO(code, inputs);
+        if (output !== test.expected) {
+          setTestFailure({ input: test.input, expected: test.expected, actual: output });
+          setTesting(false);
+          return;
+        }
+      }
+
+      setTesting(false);
       const stars = hintUsed ? 2 : 3;
       completeLevel(trackName, level.id, stars);
       setEarnedStars(stars);
       setShowModal(true);
+    } else {
+      const normalize = (s) => s.trim().replace(/\r\n/g, "\n");
+      const userCode = normalize(code);
+      const solution = normalize(level.solution);
+      const start = normalize(level.startingCode || "");
+
+      const matches = start
+        ? userCode === start + "\n" + solution || userCode === start + solution
+        : userCode === solution;
+
+      if (matches) {
+        const stars = hintUsed ? 2 : 3;
+        completeLevel(trackName, level.id, stars);
+        setEarnedStars(stars);
+        setShowModal(true);
+      }
     }
   };
 
@@ -76,6 +103,8 @@ export default function LevelPage() {
   const isCompleted = status === "completed";
   const currentStars = getStars(track.slug, level.id);
   const totalStars = getTotalStars(track.slug);
+  const levelIndex = chapter.levels.findIndex((l) => l.id === level.id);
+  const hasNextLevel = levelIndex < chapter.levels.length - 1;
 
   return (
     <>
@@ -88,6 +117,64 @@ export default function LevelPage() {
             navigate(`/tracks/${trackName}/chapters/${chapterId}`);
           }}
         />
+      )}
+
+      {testing && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+          <div className="absolute inset-0 backdrop-blur-sm" style={{ background: "rgba(0,0,0,0.5)" }} />
+          <div
+            className="relative rounded-2xl p-8 text-center max-w-sm w-full"
+            style={{ background: "#F7F3E9", border: "3px solid #7AA2F7", boxShadow: "0 20px 60px rgba(0,0,0,0.3)" }}
+          >
+            <div className="text-4xl mb-4 animate-pulse">⏳</div>
+            <h2 className="text-xl font-bold" style={{ color: "#2F2F2F", fontFamily: "'Courier New', monospace" }}>
+              Checking solution...
+            </h2>
+            <p className="text-sm mt-2" style={{ color: "#6B7280" }}>
+              Running your code against test cases
+            </p>
+          </div>
+        </div>
+      )}
+
+      {testFailure && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+          <div
+            className="absolute inset-0 backdrop-blur-sm"
+            style={{ background: "rgba(0,0,0,0.5)" }}
+            onClick={() => setTestFailure(null)}
+          />
+          <div
+            className="relative rounded-2xl p-8 text-center max-w-md w-full"
+            style={{ background: "#F7F3E9", border: "3px solid #FF5F57", boxShadow: "0 20px 60px rgba(0,0,0,0.3)" }}
+          >
+            <div className="text-4xl mb-4">❌</div>
+            <h2 className="text-xl font-bold mb-4" style={{ color: "#2F2F2F", fontFamily: "'Courier New', monospace" }}>
+              Test Failed
+            </h2>
+
+            {testFailure.input !== undefined && testFailure.input !== "" && (
+              <div className="rounded-xl p-3 mb-3 text-left" style={{ background: "#1e1e2e" }}>
+                <div className="text-xs font-bold mb-1" style={{ color: "#9CA3AF" }}>INPUT</div>
+                <pre className="text-xs font-mono m-0" style={{ color: "#CDD6F4", whiteSpace: "pre-wrap" }}>{testFailure.input}</pre>
+              </div>
+            )}
+
+            <div className="rounded-xl p-3 mb-3 text-left" style={{ background: "#1e1e2e" }}>
+              <div className="text-xs font-bold mb-1" style={{ color: "#28CA41" }}>EXPECTED</div>
+              <pre className="text-xs font-mono m-0" style={{ color: "#CDD6F4", whiteSpace: "pre-wrap" }}>{testFailure.expected}</pre>
+            </div>
+
+            <div className="rounded-xl p-3 mb-5 text-left" style={{ background: "#1e1e2e" }}>
+              <div className="text-xs font-bold mb-1" style={{ color: "#FF5F57" }}>ACTUAL</div>
+              <pre className="text-xs font-mono m-0" style={{ color: "#CDD6F4", whiteSpace: "pre-wrap" }}>{testFailure.actual || "(no output)"}</pre>
+            </div>
+
+            <PixelButton onClick={() => setTestFailure(null)} size="md" variant="primary">
+              Try Again
+            </PixelButton>
+          </div>
+        </div>
       )}
 
       <div key={levelId} className="h-screen pt-24 pb-8 px-4 relative z-10 overflow-hidden">
@@ -145,8 +232,8 @@ export default function LevelPage() {
                       seg.type === "code" ? (
                         <code
                           key={i}
-                          className="px-1.5 py-0.5 rounded font-bold text-xs"
-                          style={{ background: "#E5E7EB", color: "#7AA2F7" }}
+                          className="px-1.5 py-0.5 rounded text-xs font-mono"
+                          style={{ background: "#E5E7EB", color: "#2F2F2F" }}
                         >
                           {seg.value}
                         </code>
@@ -157,6 +244,35 @@ export default function LevelPage() {
                   </p>
                 </div>
 
+                {level.explanation ? (
+                  <div
+                    className="rounded-xl p-4 mb-4"
+                    style={{ background: "#7AA2F710", border: "1.5px solid #7AA2F740" }}
+                  >
+                    <div
+                      className="text-xs font-bold mb-2"
+                      style={{ color: "#7AA2F7" }}
+                    >
+                      📖 EXPLANATION
+                    </div>
+                    <p className="text-sm" style={{ color: "#374151" }}>
+                      {level.explanation.map((seg, i) =>
+                        seg.type === "code" ? (
+<code
+                          key={i}
+                          className="px-1.5 py-0.5 rounded text-xs font-mono"
+                          style={{ background: "#E5E7EB", color: "#2F2F2F" }}
+                        >
+                          {seg.value}
+                        </code>
+                      ) : (
+                        <span key={i}>{seg.value}</span>
+                      )
+                    )}
+                    </p>
+                  </div>
+                ) : null}
+
                 {showHint ? (
                   <div
                     className="rounded-xl p-4 mb-4"
@@ -166,30 +282,31 @@ export default function LevelPage() {
                       className="text-xs font-bold mb-2"
                       style={{ color: "#E9B44C" }}
                     >
-                      💡 Hint
+                      💡 HINT
                     </div>
                     <p className="text-sm" style={{ color: "#374151" }}>
                       {level.hint.map((seg, i) =>
                         seg.type === "code" ? (
-                          <code
-                            key={i}
-                            className="px-1 rounded"
-                            style={{ background: "#E5E7EB", color: "#2F2F2F" }}
-                          >
-                            {seg.value}
-                          </code>
-                        ) : (
-                          <span key={i}>{seg.value}</span>
-                        )
-                      )}
+<code
+                          key={i}
+                          className="px-1.5 py-0.5 rounded text-xs font-mono"
+                          style={{ background: "#E5E7EB", color: "#2F2F2F" }}
+                        >
+                          {seg.value}
+                        </code>
+                      ) : (
+                        <span key={i}>{seg.value}</span>
+                      )
+                    )}
                     </p>
                   </div>
                 ) : null}
 
                 <div className="flex flex-col gap-2">
                   <PixelButton onClick={handleRun} size="md" variant="primary">
-                    ▶ Run Code
+                    Submit Code
                   </PixelButton>
+
                   <PixelButton
                     onClick={handleHintToggle}
                     size="md"
@@ -197,14 +314,16 @@ export default function LevelPage() {
                   >
                     {showHint ? "Hide Hint" : "💡 Hint"}
                   </PixelButton>
-                  <PixelButton
-                    onClick={() => navigate(`/tracks/${trackName}/chapters/${chapterId}`)}
-                    size="md"
-                    variant="ghost"
-                    disabled={!isCompleted}
-                  >
-                    Next Level →
-                  </PixelButton>
+                  {hasNextLevel && (
+                    <PixelButton
+                      onClick={() => navigate(`/tracks/${trackName}/chapters/${chapterId}`)}
+                      size="md"
+                      variant="ghost"
+                      disabled={!isCompleted}
+                    >
+                      Next Level →
+                    </PixelButton>
+                  )}
                 </div>
               </div>
             </div>
@@ -213,7 +332,7 @@ export default function LevelPage() {
               <CodeEditorContainer code={code} setCode={setCode} language={track.name.split(" ")[0]} />
 
               <p className="text-xs mt-2 text-center" style={{ color: "#D1D5DB" }}>
-                Write your code above, then click Run Code to check your answer.
+                Write your code above, then click Run to test or Submit to check your answer.
               </p>
             </div>
 

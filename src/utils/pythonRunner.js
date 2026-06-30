@@ -1,0 +1,69 @@
+async function ensureSkulpt(inputfun) {
+  if (window.Sk && window.Sk.configure) {
+    window.Sk.configure({ inputfun });
+    return window.Sk;
+  }
+
+  await import("skulpt/dist/skulpt.min.js");
+  await import("skulpt/dist/skulpt-stdlib.js");
+
+  if (!window.Sk || !window.Sk.configure) {
+    throw new Error("Skulpt failed to load");
+  }
+
+  window.Sk.configure({
+    output: () => {},
+    read: (x) => {
+      if (window.Sk.builtinFiles === undefined || window.Sk.builtinFiles["files"][x] === undefined)
+        throw "File not found: '" + x + "'";
+      return window.Sk.builtinFiles["files"][x];
+    },
+    __future__: window.Sk.python3,
+    inputfun,
+  });
+
+  return window.Sk;
+}
+
+export async function runPythonWithIO(code, inputs = []) {
+  let i = 0;
+  const chunks = [];
+
+  const onInput = (resolve) => {
+    resolve(i < inputs.length ? inputs[i++] : "");
+  };
+
+  const onOutput = (text) => {
+    chunks.push(text);
+  };
+
+  await runPython(code, onInput, onOutput);
+
+  return chunks.join("");
+}
+
+export async function runPython(code, onInput, onOutput) {
+  try {
+    const inputfun = (prompt) => {
+      if (onOutput) onOutput(prompt);
+      return new Promise((resolve) => onInput(resolve));
+    };
+    const sk = await ensureSkulpt(inputfun);
+
+    sk.output = (text) => {
+      if (onOutput) onOutput(text);
+    };
+
+    try {
+      await sk.misceval.asyncToPromise(() =>
+        sk.importMainWithBody("<stdin>", false, code, true)
+      );
+    } catch (e) {
+      if (onOutput) onOutput(String(e));
+    }
+
+    sk.output = () => {};
+  } catch (e) {
+    if (onOutput) onOutput("Error: " + (e.message || String(e)));
+  }
+}
