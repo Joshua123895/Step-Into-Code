@@ -8,7 +8,7 @@ import PixelButton from "../components/PixelButton";
 export default function ChaptersPage() {
   const { trackName } = useParams();
   const navigate = useNavigate();
-  const { getCompletedCount, getTrackProgress } = useProgress();
+  const { getStars } = useProgress();
 
   const track = TRACKS.find((t) => t.slug === trackName);
 
@@ -59,9 +59,8 @@ export default function ChaptersPage() {
 
       <div className="flex flex-col gap-4">
         {track.chapters.map((chapter, i) => {
-          const totalLevels = track.chapters.reduce((s, ch) => s + ch.levels.length, 0);
-          const progress = getTrackProgress(track.slug, totalLevels);
-          const done = getCompletedCount(track.slug);
+          const done = chapter.levels.filter((l) => getStars(track.slug, l.id) > 0).length;
+          const progress = chapter.levels.length > 0 ? Math.round((done / chapter.levels.length) * 100) : 0;
 
           return (
             <div

@@ -9,7 +9,7 @@ import ChallengeCard from "../components/ChallengeCard";
 export default function ChapterPage() {
   const { trackName, chapterId } = useParams();
   const navigate = useNavigate();
-  const { getLevelStatus, getStars, getCompletedCount, getTotalStars } = useProgress();
+  const { getLevelStatus, getStars, getTotalStars } = useProgress();
 
   const track = TRACKS.find((t) => t.slug === trackName);
   const chapter = track?.chapters.find((c) => c.id === Number(chapterId));
