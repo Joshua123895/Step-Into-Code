@@ -16,6 +16,8 @@ const editorTheme = EditorView.theme({
   ".cm-scroller": {
     overflow: "auto",
     lineHeight: "1.6rem",
+    overscrollBehavior: "none",
+    WebkitOverflowScrolling: "touch",
   },
   ".cm-content": {
     padding: "16px 0",
@@ -196,10 +198,10 @@ export default function CodeEditorContainer({ code, setCode, language }) {
       </div>
 
       <div
-        className="flex min-h-0 flex-1 overflow-hidden"
-        style={{ background: "#1a1b2e" }}
+        className="flex min-h-0 flex-1"
+        style={{ background: "#1a1b2e", touchAction: "manipulation" }}
       >
-        <div ref={editorRef} className="flex-1 overflow-hidden" />
+        <div ref={editorRef} className="flex-1" style={{ touchAction: "manipulation" }} />
       </div>
 
       <div

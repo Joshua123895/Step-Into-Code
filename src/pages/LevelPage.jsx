@@ -293,11 +293,11 @@ export default function LevelPage() {
             ← {chapter.name}
           </button>
 
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-            <div className="lg:col-span-3">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:items-start">
+            <div className="lg:col-span-3 lg:self-start">
               <div
-                className="rounded-2xl p-5 lg:sticky lg:max-h-[calc(100vh-10rem)]"
-                style={{ background: "#fff", border: "2px solid #E5E7EB", top: "6rem", display: "flex", flexDirection: "column" }}
+                className="rounded-2xl p-5 lg:max-h-[calc(100vh-10rem)] flex flex-col"
+                style={{ background: "#fff", border: "2px solid #E5E7EB" }}
               >
                 <div>
                   <div
@@ -480,7 +480,7 @@ export default function LevelPage() {
               </div>
             </div>
 
-            <div className="lg:col-span-6">
+            <div className="lg:col-span-6 lg:self-start">
               <CodeEditorContainer code={code} setCode={setCode} language={track.name.split(" ")[0]} />
 
               <p className="text-xs mt-2 text-center" style={{ color: "#D1D5DB" }}>
@@ -488,10 +488,9 @@ export default function LevelPage() {
               </p>
             </div>
 
-            <div className="lg:col-span-3">
+            <div className="lg:col-span-3 lg:self-start">
               <div
-                className="lg:sticky lg:max-h-[calc(100vh-10rem)] lg:overflow-y-auto space-y-4"
-                style={{ top: "6rem" }}
+                className="lg:max-h-[calc(100vh-10rem)] lg:overflow-y-auto space-y-4"
               >
                 <div
                   className="rounded-2xl p-5"
