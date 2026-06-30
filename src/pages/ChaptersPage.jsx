@@ -113,17 +113,6 @@ export default function ChaptersPage() {
                       Levels Done
                     </div>
                   </div>
-                  <div className="text-center">
-                    <div
-                      className="text-lg font-bold"
-                      style={{ color: "#E9B44C", fontFamily: "'Courier New', monospace" }}
-                    >
-                      {chapter.challenges?.length || 0}
-                    </div>
-                    <div className="text-xs" style={{ color: "#9CA3AF" }}>
-                      Challenges
-                    </div>
-                  </div>
                 </div>
               </div>
             </div>

@@ -4,7 +4,6 @@ import { useProgress } from "../hooks/useProgress";
 import Icon from "../components/Icon";
 import ProgressBar from "../components/ProgressBar";
 import LevelCard from "../components/LevelCard";
-import ChallengeCard from "../components/ChallengeCard";
 
 export default function ChapterPage() {
   const { trackName, chapterId } = useParams();
@@ -92,28 +91,6 @@ export default function ChapterPage() {
           ))}
         </div>
       </div>
-
-      {chapter.challenges && chapter.challenges.length > 0 && (
-        <div>
-          <div className="mb-3">
-            <h2 className="text-sm font-bold uppercase tracking-wider mb-0.5" style={{ color: "#9CA3AF" }}>
-              Challenges
-            </h2>
-            <p className="text-xs" style={{ color: "#C0BAB0" }}>
-              Optional puzzles for extra practice. No pressure.
-            </p>
-          </div>
-          <div className="flex flex-col gap-3">
-            {chapter.challenges.map((c) => (
-              <ChallengeCard
-                key={c.id}
-                challenge={c}
-                onClick={() => navigate(`/tracks/${track.slug}/chapters/${chapter.id}/levels/${c.id}`)}
-              />
-            ))}
-          </div>
-        </div>
-      )}
     </div>
   );
 }

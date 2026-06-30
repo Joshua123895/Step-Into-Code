@@ -1,7 +1,17 @@
 import PixelButton from "./PixelButton";
 import StarIcon from "./StarIcon";
 
-export default function CompletionModal({ level, stars, onContinue }) {
+export default function CompletionModal({ level, stars, resultInfo, onContinue, onRetry }) {
+  const { lineCount, maxLines, execTime, maxTime } = resultInfo || {};
+
+  const criteria = [
+    { label: "Complete the level", met: true },
+    { label: `≤ ${maxLines} lines (yours: ${lineCount})`, met: lineCount <= maxLines },
+    { label: `≤ ${maxTime}s execution (yours: ${execTime?.toFixed(2)}s)`, met: execTime <= maxTime },
+  ];
+
+  const allThree = stars === 3;
+
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       <div
@@ -46,9 +56,32 @@ export default function CompletionModal({ level, stars, onContinue }) {
           </div>
         </div>
 
-        <PixelButton onClick={onContinue} size="lg">
-          Continue →
-        </PixelButton>
+        <div className="rounded-xl p-4 mb-4 text-left" style={{ background: "#F7F3E9", border: "1.5px solid #E5E7EB" }}>
+          <div className="text-xs font-bold uppercase tracking-wider mb-2" style={{ color: "#9CA3AF" }}>
+            Star Criteria
+          </div>
+          <div className="space-y-2">
+            {criteria.map((c, i) => (
+              <div key={i} className="flex items-center gap-2 text-sm">
+                <span style={{ color: c.met ? "#67C587" : "#FF5F57" }}>
+                  {c.met ? "✓" : "✗"}
+                </span>
+                <span style={{ color: "#374151" }}>{c.label}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="flex gap-3 justify-center">
+          {!allThree && (
+            <PixelButton onClick={onRetry} size="md" variant="accent">
+              Retry
+            </PixelButton>
+          )}
+          <PixelButton onClick={onContinue} size="lg">
+            Continue →
+          </PixelButton>
+        </div>
       </div>
     </div>
   );

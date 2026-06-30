@@ -26,6 +26,8 @@ export const TRACKS = [
             explanation: [{ type: "code", value: "print()"}, { type: "text", value: " is a built-in Python function that outputs text to the console. You pass a string inside parentheses." }],
             startingCode: "",
             solution: 'print("Hello, World!")',
+            maxLines: 2,
+            maxTime: 1,
           },
           {
             id: 2,
@@ -36,6 +38,8 @@ export const TRACKS = [
             startingCode: "",
             solution: 'x = 5\nprint(x)',
             tests: [{ expected: "5\n" }],
+            maxLines: 3,
+            maxTime: 1,
           },
           {
             id: 3,
@@ -45,6 +49,8 @@ export const TRACKS = [
             explanation: [{ type: "text", value: "input() displays a prompt and waits for the user to type something. Whatever they type is returned as a string, which you can store in a variable." }],
             startingCode: "",
             solution: 'name = input("What is your name?")',
+            maxLines: 2,
+            maxTime: 1,
           },
           {
             id: 4,
@@ -55,6 +61,8 @@ export const TRACKS = [
             startingCode: "",
             solution: 'age = int(input())\nprint(f"I am {age} years old")',
             tests: [{ input: "25", expected: "I am 25 years old\n" }],
+            maxLines: 3,
+            maxTime: 1,
           },
         ],
       },
@@ -71,6 +79,8 @@ export const TRACKS = [
             explanation: [{ type: "text", value: "A string is a sequence of characters enclosed in quotes. You can assign it to a variable like any other value." }],
             startingCode: "",
             solution: 'greeting = "Hello"',
+            maxLines: 2,
+            maxTime: 1,
           },
           {
             id: 6,
@@ -80,6 +90,8 @@ export const TRACKS = [
             explanation: [{ type: "text", value: "Integers are whole numbers, while floats have decimal points. Python handles both as numeric types and supports arithmetic on them." }],
             startingCode: "",
             solution: "count = 10\nprice = 19.99",
+            maxLines: 3,
+            maxTime: 1,
           },
           {
             id: 7,
@@ -89,6 +101,8 @@ export const TRACKS = [
             explanation: [{ type: "text", value: "Booleans represent truth values — True or False. They are often used in conditions and logical operations." }],
             startingCode: "",
             solution: "is_ready = True",
+            maxLines: 2,
+            maxTime: 1,
           },
           {
             id: 8,
@@ -99,10 +113,9 @@ export const TRACKS = [
             startingCode: "x = int(input())\n",
             solution: "print(type(x))",
             tests: [{ input: "5", expected: "<class 'int'>\n" }],
+            maxLines: 2,
+            maxTime: 1,
           },
-        ],
-        challenges: [
-          { id: 1, name: "Variable Challenge" },
         ],
       },
       {
@@ -119,6 +132,8 @@ export const TRACKS = [
             startingCode: "",
             solution: "result = 10 + 5\nprint(result)",
             tests: [{ expected: "15\n" }],
+            maxLines: 3,
+            maxTime: 1,
           },
           {
             id: 10,
@@ -128,6 +143,8 @@ export const TRACKS = [
             explanation: [{ type: "text", value: "The % operator returns the remainder of a division. It's useful for checking divisibility or cycling through ranges." }],
             startingCode: "",
             solution: "remainder = 17 % 3",
+            maxLines: 2,
+            maxTime: 1,
           },
           {
             id: 11,
@@ -137,6 +154,8 @@ export const TRACKS = [
             explanation: [{ type: "text", value: "Comparison operators like >, <, ==, != compare values and return a boolean result (True or False)." }],
             startingCode: "",
             solution: "is_greater = 10 > 5",
+            maxLines: 2,
+            maxTime: 1,
           },
           {
             id: 12,
@@ -147,6 +166,8 @@ export const TRACKS = [
             startingCode: "",
             solution: "result = True and False\nprint(result)",
             tests: [{ expected: "False\n" }],
+            maxLines: 3,
+            maxTime: 1,
           },
         ],
       },
@@ -164,6 +185,8 @@ export const TRACKS = [
             startingCode: "x = int(input())\n",
             solution: 'if x > 0:\n    print("Positive")',
             tests: [{ input: "5", expected: "Positive\n" }],
+            maxLines: 3,
+            maxTime: 1,
           },
           {
             id: 14,
@@ -177,6 +200,8 @@ export const TRACKS = [
               { input: "20", expected: "Adult\n" },
               { input: "15", expected: "Minor\n" },
             ],
+            maxLines: 5,
+            maxTime: 1,
           },
           {
             id: 15,
@@ -191,6 +216,8 @@ export const TRACKS = [
               { input: "95", expected: "A\n" },
               { input: "70", expected: "C\n" },
             ],
+            maxLines: 6,
+            maxTime: 1,
           },
         ],
       },
@@ -208,6 +235,8 @@ export const TRACKS = [
             startingCode: "",
             solution: "for i in range(5):\n    print(i)",
             tests: [{ expected: "0\n1\n2\n3\n4\n" }],
+            maxLines: 3,
+            maxTime: 1,
           },
           {
             id: 17,
@@ -218,6 +247,8 @@ export const TRACKS = [
             startingCode: 'items = ["a", "b", "c"]\n',
             solution: "for item in items:\n    print(item)",
             tests: [{ expected: "a\nb\nc\n" }],
+            maxLines: 3,
+            maxTime: 1,
           },
           {
             id: 18,
@@ -228,6 +259,8 @@ export const TRACKS = [
             startingCode: "i = 0\n",
             solution: "while i <= 3:\n    print(i)\n    i += 1",
             tests: [{ expected: "0\n1\n2\n3\n" }],
+            maxLines: 4,
+            maxTime: 1,
           },
           {
             id: 19,
@@ -238,6 +271,8 @@ export const TRACKS = [
             startingCode: "",
             solution: "for i in range(10):\n    if i == 5:\n        break\n    print(i)",
             tests: [{ expected: "0\n1\n2\n3\n4\n" }],
+            maxLines: 5,
+            maxTime: 1,
           },
         ],
       },
@@ -254,6 +289,8 @@ export const TRACKS = [
             explanation: [{ type: "text", value: "A list is an ordered, mutable collection of items written in square brackets. It can hold elements of any type." }],
             startingCode: "",
             solution: "nums = [1, 2, 3]\nprint(nums)",
+            maxLines: 3,
+            maxTime: 1,
           },
           {
             id: 21,
@@ -263,6 +300,8 @@ export const TRACKS = [
             explanation: [{ type: "text", value: "Lists have built-in methods like .append() to add items, .remove() to delete them, and .sort() to order them." }],
             startingCode: 'fruits = ["apple", "banana"]\n',
             solution: 'fruits.append("cherry")\nprint(fruits)',
+            maxLines: 3,
+            maxTime: 1,
           },
           {
             id: 22,
@@ -272,6 +311,8 @@ export const TRACKS = [
             explanation: [{ type: "text", value: "A dictionary stores key-value pairs inside curly braces. Each key maps to a value, like a real dictionary mapping words to definitions." }],
             startingCode: "",
             solution: 'person = {"name": "Alice", "age": 30}',
+            maxLines: 2,
+            maxTime: 1,
           },
           {
             id: 23,
@@ -281,10 +322,9 @@ export const TRACKS = [
             explanation: [{ type: "text", value: "A tuple is an immutable ordered collection written with parentheses. A set is an unordered collection of unique items written with curly braces." }],
             startingCode: "",
             solution: "coords = (10, 20)\nunique = {1, 2, 3}",
+            maxLines: 3,
+            maxTime: 1,
           },
-        ],
-        challenges: [
-          { id: 2, name: "Data Structures Master" },
         ],
       },
       {
@@ -300,6 +340,8 @@ export const TRACKS = [
             explanation: [{ type: "text", value: "def defines a reusable block of code. Calling the function by name executes the block. Functions help organize and reuse code." }],
             startingCode: "",
             solution: 'def greet():\n    print("Hello!")\ngreet()',
+            maxLines: 4,
+            maxTime: 1,
           },
           {
             id: 25,
@@ -309,6 +351,8 @@ export const TRACKS = [
             explanation: [{ type: "text", value: "Parameters are variables listed in the function definition that receive values when the function is called, making functions more flexible." }],
             startingCode: "",
             solution: "def square(n):\n    print(n * n)\nsquare(4)",
+            maxLines: 4,
+            maxTime: 1,
           },
           {
             id: 26,
@@ -318,6 +362,8 @@ export const TRACKS = [
             explanation: [{ type: "text", value: "return sends a value back to the caller. Unlike print(), which displays output, return makes the result available for further use." }],
             startingCode: "",
             solution: "def add(a, b):\n    return a + b\nprint(add(3, 7))",
+            maxLines: 4,
+            maxTime: 1,
           },
           {
             id: 27,
@@ -327,6 +373,8 @@ export const TRACKS = [
             explanation: [{ type: "text", value: "Default parameters let you omit arguments when calling a function. If not provided, the default value is used automatically." }],
             startingCode: "",
             solution: "def power(base, exp=2):\n    return base ** exp\nprint(power(5))",
+            maxLines: 4,
+            maxTime: 1,
           },
         ],
       },
@@ -343,6 +391,8 @@ export const TRACKS = [
             explanation: [{ type: "text", value: "Functions can contain conditional logic. By combining parameters, if/else, and return, you can build flexible utilities." }],
             startingCode: "",
             solution: 'def calculate(a, b, op):\n    if op == "add":\n        return a + b\n    else:\n        return a - b\nprint(calculate(10, 5, "add"))',
+            maxLines: 7,
+            maxTime: 1,
           },
           {
             id: 29,
@@ -352,6 +402,8 @@ export const TRACKS = [
             explanation: [{ type: "text", value: "A common pattern is to iterate over a list, test each element with a condition, and collect matching items into a new list." }],
             startingCode: "",
             solution: "def get_evens(nums):\n    result = []\n    for n in nums:\n        if n % 2 == 0:\n            result.append(n)\n    return result\nprint(get_evens([1, 2, 3, 4, 5, 6]))",
+            maxLines: 8,
+            maxTime: 1,
           },
           {
             id: 30,
@@ -362,10 +414,9 @@ export const TRACKS = [
             startingCode: 'text = input()\n',
             solution: 'print(text.count("the"))',
             tests: [{ input: "the cat and the dog", expected: "2\n" }],
+            maxLines: 2,
+            maxTime: 1,
           },
-        ],
-        challenges: [
-          { id: 3, name: "Basics Capstone" },
         ],
       },
       {
@@ -381,6 +432,8 @@ export const TRACKS = [
             explanation: [{ type: "text", value: "A class is a blueprint for creating objects. class defines a new type, and pass is a placeholder where methods go." }],
             startingCode: "",
             solution: "class Dog:\n    pass",
+            maxLines: 3,
+            maxTime: 1,
           },
           {
             id: 32,
@@ -390,6 +443,8 @@ export const TRACKS = [
             explanation: [{ type: "text", value: "__init__ is the constructor method that runs when a new object is created. self refers to the instance, and you can attach attributes to it." }],
             startingCode: "",
             solution: "class Dog:\n    def __init__(self, name):\n        self.name = name",
+            maxLines: 4,
+            maxTime: 1,
           },
           {
             id: 33,
@@ -399,6 +454,8 @@ export const TRACKS = [
             explanation: [{ type: "text", value: "Methods are functions defined inside a class. They take self as the first parameter to access the instance's attributes." }],
             startingCode: "",
             solution: 'class Dog:\n    def __init__(self, name):\n        self.name = name\n    def bark(self):\n        print("Woof!")\n\nd = Dog("Rex")\nd.bark()',
+            maxLines: 8,
+            maxTime: 1,
           },
           {
             id: 34,
@@ -408,10 +465,9 @@ export const TRACKS = [
             explanation: [{ type: "text", value: "A class can inherit attributes and methods from another class by passing the parent class in parentheses. The child can then extend or override behavior." }],
             startingCode: "class Dog:\n    pass\n",
             solution: "class Puppy(Dog):\n    pass",
+            maxLines: 3,
+            maxTime: 1,
           },
-        ],
-        challenges: [
-          { id: 4, name: "OOP Practice" },
         ],
       },
       {
@@ -427,6 +483,8 @@ export const TRACKS = [
             explanation: [{ type: "text", value: "The with statement ensures the file is properly closed after writing. \"w\" mode creates or overwrites the file." }],
             startingCode: "",
             solution: 'with open("test.txt", "w") as f:\n    f.write("Hello")',
+            maxLines: 3,
+            maxTime: 1,
           },
           {
             id: 36,
@@ -436,6 +494,8 @@ export const TRACKS = [
             explanation: [{ type: "text", value: "\"r\" mode opens a file for reading. .read() returns the entire content as a string, which you can then process or print." }],
             startingCode: "",
             solution: 'with open("test.txt", "r") as f:\n    print(f.read())',
+            maxLines: 3,
+            maxTime: 1,
           },
           {
             id: 37,
@@ -445,6 +505,8 @@ export const TRACKS = [
             explanation: [{ type: "text", value: "\"a\" mode adds content to the end of an existing file without overwriting it. The file is created if it doesn't exist." }],
             startingCode: "",
             solution: 'with open("log.txt", "a") as f:\n    f.write("done")',
+            maxLines: 3,
+            maxTime: 1,
           },
           {
             id: 38,
@@ -454,6 +516,8 @@ export const TRACKS = [
             explanation: [{ type: "text", value: "json.load() reads a JSON file and converts it into a Python dictionary or list. It's the standard way to parse structured data." }],
             startingCode: "",
             solution: 'import json\nwith open("data.json") as f:\n    print(json.load(f))',
+            maxLines: 4,
+            maxTime: 1,
           },
         ],
       },
@@ -470,6 +534,8 @@ export const TRACKS = [
             explanation: [{ type: "text", value: "try lets you test code that might raise an error. except catches specific exceptions so the program doesn't crash." }],
             startingCode: "",
             solution: 'try:\n    print(int("abc"))\nexcept ValueError:\n    print("Error")',
+            maxLines: 5,
+            maxTime: 1,
           },
           {
             id: 40,
@@ -479,6 +545,8 @@ export const TRACKS = [
             explanation: [{ type: "text", value: "You can add multiple except blocks to handle different error types differently. Only the matching handler runs." }],
             startingCode: "",
             solution: 'try:\n    result = int("x") / 0\nexcept ValueError:\n    print("ValueError")\nexcept ZeroDivisionError:\n    print("ZeroDivisionError")',
+            maxLines: 6,
+            maxTime: 1,
           },
           {
             id: 41,
@@ -488,6 +556,8 @@ export const TRACKS = [
             explanation: [{ type: "text", value: "finally always runs after try/except, whether an error occurred or not. It's typically used for cleanup like closing files." }],
             startingCode: "",
             solution: 'try:\n    10 / 0\nexcept ZeroDivisionError:\n    print("Error")\nfinally:\n    print("Done")',
+            maxLines: 6,
+            maxTime: 1,
           },
         ],
       },
@@ -504,6 +574,8 @@ export const TRACKS = [
             explanation: [{ type: "text", value: "import math gives access to math functions like sqrt, sin, and constants like pi. You call them with math.name." }],
             startingCode: "",
             solution: "import math\nprint(math.sqrt(16))",
+            maxLines: 3,
+            maxTime: 1,
           },
           {
             id: 43,
@@ -513,6 +585,8 @@ export const TRACKS = [
             explanation: [{ type: "text", value: "from ... import ... brings only specific names into the namespace, so you can call them directly without the module prefix." }],
             startingCode: "",
             solution: "from random import randint\nprint(randint(1, 10))",
+            maxLines: 3,
+            maxTime: 1,
           },
           {
             id: 44,
@@ -522,10 +596,9 @@ export const TRACKS = [
             explanation: [{ type: "text", value: "import ... as ... lets you give a module a shorter alias, making repeated calls more concise." }],
             startingCode: "",
             solution: "import datetime as dt\nprint(dt.datetime.now())",
+            maxLines: 3,
+            maxTime: 1,
           },
-        ],
-        challenges: [
-          { id: 5, name: "Modules Practice" },
         ],
       },
     ],
