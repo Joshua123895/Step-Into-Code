@@ -262,7 +262,7 @@ export default function LevelPage() {
             {testFailure.input !== undefined && testFailure.input !== "" && (
               <div className="rounded-xl p-3 mb-3 text-left" style={{ background: "#1e1e2e" }}>
                 <div className="text-xs font-bold mb-1" style={{ color: "#9CA3AF" }}>INPUT</div>
-                <pre className="text-xs font-mono m-0" style={{ color: "#CDD6F4", whiteSpace: "pre-wrap" }}>{testFailure.input}</pre>
+                <pre className="text-xs font-mono m-0" style={{ color: "#CDD6F4", whiteSpace: "pre-wrap" }}>{Array.isArray(testFailure.input) ? testFailure.input.join("\n") : testFailure.input}</pre>
               </div>
             )}
 
@@ -283,7 +283,7 @@ export default function LevelPage() {
         </div>
       )}
 
-      <div key={levelId} className="h-screen pt-24 pb-8 px-4 relative z-10 overflow-hidden">
+      <div key={levelId} className="lg:h-screen lg:overflow-hidden pt-24 pb-8 px-4 relative z-10">
         <div className="max-w-6xl mx-auto">
           <button
             onClick={() => navigate(`/tracks/${trackName}/chapters/${chapterId}`)}
@@ -296,47 +296,50 @@ export default function LevelPage() {
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
             <div className="lg:col-span-3">
               <div
-                className="rounded-2xl p-5 overflow-y-auto"
-                style={{ background: "#fff", border: "2px solid #E5E7EB", maxHeight: "calc(100vh - 10rem)" }}
+                className="rounded-2xl p-5 lg:sticky lg:max-h-[calc(100vh-10rem)]"
+                style={{ background: "#fff", border: "2px solid #E5E7EB", top: "6rem", display: "flex", flexDirection: "column" }}
               >
-                <div
-                  className="flex items-center justify-between mb-3"
-                >
-                  <span
-                    className="text-xs font-bold uppercase tracking-wider"
-                    style={{ color: "#9CA3AF" }}
+                <div>
+                  <div
+                    className="flex items-center justify-between mb-3"
                   >
-                    Level {level.id}
-                  </span>
-                  <div className="flex gap-0.5">
-                    {hasPreviousLevel && (
-                      <button
-                        onClick={() => navigate(`/tracks/${trackName}/chapters/${chapterId}/levels/${chapter.levels[levelIndex - 1].id}`)}
-                        className="flex items-center justify-center transition-all duration-100 hover:brightness-110 active:translate-y-0.5"
-                        style={{ width: 28, height: 28, borderRadius: 8, background: "#F7F3E9", border: "1.5px solid #D1D5DB", color: "#9CA3AF" }}
-                      >
-                        <span style={{ fontSize: 24, lineHeight: 1, transform: "translate(-0.5px, -3px)" }}>‹</span>
-                      </button>
-                    )}
-                    {hasNextLevel && (
-                      <button
-                        onClick={() => navigate(`/tracks/${trackName}/chapters/${chapterId}/levels/${chapter.levels[levelIndex + 1].id}`)}
-                        className="flex items-center justify-center transition-all duration-100 hover:brightness-110 active:translate-y-0.5"
-                        style={{ width: 28, height: 28, borderRadius: 8, background: "#F7F3E9", border: "1.5px solid #D1D5DB", color: "#9CA3AF" }}
-                      >
-                        <span style={{ fontSize: 24, lineHeight: 1, transform: "translate(0.5px, -3px)" }}>›</span>
-                      </button>
-                    )}
+                    <span
+                      className="text-xs font-bold uppercase tracking-wider"
+                      style={{ color: "#9CA3AF" }}
+                    >
+                      Level {level.id}
+                    </span>
+                    <div className="flex gap-0.5">
+                      {hasPreviousLevel && (
+                        <button
+                          onClick={() => navigate(`/tracks/${trackName}/chapters/${chapterId}/levels/${chapter.levels[levelIndex - 1].id}`)}
+                          className="flex items-center justify-center transition-all duration-100 hover:brightness-110 active:translate-y-0.5"
+                          style={{ width: 28, height: 28, borderRadius: 8, background: "#F7F3E9", border: "1.5px solid #D1D5DB", color: "#9CA3AF" }}
+                        >
+                          <span style={{ fontSize: 24, lineHeight: 1, transform: "translate(-0.5px, -3px)" }}>‹</span>
+                        </button>
+                      )}
+                      {hasNextLevel && (
+                        <button
+                          onClick={() => navigate(`/tracks/${trackName}/chapters/${chapterId}/levels/${chapter.levels[levelIndex + 1].id}`)}
+                          className="flex items-center justify-center transition-all duration-100 hover:brightness-110 active:translate-y-0.5"
+                          style={{ width: 28, height: 28, borderRadius: 8, background: "#F7F3E9", border: "1.5px solid #D1D5DB", color: "#9CA3AF" }}
+                        >
+                          <span style={{ fontSize: 24, lineHeight: 1, transform: "translate(0.5px, -3px)" }}>›</span>
+                        </button>
+                      )}
+                    </div>
                   </div>
+                  <h2
+                    className="text-xl font-black mb-3"
+                    style={{ color: "#2F2F2F", fontFamily: "'Courier New', monospace" }}
+                  >
+                    {level.name}
+                  </h2>
                 </div>
-                <h2
-                  className="text-xl font-black mb-3"
-                  style={{ color: "#2F2F2F", fontFamily: "'Courier New', monospace" }}
-                >
-                  {level.name}
-                </h2>
 
-                {isCompleted && currentStars > 0 && (
+                <div className="flex-1 overflow-y-auto min-h-0" style={{ scrollbarWidth: "thin" }}>
+                  {isCompleted && currentStars > 0 && (
                   <div
                     className="rounded-xl p-3 mb-4 flex items-center justify-center gap-1"
                     style={{ background: "#E9B44C10", border: "1.5px solid #E9B44C40" }}
@@ -374,7 +377,7 @@ export default function LevelPage() {
                   </p>
                 </div>
 
-                {level.explanation ? (
+                {level.explanation && (
                   <div
                     className="rounded-xl p-4 mb-4"
                     style={{ background: "#7AA2F710", border: "1.5px solid #7AA2F740" }}
@@ -397,11 +400,35 @@ export default function LevelPage() {
                         </code>
                       ) : (
                         <span key={i}>{seg.value}</span>
-                      )
-                    )}
+                      ))}
                     </p>
                   </div>
-                ) : null}
+                )}
+                {!level.explanation && level.example && (
+                  <div
+                    className="rounded-xl p-4 mb-4"
+                    style={{ background: "#6AAE6F10", border: "1.5px solid #6AAE6F30" }}
+                  >
+                    <div
+                      className="text-xs font-bold mb-2"
+                      style={{ color: "#6AAE6F" }}
+                    >
+                      🧪 EXAMPLE
+                    </div>
+                    <div className="text-sm" style={{ color: "#374151" }}>
+                      <div className="mb-1">
+                        <span className="font-bold" style={{ color: "#9CA3AF" }}>Input:</span>
+                        <pre className="text-xs font-mono mt-1 mb-0" style={{ color: "#4B5563", whiteSpace: "pre-wrap" }}>
+                          {Array.isArray(level.example.input) ? level.example.input.join("\n") : level.example.input}
+                        </pre>
+                      </div>
+                      <div>
+                        <span className="font-bold" style={{ color: "#9CA3AF" }}>Output:</span>
+                        <pre className="text-xs font-mono mt-1 mb-0" style={{ color: "#4B5563", whiteSpace: "pre-wrap" }}>{level.example.output}</pre>
+                      </div>
+                    </div>
+                  </div>
+                )}
 
                 {showHint ? (
                   <div
@@ -415,7 +442,7 @@ export default function LevelPage() {
                       💡 HINT
                     </div>
                     <p className="text-sm" style={{ color: "#374151" }}>
-                      {level.hint.map((seg, i) =>
+                      {level.hint && level.hint.map((seg, i) =>
                         seg.type === "code" ? (
 <code
                           key={i}
@@ -432,18 +459,22 @@ export default function LevelPage() {
                   </div>
                 ) : null}
 
-                <div className="flex flex-col gap-2">
+                </div>
+
+                <div className="flex flex-col gap-2 pt-3" style={{ borderTop: "1px solid #E5E7EB" }}>
                   <PixelButton onClick={handleRun} size="md" variant="primary">
                     Submit Code
                   </PixelButton>
 
-                  <PixelButton
-                    onClick={handleHintToggle}
-                    size="md"
-                    variant="accent"
-                  >
-                    {showHint ? "Hide Hint" : "💡 Hint"}
-                  </PixelButton>
+                  {level.hint && level.hint.length > 0 && (
+                    <PixelButton
+                      onClick={handleHintToggle}
+                      size="md"
+                      variant="accent"
+                    >
+                      {showHint ? "Hide Hint" : "💡 Hint"}
+                    </PixelButton>
+                  )}
 
                 </div>
               </div>
@@ -459,8 +490,8 @@ export default function LevelPage() {
 
             <div className="lg:col-span-3">
               <div
-                className="overflow-y-auto space-y-4"
-                style={{ maxHeight: "calc(100vh - 10rem)" }}
+                className="lg:sticky lg:max-h-[calc(100vh-10rem)] lg:overflow-y-auto space-y-4"
+                style={{ top: "6rem" }}
               >
                 <div
                   className="rounded-2xl p-5"

@@ -29,37 +29,31 @@ export default function Navbar() {
         </span>
       </button>
 
-      <div className="flex items-center gap-6">
+      <div className="flex items-center gap-1">
         <button
           onClick={() => navigate("/tracks")}
-          className="text-sm font-medium transition-colors"
+          className="px-4 py-2 text-sm font-medium rounded-lg transition-all duration-100 hover:brightness-110"
           style={{
-            color: isActive("/tracks") ? "#6AAE6F" : "#B5B5B5",
-            fontFamily: "system-ui, sans-serif",
+            background: isActive("/tracks") ? "#6AAE6F20" : "transparent",
+            color: isActive("/tracks") ? "#6AAE6F" : "#9CA3AF",
+            fontFamily: "'Courier New', monospace",
+            letterSpacing: "0.03em",
           }}
         >
           Tracks
         </button>
         <button
           onClick={() => navigate("/tracks/python")}
-          className="text-sm font-medium transition-colors"
+          className="px-4 py-2 text-sm font-medium rounded-lg transition-all duration-100 hover:brightness-110"
           style={{
-            color: isActive("/tracks/python") ? "#6AAE6F" : "#B5B5B5",
+            background: isActive("/tracks/python") ? "#6AAE6F20" : "transparent",
+            color: isActive("/tracks/python") ? "#6AAE6F" : "#9CA3AF",
+            fontFamily: "'Courier New', monospace",
+            letterSpacing: "0.03em",
           }}
         >
           Chapters
         </button>
-
-        <div
-          className="w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold border-2"
-          style={{
-            background: "#6AAE6F20",
-            borderColor: "#6AAE6F",
-            color: "#6AAE6F",
-          }}
-        >
-          A
-        </div>
       </div>
     </nav>
   );

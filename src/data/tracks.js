@@ -196,7 +196,7 @@ export const TRACKS = [
             solution: 'name = input()\nage = int(input())\nprint(f"{name} is {age} years old")',
             tests: [
               {
-                input: "Alex\n18",
+                input: ["Alex", "18"],
                 expected: "Alex is 18 years old\n",
               },
             ],
@@ -207,30 +207,25 @@ export const TRACKS = [
           {
             name: "The Adventurer's Passport",
             objective: [
-              { type: "text", value: "Read a traveler's name and age, then print:" },
-              { type: "code", value: "Welcome, {name}!" },
-              { type: "text", value: " and " },
-              { type: "code", value: "You are {age} years old." },
+              { type: "text", value: "Read a traveler's name, age, and city, then print three lines using f-strings:" },
+              { type: "code", value: "Name: {name}" },
+              { type: "text", value: ", " },
+              { type: "code", value: "Age: {age}" },
+              { type: "text", value: ", and " },
+              { type: "code", value: "City: {city}" },
+              { type: "text", value: "." },
             ],
-            hint: [
-              { type: "text", value: "Use two inputs and two f-strings." },
-            ],
-            explanation: [
-              { type: "text", value: "This challenge combines everything learned in this chapter: " },
-              { type: "code", value: "input()" },
-              { type: "text", value: ", variables, " },
-              { type: "code", value: "int()" },
-              { type: "text", value: ", and formatted output." },
-            ],
+            example: { input: ["Alice", "25", "Paris"], output: "Name: Alice\nAge: 25\nCity: Paris\n" },
             startingCode: "",
-            solution: 'name = input()\nage = int(input())\nprint(f"Welcome, {name}!")\nprint(f"You are {age} years old.")',
+            solution: 'name = input()\nage = int(input())\ncity = input()\nprint(f"Name: {name}")\nprint(f"Age: {age}")\nprint(f"City: {city}")',
             tests: [
               {
-                input: "Alice\n20",
-                expected: "Welcome, Alice!\nYou are 20 years old.\n",
+                input: ["Alice", "20", "London"],
+                expected: "Name: Alice\nAge: 20\nCity: London\n",
               },
+              { input: ["Bob", "0", "NYC"], expected: "Name: Bob\nAge: 0\nCity: NYC\n" },
             ],
-            maxLines: 4,
+            maxLines: 6,
             maxTime: 1,
           },
         ],
@@ -432,7 +427,7 @@ export const TRACKS = [
             solution: 'name = input()\nage = int(input())\nprint(f"{name} is level {age}")',
             tests: [
               {
-                input: "Mage\n12",
+                input: ["Mage", "12"],
                 expected: "Mage is level 12\n",
               },
             ],
@@ -443,23 +438,23 @@ export const TRACKS = [
           {
             name: "Data Collector",
             objective: [
-              { type: "text", value: "Read a name, age, and whether a player is ready. Then print all three values." },
+              { type: "text", value: "Read a name (string), age (int), and score (int). Print the type of each variable using " },
+              { type: "code", value: "type()" },
+              { type: "text", value: ", then print all three values separated by " },
+              { type: "code", value: " | " },
+              { type: "text", value: "." },
             ],
-            hint: [
-              { type: "text", value: "Use variables and an f-string." },
-            ],
-            explanation: [
-              { type: "text", value: "This challenge combines strings, integers, booleans, variables, conversion, and formatted output." },
-            ],
+            example: { input: ["Alice", "25", "90"], output: "<class 'str'>\n<class 'int'>\n<class 'int'>\nAlice | 25 | 90\n" },
             startingCode: "",
-            solution: 'name = input()\nage = int(input())\nready = input()\nprint(f"{name} | {age} | {ready}")',
+            solution: 'name = input()\nage = int(input())\nscore = int(input())\nprint(type(name))\nprint(type(age))\nprint(type(score))\nprint(f"{name} | {age} | {score}")',
             tests: [
               {
-                input: "Alex\n18\nTrue",
-                expected: "Alex | 18 | True\n",
+                input: ["Alice", "25", "90"],
+                expected: "<class 'str'>\n<class 'int'>\n<class 'int'>\nAlice | 25 | 90\n",
               },
+              { input: ["", "-5", "0"], expected: "<class 'str'>\n<class 'int'>\n<class 'int'>\n | -5 | 0\n" },
             ],
-            maxLines: 4,
+            maxLines: 7,
             maxTime: 1,
           },
         ]
@@ -668,29 +663,25 @@ export const TRACKS = [
           {
             name: "Treasure Calculator",
             objective: [
-              { type: "text", value: "Read two integers and print their sum, product, and whether the first number is greater than the second." },
+              { type: "text", value: "Read three integers (a, b, c). Print their sum, product, whether " },
+              { type: "code", value: "a > b and b > c" },
+              { type: "text", value: ", and the remainder when the sum is divided by 3." },
             ],
-            hint: [
-              { type: "text", value: "Use " },
-              { type: "code", value: "+" },
-              { type: "text", value: ", " },
-              { type: "code", value: "*" },
-              { type: "text", value: ", and " },
-              { type: "code", value: ">" },
-              { type: "text", value: "." },
-            ],
-            explanation: [
-              { type: "text", value: "This challenge combines arithmetic operations, comparisons, variables, and formatted output." },
-            ],
+            example: { input: ["10", "5", "3"], output: "18\n150\nTrue\n0\n" },
             startingCode: "",
-            solution: 'a = int(input())\nb = int(input())\nprint(a + b)\nprint(a * b)\nprint(a > b)',
+            solution: "a = int(input())\nb = int(input())\nc = int(input())\ns = a + b + c\np = a * b * c\nm = a > b and b > c\nr = s % 3\nprint(s)\nprint(p)\nprint(m)\nprint(r)",
             tests: [
               {
-                input: "10\n5",
-                expected: "15\n50\nTrue\n",
+                input: ["10", "5", "3"],
+                expected: "18\n150\nTrue\n0\n",
               },
+              {
+                input: ["3", "8", "2"],
+                expected: "13\n48\nFalse\n1\n",
+              },
+              { input: ["0", "-5", "10"], expected: "5\n0\nFalse\n2\n" },
             ],
-            maxLines: 5,
+            maxLines: 10,
             maxTime: 1,
           },
         ]
@@ -889,29 +880,24 @@ export const TRACKS = [
             name: "The Castle Gate",
             objective: [
               { type: "text", value: "A guard allows travelers into the castle." },
-              { type: "text", value: " Read an age and print " },
+              { type: "text", value: " Read an age and whether they have a permit (yes/no). Print " },
               { type: "code", value: '"Welcome"' },
-              { type: "text", value: " if the traveler is at least " },
-              { type: "code", value: "18" },
+              { type: "text", value: " if age ≥ 18 OR permit is " },
+              { type: "code", value: '"yes"' },
               { type: "text", value: ", otherwise print " },
               { type: "code", value: '"Come Back Later"' },
               { type: "text", value: "." },
             ],
-            hint: [
-              { type: "text", value: "Use an " },
-              { type: "code", value: "if-else" },
-              { type: "text", value: " statement." },
-            ],
-            explanation: [
-              { type: "text", value: "This challenge combines input, comparisons, and conditional branching." },
-            ],
+            example: { input: ["20", "no"], output: "Welcome\n" },
             startingCode: "",
-            solution: 'age = int(input())\nif age >= 18:\n    print("Welcome")\nelse:\n    print("Come Back Later")',
+            solution: 'age = int(input())\npermit = input()\nif age >= 18 or permit == "yes":\n    print("Welcome")\nelse:\n    print("Come Back Later")',
             tests: [
-              { input: "20", expected: "Welcome\n" },
-              { input: "12", expected: "Come Back Later\n" },
+              { input: ["20", "no"], expected: "Welcome\n" },
+              { input: ["16", "yes"], expected: "Welcome\n" },
+              { input: ["16", "no"], expected: "Come Back Later\n" },
+              { input: ["17", "yes"], expected: "Welcome\n" },
             ],
-            maxLines: 5,
+            maxLines: 6,
             maxTime: 1,
           },
         ]
@@ -1120,35 +1106,25 @@ export const TRACKS = [
           {
             name: "Training Grounds",
             objective: [
-              { type: "text", value: "A warrior trains for " },
+              { type: "text", value: "Read a number " },
               { type: "code", value: "n" },
-              { type: "text", value: " days. Read " },
-              { type: "code", value: "n" },
-              { type: "text", value: " and print the numbers from " },
-              { type: "code", value: "1" },
+              { type: "text", value: " and print its multiplication table from " },
+              { type: "code", value: "n * 1" },
               { type: "text", value: " to " },
-              { type: "code", value: "n" },
-              { type: "text", value: "." },
+              { type: "code", value: "n * 10" },
+              { type: "text", value: " using a loop." },
             ],
-            hint: [
-              { type: "text", value: "Use " },
-              { type: "code", value: "range()" },
-              { type: "text", value: " and a " },
-              { type: "code", value: "for" },
-              { type: "text", value: " loop." },
-            ],
-            explanation: [
-              { type: "text", value: "This challenge combines input, loops, variables, and counting." },
-            ],
+            example: { input: ["5"], output: "5\n10\n15\n20\n25\n30\n35\n40\n45\n50\n" },
             startingCode: "",
-            solution: "n = int(input())\nfor i in range(1, n + 1):\n    print(i)",
+            solution: "n = int(input())\nfor i in range(1, 11):\n    print(n * i)",
             tests: [
               {
-                input: "4",
-                expected: "1\n2\n3\n4\n",
+                input: ["5"],
+                expected: "5\n10\n15\n20\n25\n30\n35\n40\n45\n50\n",
               },
+              { input: ["1"], expected: "1\n2\n3\n4\n5\n6\n7\n8\n9\n10\n" },
             ],
-            maxLines: 3,
+            maxLines: 4,
             maxTime: 1,
           },
         ]
@@ -1360,26 +1336,25 @@ export const TRACKS = [
           {
             name: "Inventory Manager",
             objective: [
-              { type: "text", value: "An adventurer has items " },
-              { type: "code", value: '["Sword", "Shield", "Potion"]' },
-              { type: "text", value: ". Print the first item and the total number of items." },
+              { type: "text", value: "Read 3 item names using a " },
+              { type: "code", value: "for" },
+              { type: "text", value: " loop, store them in a list with " },
+              { type: "code", value: ".append()" },
+              { type: "text", value: ", then print each item with its index (e.g. " },
+              { type: "code", value: "0: Sword" },
+              { type: "text", value: ")." },
             ],
-            hint: [
-              { type: "text", value: "Use indexing and " },
-              { type: "code", value: "len()" },
-              { type: "text", value: "." },
-            ],
-            explanation: [
-              { type: "text", value: "This challenge combines list creation, indexing, and collection size." },
-            ],
-            startingCode: 'items = ["Sword", "Shield", "Potion"]\n',
-            solution: "print(items[0])\nprint(len(items))",
+            example: { input: ["Sword", "Shield", "Potion"], output: "0: Sword\n1: Shield\n2: Potion\n" },
+            startingCode: "",
+            solution: "items = []\nfor i in range(3):\n    items.append(input())\nfor i in range(len(items)):\n    print(f\"{i}: {items[i]}\")",
             tests: [
               {
-                expected: "Sword\n3\n",
+                input: ["Sword", "Shield", "Potion"],
+                expected: "0: Sword\n1: Shield\n2: Potion\n",
               },
+              { input: ["a", "b", "c"], expected: "0: a\n1: b\n2: c\n" },
             ],
-            maxLines: 2,
+            maxLines: 7,
             maxTime: 1,
           },
         ]
@@ -1491,7 +1466,7 @@ export const TRACKS = [
               { type: "code", value: "def add(a, b):" },
               { type: "text", value: " that " },
               { type: "code", value: "return" },
-              { type: "text", value: "s the sum. Call it and print the result." },
+              { type: "text", value: "s the sum. Call it and print the result of 3 and 7." },
             ],
             hint: [
               { type: "text", value: "Use " },
@@ -1567,63 +1542,22 @@ export const TRACKS = [
             name: "Potion Brewer",
             objective: [
               { type: "text", value: "Create a function " },
-              { type: "code", value: "brew(amount)" },
-              { type: "text", value: " that returns " },
-              { type: "code", value: "amount * 3" },
-              { type: "text", value: ". Call it with " },
-              { type: "code", value: "4" },
-              { type: "text", value: " and print the result." },
+              { type: "code", value: "brew(potions)" },
+              { type: "text", value: " that takes a list of amounts and returns their sum using a loop. Then read 3 potion amounts, store them in a list, call " },
+              { type: "code", value: "brew()" },
+              { type: "text", value: ", and print the total." },
             ],
-            hint: [
-              { type: "text", value: "This challenge combines parameters, return values, and function calls." },
-            ],
-            explanation: [
-              { type: "text", value: "Functions allow complex behavior to be packaged into reusable pieces." },
-            ],
+            example: { input: ["5", "10", "15"], output: "30\n" },
             startingCode: "",
-            solution: "def brew(amount):\n    return amount * 3\n\nprint(brew(4))",
-            tests: [{ expected: "12\n" }],
-            maxLines: 4,
+            solution: "def brew(potions):\n    total = 0\n    for p in potions:\n        total += p\n    return total\n\namounts = []\nfor i in range(3):\n    amounts.append(int(input()))\nprint(brew(amounts))",
+            tests: [
+              { input: ["5", "10", "15"], expected: "30\n" },
+              { input: ["0", "0", "0"], expected: "0\n" },
+            ],
+            maxLines: 10,
             maxTime: 1,
           },
         ]
-      },
-      {
-        name: "Practices",
-        icon: trophyIcon,
-        levels: [
-          {
-            name: "Calculator Function",
-            objective: [{ type: "text", value: "Define " }, { type: "code", value: "def calculate(a, b, op):" }, { type: "text", value: " that returns " }, { type: "code", value: "a + b" }, { type: "text", value: " if op is " }, { type: "code", value: '"add"' }, { type: "text", value: ", else " }, { type: "code", value: "a - b" }, { type: "text", value: ". Call " }, { type: "code", value: 'calculate(10, 5, "add")' }, { type: "text", value: "." }],
-            hint: [{ type: "text", value: 'Use if op == "add": return a + b' }],
-            explanation: [{ type: "text", value: "Functions can contain conditional logic. By combining parameters, if/else, and return, you can build flexible utilities." }],
-            startingCode: "",
-            solution: 'def calculate(a, b, op):\n    if op == "add":\n        return a + b\n    else:\n        return a - b\nprint(calculate(10, 5, "add"))',
-            maxLines: 7,
-            maxTime: 1,
-          },
-          {
-            name: "List Filter",
-            objective: [{ type: "text", value: "Define " }, { type: "code", value: "def get_evens(nums):" }, { type: "text", value: " that returns a list of even numbers from " }, { type: "code", value: "nums" }, { type: "text", value: ". Use " }, { type: "code", value: "[1, 2, 3, 4, 5, 6]" }, { type: "text", value: "." }],
-            hint: [{ type: "text", value: "Use a for loop and if n % 2 == 0" }],
-            explanation: [{ type: "text", value: "A common pattern is to iterate over a list, test each element with a condition, and collect matching items into a new list." }],
-            startingCode: "",
-            solution: "def get_evens(nums):\n    result = []\n    for n in nums:\n        if n % 2 == 0:\n            result.append(n)\n    return result\nprint(get_evens([1, 2, 3, 4, 5, 6]))",
-            maxLines: 8,
-            maxTime: 1,
-          },
-          {
-            name: "Word Counter",
-            objective: [{ type: "text", value: "Read a line of text with " }, { type: "code", value: "input()" }, { type: "text", value: ", then count how many times " }, { type: "code", value: '"the"' }, { type: "text", value: " appears using " }, { type: "code", value: ".count()" }, { type: "text", value: ". Print the count." }],
-            hint: [{ type: "text", value: 'Use: text.count("the")' }],
-            explanation: [{ type: "text", value: "The .count() method returns how many times a substring appears in a string. It's case-sensitive by default." }],
-            startingCode: 'text = input()\n',
-            solution: 'print(text.count("the"))',
-            tests: [{ input: "the cat and the dog", expected: "2\n" }],
-            maxLines: 2,
-            maxTime: 1,
-          },
-        ],
       },
       {
         name: "OOP",
@@ -1724,14 +1658,14 @@ export const TRACKS = [
               { type: "text", value: "Attributes store information inside objects." }
             ],
             startingCode:
-      `class Dog:
-          def __init__(self, name):
-              self.name = name
+              `class Dog:
+                  def __init__(self, name):
+                      self.name = name
 
-      `,
+              `,
             solution:
-      `dog = Dog("Rex")
-      print(dog.name)`,
+              `dog = Dog("Rex")
+              print(dog.name)`,
             tests: [
               { expected: "Rex\n" }
             ],
@@ -1762,15 +1696,15 @@ export const TRACKS = [
             ],
             startingCode: "",
             solution:
-      `class Dog:
-          def __init__(self, name):
-              self.name = name
+              `class Dog:
+                  def __init__(self, name):
+                      self.name = name
 
-          def bark(self):
-              print("Woof!")
+                  def bark(self):
+                      print("Woof!")
 
-      dog = Dog("Rex")
-      dog.bark()`,
+              dog = Dog("Rex")
+              dog.bark()`,
             tests: [
               { expected: "Woof!\n" }
             ],
@@ -1799,15 +1733,15 @@ export const TRACKS = [
             ],
             startingCode: "",
             solution:
-      `class Dog:
-          def __init__(self, name):
-              self.name = name
+              `class Dog:
+                  def __init__(self, name):
+                      self.name = name
 
-          def bark(self):
-              print(f"{self.name} says Woof!")
+                  def bark(self):
+                      print(f"{self.name} says Woof!")
 
-      dog = Dog("Rex")
-      dog.bark()`,
+              dog = Dog("Rex")
+              dog.bark()`,
             tests: [
               { expected: "Rex says Woof!\n" }
             ],
@@ -1854,18 +1788,18 @@ export const TRACKS = [
               { type: "text", value: "Child classes can replace inherited behavior." }
             ],
             startingCode:
-      `class Dog:
-          def bark(self):
-              print("Woof!")
+              `class Dog:
+                  def bark(self):
+                      print("Woof!")
 
-      `,
+              `,
             solution:
-      `class Puppy(Dog):
-          def bark(self):
-              print("Yip!")
+              `class Puppy(Dog):
+                  def bark(self):
+                      print("Yip!")
 
-      p = Puppy()
-      p.bark()`,
+              p = Puppy()
+              p.bark()`,
             tests: [
               { expected: "Yip!\n" }
             ],
@@ -1877,36 +1811,40 @@ export const TRACKS = [
             name: "Pet Simulator",
             objective: [
               { type: "text", value: "Create a class " },
-              { type: "code", value: "Cat" },
-              { type: "text", value: " with attribute " },
-              { type: "code", value: "name" },
-              { type: "text", value: " and method " },
-              { type: "code", value: "speak()" },
-              { type: "text", value: " that prints " },
-              { type: "code", value: '"Milo says Meow!"' },
-              { type: "text", value: "." }
+              { type: "code", value: "Character" },
+              { type: "text", value: " with " },
+              { type: "code", value: "__init__(self, name, health)" },
+              { type: "text", value: " storing both attributes, method " },
+              { type: "code", value: "take_damage(amount)" },
+              { type: "text", value: " that reduces health, and method " },
+              { type: "code", value: "is_alive()" },
+              { type: "text", value: " that returns " },
+              { type: "code", value: "self.health > 0" },
+              { type: "text", value: ". Create a character with 100 health, apply 30 then 20 damage, and print health and alive status." }
             ],
-            hint: [
-              { type: "text", value: "Combine constructors, attributes, and methods." }
-            ],
-            explanation: [
-              { type: "text", value: "This challenge reviews all OOP concepts learned in this chapter." }
-            ],
+            example: { input: [], output: "50\nTrue\n" },
             startingCode: "",
             solution:
-      `class Cat:
-          def __init__(self, name):
-              self.name = name
+              `class Character:
+                  def __init__(self, name, health):
+                      self.name = name
+                      self.health = health
 
-          def speak(self):
-              print(f"{self.name} says Meow!")
+                  def take_damage(self, amount):
+                      self.health -= amount
 
-      cat = Cat("Milo")
-      cat.speak()`,
+                  def is_alive(self):
+                      return self.health > 0
+
+              hero = Character("Hero", 100)
+              hero.take_damage(30)
+              hero.take_damage(20)
+              print(hero.health)
+              print(hero.is_alive())`,
             tests: [
-              { expected: "Milo says Meow!\n" }
+              { expected: "50\nTrue\n" }
             ],
-            maxLines: 9,
+            maxLines: 14,
             maxTime: 1,
           },
         ],
@@ -2097,24 +2035,17 @@ export const TRACKS = [
           {
             name: "Journal Keeper",
             objective: [
-              { type: "text", value: "Open " },
+              { type: "text", value: "Write three lines into " },
               { type: "code", value: '"journal.txt"' },
-              { type: "text", value: " in append mode and write " },
-              { type: "code", value: '"Today was great!\\n"' },
-              { type: "text", value: " into it." }
+              { type: "text", value: " using write mode, then open it again in read mode and " },
+              { type: "code", value: "print(f.read())" },
+              { type: "text", value: " to display the full contents." }
             ],
-            hint: [
-              { type: "text", value: "Combine " },
-              { type: "code", value: "with open()" },
-              { type: "text", value: " with append mode." }
-            ],
-            explanation: [
-              { type: "text", value: "This challenge reviews opening files, append mode, and writing text." }
-            ],
+            example: { input: [], output: "Day 1: Started the journey\nDay 2: Found a treasure map\nDay 3: Reached the destination\n" },
             startingCode: "",
             solution:
-      'with open("journal.txt", "a") as f:\n    f.write("Today was great!\\n")',
-            maxLines: 3,
+      'with open("journal.txt", "w") as f:\n    f.write("Day 1: Started the journey\\n")\n    f.write("Day 2: Found a treasure map\\n")\n    f.write("Day 3: Reached the destination\\n")\n\nwith open("journal.txt", "r") as f:\n    print(f.read())',
+            maxLines: 8,
             maxTime: 1,
           },
         ],
@@ -2271,30 +2202,27 @@ export const TRACKS = [
           {
             name: "Broken Calculator",
             objective: [
-              { type: "text", value: "Try converting " },
-              { type: "code", value: 'input()' },
-              { type: "text", value: " into an integer. If it fails, print " },
-              { type: "code", value: '"Invalid Number"' },
-              { type: "text", value: "." }
+              { type: "text", value: "Read two integers and divide the first by the second. Catch " },
+              { type: "code", value: "ValueError" },
+              { type: "text", value: " (print " },
+              { type: "code", value: '"Invalid number"' },
+              { type: "text", value: ") and " },
+              { type: "code", value: "ZeroDivisionError" },
+              { type: "text", value: " (print " },
+              { type: "code", value: '"Division by zero"' },
+              { type: "text", value: ")." }
             ],
-            hint: [
-              { type: "text", value: "Combine " },
-              { type: "code", value: "input()" },
-              { type: "text", value: " with " },
-              { type: "code", value: "try/except" },
-              { type: "text", value: "." }
-            ],
-            explanation: [
-              { type: "text", value: "This challenge combines user input, type conversion, and exception handling." }
-            ],
+            example: { input: ["10", "2"], output: "5.0\n" },
             startingCode: "",
             solution:
-      'try:\n    x = int(input())\n    print(x)\nexcept ValueError:\n    print("Invalid Number")',
+      'try:\n    a = int(input())\n    b = int(input())\n    print(a / b)\nexcept ValueError:\n    print("Invalid number")\nexcept ZeroDivisionError:\n    print("Division by zero")',
             tests: [
-              { input: "42", expected: "42\n" },
-              { input: "abc", expected: "Invalid Number\n" }
+              { input: ["10", "2"], expected: "5.0\n" },
+              { input: ["10", "0"], expected: "Division by zero\n" },
+              { input: ["abc", "2"], expected: "Invalid number\n" },
+              { input: ["-8", "4"], expected: "-2.0\n" },
             ],
-            maxLines: 5,
+            maxLines: 8,
             maxTime: 1,
           },
         ],
@@ -2458,28 +2386,217 @@ export const TRACKS = [
             name: "Random Adventurer",
             objective: [
               { type: "text", value: "Import " },
-              { type: "code", value: "choice" },
-              { type: "text", value: " from " },
-              { type: "code", value: "random" },
-              { type: "text", value: ", create the list " },
-              { type: "code", value: '["Warrior", "Mage", "Archer"]' },
-              { type: "text", value: " and print a random element from it." }
+              { type: "code", value: "math" },
+              { type: "text", value: ", read a radius as a " },
+              { type: "code", value: "float" },
+              { type: "text", value: ", and print the area (" },
+              { type: "code", value: "pi * r ** 2" },
+              { type: "text", value: ") and circumference (" },
+              { type: "code", value: "2 * pi * r" },
+              { type: "text", value: ")." }
             ],
-            hint: [
-              { type: "text", value: "Use " },
-              { type: "code", value: "choice(classes)" },
-              { type: "text", value: "." }
-            ],
-            explanation: [
-              { type: "text", value: "This challenge combines imports, lists, and function calls." }
-            ],
+            example: { input: ["5"], output: "78.53981633974483\n31.41592653589793\n" },
             startingCode: "",
             solution:
-      'from random import choice\n\nclasses = ["Warrior", "Mage", "Archer"]\nprint(choice(classes))',
+      'import math\nr = float(input())\narea = math.pi * r ** 2\ncirc = 2 * math.pi * r\nprint(area)\nprint(circ)',
             tests: [
-              { expectAnyOf: ["Warrior\n", "Mage\n", "Archer\n"] },
+              { input: ["5"], expected: "78.53981633974483\n31.41592653589793\n" },
+              { input: ["0"], expected: "0.0\n0.0\n" },
+              { input: ["1"], expected: "3.141592653589793\n6.283185307179586\n" },
             ],
-            maxLines: 4,
+            maxLines: 6,
+            maxTime: 1,
+          },
+        ],
+      },
+      {
+        name: "Challenges",
+        icon: trophyIcon,
+        levels: [
+          {
+            name: "Temperature Analyzer",
+            objective: [
+              { type: "text", value: "Read 7 daily temperatures as floats. Find and print the highest temperature, the lowest temperature, the average temperature, and how many days were above the average. Use a list to store the temperatures, a loop to read them, and another loop to compute stats. Round the float values in 3 decimal places" },
+            ],
+            example: { input: ["25.5", "30", "28", "22.5", "35", "20", "32"], output: "35.000\n20.000\n27.571\n4\n" },
+            startingCode: "",
+            solution: "temps = []\nfor i in range(7):\n    temps.append(float(input()))\n\ntotal = 0\nlow = temps[0]\nhigh = temps[0]\nfor t in temps:\n    total += t\n    if t < low:\n        low = t\n    if t > high:\n        high = t\n\navg = total / 7\nabove = 0\nfor t in temps:\n    if t > avg:\n        above += 1\n\nprint(high)\nprint(low)\nprint(avg)\nprint(above)",
+            tests: [
+              { input: ["25.5", "30", "28", "22.5", "35", "20", "32"], expected: "35.000\n20.000\n27.571\n4\n" },
+              { input: ["10", "10", "10", "10", "10", "10", "10"], expected: "10.000\n10.000\n10.000\n0\n" },
+              { input: ["0", "5", "10", "15", "20", "25", "30"], expected: "30.000\n0.000\n15.000\n3\n" },
+            ],
+            maxLines: 10,
+            maxTime: 1,
+          },
+
+          {
+            name: "Number Classifier",
+            objective: [
+              { type: "text", value: "Read 10 integers using a loop. Count how many are positive, negative, zero, even, and odd. Uses " },
+              { type: "code", value: "%" },
+              { type: "text", value: " for parity checking, " },
+              { type: "code", value: "if/elif/else" },
+              { type: "text", value: " for sign classification, and multiple counter variables." },
+            ],
+            example: { input: ["1", "-2", "0", "4", "-5", "6", "-7", "0", "9", "10"], output: "Positive: 5\nNegative: 3\nZero: 2\nEven: 6\nOdd: 4\n" },
+            startingCode: "",
+            solution:
+      'pos = 0\nneg = 0\nzero = 0\neven = 0\nodd = 0\n\nfor i in range(10):\n    n = int(input())\n    if n > 0:\n        pos += 1\n    elif n < 0:\n        neg += 1\n    else:\n        zero += 1\n    if n % 2 == 0:\n        even += 1\n    else:\n        odd += 1\n\nprint(f"Positive: {pos}")\nprint(f"Negative: {neg}")\nprint(f"Zero: {zero}")\nprint(f"Even: {even}")\nprint(f"Odd: {odd}")',
+            tests: [
+              { input: ["1", "-2", "0", "4", "-5", "6", "-7", "0", "9", "10"], expected: "Positive: 5\nNegative: 3\nZero: 2\nEven: 6\nOdd: 4\n" },
+              { input: ["0", "0", "0", "0", "0", "0", "0", "0", "0", "0"], expected: "Positive: 0\nNegative: 0\nZero: 10\nEven: 10\nOdd: 0\n" },
+              { input: ["2", "4", "6", "8", "10", "12", "14", "16", "18", "20"], expected: "Positive: 10\nNegative: 0\nZero: 0\nEven: 10\nOdd: 0\n" },
+            ],
+            maxLines: 10,
+            maxTime: 1,
+          },
+
+          {
+            name: "Shopping Receipt",
+            objective: [
+              { type: "text", value: "Read 3 item names and 3 prices (alternating). Store them in parallel lists. Print a numbered receipt. If the total exceeds 50, apply a 10% discount. Print the final total." },
+            ],
+            example: { input: ["Apple", "1.5", "Banana", "2", "Cherry", "3"], output: "Receipt:\n1. Apple - 1.5\n2. Banana - 2.0\n3. Cherry - 3.0\nTotal: 6.5\n" },
+            startingCode: "",
+            solution:
+      'names = []\nprices = []\nfor i in range(3):\n    names.append(input())\n    prices.append(float(input()))\n\ntotal = 0\nfor p in prices:\n    total += p\n\nprint("Receipt:")\nfor i in range(3):\n    print(f"{i+1}. {names[i]} - {prices[i]}")\n\nif total > 50:\n    total = total * 0.9\n    print(f"Discounted total: {total}")\nelse:\n    print(f"Total: {total}")',
+            tests: [
+              { input: ["Apple", "1.5", "Banana", "2", "Cherry", "3"], expected: "Receipt:\n1. Apple - 1.5\n2. Banana - 2.0\n3. Cherry - 3.0\nTotal: 6.5\n" },
+              { input: ["Laptop", "999", "Mouse", "25", "Keyboard", "45"], expected: "Receipt:\n1. Laptop - 999.0\n2. Mouse - 25.0\n3. Keyboard - 45.0\nDiscounted total: 962.1\n" },
+              { input: ["Bread", "0.5", "Milk", "1", "Eggs", "2.5"], expected: "Receipt:\n1. Bread - 0.5\n2. Milk - 1.0\n3. Eggs - 2.5\nTotal: 4.0\n" },
+            ],
+            maxLines: 10,
+            maxTime: 1,
+          },
+
+          {
+            name: "Grade Analyzer",
+            objective: [
+              { type: "text", value: "Define a function " },
+              { type: "code", value: "get_grade(score)" },
+              { type: "text", value: " that returns " },
+              { type: "code", value: '"A"' },
+              { type: "text", value: " (≥90), " },
+              { type: "code", value: '"B"' },
+              { type: "text", value: " (≥80), " },
+              { type: "code", value: '"C"' },
+              { type: "text", value: " (≥70), " },
+              { type: "code", value: '"D"' },
+              { type: "text", value: " (≥60), or " },
+              { type: "code", value: '"F"' },
+              { type: "text", value: " (<60). Read 5 student names and scores into parallel lists, compute the class average and highest score, then print the report." },
+            ],
+            example: { input: ["Alice", "95", "Bob", "83", "Charlie", "72", "Diana", "58", "Eve", "100"], output: "Average: 81.6\nHighest: 100\nAlice: A\nBob: B\nCharlie: C\nDiana: F\nEve: A\n" },
+            startingCode: "",
+            solution:
+      'def get_grade(score):\n    if score >= 90:\n        return "A"\n    elif score >= 80:\n        return "B"\n    elif score >= 70:\n        return "C"\n    elif score >= 60:\n        return "D"\n    else:\n        return "F"\n\nnames = []\nscores = []\nfor i in range(5):\n    names.append(input())\n    scores.append(int(input()))\n\ntotal = 0\nhighest = scores[0]\nfor s in scores:\n    total += s\n    if s > highest:\n        highest = s\n\navg = total / 5\nprint(f"Average: {avg}")\nprint(f"Highest: {highest}")\n\nfor i in range(5):\n    print(f"{names[i]}: {get_grade(scores[i])}")',
+            tests: [
+              { input: ["Alice", "95", "Bob", "83", "Charlie", "72", "Diana", "58", "Eve", "100"], expected: "Average: 81.6\nHighest: 100\nAlice: A\nBob: B\nCharlie: C\nDiana: F\nEve: A\n" },
+              { input: ["X", "40", "Y", "50", "Z", "60", "W", "70", "V", "80"], expected: "Average: 60.0\nHighest: 80\nX: F\nY: F\nZ: F\nW: D\nV: B\n" },
+            ],
+            maxLines: 15,
+            maxTime: 1,
+          },
+
+          {
+            name: "Even Number Collector",
+            objective: [
+              { type: "text", value: "Define a function " },
+              { type: "code", value: "filter_numbers(nums)" },
+              { type: "text", value: " that returns a dictionary with keys " },
+              { type: "code", value: '"evens"' },
+              { type: "text", value: " and " },
+              { type: "code", value: '"odds"' },
+              { type: "text", value: " containing lists of even and odd numbers. Read 8 integers, call the function, and print the count and sum for both evens and odds." },
+            ],
+            example: { input: ["1", "2", "3", "4", "5", "6", "7", "8"], output: "Evens: 4 Sum: 20\nOdds: 4 Sum: 16\n" },
+            startingCode: "",
+            solution:
+      'def filter_numbers(nums):\n    result = {"evens": [], "odds": []}\n    for n in nums:\n        if n % 2 == 0:\n            result["evens"].append(n)\n        else:\n            result["odds"].append(n)\n    return result\n\nnums = []\nfor i in range(8):\n    nums.append(int(input()))\n\ndata = filter_numbers(nums)\nevens = data["evens"]\nodds = data["odds"]\n\nsum_evens = 0\nfor e in evens:\n    sum_evens += e\n\nsum_odds = 0\nfor o in odds:\n    sum_odds += o\n\nprint(f"Evens: {len(evens)} Sum: {sum_evens}")\nprint(f"Odds: {len(odds)} Sum: {sum_odds}")',
+            tests: [
+              { input: ["1", "2", "3", "4", "5", "6", "7", "8"], expected: "Evens: 4 Sum: 20\nOdds: 4 Sum: 16\n" },
+              { input: ["2", "4", "6", "8", "10", "12", "14", "16"], expected: "Evens: 8 Sum: 72\nOdds: 0 Sum: 0\n" },
+              { input: ["1", "3", "5", "7", "9", "11", "13", "15"], expected: "Evens: 0 Sum: 0\nOdds: 8 Sum: 64\n" },
+            ],
+            maxLines: 15,
+            maxTime: 1,
+          },
+
+          {
+            name: "Safe Calculator",
+            objective: [
+              { type: "text", value: "Read an integer, an operator (+, -, *, /), and another integer. Use " },
+              { type: "code", value: "try/except" },
+              { type: "text", value: " to catch " },
+              { type: "code", value: "ValueError" },
+              { type: "text", value: " (invalid number) and " },
+              { type: "code", value: "ZeroDivisionError" },
+              { type: "text", value: ". Perform the correct operation with " },
+              { type: "code", value: "if/elif" },
+              { type: "text", value: " and print the result. If the operator is not recognized, print " },
+              { type: "code", value: '"Invalid operator"' },
+              { type: "text", value: "." },
+            ],
+            example: { input: ["10", "+", "5"], output: "15\n" },
+            startingCode: "",
+            solution:
+      'try:\n    a = int(input())\n    op = input()\n    b = int(input())\n    if op == "+":\n        print(a + b)\n    elif op == "-":\n        print(a - b)\n    elif op == "*":\n        print(a * b)\n    elif op == "/":\n        print(a / b)\n    else:\n        print("Invalid operator")\nexcept ValueError:\n    print("Invalid number")\nexcept ZeroDivisionError:\n    print("Division by zero")',
+            tests: [
+              { input: ["10", "+", "5"], expected: "15\n" },
+              { input: ["10", "/", "0"], expected: "Division by zero\n" },
+              { input: ["abc", "+", "5"], expected: "Invalid number\n" },
+            ],
+            maxLines: 15,
+            maxTime: 1,
+          },
+
+          {
+            name: "Random Adventurer",
+            objective: [
+              { type: "text", value: "Import " },
+              { type: "code", value: "random" },
+              { type: "text", value: ", define a function " },
+              { type: "code", value: "roll_stat()" },
+              { type: "text", value: " that returns the sum of two " },
+              { type: "code", value: "random.randint(1, 6)" },
+              { type: "text", value: " calls. Read the adventurer's name, generate 3 stats (strength, agility, intelligence), and print them formatted." },
+            ],
+            example: { input: ["Hero"], output: "Hero: STR=7 AGI=5 INT=9\n" },
+            startingCode: "",
+            solution:
+      'import random\n\ndef roll_stat():\n    return random.randint(1, 6) + random.randint(1, 6)\n\nname = input()\nstrength = roll_stat()\nagility = roll_stat()\nintelligence = roll_stat()\nprint(f"{name}: STR={strength} AGI={agility} INT={intelligence}")',
+            tests: [
+              { input: ["Hero"], expectMatch: "^\\w+: STR=\\d{1,2} AGI=\\d{1,2} INT=\\d{1,2}\\n$" },
+            ],
+            maxLines: 10,
+            maxTime: 1,
+          },
+
+          {
+            name: "Guild Registration",
+            objective: [
+              { type: "text", value: "Define a function " },
+              { type: "code", value: "get_rank(score)" },
+              { type: "text", value: " that returns " },
+              { type: "code", value: '"Elite"' },
+              { type: "text", value: " (≥90), " },
+              { type: "code", value: '"Veteran"' },
+              { type: "text", value: " (≥75), or " },
+              { type: "code", value: '"Novice"' },
+              { type: "text", value: " otherwise. Read 3 students into parallel lists (names and scores). Compute the average score and find the highest score using a loop. Then print the class average, highest score, and each student's name with their rank." },
+            ],
+            example: { input: ["Alice", "95", "Bob", "80", "Charlie", "60"], output: "Average: 78.33333333333333\nHighest: 95\nAlice: Elite\nBob: Veteran\nCharlie: Novice\n" },
+            startingCode: "",
+            solution:
+      'def get_rank(score):\n    if score >= 90:\n        return "Elite"\n    elif score >= 75:\n        return "Veteran"\n    else:\n        return "Novice"\n\nnames = []\nscores = []\nfor i in range(3):\n    names.append(input())\n    scores.append(int(input()))\n\ntotal = 0\nhighest = scores[0]\nfor s in scores:\n    total += s\n    if s > highest:\n        highest = s\n\navg = total / 3\nprint(f"Average: {avg}")\nprint(f"Highest: {highest}")\n\nfor i in range(3):\n    print(f"{names[i]}: {get_rank(scores[i])}")',
+            tests: [
+              {
+                input: ["Alice", "95", "Bob", "80", "Charlie", "60"],
+                expected: "Average: 78.33333333333333\nHighest: 95\nAlice: Elite\nBob: Veteran\nCharlie: Novice\n"
+              }
+            ],
+            maxLines: 20,
             maxTime: 1,
           },
         ],

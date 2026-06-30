@@ -30,7 +30,7 @@ export default function LevelCard({ level, onClick, stars }) {
     >
       <div className="flex items-center gap-3">
         <div
-          className="w-10 h-10 rounded-lg flex items-center justify-center text-lg font-bold shrink-0"
+          className="w-10 h-10 flex items-center justify-center text-lg font-bold shrink-0"
           style={{
             background: isCompleted
               ? "#67C58720"

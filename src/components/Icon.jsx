@@ -12,7 +12,6 @@ export default function Icon({ src, alt, size = 40, className = "" }) {
           height: size,
           background: "#6AAE6F15",
           border: "2px solid #6AAE6F30",
-          borderRadius: 12,
           color: "#6AAE6F",
           fontFamily: "'Courier New', monospace",
           fontSize: size * 0.35,
@@ -32,7 +31,6 @@ export default function Icon({ src, alt, size = 40, className = "" }) {
       style={{
         width: size,
         height: size,
-        borderRadius: 12,
         objectFit: "cover",
       }}
     />
