@@ -2371,6 +2371,9 @@ export const TRACKS = [
             ],
             startingCode: "",
             solution: "from random import randint\nprint(randint(1, 10))",
+            tests: [
+              { expectAnyOf: ["1\n", "2\n", "3\n", "4\n", "5\n", "6\n", "7\n", "8\n", "9\n", "10\n"] },
+            ],
             maxLines: 3,
             maxTime: 1,
           },
@@ -2419,6 +2422,9 @@ export const TRACKS = [
             ],
             startingCode: "",
             solution: "import datetime as dt\nprint(dt.datetime.now())",
+            tests: [
+              { expectMatch: "^\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}\\.\\d{6}\\n$" },
+            ],
             maxLines: 3,
             maxTime: 1,
           },
@@ -2470,6 +2476,9 @@ export const TRACKS = [
             startingCode: "",
             solution:
       'from random import choice\n\nclasses = ["Warrior", "Mage", "Archer"]\nprint(choice(classes))',
+            tests: [
+              { expectAnyOf: ["Warrior\n", "Mage\n", "Archer\n"] },
+            ],
             maxLines: 4,
             maxTime: 1,
           },

@@ -1,4 +1,4 @@
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, useParams } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import PixelParticles from "./components/PixelParticles";
 import HomePage from "./pages/HomePage";
@@ -6,6 +6,11 @@ import TrackPage from "./pages/TrackPage";
 import ChaptersPage from "./pages/ChaptersPage";
 import ChapterPage from "./pages/ChapterPage";
 import LevelPage from "./pages/LevelPage";
+
+function LevelPageWrapper() {
+  const { levelId } = useParams();
+  return <LevelPage key={levelId} />;
+}
 
 export default function App() {
   return (
@@ -62,7 +67,7 @@ export default function App() {
           <Route path="/tracks" element={<TrackPage />} />
           <Route path="/tracks/:trackName" element={<ChaptersPage />} />
           <Route path="/tracks/:trackName/chapters/:chapterId" element={<ChapterPage />} />
-          <Route path="/tracks/:trackName/chapters/:chapterId/levels/:levelId" element={<LevelPage />} />
+          <Route path="/tracks/:trackName/chapters/:chapterId/levels/:levelId" element={<LevelPageWrapper />} />
         </Routes>
       </div>
     </>

@@ -22,6 +22,10 @@ export default function LevelPage() {
     completeAudioRef.current = new Audio(completeSound);
     wrongAudioRef.current = new Audio(wrongSound);
   }, []);
+
+  useEffect(() => {
+    runPythonWithIO("print(1)", []);
+  }, []);
   const navigate = useNavigate();
   const { getLevelStatus, getStars, completeLevel, getTotalStars } = useProgress();
 
@@ -30,7 +34,7 @@ export default function LevelPage() {
   const level = chapter?.levels.find((l) => l.id === Number(levelId));
   const status = level ? getLevelStatus(trackName, level.id) : null;
 
-  const [code, setCode] = useState(level?.startingCode ?? "x = ");
+  const [code, setCode] = useState(level?.startingCode ?? "");
   const [showModal, setShowModal] = useState(false);
   const [showHint, setShowHint] = useState(false);
   const [earnedStars, setEarnedStars] = useState(0);
@@ -62,9 +66,14 @@ export default function LevelPage() {
       for (const test of level.tests) {
         const inputs = test.input ? (Array.isArray(test.input) ? test.input : [test.input]) : [];
         const output = await runPythonWithIO(code, inputs);
-        if (output !== test.expected) {
+        const match = test.expectAnyOf
+          ? test.expectAnyOf.includes(output)
+          : test.expectMatch
+          ? new RegExp(test.expectMatch).test(output)
+          : output === test.expected;
+        if (!match) {
           wrongAudioRef.current?.play();
-          setTestFailure({ input: test.input, expected: test.expected, actual: output });
+          setTestFailure({ input: test.input, expected: test.expected ?? test.expectAnyOf, actual: output });
           setTesting(false);
           return;
         }
@@ -190,6 +199,7 @@ export default function LevelPage() {
   const totalStars = getTotalStars(track.slug);
   const levelIndex = chapter.levels.findIndex((l) => l.id === level.id);
   const hasNextLevel = levelIndex < chapter.levels.length - 1;
+  const hasPreviousLevel = levelIndex > 0;
 
   return (
     <>
@@ -205,7 +215,12 @@ export default function LevelPage() {
           }}
           onContinue={() => {
             setShowModal(false);
-            navigate(`/tracks/${trackName}/chapters/${chapterId}`);
+            const nextLevel = chapter.levels[levelIndex + 1];
+            if (nextLevel) {
+              navigate(`/tracks/${trackName}/chapters/${chapterId}/levels/${nextLevel.id}`);
+            } else {
+              navigate(`/tracks/${trackName}/chapters/${chapterId}`);
+            }
           }}
         />
       )}
@@ -285,10 +300,34 @@ export default function LevelPage() {
                 style={{ background: "#fff", border: "2px solid #E5E7EB", maxHeight: "calc(100vh - 10rem)" }}
               >
                 <div
-                  className="text-xs font-bold uppercase tracking-wider mb-3"
-                  style={{ color: "#9CA3AF" }}
+                  className="flex items-center justify-between mb-3"
                 >
-                  Level {level.id}
+                  <span
+                    className="text-xs font-bold uppercase tracking-wider"
+                    style={{ color: "#9CA3AF" }}
+                  >
+                    Level {level.id}
+                  </span>
+                  <div className="flex gap-0.5">
+                    {hasPreviousLevel && (
+                      <button
+                        onClick={() => navigate(`/tracks/${trackName}/chapters/${chapterId}/levels/${chapter.levels[levelIndex - 1].id}`)}
+                        className="flex items-center justify-center transition-all duration-100 hover:brightness-110 active:translate-y-0.5"
+                        style={{ width: 28, height: 28, borderRadius: 8, background: "#F7F3E9", border: "1.5px solid #D1D5DB", color: "#9CA3AF" }}
+                      >
+                        <span style={{ fontSize: 24, lineHeight: 1, transform: "translate(-0.5px, -3px)" }}>‹</span>
+                      </button>
+                    )}
+                    {hasNextLevel && (
+                      <button
+                        onClick={() => navigate(`/tracks/${trackName}/chapters/${chapterId}/levels/${chapter.levels[levelIndex + 1].id}`)}
+                        className="flex items-center justify-center transition-all duration-100 hover:brightness-110 active:translate-y-0.5"
+                        style={{ width: 28, height: 28, borderRadius: 8, background: "#F7F3E9", border: "1.5px solid #D1D5DB", color: "#9CA3AF" }}
+                      >
+                        <span style={{ fontSize: 24, lineHeight: 1, transform: "translate(0.5px, -3px)" }}>›</span>
+                      </button>
+                    )}
+                  </div>
                 </div>
                 <h2
                   className="text-xl font-black mb-3"
@@ -405,16 +444,7 @@ export default function LevelPage() {
                   >
                     {showHint ? "Hide Hint" : "💡 Hint"}
                   </PixelButton>
-                  {hasNextLevel && (
-                    <PixelButton
-                      onClick={() => navigate(`/tracks/${trackName}/chapters/${chapterId}`)}
-                      size="md"
-                      variant="ghost"
-                      disabled={!isCompleted}
-                    >
-                      Next Level →
-                    </PixelButton>
-                  )}
+
                 </div>
               </div>
             </div>
