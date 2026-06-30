@@ -1,9 +1,16 @@
 import pythonIcon from "../assets/icons/python.svg";
-import mountainIcon from "../assets/icons/mountain-chapter.svg";
-import swordIcon from "../assets/icons/sword-badge.svg";
-import trophyIcon from "../assets/icons/trophy-badge.svg";
-import shieldIcon from "../assets/icons/shield-badge.svg";
-import sparklesIcon from "../assets/icons/sparkles-badge.svg";
+import outputIcon from "../assets/icons/hello.svg";
+import variableIcon from "../assets/icons/variable.svg";
+import mathIcon from "../assets/icons/math.svg";
+import ifIcon from "../assets/icons/if.svg";
+import loopIcon from "../assets/icons/loop.svg";
+import dataIcon from "../assets/icons/data.svg";
+import functionIcon from "../assets/icons/function.svg";
+import objectIcon from "../assets/icons/object.svg";
+import fileIcon from "../assets/icons/file.svg";
+import warningIcon from "../assets/icons/warning.svg";
+import moduleIcon from "../assets/icons/module.svg";
+import trophyIcon from "../assets/icons/challenge.svg";
 
 export const TRACKS = [
   {
@@ -11,10 +18,11 @@ export const TRACKS = [
     slug: "python",
     icon: pythonIcon,
     description: "Master Python from the ground up — variables, loops, functions, and beyond.",
+    difficulty: 1,
     chapters: [
       {
         name: "Input & Output",
-        icon: mountainIcon,
+        icon: outputIcon,
         levels: [
           {
             name: "Hello, World!",
@@ -232,7 +240,7 @@ export const TRACKS = [
       },
       {
         name: "Variables & Data Types",
-        icon: shieldIcon,
+        icon: variableIcon,
         levels: [
           {
             name: "String Variable",
@@ -461,7 +469,7 @@ export const TRACKS = [
       },
       {
         name: "Math & Logical Operators",
-        icon: swordIcon,
+        icon: mathIcon,
         levels: [
           {
             name: "Basic Arithmetic",
@@ -688,7 +696,7 @@ export const TRACKS = [
       },
       {
         name: "Conditionals",
-        icon: trophyIcon,
+        icon: ifIcon,
         levels: [
           {
             name: "Simple If",
@@ -904,7 +912,7 @@ export const TRACKS = [
       },
       {
         name: "Loops",
-        icon: sparklesIcon,
+        icon: loopIcon,
         levels: [
           {
             name: "For Loop with Range",
@@ -1131,7 +1139,7 @@ export const TRACKS = [
       },
       {
         name: "Data Structures",
-        icon: shieldIcon,
+        icon: dataIcon,
         levels: [
           {
             name: "Create a List",
@@ -1361,7 +1369,7 @@ export const TRACKS = [
       },
       {
         name: "Functions",
-        icon: mountainIcon,
+        icon: functionIcon,
         levels: [
           {
             name: "Define a Function",
@@ -1561,7 +1569,7 @@ export const TRACKS = [
       },
       {
         name: "OOP",
-        icon: swordIcon,
+        icon: objectIcon,
         levels: [
           {
             name: "Define a Class",
@@ -1851,7 +1859,7 @@ export const TRACKS = [
       },
       {
         name: "File Handling",
-        icon: shieldIcon,
+        icon: fileIcon,
         levels: [
           {
             name: "Write a File",
@@ -1879,6 +1887,7 @@ export const TRACKS = [
             solution: 'with open("test.txt", "w") as f:\n    f.write("Hello")',
             maxLines: 3,
             maxTime: 1,
+            files: { track: ["test.txt"] },
           },
 
           {
@@ -1904,6 +1913,7 @@ export const TRACKS = [
             solution: 'with open("test.txt", "r") as f:\n    print(f.read())',
             maxLines: 3,
             maxTime: 1,
+            files: { initial: { "test.txt": "Hello from test.txt!" } },
           },
 
           {
@@ -1928,6 +1938,7 @@ export const TRACKS = [
             solution: 'with open("log.txt", "a") as f:\n    f.write("done")',
             maxLines: 3,
             maxTime: 1,
+            files: { initial: { "log.txt": "" }, track: ["log.txt"] },
           },
 
           {
@@ -1951,6 +1962,7 @@ export const TRACKS = [
             solution: 'with open("notes.txt") as f:\n    print(f.readlines())',
             maxLines: 3,
             maxTime: 1,
+            files: { initial: { "notes.txt": "Line 1\nLine 2\nLine 3" } },
           },
 
           {
@@ -1976,6 +1988,7 @@ export const TRACKS = [
             solution: 'with open("notes.txt") as f:\n    print(len(f.readlines()))',
             maxLines: 3,
             maxTime: 1,
+            files: { initial: { "notes.txt": "Line 1\nLine 2\nLine 3" } },
           },
 
           {
@@ -2001,6 +2014,7 @@ export const TRACKS = [
             solution: 'import json\n\nwith open("data.json") as f:\n    print(json.load(f))',
             maxLines: 4,
             maxTime: 1,
+            files: { initial: { "data.json": '{"name": "test", "value": 42}' } },
           },
 
           {
@@ -2030,6 +2044,7 @@ export const TRACKS = [
       'import json\n\ndata = {"score": 100}\n\nwith open("save.json", "w") as f:\n    json.dump(data, f)',
             maxLines: 6,
             maxTime: 1,
+            files: { track: ["save.json"] },
           },
 
           {
@@ -2052,7 +2067,7 @@ export const TRACKS = [
       },
       {
         name: "Error Handling",
-        icon: sparklesIcon,
+        icon: warningIcon,
         levels: [
           {
             name: "Try-Except",
@@ -2229,7 +2244,7 @@ export const TRACKS = [
       },
       {
         name: "Modules & Packages",
-        icon: mountainIcon,
+        icon: moduleIcon,
         levels: [
           {
             name: "Import Math",

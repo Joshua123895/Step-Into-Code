@@ -3,6 +3,8 @@ import { useParams, useNavigate } from "react-router-dom";
 import { TRACKS } from "../data/tracks";
 import { useProgress } from "../hooks/useProgress";
 import { runPythonWithIO } from "../utils/pythonRunner";
+import { runPythonReal } from "../utils/pythonRunnerReal";
+import { buildFileSetup, buildFileTeardown, mergeFileStore } from "../utils/fileManager";
 import CompletionModal from "../components/CompletionModal";
 import CodeEditorContainer from "../components/CodeEditorContainer";
 import ProgressBar from "../components/ProgressBar";
@@ -11,6 +13,12 @@ import Icon from "../components/Icon";
 import StarIcon from "../components/StarIcon";
 import completeSound from "../assets/sounds/complete.mp3";
 import wrongSound from "../assets/sounds/wrong.mp3";
+
+const FILE_CAPTURE_PREFIX = "__FILE_SAVE__";
+
+function stripFileCaptures(output) {
+  return output.split("\n").filter((l) => !l.startsWith(FILE_CAPTURE_PREFIX)).join("\n");
+}
 
 export default function LevelPage() {
   const { trackName, chapterId, levelId } = useParams();
@@ -33,6 +41,42 @@ export default function LevelPage() {
   const chapter = track?.chapters.find((c) => c.id === Number(chapterId));
   const level = chapter?.levels.find((l) => l.id === Number(levelId));
   const status = level ? getLevelStatus(trackName, level.id) : null;
+
+  const fileStore = useRef({});
+  const [fileEntries, setFileEntries] = useState({});
+  const prevLevelIdRef = useRef(levelId);
+
+  if (prevLevelIdRef.current !== levelId) {
+    prevLevelIdRef.current = levelId;
+    const initial = level?.files?.initial ? { ...level.files.initial } : {};
+    fileStore.current = initial;
+    setFileEntries(initial);
+  }
+
+  function syncFileStore() {
+    setFileEntries({ ...fileStore.current });
+  }
+
+  function wrapCodeWithFiles(rawCode) {
+    const setup = buildFileSetup(fileStore.current);
+    const track = level?.files?.track;
+    const teardown = track && track.length > 0 ? buildFileTeardown(track) : "";
+    return setup + rawCode + teardown;
+  }
+
+  async function runWithFiles(rawCode, inputs) {
+    if (level?.files) {
+      const result = await runPythonReal(rawCode, fileStore.current, level.files.track || [], inputs || []);
+      if (result.files && Object.keys(result.files).length > 0) {
+        fileStore.current = mergeFileStore(fileStore.current, null, result.files);
+        syncFileStore();
+      }
+      return result.stdout || "";
+    }
+    const wrapped = wrapCodeWithFiles(rawCode);
+    return runPythonWithIO(wrapped, inputs);
+  }
+
 
   const [code, setCode] = useState(level?.startingCode ?? "");
   const [showModal, setShowModal] = useState(false);
@@ -60,20 +104,21 @@ export default function LevelPage() {
 
     const hasTests = level.tests && level.tests.length > 0;
 
-    if (hasTests) {
-      setTesting(true);
+      if (hasTests) {
+        setTesting(true);
 
-      for (const test of level.tests) {
-        const inputs = test.input ? (Array.isArray(test.input) ? test.input : [test.input]) : [];
-        const output = await runPythonWithIO(code, inputs);
-        const match = test.expectAnyOf
-          ? test.expectAnyOf.includes(output)
-          : test.expectMatch
-          ? new RegExp(test.expectMatch).test(output)
-          : output === test.expected;
+        for (const test of level.tests) {
+          const inputs = test.input ? (Array.isArray(test.input) ? test.input : [test.input]) : [];
+          const output = await runWithFiles(code, inputs);
+          const clean = stripFileCaptures(output);
+          const match = test.expectAnyOf
+            ? test.expectAnyOf.includes(clean)
+            : test.expectMatch
+            ? new RegExp(test.expectMatch).test(clean)
+            : clean === test.expected;
         if (!match) {
           wrongAudioRef.current?.play();
-          setTestFailure({ input: test.input, expected: test.expected ?? test.expectAnyOf, actual: output });
+          setTestFailure({ input: test.input, expected: test.expected ?? test.expectAnyOf, actual: clean });
           setTesting(false);
           return;
         }
@@ -95,13 +140,13 @@ export default function LevelPage() {
       if (solutionHasPrint) {
         const fullSolution = (level.startingCode || "") + level.solution;
         const [actualOutput, expectedOutput] = await Promise.all([
-          runPythonWithIO(code, []),
-          runPythonWithIO(fullSolution, []),
+          runWithFiles(code, []),
+          runWithFiles(fullSolution, []),
         ]);
 
         execTime = (performance.now() - startTime) / 1000;
 
-        if (actualOutput === expectedOutput) {
+        if (stripFileCaptures(actualOutput) === stripFileCaptures(expectedOutput)) {
           completeAudioRef.current?.play();
           let stars = 1;
           if (lineCount <= maxLines) stars++;
@@ -112,7 +157,7 @@ export default function LevelPage() {
           setShowModal(true);
         } else {
           wrongAudioRef.current?.play();
-          setTestFailure({ input: "", expected: expectedOutput, actual: actualOutput });
+          setTestFailure({ input: "", expected: stripFileCaptures(expectedOutput), actual: stripFileCaptures(actualOutput) });
         }
         return;
       }
@@ -125,12 +170,12 @@ export default function LevelPage() {
         const inputDisplay = needsInput ? "test" : "";
 
         const solutionCode = (level.startingCode || "") + level.solution;
-        const actualOutput = await runPythonWithIO(code + "\nprint(" + varName + ")", inputs);
-        const expectedOutput = await runPythonWithIO(solutionCode + "\nprint(" + varName + ")", inputs);
+        const actualOutput = await runWithFiles(code + "\nprint(" + varName + ")", inputs);
+        const expectedOutput = await runWithFiles(solutionCode + "\nprint(" + varName + ")", inputs);
 
         execTime = (performance.now() - startTime) / 1000;
 
-        if (actualOutput === expectedOutput) {
+        if (stripFileCaptures(actualOutput) === stripFileCaptures(expectedOutput)) {
           completeAudioRef.current?.play();
           let stars = 1;
           if (lineCount <= maxLines) stars++;
@@ -141,20 +186,20 @@ export default function LevelPage() {
           setShowModal(true);
         } else {
           wrongAudioRef.current?.play();
-          setTestFailure({ input: inputDisplay, expected: expectedOutput, actual: actualOutput });
+          setTestFailure({ input: inputDisplay, expected: stripFileCaptures(expectedOutput), actual: stripFileCaptures(actualOutput) });
         }
         return;
       }
 
       const fullSolution = (level.startingCode || "") + level.solution;
       const [actualOutput, expectedOutput] = await Promise.all([
-        runPythonWithIO(code, []),
-        runPythonWithIO(fullSolution, []),
+        runWithFiles(code, []),
+        runWithFiles(fullSolution, []),
       ]);
 
       execTime = (performance.now() - startTime) / 1000;
 
-      if (actualOutput === expectedOutput) {
+      if (stripFileCaptures(actualOutput) === stripFileCaptures(expectedOutput)) {
         completeAudioRef.current?.play();
         let stars = 1;
         if (lineCount <= maxLines) stars++;
@@ -165,7 +210,7 @@ export default function LevelPage() {
         setShowModal(true);
       } else {
         wrongAudioRef.current?.play();
-        setTestFailure({ input: "", expected: expectedOutput, actual: actualOutput });
+        setTestFailure({ input: "", expected: stripFileCaptures(expectedOutput), actual: stripFileCaptures(actualOutput) });
       }
     }
   };
@@ -481,7 +526,7 @@ export default function LevelPage() {
             </div>
 
             <div className="lg:col-span-6 lg:self-start">
-              <CodeEditorContainer code={code} setCode={setCode} language={track.name.split(" ")[0]} />
+              <CodeEditorContainer code={code} setCode={setCode} language={track.name.split(" ")[0]} files={level.files} fileEntries={fileEntries} fileStore={fileStore} onFileUpdate={syncFileStore} />
 
               <p className="text-xs mt-2 text-center" style={{ color: "#D1D5DB" }}>
                 Write your code above, then click Run to test or Submit to check your answer.

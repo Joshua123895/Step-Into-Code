@@ -1,5 +1,7 @@
 import { useRef, useEffect, useState, useCallback } from "react";
 import { runPython } from "../utils/pythonRunner";
+import { runPythonReal } from "../utils/pythonRunnerReal";
+import { buildFileSetup, buildFileTeardown, parseFileCaptures, mergeFileStore } from "../utils/fileManager";
 import { basicSetup } from "codemirror";
 import { EditorView } from "@codemirror/view";
 import { EditorState } from "@codemirror/state";
@@ -43,17 +45,24 @@ const editorTheme = EditorView.theme({
   },
 });
 
-export default function CodeEditorContainer({ code, setCode, language }) {
+export default function CodeEditorContainer({ code, setCode, language, files, fileEntries = {}, fileStore: fileStoreRef, onFileUpdate }) {
   const inputRef = useRef(null);
   const [output, setOutput] = useState("");
   const [running, setRunning] = useState(false);
   const [waitingInput, setWaitingInput] = useState(false);
   const [inputBuffer, setInputBuffer] = useState("");
+  const [activeTab, setActiveTab] = useState("main.py");
   const pendingResolve = useRef(null);
   const outputRef = useRef(null);
   const editorRef = useRef(null);
   const viewRef = useRef(null);
   const setCodeRef = useRef(setCode);
+  const rawOutputRef = useRef("");
+  const onFileUpdateRef = useRef(onFileUpdate);
+
+  useEffect(() => {
+    onFileUpdateRef.current = onFileUpdate;
+  });
 
   useEffect(() => {
     setCodeRef.current = setCode;
@@ -116,20 +125,53 @@ export default function CodeEditorContainer({ code, setCode, language }) {
   const handleRun = useCallback(async () => {
     setRunning(true);
     setOutput("");
-
-    const onOutput = (text) => setOutput((prev) => prev + text);
-    const onInput = (resolve) => {
-      pendingResolve.current = resolve;
-      setWaitingInput(true);
-    };
+    rawOutputRef.current = "";
 
     const view = viewRef.current;
-    if (view) {
-      await runPython(view.state.doc.toString(), onInput, onOutput);
+    if (!view) { setRunning(false); return; }
+
+    const userCode = view.state.doc.toString();
+
+    if (files) {
+      const result = await runPythonReal(userCode, fileStoreRef?.current || {}, files.track || []);
+      if (result.files && Object.keys(result.files).length > 0 && fileStoreRef) {
+        fileStoreRef.current = mergeFileStore(fileStoreRef.current, null, result.files);
+        onFileUpdateRef.current?.();
+      }
+      setOutput(result.stdout || "");
+      if (result.error) {
+        setOutput((prev) => prev + "\n" + result.error);
+      }
+    } else {
+      const onOutput = (text) => {
+        rawOutputRef.current += text;
+        const lines = rawOutputRef.current.split("\n");
+        const display = lines.filter((l) => !l.startsWith("__FILE_SAVE__")).join("\n");
+        setOutput(display);
+      };
+
+      const onInput = (resolve) => {
+        pendingResolve.current = resolve;
+        setWaitingInput(true);
+      };
+
+      const store = fileStoreRef?.current || {};
+      const setup = buildFileSetup(store);
+      const track = files?.track;
+      const teardown = track && track.length > 0 ? buildFileTeardown(track) : "";
+      const wrappedCode = setup + userCode + teardown;
+
+      await runPython(wrappedCode, onInput, onOutput);
+
+      const captures = parseFileCaptures(rawOutputRef.current);
+      if (Object.keys(captures).length > 0 && fileStoreRef) {
+        fileStoreRef.current = mergeFileStore(fileStoreRef.current, null, captures);
+        onFileUpdateRef.current?.();
+      }
     }
 
     setRunning(false);
-  }, []);
+  }, [files, fileStoreRef]);
 
   const handleInputChange = (e) => setInputBuffer(e.target.value);
 
@@ -148,6 +190,13 @@ export default function CodeEditorContainer({ code, setCode, language }) {
       inputRef.current.focus();
     }
   }, [waitingInput]);
+
+  const fileNames = Object.keys(fileEntries).filter((n) => n !== "main.py");
+
+  if (activeTab !== "main.py" && !fileEntries[activeTab]) {
+    setActiveTab("main.py");
+  }
+  const showFileTabs = files && fileNames.length > 0;
 
   return (
     <div
@@ -172,12 +221,7 @@ export default function CodeEditorContainer({ code, setCode, language }) {
             />
           ))}
         </div>
-        <div
-          className="flex-1 text-center text-xs"
-          style={{ color: "#6B7280", fontFamily: "'Consolas', monospace" }}
-        >
-          main.py
-        </div>
+        <div className="flex-1" />
         <div
           className="text-xs px-2 py-0.5 rounded mr-2"
           style={{ background: "#6AAE6F20", color: "#6AAE6F" }}
@@ -197,12 +241,61 @@ export default function CodeEditorContainer({ code, setCode, language }) {
         </button>
       </div>
 
-      <div
-        className="flex min-h-0 flex-1"
-        style={{ background: "#1a1b2e", touchAction: "manipulation" }}
-      >
-        <div ref={editorRef} className="flex-1" style={{ touchAction: "manipulation" }} />
-      </div>
+      {showFileTabs && (
+        <div
+          className="flex shrink-0 overflow-x-auto"
+          style={{ background: "#16162a", borderBottom: "1px solid #2a2b3d" }}
+        >
+          <button
+            onClick={() => setActiveTab("main.py")}
+            className="text-xs px-4 py-2 font-mono border-r transition-all"
+            style={{
+              background: activeTab === "main.py" ? "#1a1b2e" : "transparent",
+              color: activeTab === "main.py" ? "#CDD6F4" : "#6B7280",
+              borderColor: "#2a2b3d",
+              borderBottom: activeTab === "main.py" ? "2px solid #6AAE6F" : "2px solid transparent",
+            }}
+          >
+            main.py
+          </button>
+          {fileNames.map((name) => (
+            <button
+              key={name}
+              onClick={() => setActiveTab(name)}
+              className="text-xs px-4 py-2 font-mono border-r transition-all"
+              style={{
+                background: activeTab === name ? "#1a1b2e" : "transparent",
+                color: activeTab === name ? "#CDD6F4" : "#6B7280",
+                borderColor: "#2a2b3d",
+                borderBottom: activeTab === name ? "2px solid #E9B44C" : "2px solid transparent",
+              }}
+            >
+              {name}
+            </button>
+          ))}
+        </div>
+      )}
+
+      {activeTab === "main.py" ? (
+        <div
+          className="flex min-h-0 flex-1"
+          style={{ background: "#1a1b2e", touchAction: "manipulation" }}
+        >
+          <div ref={editorRef} className="flex-1" style={{ touchAction: "manipulation" }} />
+        </div>
+      ) : (
+        <div
+          className="flex min-h-0 flex-1 overflow-auto"
+          style={{ background: "#1a1b2e" }}
+        >
+          <pre
+            className="text-sm font-mono p-4 m-0 whitespace-pre-wrap"
+            style={{ color: "#CDD6F4", userSelect: "text" }}
+          >
+            {fileEntries[activeTab]}
+          </pre>
+        </div>
+      )}
 
       <div
         className="flex items-center gap-2 px-4 py-1.5 shrink-0"

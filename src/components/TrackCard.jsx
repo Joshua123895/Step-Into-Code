@@ -8,6 +8,13 @@ export default function TrackCard({ track }) {
   const navigate = useNavigate();
   const { getTrackProgress } = useProgress();
 
+  const difficultyMap = {
+    1: { label: "Basic", bg: "#6AAE6F20", color: "#6AAE6F" },
+    2: { label: "Advance", bg: "#E9B44C20", color: "#E9B44C" },
+    3: { label: "Expert", bg: "#FF5F5720", color: "#FF5F57" },
+  };
+  const diff = difficultyMap[track.difficulty] || difficultyMap[1];
+
   return (
     <div
       className="rounded-2xl p-6 relative overflow-hidden"
@@ -26,9 +33,9 @@ export default function TrackCard({ track }) {
           <Icon src={track.icon} alt={track.name} size={56} />
           <span
             className="text-xs font-bold px-3 py-1 rounded-full"
-            style={{ background: "#6AAE6F20", color: "#6AAE6F" }}
+            style={{ background: diff.bg, color: diff.color }}
           >
-            Track {track.id} of {track.id}
+            {diff.label}
           </span>
         </div>
         <h3
