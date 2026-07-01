@@ -258,7 +258,10 @@ export default function CodeEditorContainer({ code, setCode, language, files, fi
     if (e.key === "Enter" && pendingResolve.current) {
       pendingResolve.current(inputBuffer);
       pendingResolve.current = null;
-      setOutput((prev) => prev + inputBuffer + "\n");
+      rawOutputRef.current += inputBuffer + "\n";
+      const lines = rawOutputRef.current.split("\n");
+      const display = lines.filter((l) => !l.startsWith("__FILE_SAVE__")).join("\n");
+      setOutput(display);
       setInputBuffer("");
       setWaitingInput(false);
     }

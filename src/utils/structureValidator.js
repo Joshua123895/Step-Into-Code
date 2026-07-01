@@ -25,25 +25,27 @@ export async function validateStructure(code, sourceChecks) {
       if (!node || typeof node !== "object") return;
 
       if (node.constructor === sk.astnodes.ClassDef) {
-        classNames.push(node.name);
+        const className = node.name.v;
+        classNames.push(className);
         const bases = (node.bases || [])
           .map((b) => {
-            if (b.constructor === sk.astnodes.Name) return b.id;
-            if (b.constructor === sk.astnodes.Attribute) return b.attr;
+            if (b.constructor === sk.astnodes.Name) return b.id.v;
+            if (b.constructor === sk.astnodes.Attribute) return b.attr.v;
             return null;
           })
           .filter(Boolean);
-        if (bases.length > 0) inheritance[node.name] = bases;
+        if (bases.length > 0) inheritance[className] = bases;
         if (Array.isArray(node.body)) {
-          for (const stmt of node.body) walk(stmt, node.name);
+          for (const stmt of node.body) walk(stmt, className);
         }
         return;
       } else if (node.constructor === sk.astnodes.FunctionDef) {
+        const fnName = node.name.v;
         if (currentClass) {
           if (!classMethods[currentClass]) classMethods[currentClass] = [];
-          classMethods[currentClass].push(node.name);
+          classMethods[currentClass].push(fnName);
         } else {
-          functionNames.push(node.name);
+          functionNames.push(fnName);
         }
       }
 
