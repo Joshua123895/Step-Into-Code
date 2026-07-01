@@ -10,7 +10,7 @@ export default function LevelCard({ level, onClick, stars }) {
       onClick={() => !isLocked && onClick(level)}
       disabled={isLocked}
       className={`
-        relative w-full text-left p-4 rounded-xl transition-all duration-150
+        relative w-full text-left p-4 rounded-xl transition-colors duration-500
         ${isLocked ? "cursor-not-allowed" : "cursor-pointer hover:-translate-y-0.5 hover:shadow-md"}
       `}
       style={{

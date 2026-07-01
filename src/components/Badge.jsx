@@ -3,7 +3,7 @@ import Icon from "./Icon";
 export default function Badge({ badge }) {
   return (
     <div
-      className="flex flex-col items-center gap-1 p-3 rounded-xl transition-all"
+      className="flex flex-col items-center gap-1 p-3 rounded-xl transition-colors duration-500"
       style={{
         background: badge.earned ? "var(--bg-card)" : "var(--bg-surface-alt)",
         border: badge.earned ? "2px solid #E9B44C" : "2px solid var(--border-strong)",

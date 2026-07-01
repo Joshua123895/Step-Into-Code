@@ -34,7 +34,7 @@ export default function Navbar() {
       <div className="flex items-center gap-1">
         <button
           onClick={() => navigate("/tracks")}
-          className="px-4 py-2 text-sm font-medium rounded-lg transition-all duration-100 hover:brightness-110"
+          className="px-4 py-2 text-sm font-medium rounded-lg transition-colors duration-500 hover:brightness-110"
           style={{
             background: isActive("/tracks") ? "#6AAE6F20" : "transparent",
             color: isActive("/tracks") ? "#6AAE6F" : "var(--text-muted)",
@@ -46,7 +46,7 @@ export default function Navbar() {
         </button>
         <button
           onClick={() => navigate("/tracks/python")}
-          className="px-4 py-2 text-sm font-medium rounded-lg transition-all duration-100 hover:brightness-110"
+          className="px-4 py-2 text-sm font-medium rounded-lg transition-colors duration-500 hover:brightness-110"
           style={{
             background: isActive("/tracks/python") ? "#6AAE6F20" : "transparent",
             color: isActive("/tracks/python") ? "#6AAE6F" : "var(--text-muted)",
@@ -58,7 +58,7 @@ export default function Navbar() {
         </button>
         <button
           onClick={toggle}
-          className="ml-2 px-3 py-2 text-sm rounded-lg transition-all duration-100 hover:brightness-110"
+          className="ml-2 px-3 py-2 text-sm rounded-lg transition-colors duration-500 hover:brightness-110"
           style={{ background: "transparent", color: "var(--nav-text)" }}
           title={dark ? "Switch to light mode" : "Switch to dark mode"}
         >

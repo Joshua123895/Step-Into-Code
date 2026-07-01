@@ -1,14 +1,51 @@
+import { useMemo } from "react";
+
 export default function PixelParticles() {
-  const particles = Array.from({ length: 18 }, (_, i) => ({
-    id: i,
-    size: [6, 8, 10, 12][i % 4],
-    x: (i * 37 + 11) % 95,
-    y: (i * 53 + 7) % 90,
-    delay: (i * 0.4) % 4,
-    duration: 3 + (i % 3),
-    color: ["#6AAE6F", "#E9B44C", "#7AA2F7", "#67C587"][i % 4],
-    opacity: 0.12 + (i % 3) * 0.06,
-  }));
+  const count = 36;
+
+  const cols = Math.ceil(Math.sqrt(count));
+  const rows = Math.ceil(count / cols);
+
+  const particleColors = [
+    "#6AAE6F",
+    "#82bb8a",
+    "#9DBEF2",
+    "#DDBA73",
+    "#BEA3D8",
+  ];
+
+  const particles = Array.from({ length: count }, (_, i) => {
+    const col = i % cols;
+    const row = Math.floor(i / cols);
+
+    const cellWidth = 100 / cols;
+    const cellHeight = 100 / rows;
+
+    return {
+      id: i,
+// (-0.1 + Math.random() * 1.2)
+      x:
+        col * cellWidth +
+        cellWidth * (0.1 + Math.random() * 0.8),
+
+      y:
+        row * cellHeight +
+        cellHeight * (0.1 + Math.random() * 0.8),
+
+      size: 6 + Math.random() * 8,
+
+      delay: Math.random() * 4,
+
+      duration: 4 + Math.random() * 3,
+
+      color:
+        particleColors[
+          Math.floor(Math.random() * particleColors.length)
+        ],
+
+      opacity: 0.08 + Math.random() * 0.12,
+    };
+  });
 
   return (
     <div className="pointer-events-none fixed inset-0 overflow-hidden z-0">

@@ -601,7 +601,6 @@ export default function CodeEditorContainer({ code, setCode, language, files, fi
         boxShadow: "0 8px 32px rgba(0,0,0,0.15)",
         minHeight: "40vh",
         maxHeight: "calc(100vh - 10rem)",
-        transition: "border 0.5s ease, box-shadow 0.5s ease",
       }}
     >
       <div
@@ -627,7 +626,7 @@ export default function CodeEditorContainer({ code, setCode, language, files, fi
         <button
           onClick={handleRun}
           disabled={running}
-          className="text-xs px-3 py-1 rounded font-bold transition-all hover:brightness-110"
+          className="text-xs px-3 py-1 rounded font-bold hover:brightness-110"
           style={{
             background: running ? c.runDisabledBg : "#6AAE6F",
             color: "#fff",
@@ -644,7 +643,7 @@ export default function CodeEditorContainer({ code, setCode, language, files, fi
         >
           <button
             onClick={() => setActiveTab("main.py")}
-            className="text-xs px-4 py-2 font-mono border-r transition-all"
+            className="text-xs px-4 py-2 font-mono border-r"
             style={{
               background: activeTab === "main.py" ? c.tabActiveBg : "transparent",
               color: activeTab === "main.py" ? c.tabActiveText : c.tabInactiveText,
@@ -662,7 +661,7 @@ export default function CodeEditorContainer({ code, setCode, language, files, fi
               <button
                 key={name}
                 onClick={() => setActiveTab(name)}
-                className="text-xs px-4 py-2 font-mono border-r transition-all"
+                className="text-xs px-4 py-2 font-mono border-r"
                 style={{
                   background: activeTab === name ? c.tabActiveBg : "transparent",
                   color: activeTab === name ? c.tabActiveText : c.tabInactiveText,
