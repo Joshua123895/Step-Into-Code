@@ -3,7 +3,7 @@ import { runPython } from "../utils/pythonRunner";
 import { runPythonReal } from "../utils/pythonRunnerReal";
 import { buildFileSetup, buildFileTeardown, parseFileCaptures, mergeFileStore } from "../utils/fileManager";
 import { basicSetup } from "codemirror";
-import { EditorView, keymap } from "@codemirror/view";
+import { EditorView } from "@codemirror/view";
 import { EditorState, Compartment } from "@codemirror/state";
 import { python } from "@codemirror/lang-python";
 import { oneDark } from "@codemirror/theme-one-dark";
@@ -222,18 +222,18 @@ const oneLight = [
 const themeCompartment = new Compartment();
 const fileViewerThemeCompartment = new Compartment();
 
-const tabBinding = {
-  key: "Tab",
-  run: ({ state, dispatch }) => {
-    dispatch(state.update(
-      state.changeByRange(range => ({
-        changes: [{ from: range.from, to: range.to, insert: "    " }],
-        range: EditorState.cursor(range.from + 4),
-      }))
-    ));
-    return true;
+const tabHandler = EditorView.domEventHandlers({
+  keydown: (event, view) => {
+    if (event.key === "Tab" && !event.shiftKey && !event.altKey && !event.ctrlKey && !event.metaKey) {
+      event.preventDefault();
+      const { from, to } = view.state.selection.main;
+      view.dispatch({
+        changes: { from, to, insert: "    " },
+        selection: { anchor: from + 4 },
+      });
+    }
   },
-};
+});
 
 function useColors() {
   const { dark } = useTheme();
@@ -360,7 +360,7 @@ export default function CodeEditorContainer({ code, setCode, language, files, fi
 
       const extensions = [
         basicSetup,
-        keymap.of([tabBinding]),
+        tabHandler,
         python(),
         themeCompartment.of([oneDark, dynamicEditorTheme]),
         baseEditorTheme,
