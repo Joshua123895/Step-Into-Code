@@ -165,6 +165,7 @@ export default function LevelPage() {
   const handleRun = async () => {
     if (!level) return;
     setTestFailure(null);
+    setTesting(true);
 
     const tracked = level?.files?.track || [];
     const snapshot = {};
@@ -172,6 +173,9 @@ export default function LevelPage() {
       snapshot[name] = fileStore.current[name];
     }
     setFileEntriesBefore(snapshot);
+    await runPythonReal("print(1)", {}, [], []);
+
+    const startTime = performance.now();
 
     const lineCount = code
       .replace(/\r\n/g, "\n")
@@ -181,14 +185,11 @@ export default function LevelPage() {
     const maxLines = level.maxLines ?? lineCount + 1;
     const maxTime = level.maxTime ?? 1;
 
-    const startTime = performance.now();
     let execTime = 0;
 
     const hasTests = level.tests && level.tests.length > 0;
 
       if (hasTests) {
-        setTesting(true);
-
         for (const test of level.tests) {
           const inputs = test.input ? (Array.isArray(test.input) ? test.input : [test.input]) : [];
           const output = await runWithFiles(code, inputs);
@@ -242,6 +243,7 @@ export default function LevelPage() {
           playWrongSound();
           setTestFailure({ input: "", expected: expectedOutput, actual: stripFileCaptures(actualOutput) });
         }
+        setTesting(false);
         return;
       }
 
@@ -271,6 +273,7 @@ export default function LevelPage() {
           playWrongSound();
           setTestFailure({ input: inputDisplay, expected: stripFileCaptures(expectedOutput), actual: stripFileCaptures(actualOutput) });
         }
+        setTesting(false);
         return;
       }
 
@@ -321,6 +324,7 @@ export default function LevelPage() {
             actual: `${mismatchInfo.fileName} content:\n${mismatchInfo.actual}`,
           });
         }
+        setTesting(false);
         return;
       }
 
@@ -341,6 +345,7 @@ export default function LevelPage() {
           if (!result.valid) {
             playWrongSound();
             setTestFailure({ input: "", expected: "", actual: result.error });
+            setTesting(false);
             return;
           }
         }
@@ -356,6 +361,7 @@ export default function LevelPage() {
         playWrongSound();
         setTestFailure({ input: "", expected: strippedExpected, actual: strippedActual });
       }
+      setTesting(false);
     }
   };
 
@@ -426,7 +432,7 @@ export default function LevelPage() {
               Checking solution...
             </h2>
             <p className="text-sm mt-2" style={{ color: "#6B7280" }}>
-              Running your code against test cases
+              Running your code...
             </p>
           </div>
         </div>
