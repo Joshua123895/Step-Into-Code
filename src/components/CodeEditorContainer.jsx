@@ -61,6 +61,7 @@ export default function CodeEditorContainer({ code, setCode, language, files, fi
   const setCodeRef = useRef(setCode);
   const rawOutputRef = useRef("");
   const onFileUpdateRef = useRef(onFileUpdate);
+  const initialFileRef = useRef({ ...fileEntries });
   const beforeSnapshotRef = useRef({});
 
   useEffect(() => {
@@ -136,11 +137,11 @@ export default function CodeEditorContainer({ code, setCode, language, files, fi
       function getContent(tabId) {
         if (tabId.endsWith(" (Before)")) {
           const realName = tabId.slice(0, -9);
-          return fileEntriesBefore[realName] ?? beforeSnapshotRef.current[realName] ?? "";
+          return fileEntriesBefore[realName] ?? beforeSnapshotRef.current[realName] ?? initialFileRef.current[realName] ?? "";
         }
         if (tabId.endsWith(" (After)")) {
           const realName = tabId.slice(0, -8);
-          return fileEntries[realName] ?? "";
+          return fileEntries[realName] ?? fileEntriesBefore[realName] ?? "";
         }
         return fileEntries[tabId] ?? fileEntriesBefore[tabId] ?? "";
       }
@@ -276,16 +277,10 @@ export default function CodeEditorContainer({ code, setCode, language, files, fi
       ...trackedFiles.filter((n) => n !== "main.py"),
     ]),
   ];
-  const fileTabs = [];
-  const virtualTabs = [];
+  const allTabs = [];
   for (const name of fileNames) {
-    if (trackedFiles.includes(name)) {
-      virtualTabs.push(`${name} (Before)`, `${name} (After)`);
-    } else {
-      fileTabs.push(name);
-    }
+    allTabs.push(`${name} (Before)`, `${name} (After)`);
   }
-  const allTabs = [...fileTabs, ...virtualTabs];
 
   if (activeTab !== "main.py" && !allTabs.includes(activeTab)) {
     setActiveTab("main.py");

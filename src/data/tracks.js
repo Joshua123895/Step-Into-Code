@@ -2044,10 +2044,10 @@ export const TRACKS = [
             ],
             startingCode: "",
             solution:
-      'import json\n\ndata = {"score": 100}\n\nwith open("save.json", "w") as f:\n    json.dump(data, f)',
+              'import json\n\ndata = {"score": 100}\n\nwith open("save.json", "w") as f:\n    json.dump(data, f)',
             maxLines: 6,
             maxTime: 1,
-            files: { initial: { "save.json": '{"name": "test", "value": 42}' }, track: ["save.json"] },
+            files: { initial: { "save.json": '{"score": 20}' }, track: ["save.json"] },
           },
 
           {
