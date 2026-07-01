@@ -14,35 +14,35 @@ export default function HomePage() {
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center px-4 relative z-10">
-      <div className="text-center mb-10">
-        <div
-          className="inline-flex items-center gap-3 mb-4 px-5 py-2 rounded-full"
-          style={{ background: "#6AAE6F20", border: "2px solid #6AAE6F40" }}
-        >
-          <span>🗺️</span>
-          <span className="text-sm font-medium" style={{ color: "#6AAE6F" }}>
-            v1.0 — Python Fundamentals
-          </span>
+      <div className="mb-10 mt-10">
+        <div className="flex items-center gap-12">
+          <img
+            src="/icons.svg"
+            alt=""
+            className="w-40 h-auto shrink-0"
+            style={{ filter: "drop-shadow(2px 2px 0 #6AAE6F40)" }}
+          />
+          <div>
+            <h1
+              className="text-5xl font-black mb-3 leading-tight"
+              style={{
+                color: "#2F2F2F",
+                fontFamily: "'Courier New', monospace",
+                textShadow: "3px 3px 0 #6AAE6F40",
+              }}
+            >
+              Step Into<br />
+              <span style={{ color: "#6AAE6F" }}>Code</span>
+            </h1>
+
+            <p
+              className="text-lg max-w-sm"
+              style={{ color: "#6B7280", lineHeight: 1.6 }}
+            >
+              Learn programming one step at a time.
+            </p>
+          </div>
         </div>
-
-        <h1
-          className="text-6xl font-black mb-3 leading-tight"
-          style={{
-            color: "#2F2F2F",
-            fontFamily: "'Courier New', monospace",
-            textShadow: "3px 3px 0 #6AAE6F40",
-          }}
-        >
-          Step Into<br />
-          <span style={{ color: "#6AAE6F" }}>Code</span>
-        </h1>
-
-        <p
-          className="text-lg max-w-sm mx-auto"
-          style={{ color: "#6B7280", lineHeight: 1.6 }}
-        >
-          Learn programming one step at a time.
-        </p>
       </div>
 
       <div className="mb-12">

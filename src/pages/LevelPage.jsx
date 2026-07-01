@@ -589,7 +589,7 @@ export default function LevelPage() {
                     <p className="text-sm" style={{ color: "#374151" }}>
                       {level.explanation.map((seg, i) =>
                         seg.type === "code" ? (
-<code
+                        <code
                           key={i}
                           className="px-1.5 py-0.5 rounded text-xs font-mono"
                           style={{ background: "#E5E7EB", color: "#2F2F2F" }}
@@ -642,7 +642,7 @@ export default function LevelPage() {
                     <p className="text-sm" style={{ color: "#374151" }}>
                       {level.hint && level.hint.map((seg, i) =>
                         seg.type === "code" ? (
-<code
+                        <code
                           key={i}
                           className="px-1.5 py-0.5 rounded text-xs font-mono"
                           style={{ background: "#E5E7EB", color: "#2F2F2F" }}
@@ -681,7 +681,7 @@ export default function LevelPage() {
             <div className="lg:col-span-6 lg:self-start">
               <CodeEditorContainer code={code} setCode={setCode} language={track.name.split(" ")[0]} files={level.files} fileEntries={fileEntries} fileStore={fileStore} onFileUpdate={syncFileStore} fileEntriesBefore={fileEntriesBefore} />
 
-              <p className="text-xs mt-2 text-center" style={{ color: "#D1D5DB" }}>
+              <p className="text-xs mt-4 text-center" style={{ color: "#C0BAB0" }}>
                 Write your code above, then click Run to test or Submit to check your answer.
               </p>
             </div>
