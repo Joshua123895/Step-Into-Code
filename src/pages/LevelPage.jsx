@@ -13,6 +13,7 @@ import PixelButton from "../components/PixelButton";
 import Icon from "../components/Icon";
 import StarIcon from "../components/StarIcon";
 import completeSound from "../assets/sounds/complete.mp3";
+import collectSound from "../assets/sounds/collect.mp3";
 import wrongSound from "../assets/sounds/wrong.mp3";
 
 const FILE_CAPTURE_PREFIX = "__FILE_SAVE__";
@@ -26,6 +27,7 @@ export default function LevelPage() {
 
   const audioContextRef = useRef(null);
   const completeBufferRef = useRef(null);
+  const collectBufferRef = useRef(null);
   const wrongBufferRef = useRef(null);
 
   useEffect(() => {
@@ -41,6 +43,7 @@ export default function LevelPage() {
     };
 
     loadSound(completeSound, completeBufferRef);
+    loadSound(collectSound, collectBufferRef);
     loadSound(wrongSound, wrongBufferRef);
 
     return () => {
@@ -58,7 +61,7 @@ export default function LevelPage() {
     source.start(0);
   }
 
-  function playCompleteSound() { playSound(completeBufferRef.current); }
+  function playCompleteSound(stars) { playSound(stars === 3 ? completeBufferRef.current : collectBufferRef.current); }
   function playWrongSound() { playSound(wrongBufferRef.current); }
 
   async function cachedRunPythonReal(code, initialFiles, trackedFiles, inputs) {
@@ -209,10 +212,10 @@ export default function LevelPage() {
 
       execTime = (performance.now() - startTime) / 1000;
       setTesting(false);
-      playCompleteSound();
       let stars = 1;
       if (lineCount <= maxLines) stars++;
       if (execTime <= maxTime) stars++;
+      playCompleteSound(stars);
       completeLevel(trackName, level.id, stars);
       setEarnedStars(stars);
       setResultInfo({ lineCount, maxLines, execTime, maxTime });
@@ -231,10 +234,10 @@ export default function LevelPage() {
         execTime = (performance.now() - startTime) / 1000;
 
         if (stripFileCaptures(actualOutput) === expectedOutput) {
-          playCompleteSound();
           let stars = 1;
           if (lineCount <= maxLines) stars++;
           if (execTime <= maxTime) stars++;
+          playCompleteSound(stars);
           completeLevel(trackName, level.id, stars);
           setEarnedStars(stars);
           setResultInfo({ lineCount, maxLines, execTime, maxTime });
@@ -261,10 +264,10 @@ export default function LevelPage() {
         execTime = (performance.now() - startTime) / 1000;
 
         if (stripFileCaptures(actualOutput) === stripFileCaptures(expectedOutput)) {
-          playCompleteSound();
           let stars = 1;
           if (lineCount <= maxLines) stars++;
           if (execTime <= maxTime) stars++;
+          playCompleteSound(stars);
           completeLevel(trackName, level.id, stars);
           setEarnedStars(stars);
           setResultInfo({ lineCount, maxLines, execTime, maxTime });
@@ -308,10 +311,10 @@ export default function LevelPage() {
         }
 
         if (filesMatch) {
-          playCompleteSound();
           let stars = 1;
           if (lineCount <= maxLines) stars++;
           if (execTime <= maxTime) stars++;
+          playCompleteSound(stars);
           completeLevel(trackName, level.id, stars);
           setEarnedStars(stars);
           setResultInfo({ lineCount, maxLines, execTime, maxTime });
@@ -349,10 +352,10 @@ export default function LevelPage() {
             return;
           }
         }
-        playCompleteSound();
         let stars = 1;
         if (lineCount <= maxLines) stars++;
         if (execTime <= maxTime) stars++;
+        playCompleteSound(stars);
         completeLevel(trackName, level.id, stars);
         setEarnedStars(stars);
         setResultInfo({ lineCount, maxLines, execTime, maxTime });
