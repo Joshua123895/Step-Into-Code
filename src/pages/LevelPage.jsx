@@ -23,17 +23,47 @@ function stripFileCaptures(output) {
 export default function LevelPage() {
   const { trackName, chapterId, levelId } = useParams();
 
-  const completeAudioRef = useRef(null);
-  const wrongAudioRef = useRef(null);
+  const audioContextRef = useRef(null);
+  const completeBufferRef = useRef(null);
+  const wrongBufferRef = useRef(null);
 
   useEffect(() => {
-    completeAudioRef.current = new Audio(completeSound);
-    wrongAudioRef.current = new Audio(wrongSound);
+    const ctx = new AudioContext();
+    audioContextRef.current = ctx;
+
+    const loadSound = (url, bufferRef) => {
+      fetch(url)
+        .then((res) => res.arrayBuffer())
+        .then((data) => ctx.decodeAudioData(data))
+        .then((buf) => { bufferRef.current = buf; })
+        .catch(() => {});
+    };
+
+    loadSound(completeSound, completeBufferRef);
+    loadSound(wrongSound, wrongBufferRef);
+
+    return () => {
+      ctx.close();
+    };
   }, []);
+
+  function playSound(buffer) {
+    const ctx = audioContextRef.current;
+    if (!ctx || !buffer) return;
+    if (ctx.state === "suspended") ctx.resume();
+    const source = ctx.createBufferSource();
+    source.buffer = buffer;
+    source.connect(ctx.destination);
+    source.start(0);
+  }
+
+  function playCompleteSound() { playSound(completeBufferRef.current); }
+  function playWrongSound() { playSound(wrongBufferRef.current); }
 
   useEffect(() => {
     runPythonWithIO("print(1)", []);
   }, []);
+
   const navigate = useNavigate();
   const { getLevelStatus, getStars, completeLevel, getTotalStars } = useProgress();
 
@@ -44,7 +74,9 @@ export default function LevelPage() {
 
   const fileStore = useRef({});
   const [fileEntries, setFileEntries] = useState({});
-  const prevLevelIdRef = useRef(levelId);
+  const [fileEntriesBefore, setFileEntriesBefore] = useState({});
+  const prevLevelIdRef = useRef(null);
+  const solutionCacheRef = useRef(null);
 
   if (prevLevelIdRef.current !== levelId) {
     prevLevelIdRef.current = levelId;
@@ -52,6 +84,22 @@ export default function LevelPage() {
     fileStore.current = initial;
     setFileEntries(initial);
   }
+
+  useEffect(() => {
+    if (level?.files) {
+      const initialFiles = level.files.initial || {};
+      const trackedFiles = level.files.track || [];
+      const fullSolution = (level.startingCode || "") + level.solution;
+      runPythonReal(fullSolution, initialFiles, trackedFiles, [])
+        .then((result) => {
+          solutionCacheRef.current = {
+            stdout: result.stdout || "",
+            files: result.files || {},
+          };
+        })
+        .catch(() => {});
+    }
+  }, [level?.id]);
 
   function syncFileStore() {
     setFileEntries({ ...fileStore.current });
@@ -77,6 +125,15 @@ export default function LevelPage() {
     return runPythonWithIO(wrapped, inputs);
   }
 
+  async function runCodeFrom(rawCode, initialFiles, inputs) {
+    if (level?.files) {
+      return await runPythonReal(rawCode, initialFiles, level.files.track || [], inputs || []);
+    }
+    const wrapped = wrapCodeWithFiles(rawCode);
+    const stdout = await runPythonWithIO(wrapped, inputs);
+    return { stdout, files: {} };
+  }
+
 
   const [code, setCode] = useState(level?.startingCode ?? "");
   const [showModal, setShowModal] = useState(false);
@@ -90,6 +147,13 @@ export default function LevelPage() {
   const handleRun = async () => {
     if (!level) return;
     setTestFailure(null);
+
+    const tracked = level?.files?.track || [];
+    const snapshot = {};
+    for (const name of tracked) {
+      snapshot[name] = fileStore.current[name];
+    }
+    setFileEntriesBefore(snapshot);
 
     const lineCount = code
       .replace(/\r\n/g, "\n")
@@ -117,7 +181,7 @@ export default function LevelPage() {
             ? new RegExp(test.expectMatch).test(clean)
             : clean === test.expected;
         if (!match) {
-          wrongAudioRef.current?.play();
+          playWrongSound();
           setTestFailure({ input: test.input, expected: test.expected ?? test.expectAnyOf, actual: clean });
           setTesting(false);
           return;
@@ -126,7 +190,7 @@ export default function LevelPage() {
 
       execTime = (performance.now() - startTime) / 1000;
       setTesting(false);
-      completeAudioRef.current?.play();
+      playCompleteSound();
       let stars = 1;
       if (lineCount <= maxLines) stars++;
       if (execTime <= maxTime) stars++;
@@ -138,16 +202,17 @@ export default function LevelPage() {
       const solutionHasPrint = level.solution.includes("print(");
 
       if (solutionHasPrint) {
-        const fullSolution = (level.startingCode || "") + level.solution;
-        const [actualOutput, expectedOutput] = await Promise.all([
-          runWithFiles(code, []),
-          runWithFiles(fullSolution, []),
-        ]);
+        const actualOutput = await runWithFiles(code, []);
+        let expectedOutput = solutionCacheRef.current?.stdout;
+        if (expectedOutput === undefined) {
+          const result = await runCodeFrom((level.startingCode || "") + level.solution, { ...(level?.files?.initial || {}) }, []);
+          expectedOutput = result.stdout || "";
+        }
 
         execTime = (performance.now() - startTime) / 1000;
 
-        if (stripFileCaptures(actualOutput) === stripFileCaptures(expectedOutput)) {
-          completeAudioRef.current?.play();
+        if (stripFileCaptures(actualOutput) === expectedOutput) {
+          playCompleteSound();
           let stars = 1;
           if (lineCount <= maxLines) stars++;
           if (execTime <= maxTime) stars++;
@@ -156,8 +221,8 @@ export default function LevelPage() {
           setResultInfo({ lineCount, maxLines, execTime, maxTime });
           setShowModal(true);
         } else {
-          wrongAudioRef.current?.play();
-          setTestFailure({ input: "", expected: stripFileCaptures(expectedOutput), actual: stripFileCaptures(actualOutput) });
+          playWrongSound();
+          setTestFailure({ input: "", expected: expectedOutput, actual: stripFileCaptures(actualOutput) });
         }
         return;
       }
@@ -176,7 +241,7 @@ export default function LevelPage() {
         execTime = (performance.now() - startTime) / 1000;
 
         if (stripFileCaptures(actualOutput) === stripFileCaptures(expectedOutput)) {
-          completeAudioRef.current?.play();
+          playCompleteSound();
           let stars = 1;
           if (lineCount <= maxLines) stars++;
           if (execTime <= maxTime) stars++;
@@ -185,8 +250,58 @@ export default function LevelPage() {
           setResultInfo({ lineCount, maxLines, execTime, maxTime });
           setShowModal(true);
         } else {
-          wrongAudioRef.current?.play();
+          playWrongSound();
           setTestFailure({ input: inputDisplay, expected: stripFileCaptures(expectedOutput), actual: stripFileCaptures(actualOutput) });
+        }
+        return;
+      }
+
+      if (level?.files?.track?.length > 0) {
+        const initialFiles = level?.files?.initial ? { ...level.files.initial } : {};
+        const trackedFiles = level.files.track;
+
+        const userResult = await runCodeFrom(code, initialFiles, []);
+        let expectedFiles = solutionCacheRef.current?.files;
+        if (expectedFiles === undefined) {
+          const result = await runCodeFrom((level.startingCode || "") + level.solution, initialFiles, []);
+          expectedFiles = result.files || {};
+        }
+
+        execTime = (performance.now() - startTime) / 1000;
+
+        if (userResult.files && Object.keys(userResult.files).length > 0) {
+          fileStore.current = mergeFileStore(fileStore.current, null, userResult.files);
+          syncFileStore();
+        }
+
+        let filesMatch = true;
+        let mismatchInfo = null;
+        for (const fileName of trackedFiles) {
+          const userContent = (userResult.files || {})[fileName];
+          const expectedContent = expectedFiles[fileName];
+          if (userContent !== expectedContent) {
+            filesMatch = false;
+            mismatchInfo = { fileName, expected: expectedContent ?? "(file does not exist)", actual: userContent ?? "(file does not exist)" };
+            break;
+          }
+        }
+
+        if (filesMatch) {
+          playCompleteSound();
+          let stars = 1;
+          if (lineCount <= maxLines) stars++;
+          if (execTime <= maxTime) stars++;
+          completeLevel(trackName, level.id, stars);
+          setEarnedStars(stars);
+          setResultInfo({ lineCount, maxLines, execTime, maxTime });
+          setShowModal(true);
+        } else {
+          playWrongSound();
+          setTestFailure({
+            input: "",
+            expected: `${mismatchInfo.fileName} content:\n${mismatchInfo.expected}`,
+            actual: `${mismatchInfo.fileName} content:\n${mismatchInfo.actual}`,
+          });
         }
         return;
       }
@@ -200,7 +315,7 @@ export default function LevelPage() {
       execTime = (performance.now() - startTime) / 1000;
 
       if (stripFileCaptures(actualOutput) === stripFileCaptures(expectedOutput)) {
-        completeAudioRef.current?.play();
+        playCompleteSound();
         let stars = 1;
         if (lineCount <= maxLines) stars++;
         if (execTime <= maxTime) stars++;
@@ -209,7 +324,7 @@ export default function LevelPage() {
         setResultInfo({ lineCount, maxLines, execTime, maxTime });
         setShowModal(true);
       } else {
-        wrongAudioRef.current?.play();
+        playWrongSound();
         setTestFailure({ input: "", expected: stripFileCaptures(expectedOutput), actual: stripFileCaptures(actualOutput) });
       }
     }
@@ -526,7 +641,7 @@ export default function LevelPage() {
             </div>
 
             <div className="lg:col-span-6 lg:self-start">
-              <CodeEditorContainer code={code} setCode={setCode} language={track.name.split(" ")[0]} files={level.files} fileEntries={fileEntries} fileStore={fileStore} onFileUpdate={syncFileStore} />
+              <CodeEditorContainer code={code} setCode={setCode} language={track.name.split(" ")[0]} files={level.files} fileEntries={fileEntries} fileStore={fileStore} onFileUpdate={syncFileStore} fileEntriesBefore={fileEntriesBefore} comparisonMode="tabs" />
 
               <p className="text-xs mt-2 text-center" style={{ color: "#D1D5DB" }}>
                 Write your code above, then click Run to test or Submit to check your answer.

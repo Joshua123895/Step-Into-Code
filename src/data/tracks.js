@@ -2062,6 +2062,7 @@ export const TRACKS = [
       'with open("journal.txt", "w") as f:\n    f.write("Day 1: Started the journey\\n")\n    f.write("Day 2: Found a treasure map\\n")\n    f.write("Day 3: Reached the destination\\n")\n\nwith open("journal.txt", "r") as f:\n    print(f.read())',
             maxLines: 8,
             maxTime: 1,
+            files: { track: ["journal.txt"] },
           },
         ],
       },

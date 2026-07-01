@@ -45,17 +45,20 @@ const editorTheme = EditorView.theme({
   },
 });
 
-export default function CodeEditorContainer({ code, setCode, language, files, fileEntries = {}, fileStore: fileStoreRef, onFileUpdate }) {
+export default function CodeEditorContainer({ code, setCode, language, files, fileEntries = {}, fileStore: fileStoreRef, onFileUpdate, fileEntriesBefore = {}, comparisonMode = "tabs" }) {
   const inputRef = useRef(null);
   const [output, setOutput] = useState("");
   const [running, setRunning] = useState(false);
   const [waitingInput, setWaitingInput] = useState(false);
   const [inputBuffer, setInputBuffer] = useState("");
   const [activeTab, setActiveTab] = useState("main.py");
+  const [comparisonView, setComparisonView] = useState("after");
   const pendingResolve = useRef(null);
   const outputRef = useRef(null);
   const editorRef = useRef(null);
   const viewRef = useRef(null);
+  const fileViewerRef = useRef(null);
+  const fileViewInstance = useRef(null);
   const setCodeRef = useRef(setCode);
   const rawOutputRef = useRef("");
   const onFileUpdateRef = useRef(onFileUpdate);
@@ -121,6 +124,64 @@ export default function CodeEditorContainer({ code, setCode, language, files, fi
       outputRef.current.scrollTop = outputRef.current.scrollHeight;
     }
   }, [output]);
+
+  useEffect(() => {
+    if (activeTab === "main.py" && viewRef.current) {
+      viewRef.current.requestMeasure();
+    }
+  }, [activeTab]);
+
+  useEffect(() => {
+    if (activeTab !== "main.py" && fileViewerRef.current) {
+      const beforeContent = fileEntriesBefore[activeTab];
+      const afterContent = fileEntries[activeTab];
+      const hasBefore = beforeContent !== undefined;
+      const hasAfter = afterContent !== undefined;
+      const showToggle = hasBefore && hasAfter;
+      const content = showToggle
+        ? (comparisonView === "before" ? beforeContent : afterContent)
+        : (hasAfter ? afterContent : (hasBefore ? beforeContent : "(No file)"));
+      const isPy = activeTab.endsWith(".py");
+
+      if (!fileViewInstance.current) {
+        fileViewInstance.current = new EditorView({
+          state: EditorState.create({
+            doc: content,
+            extensions: [
+              basicSetup,
+              ...(isPy ? [python()] : []),
+              oneDark,
+              editorTheme,
+              EditorView.editable.of(false),
+              indentUnit.of("    "),
+              EditorState.tabSize.of(4),
+            ],
+          }),
+          parent: fileViewerRef.current,
+        });
+      } else {
+        const currentDoc = fileViewInstance.current.state.doc.toString();
+        if (currentDoc !== content) {
+          fileViewInstance.current.dispatch({
+            changes: { from: 0, to: currentDoc.length, insert: content },
+          });
+        }
+      }
+    }
+  }, [activeTab, fileEntries, fileEntriesBefore, comparisonView]);
+
+  useEffect(() => {
+    setComparisonView("after");
+  }, [fileEntries]);
+
+  useEffect(() => {
+    return () => {
+      if (fileViewInstance.current) {
+        fileViewInstance.current.destroy();
+        fileViewInstance.current = null;
+      }
+    };
+  }, []);
 
   const handleRun = useCallback(async () => {
     setRunning(true);
@@ -191,12 +252,24 @@ export default function CodeEditorContainer({ code, setCode, language, files, fi
     }
   }, [waitingInput]);
 
-  const fileNames = Object.keys(fileEntries).filter((n) => n !== "main.py");
+  const trackedFiles = files?.track || [];
+  const fileNames = [
+    ...new Set([
+      ...Object.keys(fileEntries).filter((n) => n !== "main.py"),
+      ...trackedFiles.filter((n) => n !== "main.py"),
+    ]),
+  ];
 
-  if (activeTab !== "main.py" && !fileEntries[activeTab]) {
+  if (activeTab !== "main.py" && !fileNames.includes(activeTab)) {
     setActiveTab("main.py");
   }
   const showFileTabs = files && fileNames.length > 0;
+
+  const beforeContent = fileEntriesBefore?.[activeTab];
+  const afterContent = fileEntries[activeTab];
+  const hasBefore = beforeContent !== undefined;
+  const hasAfter = afterContent !== undefined;
+  const showComparisonToggle = hasBefore && hasAfter && comparisonMode === "tabs";
 
   return (
     <div
@@ -276,26 +349,53 @@ export default function CodeEditorContainer({ code, setCode, language, files, fi
         </div>
       )}
 
-      {activeTab === "main.py" ? (
+      {activeTab !== "main.py" && showComparisonToggle && (
         <div
-          className="flex min-h-0 flex-1"
-          style={{ background: "#1a1b2e", touchAction: "manipulation" }}
+          className="flex shrink-0"
+          style={{ background: "#16162a", borderBottom: "1px solid #2a2b3d" }}
         >
-          <div ref={editorRef} className="flex-1" style={{ touchAction: "manipulation" }} />
-        </div>
-      ) : (
-        <div
-          className="flex min-h-0 flex-1 overflow-auto"
-          style={{ background: "#1a1b2e" }}
-        >
-          <pre
-            className="text-sm font-mono p-4 m-0 whitespace-pre-wrap"
-            style={{ color: "#CDD6F4", userSelect: "text" }}
+          <button
+            onClick={() => setComparisonView("before")}
+            className="text-xs px-4 py-1.5 font-mono border-r transition-all"
+            style={{
+              background: comparisonView === "before" ? "#1a1b2e" : "transparent",
+              color: comparisonView === "before" ? "#CDD6F4" : "#6B7280",
+              borderColor: "#2a2b3d",
+              borderBottom: comparisonView === "before" ? "2px solid #7AA2F7" : "2px solid transparent",
+            }}
           >
-            {fileEntries[activeTab]}
-          </pre>
+            Before
+          </button>
+          <button
+            onClick={() => setComparisonView("after")}
+            className="text-xs px-4 py-1.5 font-mono border-r transition-all"
+            style={{
+              background: comparisonView === "after" ? "#1a1b2e" : "transparent",
+              color: comparisonView === "after" ? "#CDD6F4" : "#6B7280",
+              borderColor: "#2a2b3d",
+              borderBottom: comparisonView === "after" ? "2px solid #6AAE6F" : "2px solid transparent",
+            }}
+          >
+            After
+          </button>
         </div>
       )}
+
+      <div
+        className="flex min-h-0 flex-1"
+        style={{ background: "#1a1b2e", touchAction: "manipulation" }}
+      >
+        <div
+          ref={editorRef}
+          className="flex-1"
+          style={{ display: activeTab === "main.py" ? "" : "none", touchAction: "manipulation" }}
+        />
+        <div
+          ref={fileViewerRef}
+          className="flex-1"
+          style={{ display: activeTab !== "main.py" ? "" : "none", touchAction: "manipulation" }}
+        />
+      </div>
 
       <div
         className="flex items-center gap-2 px-4 py-1.5 shrink-0"
@@ -310,7 +410,7 @@ export default function CodeEditorContainer({ code, setCode, language, files, fi
       </div>
       <div
         className="flex flex-col shrink-0"
-        style={{ background: "#0d0e17", minHeight: 120, maxHeight: 200 }}
+        style={{ background: "#0d0e17", minHeight: 80, maxHeight: 150 }}
       >
         <div
           ref={outputRef}
