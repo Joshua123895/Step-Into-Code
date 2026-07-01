@@ -1597,6 +1597,7 @@ export const TRACKS = [
             solution: "class Dog:\n    pass",
             maxLines: 3,
             maxTime: 1,
+            sourceChecks: { classes: ["Dog"] },
           },
 
           {
@@ -1646,6 +1647,7 @@ export const TRACKS = [
             solution: "class Dog:\n    def __init__(self, name):\n        self.name = name",
             maxLines: 4,
             maxTime: 1,
+            sourceChecks: { classes: ["Dog"], functions: ["__init__"] },
           },
 
           {
@@ -1776,6 +1778,7 @@ export const TRACKS = [
             solution: "class Puppy(Dog):\n    pass",
             maxLines: 3,
             maxTime: 1,
+            sourceChecks: { classes: ["Puppy"], inheritance: { "Puppy": ["Dog"] } },
           },
 
           {

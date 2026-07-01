@@ -45,14 +45,13 @@ const editorTheme = EditorView.theme({
   },
 });
 
-export default function CodeEditorContainer({ code, setCode, language, files, fileEntries = {}, fileStore: fileStoreRef, onFileUpdate, fileEntriesBefore = {}, comparisonMode = "tabs" }) {
+export default function CodeEditorContainer({ code, setCode, language, files, fileEntries = {}, fileStore: fileStoreRef, onFileUpdate, fileEntriesBefore = {} }) {
   const inputRef = useRef(null);
   const [output, setOutput] = useState("");
   const [running, setRunning] = useState(false);
   const [waitingInput, setWaitingInput] = useState(false);
   const [inputBuffer, setInputBuffer] = useState("");
   const [activeTab, setActiveTab] = useState("main.py");
-  const [comparisonView, setComparisonView] = useState("after");
   const pendingResolve = useRef(null);
   const outputRef = useRef(null);
   const editorRef = useRef(null);
@@ -133,15 +132,18 @@ export default function CodeEditorContainer({ code, setCode, language, files, fi
 
   useEffect(() => {
     if (activeTab !== "main.py" && fileViewerRef.current) {
-      const beforeContent = fileEntriesBefore[activeTab];
-      const afterContent = fileEntries[activeTab];
-      const hasBefore = beforeContent !== undefined;
-      const hasAfter = afterContent !== undefined;
-      const showToggle = hasBefore && hasAfter;
-      const content = showToggle
-        ? (comparisonView === "before" ? beforeContent : afterContent)
-        : (hasAfter ? afterContent : (hasBefore ? beforeContent : "(No file)"));
-      const isPy = activeTab.endsWith(".py");
+      function getContent(tabId) {
+        if (tabId.endsWith(" (Before)")) return fileEntriesBefore[tabId.slice(0, -9)] ?? "(No file)";
+        if (tabId.endsWith(" (After)")) return fileEntries[tabId.slice(0, -8)] ?? "(No file)";
+        return fileEntries[tabId] ?? fileEntriesBefore[tabId] ?? "(No file)";
+      }
+      function getRealName(tabId) {
+        if (tabId.endsWith(" (Before)")) return tabId.slice(0, -9);
+        if (tabId.endsWith(" (After)")) return tabId.slice(0, -8);
+        return tabId;
+      }
+      const content = getContent(activeTab);
+      const isPy = getRealName(activeTab).endsWith(".py");
 
       if (!fileViewInstance.current) {
         fileViewInstance.current = new EditorView({
@@ -168,11 +170,7 @@ export default function CodeEditorContainer({ code, setCode, language, files, fi
         }
       }
     }
-  }, [activeTab, fileEntries, fileEntriesBefore, comparisonView]);
-
-  useEffect(() => {
-    setComparisonView("after");
-  }, [fileEntries]);
+  }, [activeTab, fileEntries, fileEntriesBefore]);
 
   useEffect(() => {
     return () => {
@@ -259,17 +257,21 @@ export default function CodeEditorContainer({ code, setCode, language, files, fi
       ...trackedFiles.filter((n) => n !== "main.py"),
     ]),
   ];
+  const fileTabs = [];
+  const virtualTabs = [];
+  for (const name of fileNames) {
+    if (fileEntriesBefore[name] !== undefined && fileEntries[name] !== undefined) {
+      virtualTabs.push(`${name} (Before)`, `${name} (After)`);
+    } else {
+      fileTabs.push(name);
+    }
+  }
+  const allTabs = [...fileTabs, ...virtualTabs];
 
-  if (activeTab !== "main.py" && !fileNames.includes(activeTab)) {
+  if (activeTab !== "main.py" && !allTabs.includes(activeTab)) {
     setActiveTab("main.py");
   }
   const showFileTabs = files && fileNames.length > 0;
-
-  const beforeContent = fileEntriesBefore?.[activeTab];
-  const afterContent = fileEntries[activeTab];
-  const hasBefore = beforeContent !== undefined;
-  const hasAfter = afterContent !== undefined;
-  const showComparisonToggle = hasBefore && hasAfter && comparisonMode === "tabs";
 
   return (
     <div
@@ -331,53 +333,28 @@ export default function CodeEditorContainer({ code, setCode, language, files, fi
           >
             main.py
           </button>
-          {fileNames.map((name) => (
-            <button
-              key={name}
-              onClick={() => setActiveTab(name)}
-              className="text-xs px-4 py-2 font-mono border-r transition-all"
-              style={{
-                background: activeTab === name ? "#1a1b2e" : "transparent",
-                color: activeTab === name ? "#CDD6F4" : "#6B7280",
-                borderColor: "#2a2b3d",
-                borderBottom: activeTab === name ? "2px solid #E9B44C" : "2px solid transparent",
-              }}
-            >
-              {name}
-            </button>
-          ))}
-        </div>
-      )}
-
-      {activeTab !== "main.py" && showComparisonToggle && (
-        <div
-          className="flex shrink-0"
-          style={{ background: "#16162a", borderBottom: "1px solid #2a2b3d" }}
-        >
-          <button
-            onClick={() => setComparisonView("before")}
-            className="text-xs px-4 py-1.5 font-mono border-r transition-all"
-            style={{
-              background: comparisonView === "before" ? "#1a1b2e" : "transparent",
-              color: comparisonView === "before" ? "#CDD6F4" : "#6B7280",
-              borderColor: "#2a2b3d",
-              borderBottom: comparisonView === "before" ? "2px solid #7AA2F7" : "2px solid transparent",
-            }}
-          >
-            Before
-          </button>
-          <button
-            onClick={() => setComparisonView("after")}
-            className="text-xs px-4 py-1.5 font-mono border-r transition-all"
-            style={{
-              background: comparisonView === "after" ? "#1a1b2e" : "transparent",
-              color: comparisonView === "after" ? "#CDD6F4" : "#6B7280",
-              borderColor: "#2a2b3d",
-              borderBottom: comparisonView === "after" ? "2px solid #6AAE6F" : "2px solid transparent",
-            }}
-          >
-            After
-          </button>
+          {allTabs.map((name) => {
+            const isBefore = name.endsWith(" (Before)");
+            const isAfter = name.endsWith(" (After)");
+            const accentColor = isBefore ? "#7AA2F7" : isAfter ? "#6AAE6F" : "#E9B44C";
+            return (
+              <button
+                key={name}
+                onClick={() => setActiveTab(name)}
+                className="text-xs px-4 py-2 font-mono border-r transition-all"
+                style={{
+                  background: activeTab === name ? "#1a1b2e" : "transparent",
+                  color: activeTab === name ? "#CDD6F4" : "#6B7280",
+                  borderColor: "#2a2b3d",
+                  borderBottom: activeTab === name
+                    ? `2px solid ${accentColor}`
+                    : "2px solid transparent",
+                }}
+              >
+                {name}
+              </button>
+            );
+          })}
         </div>
       )}
 

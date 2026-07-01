@@ -5,6 +5,7 @@ import { useProgress } from "../hooks/useProgress";
 import { runPythonWithIO } from "../utils/pythonRunner";
 import { runPythonReal } from "../utils/pythonRunnerReal";
 import { buildFileSetup, buildFileTeardown, mergeFileStore } from "../utils/fileManager";
+import { validateStructure } from "../utils/structureValidator";
 import CompletionModal from "../components/CompletionModal";
 import CodeEditorContainer from "../components/CodeEditorContainer";
 import ProgressBar from "../components/ProgressBar";
@@ -60,6 +61,22 @@ export default function LevelPage() {
   function playCompleteSound() { playSound(completeBufferRef.current); }
   function playWrongSound() { playSound(wrongBufferRef.current); }
 
+  async function cachedRunPythonReal(code, initialFiles, trackedFiles, inputs) {
+    const normalizedFiles = Object.keys(initialFiles).sort().reduce((acc, key) => {
+      acc[key] = initialFiles[key];
+      return acc;
+    }, {});
+    const cacheKey = JSON.stringify({ c: code, f: normalizedFiles, t: trackedFiles, i: inputs });
+    const cached = serverCacheRef.current.get(cacheKey);
+    if (cached) return cached;
+
+    const result = await runPythonReal(code, initialFiles, trackedFiles, inputs);
+    if (!result.error) {
+      serverCacheRef.current.set(cacheKey, result);
+    }
+    return result;
+  }
+
   useEffect(() => {
     runPythonWithIO("print(1)", []);
   }, []);
@@ -75,6 +92,7 @@ export default function LevelPage() {
   const fileStore = useRef({});
   const [fileEntries, setFileEntries] = useState({});
   const [fileEntriesBefore, setFileEntriesBefore] = useState({});
+  const serverCacheRef = useRef(new Map());
   const prevLevelIdRef = useRef(null);
   const solutionCacheRef = useRef(null);
 
@@ -114,7 +132,7 @@ export default function LevelPage() {
 
   async function runWithFiles(rawCode, inputs) {
     if (level?.files) {
-      const result = await runPythonReal(rawCode, fileStore.current, level.files.track || [], inputs || []);
+      const result = await cachedRunPythonReal(rawCode, fileStore.current, level.files.track || [], inputs || []);
       if (result.files && Object.keys(result.files).length > 0) {
         fileStore.current = mergeFileStore(fileStore.current, null, result.files);
         syncFileStore();
@@ -127,7 +145,7 @@ export default function LevelPage() {
 
   async function runCodeFrom(rawCode, initialFiles, inputs) {
     if (level?.files) {
-      return await runPythonReal(rawCode, initialFiles, level.files.track || [], inputs || []);
+      return await cachedRunPythonReal(rawCode, initialFiles, level.files.track || [], inputs || []);
     }
     const wrapped = wrapCodeWithFiles(rawCode);
     const stdout = await runPythonWithIO(wrapped, inputs);
@@ -262,17 +280,12 @@ export default function LevelPage() {
 
         const userResult = await runCodeFrom(code, initialFiles, []);
         let expectedFiles = solutionCacheRef.current?.files;
-        if (expectedFiles === undefined) {
+        if (expectedFiles === undefined || expectedFiles === null) {
           const result = await runCodeFrom((level.startingCode || "") + level.solution, initialFiles, []);
           expectedFiles = result.files || {};
         }
 
         execTime = (performance.now() - startTime) / 1000;
-
-        if (userResult.files && Object.keys(userResult.files).length > 0) {
-          fileStore.current = mergeFileStore(fileStore.current, null, userResult.files);
-          syncFileStore();
-        }
 
         let filesMatch = true;
         let mismatchInfo = null;
@@ -284,6 +297,11 @@ export default function LevelPage() {
             mismatchInfo = { fileName, expected: expectedContent ?? "(file does not exist)", actual: userContent ?? "(file does not exist)" };
             break;
           }
+        }
+
+        if (userResult.files && Object.keys(userResult.files).length > 0) {
+          fileStore.current = mergeFileStore(fileStore.current, null, userResult.files);
+          syncFileStore();
         }
 
         if (filesMatch) {
@@ -314,7 +332,18 @@ export default function LevelPage() {
 
       execTime = (performance.now() - startTime) / 1000;
 
-      if (stripFileCaptures(actualOutput) === stripFileCaptures(expectedOutput)) {
+      const strippedActual = stripFileCaptures(actualOutput);
+      const strippedExpected = stripFileCaptures(expectedOutput);
+
+      if (strippedActual === strippedExpected) {
+        if (strippedActual === "" && strippedExpected === "" && level.sourceChecks) {
+          const result = await validateStructure(code, level.sourceChecks);
+          if (!result.valid) {
+            playWrongSound();
+            setTestFailure({ input: "", expected: "", actual: result.error });
+            return;
+          }
+        }
         playCompleteSound();
         let stars = 1;
         if (lineCount <= maxLines) stars++;
@@ -325,7 +354,7 @@ export default function LevelPage() {
         setShowModal(true);
       } else {
         playWrongSound();
-        setTestFailure({ input: "", expected: stripFileCaptures(expectedOutput), actual: stripFileCaptures(actualOutput) });
+        setTestFailure({ input: "", expected: strippedExpected, actual: strippedActual });
       }
     }
   };
@@ -641,7 +670,7 @@ export default function LevelPage() {
             </div>
 
             <div className="lg:col-span-6 lg:self-start">
-              <CodeEditorContainer code={code} setCode={setCode} language={track.name.split(" ")[0]} files={level.files} fileEntries={fileEntries} fileStore={fileStore} onFileUpdate={syncFileStore} fileEntriesBefore={fileEntriesBefore} comparisonMode="tabs" />
+              <CodeEditorContainer code={code} setCode={setCode} language={track.name.split(" ")[0]} files={level.files} fileEntries={fileEntries} fileStore={fileStore} onFileUpdate={syncFileStore} fileEntriesBefore={fileEntriesBefore} />
 
               <p className="text-xs mt-2 text-center" style={{ color: "#D1D5DB" }}>
                 Write your code above, then click Run to test or Submit to check your answer.
