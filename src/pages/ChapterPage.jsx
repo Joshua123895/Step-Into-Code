@@ -16,7 +16,7 @@ export default function ChapterPage() {
   if (!track || !chapter) {
     return (
       <div className="min-h-screen pt-24 pb-16 px-4 max-w-4xl mx-auto relative z-10">
-        <h1 className="text-2xl font-bold" style={{ color: "#2F2F2F" }}>
+        <h1 className="text-2xl font-bold" style={{ color: "var(--text)" }}>
           Chapter not found
         </h1>
         <button onClick={() => navigate(`/tracks/${trackName}`)} style={{ color: "#6AAE6F" }}>
@@ -37,23 +37,23 @@ export default function ChapterPage() {
       <div className="mb-8">
         <button onClick={() => navigate(`/tracks/${trackName}`)}
           className="text-sm mb-4 flex items-center gap-1 hover:gap-2 transition-all"
-          style={{ color: "#9CA3AF" }}>
+          style={{ color: "var(--text-muted)" }}>
           ← {track.name}
         </button>
 
         <div className="flex items-center gap-4 mb-4">
           <Icon src={chapter.icon} alt={chapter.name} size={64} />
           <div>
-            <div className="text-xs font-bold mb-0.5 uppercase tracking-wider" style={{ color: "#9CA3AF" }}>
+            <div className="text-xs font-bold mb-0.5 uppercase tracking-wider" style={{ color: "var(--text-muted)" }}>
               Chapter {chapter.id}
             </div>
-            <h1 className="text-2xl font-black" style={{ color: "#2F2F2F", fontFamily: "'Courier New', monospace" }}>
+            <h1 className="text-2xl font-black" style={{ color: "var(--text)", fontFamily: "'Courier New', monospace" }}>
               {chapter.name}
             </h1>
           </div>
         </div>
 
-        <p className="text-sm mb-4" style={{ color: "#6B7280" }}>
+        <p className="text-sm mb-4" style={{ color: "var(--text-secondary)" }}>
           Learn how programs store and remember information through small, satisfying coding puzzles.
         </p>
 
@@ -68,7 +68,7 @@ export default function ChapterPage() {
               <span className="text-sm font-black" style={{ color: s.color, fontFamily: "'Courier New', monospace" }}>
                 {s.value}
               </span>
-              <span className="text-xs ml-1" style={{ color: "#9CA3AF" }}>
+              <span className="text-xs ml-1" style={{ color: "var(--text-muted)" }}>
                 {s.label}
               </span>
             </div>
@@ -77,7 +77,7 @@ export default function ChapterPage() {
       </div>
 
       <div className="mb-8">
-        <h2 className="text-sm font-bold mb-3 uppercase tracking-wider" style={{ color: "#9CA3AF" }}>
+        <h2 className="text-sm font-bold mb-3 uppercase tracking-wider" style={{ color: "var(--text-muted)" }}>
           Levels
         </h2>
         <div className="flex flex-col gap-2">

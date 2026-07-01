@@ -14,12 +14,12 @@ export default function LevelCard({ level, onClick, stars }) {
         ${isLocked ? "cursor-not-allowed" : "cursor-pointer hover:-translate-y-0.5 hover:shadow-md"}
       `}
       style={{
-        background: isLocked ? "#F0F0F0" : "#fff",
+        background: isLocked ? "var(--bg-surface)" : "var(--bg-card)",
         border: isCompleted
           ? "2px solid #67C587"
           : isUnlocked
           ? "2px solid #7AA2F7"
-          : "2px solid #E0E0E0",
+          : "2px solid var(--border-strong)",
         opacity: isLocked ? 0.55 : 1,
         boxShadow: isCompleted
           ? "0 2px 12px #67C58720"
@@ -37,7 +37,7 @@ export default function LevelCard({ level, onClick, stars }) {
               : isUnlocked
               ? "#7AA2F720"
               : "#E0E0E020",
-            color: isCompleted ? "#67C587" : isUnlocked ? "#7AA2F7" : "#B5B5B5",
+            color: isCompleted ? "#67C587" : isUnlocked ? "#7AA2F7" : "var(--text-disabled)",
             fontFamily: "'Courier New', monospace",
           }}
         >
@@ -45,13 +45,13 @@ export default function LevelCard({ level, onClick, stars }) {
         </div>
 
         <div className="flex-1 min-w-0">
-          <div className="text-xs font-medium mb-0.5" style={{ color: "#9CA3AF" }}>
+          <div className="text-xs font-medium mb-0.5" style={{ color: "var(--text-muted)" }}>
             Level {level.id}
           </div>
           <div
             className="font-bold text-sm truncate"
             style={{
-              color: isLocked ? "#B5B5B5" : "#2F2F2F",
+              color: isLocked ? "var(--text-disabled)" : "var(--text)",
               fontFamily: isUnlocked ? "'Courier New', monospace" : "inherit",
             }}
           >

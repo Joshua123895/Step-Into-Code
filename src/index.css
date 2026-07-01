@@ -1,9 +1,46 @@
 @import "tailwindcss";
 
+:root {
+  --bg: #F7F3E9;
+  --bg-card: #ffffff;
+  --bg-surface: #F0F0F0;
+  --bg-surface-alt: #F5F5F5;
+  --text: #2F2F2F;
+  --text-secondary: #6B7280;
+  --text-muted: #9CA3AF;
+  --text-disabled: #B5B5B5;
+  --border: #E5E7EB;
+  --border-strong: #E0E0E0;
+  --nav-bg: #2F2F2F;
+  --nav-text: #F7F3E9;
+  --overlay: rgba(0,0,0,0.5);
+}
+
+.dark {
+  --bg: #1a1b2e;
+  --bg-card: #2d2d44;
+  --bg-surface: #3d3d5c;
+  --bg-surface-alt: #3d3d5c;
+  --text: #CDD6F4;
+  --text-secondary: #9CA3AF;
+  --text-muted: #6B7280;
+  --text-disabled: #6B7280;
+  --border: #3d3d5c;
+  --border-strong: #4a4a6a;
+  --nav-bg: #0d0e17;
+  --nav-text: #CDD6F4;
+  --overlay: rgba(0,0,0,0.7);
+}
+
 body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  background-color: #F7F3E9;
-  color: #2F2F2F;
+  background-color: var(--bg);
+  color: var(--text);
+  transition: background-color 0.5s ease, color 0.5s ease;
+}
+
+html, #root, nav, main, section {
+  transition: background-color 0.5s ease, color 0.5s ease, border-color 0.5s ease;
 }
 
 html, body, #root {
@@ -13,7 +50,6 @@ html, body, #root {
 
 /* --- Scrollbar styling for all browsers --- */
 
-/* Chrome, Edge, Safari */
 ::-webkit-scrollbar {
   width: 5px;
   height: 5px;
@@ -36,8 +72,15 @@ html, body, #root {
   background: #a0a0a0;
 }
 
-/* Firefox & Chromium standard properties (not inherited, apply to all) */
 * {
   scrollbar-width: thin;
   scrollbar-color: #c4c4c4 transparent;
+}
+
+.editor-wrapper,
+.editor-wrapper * {
+  transition: background 0.5s ease, background-color 0.5s ease,
+              color 0.5s ease, border 0.5s ease, border-color 0.5s ease,
+              border-bottom-color 0.5s ease, border-top-color 0.5s ease,
+              box-shadow 0.5s ease, caret-color 0.5s ease;
 }

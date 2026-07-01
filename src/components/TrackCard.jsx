@@ -19,7 +19,7 @@ export default function TrackCard({ track }) {
     <div
       className="rounded-2xl p-6 relative overflow-hidden"
       style={{
-        background: "#fff",
+        background: "var(--bg-card)",
         border: "2px solid #6AAE6F",
         boxShadow: "0 4px 24px #6AAE6F15",
       }}
@@ -40,11 +40,11 @@ export default function TrackCard({ track }) {
         </div>
         <h3
           className="text-xl font-bold mb-1"
-          style={{ color: "#2F2F2F", fontFamily: "'Courier New', monospace" }}
+          style={{ color: "var(--text)", fontFamily: "'Courier New', monospace" }}
         >
           {track.name}
         </h3>
-        <p className="text-sm mb-4" style={{ color: "#6B7280" }}>
+        <p className="text-sm mb-4" style={{ color: "var(--text-secondary)" }}>
           {track.description}
         </p>
         <ProgressBar value={getTrackProgress(track.slug, track.chapters.reduce((s, ch) => s + ch.levels.length, 0))} />
@@ -57,7 +57,7 @@ export default function TrackCard({ track }) {
               >
                 {track.chapters.length}
               </div>
-              <div className="text-xs" style={{ color: "#9CA3AF" }}>
+              <div className="text-xs" style={{ color: "var(--text-muted)" }}>
                 Chapter{track.chapters.length > 1 ? "s" : ""}
               </div>
             </div>
@@ -68,7 +68,7 @@ export default function TrackCard({ track }) {
               >
                 {track.chapters.reduce((sum, ch) => sum + ch.levels.length, 0)}
               </div>
-              <div className="text-xs" style={{ color: "#9CA3AF" }}>
+              <div className="text-xs" style={{ color: "var(--text-muted)" }}>
                 Levels
               </div>
             </div>

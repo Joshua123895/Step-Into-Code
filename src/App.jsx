@@ -13,6 +13,7 @@ function LevelPageWrapper() {
 }
 
 export default function App() {
+
   return (
     <>
       <style>{`
@@ -58,7 +59,7 @@ export default function App() {
 
       <div
         className="relative"
-        style={{ background: "#F7F3E9", minHeight: "100vh" }}
+        style={{ background: "var(--bg)", minHeight: "100vh" }}
       >
         <PixelParticles />
         <Navbar />

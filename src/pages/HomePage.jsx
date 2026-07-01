@@ -26,7 +26,7 @@ export default function HomePage() {
             <h1
               className="text-5xl font-black mb-3 leading-tight"
               style={{
-                color: "#2F2F2F",
+                color: "var(--text)",
                 fontFamily: "'Courier New', monospace",
                 textShadow: "3px 3px 0 #6AAE6F40",
               }}
@@ -37,7 +37,7 @@ export default function HomePage() {
 
             <p
               className="text-lg max-w-sm"
-              style={{ color: "#6B7280", lineHeight: 1.6 }}
+              style={{ color: "var(--text-secondary)", lineHeight: 1.6 }}
             >
               Learn programming one step at a time.
             </p>
@@ -54,8 +54,8 @@ export default function HomePage() {
       <div
         className="grid grid-cols-3 gap-px rounded-2xl overflow-hidden"
         style={{
-          background: "#E5E7EB",
-          border: "2px solid #E5E7EB",
+          background: "var(--border)",
+          border: "2px solid var(--border)",
           boxShadow: "0 4px 24px rgba(0,0,0,0.06)",
           maxWidth: 420,
           width: "100%",
@@ -69,7 +69,7 @@ export default function HomePage() {
           <div
             key={s.label}
             className="flex flex-col items-center py-5 px-4"
-            style={{ background: "#fff" }}
+            style={{ background: "var(--bg-card)" }}
           >
             <span className="text-2xl mb-1">{s.icon}</span>
             <span
@@ -78,14 +78,14 @@ export default function HomePage() {
             >
               {s.value}
             </span>
-            <span className="text-xs text-center" style={{ color: "#9CA3AF" }}>
+            <span className="text-xs text-center" style={{ color: "var(--text-muted)" }}>
               {s.label}
             </span>
           </div>
         ))}
       </div>
 
-      <p className="mt-8 text-xs" style={{ color: "#C0BAB0" }}>
+      <p className="mt-8 text-xs" style={{ color: "var(--text-muted)" }}>
         No account needed · Free to play
       </p>
     </div>

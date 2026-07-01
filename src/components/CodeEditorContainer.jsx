@@ -1,51 +1,329 @@
-import { useRef, useEffect, useState, useCallback } from "react";
+import { useRef, useEffect, useState, useCallback, useMemo } from "react";
 import { runPython } from "../utils/pythonRunner";
 import { runPythonReal } from "../utils/pythonRunnerReal";
 import { buildFileSetup, buildFileTeardown, parseFileCaptures, mergeFileStore } from "../utils/fileManager";
 import { basicSetup } from "codemirror";
-import { EditorView } from "@codemirror/view";
-import { EditorState } from "@codemirror/state";
+import { EditorView, keymap } from "@codemirror/view";
+import { EditorState, Compartment } from "@codemirror/state";
 import { python } from "@codemirror/lang-python";
 import { oneDark } from "@codemirror/theme-one-dark";
-import { indentUnit } from "@codemirror/language";
+import { indentUnit, HighlightStyle, syntaxHighlighting } from "@codemirror/language";
+import { tags } from "@lezer/highlight";
+import { useTheme } from "../context/ThemeContext";
 
-const editorTheme = EditorView.theme({
+const oneLightTheme = EditorView.theme({
   "&": {
-    height: "100%",
-    fontSize: "14px",
-    fontFamily: "'Consolas', monospace",
+    color: "#374151",
+    backgroundColor: "#FAF9F5",
   },
-  ".cm-scroller": {
-    overflow: "auto",
-    lineHeight: "1.6rem",
-    overscrollBehavior: "none",
-    WebkitOverflowScrolling: "touch",
-  },
+
   ".cm-content": {
-    padding: "16px 0",
     caretColor: "#6AAE6F",
   },
-  ".cm-gutters": {
-    fontFamily: "'Consolas', monospace",
-    fontSize: "13px",
-    paddingRight: "4px",
-    borderRight: "none",
-  },
-  ".cm-activeLineGutter": {
-    backgroundColor: "transparent",
-  },
-  ".cm-selectionBackground": {
-    backgroundColor: "#334155 !important",
-  },
-  "&.cm-focused .cm-cursor": {
+
+  ".cm-cursor, .cm-dropCursor": {
     borderLeftColor: "#6AAE6F",
   },
-  "&.cm-focused": {
-    outline: "none",
+
+  "&.cm-focused > .cm-scroller > .cm-selectionLayer .cm-selectionBackground, .cm-selectionBackground, .cm-content ::selection": {
+    backgroundColor: "#D8ECD7",
   },
-});
+
+  ".cm-panels": {
+    backgroundColor: "#F5F4EF",
+    color: "#374151",
+  },
+
+  ".cm-panels.cm-panels-top": {
+    borderBottom: "1px solid #D8DDD3",
+  },
+
+  ".cm-panels.cm-panels-bottom": {
+    borderTop: "1px solid #D8DDD3",
+  },
+
+  ".cm-searchMatch": {
+    backgroundColor: "#B7D7FF55",
+    outline: "1px solid #6AAE6F",
+  },
+
+  ".cm-searchMatch.cm-searchMatch-selected": {
+    backgroundColor: "#D8ECD7",
+  },
+
+  ".cm-activeLine": {
+    backgroundColor: "#F0F3ED",
+  },
+
+  ".cm-selectionMatch": {
+    backgroundColor: "#D8ECD7",
+  },
+
+  "&.cm-focused .cm-matchingBracket": {
+    backgroundColor: "#D8ECD7",
+    color: "#2F3430",
+    fontWeight: "600",
+  },
+
+  "&.cm-focused .cm-nonmatchingBracket": {
+    backgroundColor: "#FAD2D2",
+    color: "#C0392B",
+  },
+
+  ".cm-foldPlaceholder": {
+    backgroundColor: "#EEF2EB",
+    border: "1px solid #D8DDD3",
+    color: "#7B8077",
+    borderRadius: "4px",
+  },
+
+  ".cm-tooltip": {
+    border: "1px solid #D8DDD3",
+    backgroundColor: "#FAF9F5",
+    borderRadius: "8px",
+  },
+
+  ".cm-tooltip .cm-tooltip-arrow:before": {
+    borderTopColor: "transparent",
+    borderBottomColor: "transparent",
+  },
+
+  ".cm-tooltip .cm-tooltip-arrow:after": {
+    borderTopColor: "#FAF9F5",
+    borderBottomColor: "#FAF9F5",
+  },
+
+  ".cm-tooltip-autocomplete": {
+    "& > ul > li[aria-selected]": {
+      backgroundColor: "#D8ECD7",
+      color: "#2F3430",
+    },
+  },
+}, { dark: false });
+
+const oneLightHighlightStyle = HighlightStyle.define([
+  { tag: tags.keyword, color: "#8B3FA5" },
+
+  {
+    tag: [
+      tags.name,
+      tags.deleted,
+      tags.character,
+      tags.propertyName,
+      tags.macroName,
+    ],
+    color: "#D65D4E",
+  },
+
+  {
+    tag: [
+      tags.function(tags.variableName),
+      tags.labelName,
+    ],
+    color: "#4F7EF7",
+  },
+
+  {
+    tag: [
+      tags.color,
+      tags.constant(tags.name),
+      tags.standard(tags.name),
+      tags.atom,
+      tags.bool,
+    ],
+    color: "#B7791F",
+  },
+
+  {
+    tag: [
+      tags.typeName,
+      tags.className,
+      tags.number,
+      tags.changed,
+      tags.annotation,
+      tags.modifier,
+      tags.self,
+      tags.namespace,
+    ],
+    color: "#D48A12",
+  },
+
+  {
+    tag: [
+      tags.operator,
+      tags.operatorKeyword,
+      tags.url,
+      tags.escape,
+      tags.regexp,
+      tags.link,
+      tags.special(tags.string),
+    ],
+    color: "#0F7FAE",
+  },
+
+  {
+    tag: [
+      tags.processingInstruction,
+      tags.string,
+      tags.inserted,
+    ],
+    color: "#5A9E58",
+  },
+
+  {
+    tag: [
+      tags.meta,
+      tags.comment,
+    ],
+    color: "#98A29A",
+    fontStyle: "italic",
+  },
+
+  {
+    tag: [
+      tags.definition(tags.name),
+      tags.separator,
+    ],
+    color: "#374151",
+  },
+
+  {
+    tag: tags.heading,
+    color: "#6AAE6F",
+    fontWeight: "bold",
+  },
+
+  {
+    tag: tags.strong,
+    fontWeight: "bold",
+  },
+
+  {
+    tag: tags.emphasis,
+    fontStyle: "italic",
+  },
+
+  {
+    tag: tags.strikethrough,
+    textDecoration: "line-through",
+  },
+
+  {
+    tag: tags.invalid,
+    color: "#E05252",
+  },
+]);
+
+const oneLight = [
+  oneLightTheme,
+  syntaxHighlighting(oneLightHighlightStyle),
+];
+
+const themeCompartment = new Compartment();
+const fileViewerThemeCompartment = new Compartment();
+
+const tabBinding = {
+  key: "Tab",
+  run: ({ state, dispatch }) => {
+    dispatch(state.update(
+      state.changeByRange(range => ({
+        changes: [{ from: range.from, to: range.to, insert: "    " }],
+        range: EditorState.cursor(range.from + 4),
+      }))
+    ));
+    return true;
+  },
+};
+
+function useColors() {
+  const { dark } = useTheme();
+
+  return {
+    isDark: dark,
+
+    outerBorder: dark ? "#374151" : "#D4D9CF",
+
+    headerBg: dark ? "#1e1e2e" : "#F5F4EF",
+
+    languageBg: "#6AAE6F20",
+
+    languageText: "#6AAE6F",
+
+    runDisabledBg: dark ? "#6B7280" : "#B7BDB2",
+
+    tabBarBg: dark ? "#16162a" : "#ECEBE5",
+
+    tabBorder: dark ? "#2a2b3d" : "#D8DDD3",
+
+    tabActiveBg: dark ? "#1a1b2e" : "#FFFFFF",
+
+    tabActiveText: dark ? "#CDD6F4" : "#2F3430",
+
+    tabInactiveText: dark ? "#6B7280" : "#70766D",
+
+    editorBg: dark ? "#1a1b2e" : "#FAF9F5",
+
+    consoleBg: dark ? "#0d0e17" : "#EEF2EB",
+
+    consoleText: dark ? "#CDD6F4" : "#374151",
+
+    consoleLabel: dark ? "#6B7280" : "#7B8077",
+
+    inputText: dark ? "#CDD6F4" : "#374151",
+
+    selectionBg: dark ? "#334155" : "#D8ECD7",
+
+    caretColor: "#6AAE6F",
+  };
+}
 
 export default function CodeEditorContainer({ code, setCode, language, files, fileEntries = {}, fileStore: fileStoreRef, onFileUpdate, fileEntriesBefore = {} }) {
+  const c = useColors();
+
+  const baseEditorTheme = useMemo(() => EditorView.theme({
+    "&": {
+      height: "100%",
+      fontSize: "14px",
+      fontFamily: "'Consolas', monospace",
+    },
+    ".cm-scroller": {
+      overflow: "auto",
+      lineHeight: "1.6rem",
+      overscrollBehavior: "none",
+      WebkitOverflowScrolling: "touch",
+    },
+    ".cm-content": {
+      padding: "16px 0",
+    },
+    ".cm-gutters": {
+      fontFamily: "'Consolas', monospace",
+      fontSize: "13px",
+      paddingRight: "4px",
+      borderRight: "none",
+    },
+    ".cm-activeLineGutter": {
+      backgroundColor: "transparent",
+    },
+    "&.cm-focused": {
+      outline: "none",
+    },
+  }), []);
+
+  const dynamicEditorTheme = useMemo(() => EditorView.theme({
+    ".cm-content": {
+      caretColor: c.caretColor,
+    },
+    ".cm-gutters": {
+      backgroundColor: c.editorBg,
+      color: c.tabInactiveText,
+    },
+    ".cm-selectionBackground": {
+      backgroundColor: `${c.selectionBg} !important`,
+    },
+    "&.cm-focused .cm-cursor": {
+      borderLeftColor: c.caretColor,
+    },
+  }), [c.isDark]); // eslint-disable-line react-hooks/exhaustive-deps
   const inputRef = useRef(null);
   const [output, setOutput] = useState("");
   const [running, setRunning] = useState(false);
@@ -80,18 +358,21 @@ export default function CodeEditorContainer({ code, setCode, language, files, fi
         }
       });
 
+      const extensions = [
+        basicSetup,
+        keymap.of([tabBinding]),
+        python(),
+        themeCompartment.of([oneDark, dynamicEditorTheme]),
+        baseEditorTheme,
+        indentUnit.of("    "),
+        EditorState.tabSize.of(4),
+        updateListener,
+      ].flat();
+
       const view = new EditorView({
         state: EditorState.create({
           doc: code,
-          extensions: [
-            basicSetup,
-            python(),
-            oneDark,
-            editorTheme,
-            indentUnit.of("    "),
-            EditorState.tabSize.of(4),
-            updateListener,
-          ],
+          extensions,
         }),
         parent: editorRef.current,
       });
@@ -107,6 +388,17 @@ export default function CodeEditorContainer({ code, setCode, language, files, fi
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    if (viewRef.current) {
+      viewRef.current.dispatch({
+        effects: themeCompartment.reconfigure([
+          c.isDark ? oneDark : oneLight,
+          dynamicEditorTheme,
+        ]),
+      });
+    }
+  }, [c.isDark, dynamicEditorTheme]);
 
   useEffect(() => {
     const view = viewRef.current;
@@ -160,12 +452,12 @@ export default function CodeEditorContainer({ code, setCode, language, files, fi
             extensions: [
               basicSetup,
               ...(isPy ? [python()] : []),
-              oneDark,
-              editorTheme,
+              fileViewerThemeCompartment.of([oneDark, dynamicEditorTheme]),
+              baseEditorTheme,
               EditorView.editable.of(false),
               indentUnit.of("    "),
               EditorState.tabSize.of(4),
-            ],
+            ].flat(),
           }),
           parent: fileViewerRef.current,
         });
@@ -178,7 +470,18 @@ export default function CodeEditorContainer({ code, setCode, language, files, fi
         }
       }
     }
-  }, [activeTab, fileEntries, fileEntriesBefore]);
+  }, [activeTab, fileEntries, fileEntriesBefore]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  useEffect(() => {
+    if (fileViewInstance.current) {
+      fileViewInstance.current.dispatch({
+        effects: fileViewerThemeCompartment.reconfigure([
+          c.isDark ? oneDark : oneLight,
+          dynamicEditorTheme,
+        ]),
+      });
+    }
+  }, [c.isDark, dynamicEditorTheme]);
 
   useEffect(() => {
     return () => {
@@ -292,31 +595,32 @@ export default function CodeEditorContainer({ code, setCode, language, files, fi
 
   return (
     <div
-      className="rounded-xl overflow-hidden flex flex-col"
+      className="rounded-xl overflow-hidden flex flex-col editor-wrapper"
       style={{
-        border: "2px solid #374151",
+        border: `2px solid ${c.outerBorder}`,
         boxShadow: "0 8px 32px rgba(0,0,0,0.15)",
         minHeight: "40vh",
         maxHeight: "calc(100vh - 10rem)",
+        transition: "border 0.5s ease, box-shadow 0.5s ease",
       }}
     >
       <div
         className="flex items-center gap-2 px-4 py-3 shrink-0"
-        style={{ background: "#1e1e2e" }}
+        style={{ background: c.headerBg }}
       >
         <div className="flex gap-1.5">
-          {["#FF5F57", "#FFBD2E", "#28CA41"].map((c, i) => (
+          {["#FF5F57", "#FFBD2E", "#28CA41"].map((dot, i) => (
             <div
               key={i}
               className="w-3 h-3 rounded-full"
-              style={{ background: c }}
+              style={{ background: dot }}
             />
           ))}
         </div>
         <div className="flex-1" />
         <div
           className="text-xs px-2 py-0.5 rounded mr-2"
-          style={{ background: "#6AAE6F20", color: "#6AAE6F" }}
+          style={{ background: c.languageBg, color: c.languageText }}
         >
           {language}
         </div>
@@ -325,7 +629,7 @@ export default function CodeEditorContainer({ code, setCode, language, files, fi
           disabled={running}
           className="text-xs px-3 py-1 rounded font-bold transition-all hover:brightness-110"
           style={{
-            background: running ? "#6B7280" : "#28CA41",
+            background: running ? c.runDisabledBg : "#6AAE6F",
             color: "#fff",
           }}
         >
@@ -336,15 +640,15 @@ export default function CodeEditorContainer({ code, setCode, language, files, fi
       {showFileTabs && (
         <div
           className="flex shrink-0 overflow-x-auto"
-          style={{ background: "#16162a", borderBottom: "1px solid #2a2b3d" }}
+          style={{ background: c.tabBarBg, borderBottom: `1px solid ${c.tabBorder}` }}
         >
           <button
             onClick={() => setActiveTab("main.py")}
             className="text-xs px-4 py-2 font-mono border-r transition-all"
             style={{
-              background: activeTab === "main.py" ? "#1a1b2e" : "transparent",
-              color: activeTab === "main.py" ? "#CDD6F4" : "#6B7280",
-              borderColor: "#2a2b3d",
+              background: activeTab === "main.py" ? c.tabActiveBg : "transparent",
+              color: activeTab === "main.py" ? c.tabActiveText : c.tabInactiveText,
+              borderColor: c.tabBorder,
               borderBottom: activeTab === "main.py" ? "2px solid #6AAE6F" : "2px solid transparent",
             }}
           >
@@ -360,9 +664,9 @@ export default function CodeEditorContainer({ code, setCode, language, files, fi
                 onClick={() => setActiveTab(name)}
                 className="text-xs px-4 py-2 font-mono border-r transition-all"
                 style={{
-                  background: activeTab === name ? "#1a1b2e" : "transparent",
-                  color: activeTab === name ? "#CDD6F4" : "#6B7280",
-                  borderColor: "#2a2b3d",
+                  background: activeTab === name ? c.tabActiveBg : "transparent",
+                  color: activeTab === name ? c.tabActiveText : c.tabInactiveText,
+                  borderColor: c.tabBorder,
                   borderBottom: activeTab === name
                     ? `2px solid ${accentColor}`
                     : "2px solid transparent",
@@ -377,7 +681,7 @@ export default function CodeEditorContainer({ code, setCode, language, files, fi
 
       <div
         className="flex min-h-0 flex-1"
-        style={{ background: "#1a1b2e", touchAction: "manipulation" }}
+        style={{ background: c.editorBg, touchAction: "manipulation" }}
       >
         <div
           ref={editorRef}
@@ -393,40 +697,40 @@ export default function CodeEditorContainer({ code, setCode, language, files, fi
 
       <div
         className="flex items-center gap-2 px-4 py-1.5 shrink-0"
-        style={{ background: "#0d0e17", borderTop: "1px solid #2a2b3d" }}
+        style={{ background: c.consoleBg, borderTop: `1px solid ${c.tabBorder}` }}
       >
         <span
           className="text-xs font-bold"
-          style={{ color: "#6B7280", fontFamily: "'Consolas', monospace" }}
+          style={{ color: c.consoleLabel, fontFamily: "'Consolas', monospace" }}
         >
           ■ CONSOLE
         </span>
       </div>
       <div
         className="flex flex-col shrink-0"
-        style={{ background: "#0d0e17", minHeight: 80, maxHeight: 150 }}
+        style={{ background: c.consoleBg, minHeight: 80, maxHeight: 150 }}
       >
         <div
           ref={outputRef}
           className="px-4 py-3 font-mono text-xs leading-relaxed whitespace-pre-wrap overflow-y-auto flex-1"
-          style={{ color: "#CDD6F4" }}
+          style={{ color: c.consoleText }}
         >
           {output || (waitingInput ? "" : running ? "Running..." : "> Ready to run")}
         </div>
         {waitingInput && (
           <div
             className="flex items-center gap-1 px-4 py-2 border-t shrink-0"
-            style={{ borderColor: "#2a2b3d", background: "#0d0e17" }}
+            style={{ borderColor: c.tabBorder, background: c.consoleBg }}
           >
-            <span className="text-xs font-mono" style={{ color: "#6B7280" }}>
+            <span className="text-xs font-mono" style={{ color: c.consoleLabel }}>
               &gt;
             </span>
             <input
               ref={inputRef}
               className="flex-1 bg-transparent border-none outline-none font-mono text-xs"
               style={{
-                color: "#CDD6F4",
-                caretColor: "#6AAE6F",
+                color: c.inputText,
+                caretColor: c.caretColor,
               }}
               value={inputBuffer}
               onChange={handleInputChange}

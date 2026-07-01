@@ -378,7 +378,7 @@ export default function LevelPage() {
   if (!track || !chapter || !level) {
     return (
       <div className="min-h-screen pt-24 pb-16 px-4 max-w-4xl mx-auto relative z-10">
-        <h1 className="text-2xl font-bold" style={{ color: "#2F2F2F" }}>
+        <h1 className="text-2xl font-bold" style={{ color: "var(--text)" }}>
           Level not found
         </h1>
         <button onClick={() => navigate("/tracks")} style={{ color: "#6AAE6F" }}>
@@ -428,15 +428,16 @@ export default function LevelPage() {
           <div className="absolute inset-0 backdrop-blur-sm" style={{ background: "rgba(0,0,0,0.5)" }} />
           <div
             className="relative rounded-2xl p-8 text-center max-w-sm w-full"
-            style={{ background: "#F7F3E9", border: "3px solid #7AA2F7", boxShadow: "0 20px 60px rgba(0,0,0,0.3)" }}
+            style={{ background: "var(--bg)", border: "3px solid #7AA2F7", boxShadow: "0 20px 60px rgba(0,0,0,0.3)" }}
           >
-            <div className="text-4xl mb-4 animate-pulse">⏳</div>
-            <h2 className="text-xl font-bold" style={{ color: "#2F2F2F", fontFamily: "'Courier New', monospace" }}>
-              Checking solution...
-            </h2>
-            <p className="text-sm mt-2" style={{ color: "#6B7280" }}>
-              Running your code...
-            </p>
+            <div className="p-6">
+              <h2 className="text-xl font-bold" style={{ color: "var(--text)", fontFamily: "'Courier New', monospace" }}>
+                {level.name}
+              </h2>
+              <p className="text-sm mt-2" style={{ color: "var(--text-secondary)" }}>
+                Running your code...
+              </p>
+            </div>
           </div>
         </div>
       )}
@@ -450,10 +451,9 @@ export default function LevelPage() {
           />
           <div
             className="relative rounded-2xl p-8 text-center max-w-md w-full"
-            style={{ background: "#F7F3E9", border: "3px solid #FF5F57", boxShadow: "0 20px 60px rgba(0,0,0,0.3)" }}
+            style={{ background: "var(--bg)", border: "3px solid #FF5F57", boxShadow: "0 20px 60px rgba(0,0,0,0.3)" }}
           >
-            <div className="text-4xl mb-4">❌</div>
-            <h2 className="text-xl font-bold mb-4" style={{ color: "#2F2F2F", fontFamily: "'Courier New', monospace" }}>
+            <h2 className="text-xl font-bold mb-4" style={{ color: "var(--text)", fontFamily: "'Courier New', monospace" }}>
               Test Failed
             </h2>
 
@@ -486,7 +486,7 @@ export default function LevelPage() {
           <button
             onClick={() => navigate(`/tracks/${trackName}/chapters/${chapterId}`)}
             className="text-sm mb-6 flex items-center gap-1 hover:gap-2 transition-all"
-            style={{ color: "#9CA3AF" }}
+            style={{ color: "var(--text-muted)" }}
           >
             ← {chapter.name}
           </button>
@@ -495,7 +495,7 @@ export default function LevelPage() {
             <div className="lg:col-span-3 lg:self-start">
               <div
                 className="rounded-2xl p-5 lg:max-h-[calc(100vh-10rem)] flex flex-col"
-                style={{ background: "#fff", border: "2px solid #E5E7EB" }}
+                style={{ background: "var(--bg-card)", border: "2px solid var(--border)" }}
               >
                 <div>
                   <div
@@ -503,7 +503,7 @@ export default function LevelPage() {
                   >
                     <span
                       className="text-xs font-bold uppercase tracking-wider"
-                      style={{ color: "#9CA3AF" }}
+                      style={{ color: "var(--text-muted)" }}
                     >
                       Level {level.id}
                     </span>
@@ -512,7 +512,7 @@ export default function LevelPage() {
                         <button
                           onClick={() => navigate(`/tracks/${trackName}/chapters/${chapterId}/levels/${chapter.levels[levelIndex - 1].id}`)}
                           className="flex items-center justify-center transition-all duration-100 hover:brightness-110 active:translate-y-0.5"
-                          style={{ width: 28, height: 28, borderRadius: 8, background: "#F7F3E9", border: "1.5px solid #D1D5DB", color: "#9CA3AF" }}
+                          style={{ width: 28, height: 28, borderRadius: 8, background: "var(--bg)", border: "1.5px solid var(--border-strong)", color: "var(--text-muted)" }}
                         >
                           <span style={{ fontSize: 24, lineHeight: 1, transform: "translate(-0.5px, -3px)" }}>‹</span>
                         </button>
@@ -521,7 +521,7 @@ export default function LevelPage() {
                         <button
                           onClick={() => navigate(`/tracks/${trackName}/chapters/${chapterId}/levels/${chapter.levels[levelIndex + 1].id}`)}
                           className="flex items-center justify-center transition-all duration-100 hover:brightness-110 active:translate-y-0.5"
-                          style={{ width: 28, height: 28, borderRadius: 8, background: "#F7F3E9", border: "1.5px solid #D1D5DB", color: "#9CA3AF" }}
+                          style={{ width: 28, height: 28, borderRadius: 8, background: "var(--bg)", border: "1.5px solid var(--border-strong)", color: "var(--text-muted)" }}
                         >
                           <span style={{ fontSize: 24, lineHeight: 1, transform: "translate(0.5px, -3px)" }}>›</span>
                         </button>
@@ -530,7 +530,7 @@ export default function LevelPage() {
                   </div>
                   <h2
                     className="text-xl font-black mb-3"
-                    style={{ color: "#2F2F2F", fontFamily: "'Courier New', monospace" }}
+                    style={{ color: "var(--text)", fontFamily: "'Courier New', monospace" }}
                   >
                     {level.name}
                   </h2>
@@ -558,13 +558,13 @@ export default function LevelPage() {
                   >
                     🎯 Objective
                   </div>
-                  <p className="text-sm leading-relaxed" style={{ color: "#374151" }}>
+                  <p className="text-sm leading-relaxed" style={{ color: "var(--text)" }}>
                     {level.objective.map((seg, i) =>
                       seg.type === "code" ? (
                         <code
                           key={i}
                           className="px-1.5 py-0.5 rounded text-xs font-mono"
-                          style={{ background: "#E5E7EB", color: "#2F2F2F" }}
+                          style={{ background: "var(--bg)", color: "var(--text)" }}
                         >
                           {seg.value}
                         </code>
@@ -586,13 +586,13 @@ export default function LevelPage() {
                     >
                       📖 EXPLANATION
                     </div>
-                    <p className="text-sm" style={{ color: "#374151" }}>
+                    <p className="text-sm" style={{ color: "var(--text)" }}>
                       {level.explanation.map((seg, i) =>
                         seg.type === "code" ? (
                         <code
                           key={i}
                           className="px-1.5 py-0.5 rounded text-xs font-mono"
-                          style={{ background: "#E5E7EB", color: "#2F2F2F" }}
+                          style={{ background: "var(--bg)", color: "var(--text)" }}
                         >
                           {seg.value}
                         </code>
@@ -613,15 +613,15 @@ export default function LevelPage() {
                     >
                       🧪 EXAMPLE
                     </div>
-                    <div className="text-sm" style={{ color: "#374151" }}>
+                    <div className="text-sm" style={{ color: "var(--text)" }}>
                       <div className="mb-1">
-                        <span className="font-bold" style={{ color: "#9CA3AF" }}>Input:</span>
+                        <span className="font-bold" style={{ color: "var(--text-muted)" }}>Input:</span>
                         <pre className="text-xs font-mono mt-1 mb-0" style={{ color: "#4B5563", whiteSpace: "pre-wrap" }}>
                           {Array.isArray(level.example.input) ? level.example.input.join("\n") : level.example.input}
                         </pre>
                       </div>
                       <div>
-                        <span className="font-bold" style={{ color: "#9CA3AF" }}>Output:</span>
+                        <span className="font-bold" style={{ color: "var(--text-muted)" }}>Output:</span>
                         <pre className="text-xs font-mono mt-1 mb-0" style={{ color: "#4B5563", whiteSpace: "pre-wrap" }}>{level.example.output}</pre>
                       </div>
                     </div>
@@ -639,13 +639,13 @@ export default function LevelPage() {
                     >
                       💡 HINT
                     </div>
-                    <p className="text-sm" style={{ color: "#374151" }}>
+                    <p className="text-sm" style={{ color: "var(--text)" }}>
                       {level.hint && level.hint.map((seg, i) =>
                         seg.type === "code" ? (
                         <code
                           key={i}
                           className="px-1.5 py-0.5 rounded text-xs font-mono"
-                          style={{ background: "#E5E7EB", color: "#2F2F2F" }}
+                          style={{ background: "var(--bg)", color: "var(--text)" }}
                         >
                           {seg.value}
                         </code>
@@ -659,7 +659,7 @@ export default function LevelPage() {
 
                 </div>
 
-                <div className="flex flex-col gap-2 pt-3" style={{ borderTop: "1px solid #E5E7EB" }}>
+                <div className="flex flex-col gap-2 pt-3" style={{ borderTop: "1px solid var(--border)" }}>
                   <PixelButton onClick={handleRun} size="md" variant="primary">
                     Submit Code
                   </PixelButton>
@@ -681,7 +681,7 @@ export default function LevelPage() {
             <div className="lg:col-span-6 lg:self-start">
               <CodeEditorContainer code={code} setCode={setCode} language={track.name.split(" ")[0]} files={level.files} fileEntries={fileEntries} fileStore={fileStore} onFileUpdate={syncFileStore} fileEntriesBefore={fileEntriesBefore} />
 
-              <p className="text-xs mt-4 text-center" style={{ color: "#C0BAB0" }}>
+              <p className="text-xs mt-4 text-center" style={{ color: "var(--text-muted)" }}>
                 Write your code above, then click Run to test or Submit to check your answer.
               </p>
             </div>
@@ -692,26 +692,26 @@ export default function LevelPage() {
               >
                 <div
                   className="rounded-2xl p-5"
-                  style={{ background: "#fff", border: "2px solid #E5E7EB" }}
+                  style={{ background: "var(--bg-card)", border: "2px solid var(--border)" }}
                 >
                   <div
                     className="text-xs font-bold uppercase tracking-wider mb-3"
-                    style={{ color: "#9CA3AF" }}
+                    style={{ color: "var(--text-muted)" }}
                   >
                     Chapter Progress
                   </div>
                   <ProgressBar value={progress} showLabel={false} />
-                  <p className="text-xs mt-2" style={{ color: "#9CA3AF" }}>
+                  <p className="text-xs mt-2" style={{ color: "var(--text-muted)" }}>
                     {completedCount} of {chapter.levels.length} levels complete
                   </p>
 
                   <div
                     className="mt-4 pt-4"
-                    style={{ borderTop: "1px solid #F3F4F6" }}
+                    style={{ borderTop: "1px solid var(--border)" }}
                   >
                     <div
                       className="text-xs font-bold uppercase tracking-wider mb-1"
-                      style={{ color: "#9CA3AF" }}
+                      style={{ color: "var(--text-muted)" }}
                     >
                       Current Chapter
                     </div>
@@ -719,7 +719,7 @@ export default function LevelPage() {
                       <Icon src={chapter.icon} alt={chapter.name} size={28} />
                       <span
                         className="text-sm font-bold"
-                        style={{ color: "#2F2F2F", fontFamily: "'Courier New', monospace" }}
+                        style={{ color: "var(--text)", fontFamily: "'Courier New', monospace" }}
                       >
                         {chapter.name}
                       </span>
@@ -729,11 +729,11 @@ export default function LevelPage() {
 
                 <div
                   className="rounded-2xl p-5"
-                  style={{ background: "#fff", border: "2px solid #E5E7EB" }}
+                  style={{ background: "var(--bg-card)", border: "2px solid var(--border)" }}
                 >
                   <div
                     className="text-xs font-bold uppercase tracking-wider mb-3"
-                    style={{ color: "#9CA3AF" }}
+                    style={{ color: "var(--text-muted)" }}
                   >
                     Total Stars
                   </div>
@@ -746,7 +746,7 @@ export default function LevelPage() {
                     </span>
                     <StarIcon filled className="text-lg" />
                   </div>
-                  <p className="text-xs mt-1" style={{ color: "#9CA3AF" }}>
+                  <p className="text-xs mt-1" style={{ color: "var(--text-muted)" }}>
                     across {completedCount} completed levels
                   </p>
                 </div>

@@ -16,13 +16,13 @@ export default function CompletionModal({ level, stars, resultInfo, onContinue, 
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       <div
         className="absolute inset-0 backdrop-blur-sm"
-        style={{ background: "rgba(0,0,0,0.5)" }}
+        style={{ background: "var(--overlay)" }}
         onClick={onContinue}
       />
       <div
         className="relative rounded-2xl p-8 text-center max-w-sm w-full"
         style={{
-          background: "#F7F3E9",
+          background: "var(--bg)",
           border: "3px solid #6AAE6F",
           boxShadow: "0 20px 60px rgba(0,0,0,0.3)",
         }}
@@ -36,10 +36,10 @@ export default function CompletionModal({ level, stars, resultInfo, onContinue, 
         </div>
 
         <h2 className="text-2xl font-bold mb-1"
-          style={{ color: "#2F2F2F", fontFamily: "'Courier New', monospace" }}>
+          style={{ color: "var(--text)", fontFamily: "'Courier New', monospace" }}>
           Quest Complete!
         </h2>
-        <p className="text-sm mb-5" style={{ color: "#6B7280" }}>
+        <p className="text-sm mb-5" style={{ color: "var(--text-secondary)" }}>
           {level.name} completed!
         </p>
 
@@ -51,13 +51,13 @@ export default function CompletionModal({ level, stars, resultInfo, onContinue, 
             style={{ color: "#E9B44C", fontFamily: "'Courier New', monospace" }}>
             {stars} / 3
           </div>
-          <div className="text-xs" style={{ color: "#6B7280" }}>
+          <div className="text-xs" style={{ color: "var(--text-secondary)" }}>
             Stars Earned
           </div>
         </div>
 
-        <div className="rounded-xl p-4 mb-4 text-left" style={{ background: "#F7F3E9", border: "1.5px solid #E5E7EB" }}>
-          <div className="text-xs font-bold uppercase tracking-wider mb-2" style={{ color: "#9CA3AF" }}>
+        <div className="rounded-xl p-4 mb-4 text-left" style={{ background: "var(--bg)", border: "1.5px solid var(--border)" }}>
+          <div className="text-xs font-bold uppercase tracking-wider mb-2" style={{ color: "var(--text-muted)" }}>
             Star Criteria
           </div>
           <div className="space-y-2">
@@ -66,7 +66,7 @@ export default function CompletionModal({ level, stars, resultInfo, onContinue, 
                 <span style={{ color: c.met ? "#67C587" : "#FF5F57" }}>
                   {c.met ? "✓" : "✗"}
                 </span>
-                <span style={{ color: "#374151" }}>{c.label}</span>
+                <span style={{ color: c.met ? "var(--text)" : "var(--text-secondary)" }}>{c.label}</span>
               </div>
             ))}
           </div>

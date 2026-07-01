@@ -5,8 +5,8 @@ export default function Badge({ badge }) {
     <div
       className="flex flex-col items-center gap-1 p-3 rounded-xl transition-all"
       style={{
-        background: badge.earned ? "#fff" : "#F5F5F5",
-        border: badge.earned ? "2px solid #E9B44C" : "2px solid #E0E0E0",
+        background: badge.earned ? "var(--bg-card)" : "var(--bg-surface-alt)",
+        border: badge.earned ? "2px solid #E9B44C" : "2px solid var(--border-strong)",
         opacity: badge.earned ? 1 : 0.5,
         boxShadow: badge.earned ? "0 2px 12px #E9B44C20" : "none",
         minWidth: 72,
@@ -19,7 +19,7 @@ export default function Badge({ badge }) {
       )}
       <span
         className="text-xs text-center font-medium leading-tight"
-        style={{ color: badge.earned ? "#2F2F2F" : "#B5B5B5" }}
+        style={{ color: badge.earned ? "var(--text)" : "var(--text-disabled)" }}
       >
         {badge.name}
       </span>

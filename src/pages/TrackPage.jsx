@@ -11,17 +11,17 @@ export default function TrackPage() {
         <button
           onClick={() => navigate("/")}
           className="text-sm mb-4 flex items-center gap-1 hover:gap-2 transition-all"
-          style={{ color: "#9CA3AF" }}
+          style={{ color: "var(--text-muted)" }}
         >
           ← Back to Home
         </button>
         <h1
           className="text-3xl font-black mb-1"
-          style={{ color: "#2F2F2F", fontFamily: "'Courier New', monospace" }}
+          style={{ color: "var(--text)", fontFamily: "'Courier New', monospace" }}
         >
           Your Tracks
         </h1>
-        <p style={{ color: "#9CA3AF", fontSize: 14 }}>
+        <p style={{ color: "var(--text-muted)", fontSize: 14 }}>
           Choose a learning path to continue.
         </p>
       </div>
@@ -35,15 +35,15 @@ export default function TrackPage() {
       <div
         className="rounded-2xl p-6 text-center"
         style={{
-          background: "#fff",
-          border: "2px dashed #E0E0E0",
+          background: "var(--bg-card)",
+          border: "2px dashed var(--border-strong)",
         }}
       >
         <div className="text-3xl mb-2">🔮</div>
-        <p className="font-bold text-sm mb-1" style={{ color: "#B5B5B5" }}>
+        <p className="font-bold text-sm mb-1" style={{ color: "var(--text-disabled)" }}>
           More tracks coming soon
         </p>
-        <p className="text-xs" style={{ color: "#D1D5DB" }}>
+        <p className="text-xs" style={{ color: "var(--text-muted)" }}>
           JavaScript Basics · HTML & CSS · Data Science
         </p>
       </div>

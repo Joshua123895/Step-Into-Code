@@ -44,7 +44,7 @@ export default function PixelButton({ children, onClick, variant = "primary", si
         ${disabled ? "opacity-40 cursor-not-allowed" : "cursor-pointer hover:brightness-110 active:shadow-none"}
       `}
       style={{
-        background: disabled ? "#B5B5B5" : v.bg,
+        background: disabled ? "var(--text-disabled)" : v.bg,
         color: v.text,
         boxShadow: disabled ? "none" : `0 3px 0 ${v.shadow || v.bg}`,
         border: v.border ? `2px solid ${v.border}` : "none",

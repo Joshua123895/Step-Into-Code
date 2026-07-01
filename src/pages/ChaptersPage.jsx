@@ -15,7 +15,7 @@ export default function ChaptersPage() {
   if (!track) {
     return (
       <div className="min-h-screen pt-24 pb-16 px-4 max-w-4xl mx-auto relative z-10">
-        <h1 className="text-2xl font-bold" style={{ color: "#2F2F2F" }}>
+        <h1 className="text-2xl font-bold" style={{ color: "var(--text)" }}>
           Track not found
         </h1>
         <button onClick={() => navigate("/tracks")} style={{ color: "#6AAE6F" }}>
@@ -30,7 +30,7 @@ export default function ChaptersPage() {
       <button
         onClick={() => navigate("/tracks")}
         className="text-sm mb-6 flex items-center gap-1 hover:gap-2 transition-all"
-        style={{ color: "#9CA3AF" }}
+        style={{ color: "var(--text-muted)" }}
       >
         ← All Tracks
       </button>
@@ -40,11 +40,11 @@ export default function ChaptersPage() {
         <div>
           <h1
             className="text-3xl font-black"
-            style={{ color: "#2F2F2F", fontFamily: "'Courier New', monospace" }}
+            style={{ color: "var(--text)", fontFamily: "'Courier New', monospace" }}
           >
             {track.name}
           </h1>
-          <p className="text-sm mt-1" style={{ color: "#6B7280" }}>
+          <p className="text-sm mt-1" style={{ color: "var(--text-secondary)" }}>
             {track.description}
           </p>
         </div>
@@ -52,7 +52,7 @@ export default function ChaptersPage() {
 
       <h2
         className="text-sm font-bold mb-4 uppercase tracking-wider"
-        style={{ color: "#9CA3AF" }}
+        style={{ color: "var(--text-muted)" }}
       >
         Chapters
       </h2>
@@ -67,7 +67,7 @@ export default function ChaptersPage() {
               key={chapter.id}
               className="rounded-2xl p-6 relative overflow-hidden cursor-pointer hover:-translate-y-0.5 transition-all"
               style={{
-                background: "#fff",
+                background: "var(--bg-card)",
                 border: "2px solid #6AAE6F",
                 boxShadow: "0 4px 24px #6AAE6F15",
               }}
@@ -84,13 +84,13 @@ export default function ChaptersPage() {
                     <div>
                       <div
                         className="text-xs font-bold uppercase tracking-wider mb-0.5"
-                        style={{ color: "#9CA3AF" }}
+                        style={{ color: "var(--text-muted)" }}
                       >
                         Chapter {i + 1}
                       </div>
                       <h3
                         className="text-xl font-bold"
-                        style={{ color: "#2F2F2F", fontFamily: "'Courier New', monospace" }}
+                        style={{ color: "var(--text)", fontFamily: "'Courier New', monospace" }}
                       >
                         {chapter.name}
                       </h3>
@@ -109,7 +109,7 @@ export default function ChaptersPage() {
                     >
                       {done} / {chapter.levels.length}
                     </div>
-                    <div className="text-xs" style={{ color: "#9CA3AF" }}>
+                    <div className="text-xs" style={{ color: "var(--text-muted)" }}>
                       Levels Done
                     </div>
                   </div>
