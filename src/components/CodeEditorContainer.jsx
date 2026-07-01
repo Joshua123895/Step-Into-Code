@@ -61,6 +61,7 @@ export default function CodeEditorContainer({ code, setCode, language, files, fi
   const setCodeRef = useRef(setCode);
   const rawOutputRef = useRef("");
   const onFileUpdateRef = useRef(onFileUpdate);
+  const beforeSnapshotRef = useRef({});
 
   useEffect(() => {
     onFileUpdateRef.current = onFileUpdate;
@@ -133,9 +134,15 @@ export default function CodeEditorContainer({ code, setCode, language, files, fi
   useEffect(() => {
     if (activeTab !== "main.py" && fileViewerRef.current) {
       function getContent(tabId) {
-        if (tabId.endsWith(" (Before)")) return fileEntriesBefore[tabId.slice(0, -9)] ?? "(No file)";
-        if (tabId.endsWith(" (After)")) return fileEntries[tabId.slice(0, -8)] ?? "(No file)";
-        return fileEntries[tabId] ?? fileEntriesBefore[tabId] ?? "(No file)";
+        if (tabId.endsWith(" (Before)")) {
+          const realName = tabId.slice(0, -9);
+          return fileEntriesBefore[realName] ?? beforeSnapshotRef.current[realName] ?? "";
+        }
+        if (tabId.endsWith(" (After)")) {
+          const realName = tabId.slice(0, -8);
+          return fileEntries[realName] ?? "";
+        }
+        return fileEntries[tabId] ?? fileEntriesBefore[tabId] ?? "";
       }
       function getRealName(tabId) {
         if (tabId.endsWith(" (Before)")) return tabId.slice(0, -9);
@@ -192,6 +199,12 @@ export default function CodeEditorContainer({ code, setCode, language, files, fi
     const userCode = view.state.doc.toString();
 
     if (files) {
+      const snap = {};
+      for (const name of files.track || []) {
+        const val = (fileStoreRef?.current || {})[name];
+        if (val !== undefined) snap[name] = val;
+      }
+      beforeSnapshotRef.current = snap;
       const result = await runPythonReal(userCode, fileStoreRef?.current || {}, files.track || []);
       if (result.files && Object.keys(result.files).length > 0 && fileStoreRef) {
         fileStoreRef.current = mergeFileStore(fileStoreRef.current, null, result.files);
@@ -202,6 +215,12 @@ export default function CodeEditorContainer({ code, setCode, language, files, fi
         setOutput((prev) => prev + "\n" + result.error);
       }
     } else {
+      const snap = {};
+      for (const name of files?.track || []) {
+        const val = (fileStoreRef?.current || {})[name];
+        if (val !== undefined) snap[name] = val;
+      }
+      beforeSnapshotRef.current = snap;
       const onOutput = (text) => {
         rawOutputRef.current += text;
         const lines = rawOutputRef.current.split("\n");
@@ -260,7 +279,7 @@ export default function CodeEditorContainer({ code, setCode, language, files, fi
   const fileTabs = [];
   const virtualTabs = [];
   for (const name of fileNames) {
-    if (fileEntriesBefore[name] !== undefined && fileEntries[name] !== undefined) {
+    if (trackedFiles.includes(name)) {
       virtualTabs.push(`${name} (Before)`, `${name} (After)`);
     } else {
       fileTabs.push(name);

@@ -1890,7 +1890,7 @@ export const TRACKS = [
             solution: 'with open("test.txt", "w") as f:\n    f.write("Hello")',
             maxLines: 3,
             maxTime: 1,
-            files: { track: ["test.txt"] },
+            files: { initial: {"test.txt": "change this text here"}, track: ["test.txt"] },
           },
 
           {
@@ -1941,7 +1941,7 @@ export const TRACKS = [
             solution: 'with open("log.txt", "a") as f:\n    f.write("done")',
             maxLines: 3,
             maxTime: 1,
-            files: { initial: { "log.txt": "" }, track: ["log.txt"] },
+            files: { initial: { "log.txt": "job here is " }, track: ["log.txt"] },
           },
 
           {
@@ -2047,7 +2047,7 @@ export const TRACKS = [
       'import json\n\ndata = {"score": 100}\n\nwith open("save.json", "w") as f:\n    json.dump(data, f)',
             maxLines: 6,
             maxTime: 1,
-            files: { track: ["save.json"] },
+            files: { initial: { "save.json": '{"name": "test", "value": 42}' }, track: ["save.json"] },
           },
 
           {
