@@ -95,60 +95,52 @@ export default function Navbar() {
         </div>
 
         {/* Mobile hamburger */}
-        <button
-          onClick={() => setMenuOpen(true)}
-          className="md:hidden flex flex-col gap-1 p-2"
-          style={{ color: "var(--nav-text)" }}
-          aria-label="Open menu"
-        >
-          <span className="block w-5 h-0.5 rounded-full" style={{ background: "var(--nav-text)" }} />
-          <span className="block w-5 h-0.5 rounded-full" style={{ background: "var(--nav-text)" }} />
-          <span className="block w-5 h-0.5 rounded-full" style={{ background: "var(--nav-text)" }} />
+          <button
+            onClick={() => {
+              console.log("hamburger clicked, current:", menuOpen);
+              setMenuOpen((prev) => !prev);
+            }}
+            className="md:hidden relative w-8 h-8 flex items-center justify-center"
+            style={{ color: "var(--nav-text)" }}
+            aria-label={menuOpen ? "Close menu" : "Open menu"}
+          >
+          <span
+            className="absolute block w-5 h-0.5 rounded-full transition-all duration-300 ease-in-out"
+            style={{
+              background: "var(--nav-text)",
+              transform: menuOpen ? "rotate(45deg)" : "translateY(-4px)",
+            }}
+          />
+          <span
+            className="absolute block w-5 h-0.5 rounded-full transition-all duration-300 ease-in-out"
+            style={{
+              background: "var(--nav-text)",
+              opacity: menuOpen ? 0 : 1,
+              transform: menuOpen ? "translateX(-10px)" : "translateY(0)",
+            }}
+          />
+          <span
+            className="absolute block w-5 h-0.5 rounded-full transition-all duration-300 ease-in-out"
+            style={{
+              background: "var(--nav-text)",
+              transform: menuOpen ? "rotate(-45deg)" : "translateY(4px)",
+            }}
+          />
         </button>
       </nav>
 
-      {/* Mobile overlay */}
-      {menuOpen && (
-        <div
-          className="fixed inset-0 z-40 md:hidden"
-          style={{ background: "var(--overlay)" }}
-          onClick={closeMenu}
-        />
-      )}
-
-      {/* Mobile aside drawer */}
+      {/* Mobile aside — hidden off-screen right, slides left when open */}
       <aside
-        className={`fixed top-0 right-0 z-50 h-full w-64 transform transition-transform duration-300 ease-in-out md:hidden ${
-          menuOpen ? "translate-x-0" : "translate-x-full"
-        }`}
+        className="fixed top-0 right-0 z-40 h-full w-64"
         style={{
           background: "var(--nav-bg)",
           borderLeft: "3px solid #6AAE6F",
+          paddingTop: "3.5rem",
+          transform: menuOpen ? "translateX(0)" : "translateX(100%)",
+          transition: "transform 0.5s ease-in-out",
         }}
       >
-        <div className="flex items-center justify-between px-4 py-3 border-b" style={{ borderColor: "var(--border)" }}>
-          <span
-            className="font-bold text-sm tracking-wide"
-            style={{
-              color: "var(--nav-text)",
-              fontFamily: "'Courier New', monospace",
-            }}
-          >
-            Menu
-          </span>
-          <button
-            onClick={closeMenu}
-            className="p-1 rounded-lg transition-colors duration-500 hover:brightness-110"
-            style={{ color: "var(--nav-text)" }}
-            aria-label="Close menu"
-          >
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-            </svg>
-          </button>
-        </div>
-
-        <div className="flex flex-col gap-2 p-4">
+        <div className="flex flex-col gap-4 p-4">
           {navLinks.map(({ path, label }) => (
             <button
               key={path}
