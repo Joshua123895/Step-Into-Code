@@ -41,6 +41,10 @@ export function parseFileCaptures(output) {
   return files;
 }
 
+export function stripFileCaptures(output) {
+  return output.split("\n").filter((l) => !l.startsWith(FILE_MARKER)).join("\n");
+}
+
 export function mergeFileStore(existing, initial, captures) {
   const merged = { ...existing };
   if (initial) {
