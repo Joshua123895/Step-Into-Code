@@ -616,13 +616,13 @@ export default function LevelPage() {
                     <div className="text-sm" style={{ color: "var(--text)" }}>
                       <div className="mb-1">
                         <span className="font-bold" style={{ color: "var(--text-muted)" }}>Input:</span>
-                        <pre className="text-xs font-mono mt-1 mb-0" style={{ color: "#4B5563", whiteSpace: "pre-wrap" }}>
+                        <pre className="text-xs font-mono mt-1 mb-0" style={{ color: "var(--text)", whiteSpace: "pre-wrap" }}>
                           {Array.isArray(level.example.input) ? level.example.input.join("\n") : level.example.input}
                         </pre>
                       </div>
                       <div>
                         <span className="font-bold" style={{ color: "var(--text-muted)" }}>Output:</span>
-                        <pre className="text-xs font-mono mt-1 mb-0" style={{ color: "#4B5563", whiteSpace: "pre-wrap" }}>{level.example.output}</pre>
+                        <pre className="text-xs font-mono mt-1 mb-0" style={{ color: "var(--text)", whiteSpace: "pre-wrap" }}>{level.example.output}</pre>
                       </div>
                     </div>
                   </div>
