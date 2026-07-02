@@ -13,7 +13,7 @@ export default function ProgressBar({ value, color = "#6AAE6F", height = 10, sho
       )}
       <div
         className="w-full rounded-full overflow-hidden"
-        style={{ height, background: "var(--border)" }}
+        style={{ height, background: "var(--bar-track)" }}
       >
         <div
           className="h-full rounded-full transition-all duration-700"
