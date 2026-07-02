@@ -34,11 +34,25 @@
   --overlay: rgba(0,0,0,0.7);
 }
 
+::selection {
+  background-color: #B3D4FC !important;
+  color: #1F2937 !important;
+}
+
+.dark ::selection {
+  background-color: #334155 !important;
+  color: #CDD6F4 !important;
+}
+
 *, *::before, *::after {
   transition: background 0.5s ease, background-color 0.5s ease,
               color 0.5s ease, border 0.5s ease, border-color 0.5s ease,
               border-top-color 0.5s ease, border-bottom-color 0.5s ease,
               box-shadow 0.5s ease, caret-color 0.5s ease;
+}
+
+::selection {
+  transition: none !important;
 }
 
 body {

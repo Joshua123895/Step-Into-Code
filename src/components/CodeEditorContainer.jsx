@@ -26,7 +26,7 @@ const oneLightTheme = EditorView.theme({
   },
 
   "&.cm-focused > .cm-scroller > .cm-selectionLayer .cm-selectionBackground, .cm-selectionBackground, .cm-content ::selection": {
-    backgroundColor: "#D8ECD7",
+    backgroundColor: "#B3D4FC",
   },
 
   ".cm-panels": {
@@ -271,7 +271,7 @@ function useColors() {
 
     inputText: dark ? "#CDD6F4" : "#374151",
 
-    selectionBg: dark ? "#334155" : "#D8ECD7",
+    selectionBg: dark ? "#334155" : "#B3D4FC",
 
     caretColor: "#6AAE6F",
   };
@@ -362,7 +362,7 @@ export default function CodeEditorContainer({ code, setCode, language, files, fi
         basicSetup,
         tabHandler,
         python(),
-        themeCompartment.of([oneDark, dynamicEditorTheme]),
+        themeCompartment.of([c.isDark ? oneDark : oneLight, dynamicEditorTheme]),
         baseEditorTheme,
         indentUnit.of("    "),
         EditorState.tabSize.of(4),
@@ -452,7 +452,7 @@ export default function CodeEditorContainer({ code, setCode, language, files, fi
             extensions: [
               basicSetup,
               ...(isPy ? [python()] : []),
-              fileViewerThemeCompartment.of([oneDark, dynamicEditorTheme]),
+              fileViewerThemeCompartment.of([c.isDark ? oneDark : oneLight, dynamicEditorTheme]),
               baseEditorTheme,
               EditorView.editable.of(false),
               indentUnit.of("    "),
