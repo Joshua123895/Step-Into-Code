@@ -40,6 +40,7 @@ export default function Navbar() {
             color: isActive("/tracks") ? "#6AAE6F" : "var(--text-muted)",
             fontFamily: "'Courier New', monospace",
             letterSpacing: "0.03em",
+            border: "1.5px solid var(--border)",
           }}
         >
           Tracks
@@ -52,6 +53,7 @@ export default function Navbar() {
             color: isActive("/tracks/python") ? "#6AAE6F" : "var(--text-muted)",
             fontFamily: "'Courier New', monospace",
             letterSpacing: "0.03em",
+            border: "1.5px solid var(--border)",
           }}
         >
           Chapters
@@ -59,7 +61,7 @@ export default function Navbar() {
         <button
           onClick={toggle}
           className="ml-2 px-3 py-2 text-sm rounded-lg transition-colors duration-500 hover:brightness-110"
-          style={{ background: "transparent", color: "var(--nav-text)" }}
+          style={{ background: "transparent", color: "var(--nav-text)", border: "1.5px solid var(--border)" }}
           title={dark ? "Switch to light mode" : "Switch to dark mode"}
         >
           {dark ? "☀️" : "🌙"}
