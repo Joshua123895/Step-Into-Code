@@ -435,7 +435,7 @@ export default function LevelPage() {
                 {level.name}
               </h2>
               <p className="text-sm mt-2" style={{ color: "var(--text-secondary)" }}>
-                Running your code...
+                First time running may take longer...
               </p>
             </div>
           </div>
