@@ -5,7 +5,7 @@ desc: 'Master advanced Python: comprehensions, lambdas, generators, and beyond.'
 difficulty: 2
 chapters:
 - name: Comprehensions
-  icon: loop
+  icon: data
   levels:
   - name: Basic List Comprehension
     obj: Use a list comprehension to create a list of numbers from `0` to `9`.
@@ -439,7 +439,7 @@ chapters:
         '
     max: 10/1
 - name: Iterators & Generators
-  icon: data
+  icon: loop
   levels:
   - name: Basic Iterator
     obj: Create a list `[10, 20, 30]`, get its iterator with `iter()`, then call `next()` three times and print each value.

@@ -1,11 +1,11 @@
 name: Python Fundamentals
 slug: python
-icon: pythonIcon
+icon: python
 description: Master Python from the ground up — variables, loops, functions, and beyond.
 difficulty: 1
 chapters:
 - name: Input & Output
-  icon: outputIcon
+  icon: output
   levels:
   - name: Hello, World!
     hint: 'Try: `print("Hello, World!")`'
@@ -173,7 +173,7 @@ chapters:
     start: ''
   id: 1
 - name: Variables & Data Types
-  icon: variableIcon
+  icon: variable
   levels:
   - name: String Variable
     hint: 'Try: `greeting = "Hello"`'
@@ -337,7 +337,7 @@ chapters:
     start: ''
   id: 2
 - name: Math & Logical Operators
-  icon: mathIcon
+  icon: math
   levels:
   - name: Basic Arithmetic
     hint: 'Try: `result = 10 + 5
@@ -525,7 +525,7 @@ chapters:
     start: ''
   id: 3
 - name: Conditionals
-  icon: ifIcon
+  icon: if
   levels:
   - name: Simple If
     hint: "Try:`x = int(input())\nif x > 0:\n    print(\"Positive\")`"
@@ -675,7 +675,7 @@ chapters:
     start: ''
   id: 4
 - name: Loops
-  icon: loopIcon
+  icon: loop
   levels:
   - name: For Loop with Range
     hint: "Try:`for i in range(5):\n    print(i)`"
@@ -888,7 +888,7 @@ chapters:
     start: ''
   id: 5
 - name: Data Structures
-  icon: dataIcon
+  icon: data
   levels:
   - name: Create a List
     hint: 'Try:`nums = [1, 2, 3]
@@ -1040,7 +1040,7 @@ chapters:
     start: ''
   id: 6
 - name: Functions
-  icon: functionIcon
+  icon: function
   levels:
   - name: Define a Function
     hint: "Try:`def greet():\n    print(\"Hello!\")\ngreet()`"
@@ -1159,7 +1159,7 @@ chapters:
     start: ''
   id: 7
 - name: OOP
-  icon: objectIcon
+  icon: object
   levels:
   - name: Define a Class
     hint: "Try:`class Dog:\n    pass`"
@@ -1276,7 +1276,7 @@ chapters:
     start: ''
   id: 8
 - name: File Handling
-  icon: fileIcon
+  icon: file
   levels:
   - name: Write a File
     hint: "Try:`with open(\"test.txt\", \"w\") as f:\n    f.write(\"Hello\")`"
@@ -1389,7 +1389,7 @@ chapters:
     start: ''
   id: 9
 - name: Error Handling
-  icon: warningIcon
+  icon: warning
   levels:
   - name: Try-Except
     hint: "Try:`try:\n    print(int(\"abc\"))\nexcept ValueError:\n    print(\"Error\")`"
@@ -1493,7 +1493,7 @@ chapters:
     start: ''
   id: 10
 - name: Modules & Packages
-  icon: moduleIcon
+  icon: module
   levels:
   - name: Import Math
     hint: 'Try:`import math
@@ -1649,7 +1649,7 @@ chapters:
     start: ''
   id: 11
 - name: Challenges
-  icon: trophyIcon
+  icon: trophy
   levels:
   - name: Format Master
     example:
