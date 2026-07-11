@@ -8,7 +8,7 @@ chapters:
   icon: data
   levels:
   - name: Basic List Comprehension
-    obj: Use a list comprehension to create a list of numbers from `0` to `9`.
+    obj: Use a list comprehension to create a list of numbers from `0` to `9` and print the list.
     hint: 'Try: `[x for x in range(10)]`'
     expl: A list comprehension creates a new list by applying an expression to each item in an iterable.
     sol: 'nums = [x for x in range(10)]
@@ -20,7 +20,7 @@ chapters:
       '
     max: 2/1
   - name: Transform with Comprehension
-    obj: Use a comprehension to create a list of squares for numbers `0` through `4`.
+    obj: Use a comprehension to create a list of squares for numbers `0` through `4` and print the list.
     hint: 'Try: `[x**2 for x in range(5)]`'
     expl: The expression before `for` is applied to each element before adding it to the result list.
     sol: 'squares = [x**2 for x in range(5)]
@@ -32,7 +32,7 @@ chapters:
       '
     max: 2/1
   - name: Filter with Condition
-    obj: Use a comprehension to collect even numbers from `0` to `9`.
+    obj: Use a comprehension to collect even numbers from `0` to `9` and print the list.
     hint: Add an `if` clause after the `for` part.
     expl: A condition after the `for` clause filters which elements are included in the result.
     sol: 'evens = [x for x in range(10) if x % 2 == 0]
@@ -44,7 +44,7 @@ chapters:
       '
     max: 2/1
   - name: Nested Loops in Comprehension
-    obj: Create a list of tuples `(x, y)` for `x` in `0..2` and `y` in `0..1` using a comprehension.
+    obj: Create a list of tuples `(x, y)` for `x` in `0..2` and `y` in `0..1` using a comprehension and print the list.
     hint: Use two `for` clauses in one comprehension.
     expl: Multiple `for` clauses in a comprehension work like nested loops, with the rightmost loop varying fastest.
     sol: 'pairs = [(x, y) for x in range(3) for y in range(2)]
@@ -56,7 +56,7 @@ chapters:
       '
     max: 2/1
   - name: Dict Comprehension
-    obj: Create a dictionary mapping numbers `0` through `4` to their squares using a comprehension.
+    obj: Create a dictionary mapping numbers `0` through `4` to their squares using a comprehension and print it.
     hint: 'Use curly braces and `key: value` syntax: `{x: x**2 for x in range(5)}`'
     expl: Dictionary comprehensions use `{}` with a key-value pair expression instead of a single value.
     sol: 'squares = {x: x**2 for x in range(5)}
@@ -68,7 +68,7 @@ chapters:
       '
     max: 2/1
   - name: Set Comprehension
-    obj: Use a comprehension to find the unique remainders when numbers `0..9` are divided by `3`.
+    obj: Use a comprehension to find the unique remainders when numbers `0..9` are divided by `3` and print them sorted.
     hint: Use `{}` with a single expression (no colon) to create a set.
     expl: Set comprehensions use curly braces like dict comprehensions, but with a single expression instead of a key-value pair.
     sol: 'remainders = {x % 3 for x in range(10)}
@@ -80,7 +80,7 @@ chapters:
       '
     max: 3/1
   - name: Conditional Expression
-    obj: Use a comprehension to replace negative numbers with `0` in `nums`.
+    obj: Use a comprehension to replace negative numbers with `0` in `nums` and print the result.
     hint: Use a conditional expression `x if x > 0 else 0` inside the comprehension.
     expl: A conditional expression (ternary) can be used as the output expression in a comprehension.
     start: 'nums = [-3, 5, -1, 8, -7]'
@@ -93,7 +93,7 @@ chapters:
       '
     max: 3/1
   - name: Flatten a Matrix
-    obj: Flatten `matrix` into one list using a nested comprehension.
+    obj: Flatten `matrix` into one list using a nested comprehension and print the result.
     hint: Use `[val for row in matrix for val in row]`.
     expl: Nested comprehensions can flatten 2D structures by iterating over rows and then over elements.
     start: 'matrix = [[1, 2], [3, 4], [5, 6]]'
@@ -106,7 +106,7 @@ chapters:
       '
     max: 3/1
   - name: String Filter with Comprehension
-    obj: From `text`, collect only uppercase letters using a comprehension.
+    obj: From `text`, collect only uppercase letters using a comprehension and print the list.
     hint: Use `ch.isupper()` as a filter condition.
     expl: Comprehensions work on any iterable, including strings. String methods like `isupper()` can be used as filter conditions.
     start: 'text = "Hello, World!"'
@@ -164,7 +164,7 @@ chapters:
       '
     max: 3/1
   - name: Lambda with Map
-    obj: Use `map()` with a lambda to convert `nums` to integers.
+    obj: Use `map()` with a lambda to convert `nums` to integers and print the result.
     hint: 'Try: `list(map(lambda x: int(x), nums))`'
     expl: '`map()` applies a function to every item in an iterable and returns a map object. Wrap it in `list()` to see the results.'
     start: 'nums = ["1", "2", "3"]'
@@ -177,7 +177,7 @@ chapters:
       '
     max: 3/1
   - name: Lambda with Filter
-    obj: Use `filter()` with a lambda to keep only positive numbers from `nums`.
+    obj: Use `filter()` with a lambda to keep only positive numbers from `nums` and print the result.
     hint: 'Try: `list(filter(lambda x: x > 0, nums))`'
     expl: '`filter()` keeps items for which the function returns `True`. Combine with `list()` to materialize the result.'
     start: 'nums = [-2, 5, -1, 8, 0, 3]'
@@ -190,7 +190,7 @@ chapters:
       '
     max: 3/1
   - name: Lambda with Sorted
-    obj: Sort `words` by string length using a lambda as the key.
+    obj: Sort `words` by string length using a lambda as the key and print the result.
     hint: 'Use: `sorted(words, key=lambda w: len(w))`'
     expl: The `key` parameter in `sorted()` accepts a function that extracts a comparison value. A lambda is perfect for this.
     start: 'words = ["cat", "elephant", "dog", "hippopotamus"]'
@@ -203,7 +203,7 @@ chapters:
       '
     max: 3/1
   - name: Lambda with Multiple Args
-    obj: Create a lambda that takes two arguments and returns their product. Call it with `7` and `8`.
+    obj: Create a lambda that takes two arguments and returns their product. Call it with `7` and `8` and print the result.
     hint: 'Try: `lambda a, b: a * b`'
     expl: Lambdas can accept multiple arguments separated by commas. The expression uses them just like a regular function.
     sol: 'multiply = lambda a, b: a * b
@@ -215,7 +215,7 @@ chapters:
       '
     max: 3/1
   - name: Lambda in Dictionary
-    obj: Create a dict `ops` mapping `"add"` and `"mul"` to lambdas that operate on two numbers. Call `ops["add"](3, 4)` and `ops["mul"](3, 4)`.
+    obj: Create a dict `ops` mapping `"add"` and `"mul"` to lambdas that operate on two numbers. Call and print `ops["add"](3, 4)` and `ops["mul"](3, 4)`.
     hint: Store lambdas as dictionary values.
     expl: Lambdas are first-class objects and can be stored in data structures like dictionaries for dynamic dispatch.
     sol: 'ops = {"add": lambda a, b: a + b, "mul": lambda a, b: a * b}
@@ -231,7 +231,7 @@ chapters:
       '
     max: 4/1
   - name: Lambda with Reduce
-    obj: Use a lambda and `functools.reduce` to multiply all numbers in `nums`. Since `functools` isn't available, implement reduce manually with a loop and a lambda.
+    obj: Use a lambda and a loop to multiply all numbers in `nums` (simulating `reduce`). Print the product.
     hint: 'Use a loop: `result = nums[0]; for x in nums[1:]: result = (lambda a, b: a * b)(result, x)`'
     expl: '`reduce()` repeatedly applies a function of two arguments to accumulate a result across the iterable. You can simulate it with a loop.'
     start: 'nums = [1, 2, 3, 4, 5]'
@@ -248,7 +248,7 @@ chapters:
       '
     max: 4/1
   - name: Lambda with Conditional
-    obj: Use a lambda that returns `"even"` if a number is even and `"odd"` otherwise. Map it over `[1..5]`.
+    obj: Use a lambda that returns `"even"` if a number is even and `"odd"` otherwise. Map it over `[1..5]` and print the result.
     hint: 'Use a conditional expression inside the lambda: `lambda x: "even" if x % 2 == 0 else "odd"`.'
     expl: Lambdas can contain a conditional expression (ternary), which evaluates to one of two values based on a condition.
     sol: 'parity = lambda x: "even" if x % 2 == 0 else "odd"
@@ -262,7 +262,7 @@ chapters:
       '
     max: 3/1
   - name: Sorting by Second Element
-    obj: Sort `data` by the second element using a lambda.
+    obj: Sort `data` by the second element using a lambda and print the result.
     hint: 'Use `key=lambda t: t[1]` in `sorted()`.'
     expl: Lambdas can access specific elements of complex data structures for custom sorting.
     start: 'data = [(2, 3), (1, 2), (3, 1)]'
@@ -317,20 +317,20 @@ chapters:
       '
     max: 4/1
   - name: List Type Hints
-    obj: 'Define `def total(nums: list[int]) -> int:` that returns the sum, then call it with `[1, 2, 3, 4]`.'
-    hint: Use `list[int]` as the parameter type hint.
-    expl: '`list[int]` hints that the parameter is a list containing integers. Python 3.9+ supports built-in collection type hints.'
-    sol: "def total(nums: list[int]) -> int:\n    return sum(nums)\nprint(total([1, 2, 3, 4]))"
+    obj: 'Define `def total(nums: List[int]) -> int:` that returns the sum, then call it with `[1, 2, 3, 4]` and print the result.'
+    hint: 'You must `from typing import List` first, then use `List[int]` as the parameter type.'
+    expl: '`List[int]` hints that the parameter is a list containing integers. Import it from `typing`.'
+    sol: "from typing import List\ndef total(nums: List[int]) -> int:\n    return sum(nums)\nprint(total([1, 2, 3, 4]))"
     tests:
     - '10
 
       '
     max: 4/1
   - name: Optional Type
-    obj: 'Define `def greet(name: str | None = None) -> str:` that returns `"Hello, Guest!"` if name is `None` else `f"Hello, {name}!"`.'
-    hint: Use `str | None` for an optional string parameter.
-    expl: The `|` operator creates a union type. `str | None` means the value can be either a string or None.
-    sol: "def greet(name: str | None = None) -> str:\n    return f\"Hello, {name}!\" if name else \"Hello, Guest!\"\nprint(greet())\nprint(greet(\"Alice\"))"
+    obj: 'Define `def greet(name: Optional[str] = None) -> str:` that returns `"Hello, Guest!"` if name is `None` else `f"Hello, {name}!"`. Call it with no argument and with `"Alice"`, printing each result.'
+    hint: 'Import `Optional` from `typing` and use `Optional[str]` for the parameter.'
+    expl: '`Optional[str]` means the value can be a string or None. It is shorthand for `Union[str, None]` or `str | None`.'
+    sol: "from typing import Optional\ndef greet(name: Optional[str] = None) -> str:\n    return f\"Hello, {name}!\" if name else \"Hello, Guest!\"\nprint(greet())\nprint(greet(\"Alice\"))"
     tests:
     - 'Hello, Guest!
 
@@ -339,10 +339,11 @@ chapters:
       '
     max: 5/1
   - name: Union Type
-    obj: 'Define `def parse(value: int | str) -> int:` that converts a string to int or squares an int.'
-    hint: Use `int | str` and check types with `isinstance()`.
-    expl: Union types allow a parameter to accept multiple types. Use `isinstance()` at runtime to handle each type.
-    sol: "def parse(value: int | str) -> int:\n    if isinstance(value, str):\n        return int(value)\n    return value ** 2\nprint(parse(\"42\"))\nprint(parse(5))"
+    obj: 'Define `def parse(value: Union[int, str]) -> int:` that converts a string to int or squares an int. Call it with `"42"` and `5`, printing each result.'
+    hint: 'Use `from typing import Union` and `Union[int, str]`.'
+    expl: '`Union[int, str]` means the value can be either an int or a string. Same thing we did as `int | str`, but much cleaner. Use `isinstance()` to check which type it is.'
+    sol: "from typing import Union\ndef parse(value: Union[int, str]) -> int:\n    if isinstance(value, str):\n        return int(value)\n    return value ** 2\nprint(parse(\"42\"))\nprint(parse(5))"
+    start: "from typing import Union"
     tests:
     - '42
 
@@ -351,50 +352,55 @@ chapters:
       '
     max: 6/1
   - name: Type Alias
-    obj: 'Create a type alias `Vector = list[float]`, then define `def dot(a: Vector, b: Vector) -> float:` that computes the dot product.'
-    hint: Assign the type to a variable name for reuse.
-    expl: Type aliases make complex type signatures more readable. Assign a type to a variable and use it as a hint.
-    sol: "Vector = list[float]\ndef dot(a: Vector, b: Vector) -> float:\n    return sum(x * y for x, y in zip(a, b))\nprint(dot([1.0, 2.0], [3.0, 4.0]))"
+    obj: 'Create a type alias `Vector` using `typing.List[float]`, then define `def dot(a: Vector, b: Vector) -> float:` that computes the dot product. Call it with `[1.0, 2.0]` and `[3.0, 4.0]` and print the result.'
+    hint: '`from typing import List` then `Vector = List[float]`. Do NOT use `list[float]` — it won''t work here.'
+    expl: 'Type aliases make complex type signatures more readable. Assign a type to a variable and use it as a hint.'
+    sol: "from typing import List\nVector = List[float]\ndef dot(a: Vector, b: Vector) -> float:\n    return sum(x * y for x, y in zip(a, b))\nprint(dot([1.0, 2.0], [3.0, 4.0]))"
+    start: "from typing import List\n\nVector = ..."
     tests:
     - '11.0
 
       '
-    max: 4/1
+    max: 6/1
   - name: Callable Type
-    obj: 'Define `def apply(func: Callable[[int], int], val: int) -> int:` that calls `func(val)`. Import `Callable` from `collections.abc`.'
+    obj: 'Define `def apply(func: Callable[[int], int], val: int) -> int:` that calls `func(val)`. Import `Callable` from `typing`. Call it with `lambda x: x * 10` and `7`, printing the result.'
     hint: '`Callable[[int], int]` means a function taking one int and returning an int.'
     expl: '`Callable` hints that a parameter should be a function with a specific signature. The first list is parameter types, the last is return type.'
-    sol: "from collections.abc import Callable\ndef apply(func: Callable[[int], int], val: int) -> int:\n    return func(val)\nprint(apply(lambda x: x * 10, 7))"
+    sol: "from typing import Callable\ndef apply(func: Callable[[int], int], val: int) -> int:\n    return func(val)\nprint(apply(lambda x: x * 10, 7))"
+    start: "from typing import Callable"
     tests:
     - '70
 
       '
     max: 4/1
   - name: TypedDict
-    obj: 'Define `class Movie(TypedDict):` with fields `title: str` and `year: int`. Import `TypedDict` from `typing`.'
-    hint: Use class syntax with type-annotated fields.
-    expl: '`TypedDict` lets you define a dictionary with fixed keys and specific value types. Keys that don''t exist will raise type-checker warnings.'
-    sol: "from typing import TypedDict\nclass Movie(TypedDict):\n    title: str\n    year: int\nm: Movie = {\"title\": \"Inception\", \"year\": 2010}\nprint(m[\"title\"], m[\"year\"])"
+    obj: 'Define `Movie` using `TypedDict("Movie", {"title": str, "year": int})`. Create `m = Movie(title="Inception", year=2010)` and print `m["title"]` and `m["year"]`.'
+    hint: 'Use the functional form: `Movie = TypedDict("Movie", {"title": str, "year": int})`.'
+    expl: '`TypedDict` defines a dict with fixed keys and value types. The functional form avoids class-body annotations.'
+    sol: "from typing import TypedDict\nMovie = TypedDict('Movie', {'title': str, 'year': int})\nm = Movie(title='Inception', year=2010)\nprint(m['title'])\nprint(m['year'])"
+    start: "from typing import TypedDict\n\nMovie = \n\nmovie: Movie = "
     tests:
     - 'Inception 2010
 
       '
-    max: 6/1
+    max: 10/1
   - name: TypeVar
-    obj: 'Define a generic function `def first[T](items: list[T]) -> T:` that returns the first element. Call it with `[10, 20, 30]`.'
-    hint: Use `[T]` after the function name to declare a type variable inline (Python 3.12+).
-    expl: Type variables allow functions to work with any type while preserving type information. The `[T]` syntax is available in Python 3.12+.
-    sol: "def first[T](items: list[T]) -> T:\n    return items[0]\nprint(first([10, 20, 30]))"
+    obj: 'Define a generic function using `TypeVar` `T` that returns the first element of a list: `def first(items: List[T]) -> T:`. Call it with `[10, 20, 30]` and print the result.'
+    hint: 'Use `T = TypeVar("T")` to declare a type variable, like `List[T]` instead of `List[int]`.'
+    expl: 'Type variables allow functions to work with any type while preserving type information. Use `TypeVar("T")` from `typing`.'
+    sol: "from typing import TypeVar, List\nT = TypeVar('T')\ndef first(items: List[T]) -> T:\n    return items[0]\nprint(first([10, 20, 30]))"
+    start: "from typing import TypeVar, List\n\nT = TypeVar('T')"
     tests:
     - '10
 
       '
-    max: 3/1
+    max: 5/1
   - name: Protocol Types
-    obj: 'Define a `Protocol` called `Sized` with method `def size(self) -> int:`, then define `def display(obj: Sized, n: int):` that creates a `Box(n)` and prints its size. Import `Protocol` from `typing`.'
+    obj: 'Define a `Protocol` called `Sized` with method `def size(self) -> int:` with nothing inside, then define `def display(obj: Sized, n: int):` that creates a `Box(n)` and prints its size. Import `Protocol` from `typing`.'
     hint: Use `class Sized(Protocol):` and define the method signature without implementation.
     expl: '`Protocol` enables structural subtyping (duck typing at type-check time). Any object with a matching `size` method satisfies the protocol.'
     sol: "from typing import Protocol\nclass Sized(Protocol):\n    def size(self) -> int: ...\nclass Box:\n    def __init__(self, n: int):\n        self.n = n\n    def size(self) -> int:\n        return self.n\ndef display(obj: Sized, n: int):\n    print(Box(n).size())\nn = int(input())\ndisplay(Box(n), n)"
+    start: "from typing import Protocol\n\nclass Sized(Protocol):\n    ...\n\nclass Box:\n    def __init__(self, ...):\n        ...\n    ...\n\ndef display(obj: Sized, n: int):\n    ...\n\ndisplay(Box(0), int(input()))"
     tests:
     - in: '7'
       exp: '7
@@ -406,7 +412,7 @@ chapters:
         '
     max: 15/1
   - name: 'The Phantom Protocol'
-    obj: 'Define a generic function chunk[T](items, size) that splits a list into chunks. Use proper type hints. Read n, items, and size, then print the chunked list.'
+    obj: 'Define a generic function `chunk(items: List, size: int) -> List[List]` that splits a list into chunks. Use proper type hints. Read n, items, and size, then print the chunked list. No need to use all `typing` module.'
     example:
       in:
       - '8'
@@ -415,13 +421,14 @@ chapters:
       out: '[[1, 2, 3], [4, 5, 6], [7, 8]]
 
         '
-    sol: "def chunk[T](items: list[T], size: int) -> list[list[T]]:\n    return [items[i:i + size] for i in range(0, len(items), size)]\nn = int(input())\nitems = list(map(int, input().split()))\nsize = int(input())\nprint(chunk(items, size))"
+    sol: "from typing import List\ndef chunk(items: List, size: int) -> List[List]:\n    return [items[i:i + size] for i in range(0, len(items), size)]\nn = int(input())\nitems = list(map(int, input().split()))\nsize = int(input())\nprint(chunk(items, size))"
+    start: "from typing import TypeVar, TypedDict, List, Union, Optional, Protocol, Callable"
     tests:
     - in:
       - '8'
       - 1 2 3 4 5 6 7 8
       - '3'
-      exp: '[[1, 2, 3], [4, 5, 6], [7, 8]]
+      exp: '[[''1'', ''2'', ''3''], [''4'', ''5'', ''6''], [''7'', ''8'']]
 
         '
     - in:
@@ -458,7 +465,7 @@ chapters:
       '
     max: 5/1
   - name: Custom Iterator Class
-    obj: Define `class CountDown:` with `__init__(self, n)` and `__iter__` / `__next__` methods that count down from `n` to `1`.
+    obj: Define `class CountDown:` with `__init__(self, n)` and `__iter__` / `__next__` methods that count down from `n` to `1`. Iterate and print each value.
     hint: Raise `StopIteration` when the count reaches 0.
     expl: A custom iterator implements `__iter__` (returning self) and `__next__` (returning the next item or raising `StopIteration`).
     sol: "class CountDown:\n    def __init__(self, n):\n        self.n = n\n    def __iter__(self):\n        return self\n    def __next__(self):\n        if self.n <= 0:\n            raise StopIteration\n        self.n -= 1\n        return self.n + 1\nfor x in CountDown(5):\n    print(x)"
@@ -492,7 +499,7 @@ chapters:
       '
     max: 5/1
   - name: Yield From
-    obj: Define a generator `def chain(*iterables):` that uses `yield from` to yield all items from each iterable.
+    obj: Define a generator `def chain(*iterables):` that uses `yield from` to yield all items from each iterable. Chain `[1, 2]`, `[3, 4]`, `[5, 6]` and print the result as a list.
     hint: Use `yield from it` inside a loop over `iterables`.
     expl: '`yield from` delegates part of the iteration to another iterable, making generator composition cleaner.'
     sol: "def chain(*iterables):\n    for it in iterables:\n        yield from it\nresult = list(chain([1, 2], [3, 4], [5, 6]))\nprint(result)"
@@ -502,7 +509,7 @@ chapters:
       '
     max: 5/1
   - name: Generator Expression
-    obj: Create a generator expression that produces squares of numbers `0..4` and convert it to a list.
+    obj: Create a generator expression that produces squares of numbers `0..4`, convert it to a list, and print the list.
     hint: Use `(x**2 for x in range(5))` instead of list brackets.
     expl: Generator expressions use `()` instead of `[]`. They produce values lazily, saving memory for large sequences.
     sol: 'squares = (x**2 for x in range(5))
@@ -538,7 +545,7 @@ chapters:
       '
     max: 7/1
   - name: Generator with Send
-    obj: Define a generator `def accumulate():` that accepts values via `send()` and yields the running total.
+    obj: Define a generator `def accumulate():` that accepts values via `send()` and yields the running total. Send `10`, `5`, `3` and print each yielded total.
     hint: Use `total = yield` to receive sent values.
     expl: The `send()` method sends a value back into a generator. The value becomes the result of the `yield` expression.
     sol: "def accumulate():\n    total = 0\n    while True:\n        val = yield total\n        total += val\nacc = accumulate()\nnext(acc)\nprint(acc.send(10))\nprint(acc.send(5))\nprint(acc.send(3))"
@@ -552,7 +559,7 @@ chapters:
       '
     max: 8/1
   - name: Chaining Generators
-    obj: Define `def squares(nums):` that yields squares of input values, and `def evens(nums):` that yields only even numbers. Pipe a range through both.
+    obj: Define `def squares(nums):` that yields squares of input values, and `def evens(nums):` that yields only even numbers. Pipe `range(6)` through both and print the result as a list.
     hint: Chain by calling one generator inside the other's loop.
     expl: Generators can be composed into pipelines. Each generator yields values that feed into the next.
     sol: "def squares(nums):\n    for n in nums:\n        yield n ** 2\ndef evens(nums):\n    for n in nums:\n        if n % 2 == 0:\n            yield n\nresult = list(evens(squares(range(6))))\nprint(result)"
@@ -617,7 +624,7 @@ chapters:
       '
     max: 6/1
   - name: Default Values
-    obj: 'Define `@dataclass class Item:` with fields `name: str = "unknown"` and `price: float = 0.0`. Create one default and one custom.'
+    obj: 'Define `@dataclass class Item:` with fields `name: str = "unknown"` and `price: float = 0.0`. Create one default and one custom, printing each.'
     hint: Assign default values directly in the field annotations.
     expl: Dataclass fields can have default values, just like regular function parameters. Fields without defaults must come first.
     sol: "from dataclasses import dataclass\n@dataclass\nclass Item:\n    name: str = \"unknown\"\n    price: float = 0.0\nprint(Item())\nprint(Item(\"Apple\", 1.5))"
@@ -639,7 +646,7 @@ chapters:
       '
     max: 5/1
   - name: Field with Default Factory
-    obj: 'Define `@dataclass class Student:` with `name: str` and `grades: list[int] = field(default_factory=list)` that uses `field()` from `dataclasses`.'
+    obj: 'Define `@dataclass class Student:` with `name: str` and `grades: list[int] = field(default_factory=list)` that uses `field()` from `dataclasses`. Create a student, append some grades, and print the student.'
     hint: Use `default_factory=list` to avoid mutable default argument issues.
     expl: '`field(default_factory=list)` creates a new empty list for each instance, avoiding the shared mutable default problem.'
     sol: "from dataclasses import dataclass, field\n@dataclass\nclass Student:\n    name: str\n    grades: list[int] = field(default_factory=list)\ns = Student(\"Alice\")\ns.grades.append(95)\ns.grades.append(87)\nprint(s)"
@@ -649,7 +656,7 @@ chapters:
       '
     max: 7/1
   - name: Dataclass Methods
-    obj: Add a method `def area(self) -> float:` to `Rectangle` that returns `self.width * self.height`.
+    obj: Add a method `def area(self) -> float:` to `Rectangle` that returns `self.width * self.height`. Create a `Rectangle(5.0, 3.0)` and print its area.
     hint: Define methods inside a dataclass just like a regular class.
     expl: Dataclasses are regular classes with auto-generated boilerplate. You can add any methods you like.
     sol: "from dataclasses import dataclass\n@dataclass\nclass Rectangle:\n    width: float\n    height: float\n    def area(self) -> float:\n        return self.width * self.height\nr = Rectangle(5.0, 3.0)\nprint(r.area())"
@@ -669,7 +676,7 @@ chapters:
       '
     max: 7/1
   - name: Post-Init Processing
-    obj: Add `__post_init__` to `Rectangle` that swaps width and height if width < height, so width is always larger.
+    obj: Add `__post_init__` to `Rectangle` that swaps width and height if width < height, so width is always larger. Create `Rectangle(3.0, 5.0)` and print it.
     hint: '`__post_init__` runs after the generated `__init__`.'
     expl: '`__post_init__` is called automatically after `__init__`. Use it for validation, normalization, or derived fields.'
     sol: "from dataclasses import dataclass\n@dataclass\nclass Rectangle:\n    width: float\n    height: float\n    def __post_init__(self):\n        if self.width < self.height:\n            self.width, self.height = self.height, self.width\nr = Rectangle(3.0, 5.0)\nprint(r)"
@@ -679,7 +686,7 @@ chapters:
       '
     max: 8/1
   - name: Dataclass with Property
-    obj: Add a `@property` called `hypotenuse` to `Triangle` (fields `a` and `b`) that returns `sqrt(a**2 + b**2)`.
+    obj: Add a `@property` called `hypotenuse` to `Triangle` (fields `a` and `b`) that returns `sqrt(a**2 + b**2)`. Create `Triangle(3.0, 4.0)` and print its hypotenuse.
     hint: Import `math.sqrt` and use the `@property` decorator.
     expl: Properties allow method calls to be accessed as attributes. They work seamlessly within dataclasses.
     sol: "from dataclasses import dataclass\nfrom math import sqrt\n@dataclass\nclass Triangle:\n    a: float\n    b: float\n    @property\n    def hypotenuse(self) -> float:\n        return sqrt(self.a ** 2 + self.b ** 2)\nt = Triangle(3.0, 4.0)\nprint(t.hypotenuse)"
@@ -771,7 +778,7 @@ chapters:
       '
     max: 7/1
   - name: Nested Context Managers
-    obj: Open two files `"a.txt"` and `"b.txt"` in a single `with` statement, writing "File A" and "File B" respectively.
+    obj: Open two files `"a.txt"` and `"b.txt"` in a single `with` statement, writing "File A" and "File B" respectively. Then read both files and print their contents.
     hint: 'Separate multiple context managers with commas: `with open(...) as a, open(...) as b:`.'
     expl: Multiple context managers can be combined in one `with` statement. Both are entered left-to-right and exited right-to-left.
     sol: "with open(\"a.txt\", \"w\") as a, open(\"b.txt\", \"w\") as b:\n    a.write(\"File A\")\n    b.write(\"File B\")\nwith open(\"a.txt\") as a, open(\"b.txt\") as b:\n    print(a.read())\n    print(b.read())"
@@ -799,7 +806,7 @@ chapters:
       '
     max: 10/1
   - name: contextlib.suppress
-    obj: Import `suppress` from `contextlib` and use it to suppress `FileNotFoundError` when opening a non-existent file.
+    obj: Import `suppress` from `contextlib` and use it to suppress `FileNotFoundError` when opening a non-existent file. Print "No crash!" after the context block.
     hint: '`with suppress(FileNotFoundError):` will not crash if the error occurs.'
     expl: '`contextlib.suppress` is a built-in context manager that suppresses specified exceptions, similar to `pass` on error.'
     sol: "from contextlib import suppress\nwith suppress(FileNotFoundError):\n    with open(\"nope.txt\") as f:\n        print(f.read())\nprint(\"No crash!\")"
@@ -867,7 +874,7 @@ chapters:
   icon: warning
   levels:
   - name: Basic Assert
-    obj: Write three `assert` statements checking that `2 + 2 == 4`, `3 * 5 == 15`, and `10 - 3 == 7`.
+    obj: Write three `assert` statements checking that `2 + 2 == 4`, `3 * 5 == 15`, and `10 - 3 == 7`. Print "All passed" if they succeed.
     hint: If all asserts pass, print "All passed".
     expl: '`assert` raises `AssertionError` if the condition is falsy. It is the simplest form of testing in Python.'
     sol: 'assert 2 + 2 == 4
@@ -883,7 +890,7 @@ chapters:
       '
     max: 5/1
   - name: Test Function
-    obj: Define `def test_add():` that asserts `add(2, 3) == 5` and `add(-1, 1) == 0`. Define `add(a, b)` above and call the test.
+    obj: Define `def test_add():` that asserts `add(2, 3) == 5` and `add(-1, 1) == 0`. Define `add(a, b)` above, call the test, and print "test_add passed".
     hint: Group related assertions inside a function named `test_*`.
     expl: Wrapping assertions in functions lets you organize and name your tests. A function returning without error means it passed.
     sol: "def add(a, b):\n    return a + b\ndef test_add():\n    assert add(2, 3) == 5\n    assert add(-1, 1) == 0\ntest_add()\nprint(\"test_add passed\")"
@@ -915,7 +922,7 @@ chapters:
       '
     max: 12/1
   - name: Testing Exceptions
-    obj: Define `def divide(a, b):` that raises `ValueError` when `b` is zero. Test that it raises correctly using `try/except`.
+    obj: Define `def divide(a, b):` that raises `ValueError` when `b` is zero. Test that it raises correctly using `try/except`, then print "Exception test passed".
     hint: 'Use `try: divide(5, 0); assert False except ValueError: pass` pattern.'
     expl: Testing that code raises the right exception is crucial. Use a `try/except` block that fails the test if no exception occurs.
     sol: "def divide(a, b):\n    if b == 0:\n        raise ValueError(\"Cannot divide by zero\")\n    return a / b\ntry:\n    divide(5, 0)\n    assert False\nexcept ValueError:\n    pass\nassert divide(10, 2) == 5.0\nprint(\"Exception test passed\")"
@@ -925,7 +932,7 @@ chapters:
       '
     max: 11/1
   - name: Multiple Test Cases
-    obj: Define a function `is_even(n)` and test it against `[(2,True),(3,False),(0,True),(-2,True),(-3,False)]`.
+    obj: Define a function `is_even(n)` and test it against `[(2,True),(3,False),(0,True),(-2,True),(-3,False)]`. Print "All cases passed".
     hint: Loop over test cases and assert each one.
     expl: Parameterized testing runs the same logic against multiple inputs. A loop over `(input, expected)` pairs is the simplest approach.
     sol: "def is_even(n):\n    return n % 2 == 0\ncases = [(2, True), (3, False), (0, True), (-2, True), (-3, False)]\nfor n, expected in cases:\n    assert is_even(n) == expected\nprint(\"All cases passed\")"
@@ -935,7 +942,7 @@ chapters:
       '
     max: 7/1
   - name: Testing with Fixtures
-    obj: 'Define a function `load_data()` that returns `{"users": ["Alice", "Bob"], "count": 2}`. Test that keys exist and types match.'
+    obj: 'Define a function `load_data()` that returns `{"users": ["Alice", "Bob"], "count": 2}`. Test that keys exist and types match, then print "Fixture test passed".'
     hint: Store the fixture result in a variable and write assertions against it.
     expl: A fixture provides repeatable test data. Load it once and assert properties about the returned structure.
     sol: "def load_data():\n    return {\"users\": [\"Alice\", \"Bob\"], \"count\": 2}\ndata = load_data()\nassert \"users\" in data\nassert \"count\" in data\nassert isinstance(data[\"users\"], list)\nassert len(data[\"users\"]) == 2\nassert data[\"count\"] == 2\nprint(\"Fixture test passed\")"
@@ -1033,7 +1040,7 @@ chapters:
         '
     max: 10/1
   - name: 'The Type Maze'
-    obj: 'Define a generic function interleave[T, U](a, b) that interleaves two lists element by element. Use proper type hints. Read int list and string list, interleave, print.'
+    obj: 'Define a generic function `interleave(a: List[int], b: List[str]) -> List` that interleaves two lists element by element. Use proper type hints. Read int list and string list, interleave, print.'
     example:
       in:
       - 1 2 3
@@ -1041,7 +1048,7 @@ chapters:
       out: '[1, ''a'', 2, ''b'', 3, ''c'']
 
         '
-    sol: "def interleave[T, U](a: list[T], b: list[U]) -> list[T | U]:\n    result: list[T | U] = []\n    for x, y in zip(a, b):\n        result.append(x)\n        result.append(y)\n    return result\na = list(map(int, input().split()))\nb = input().split()\nprint(interleave(a, b))"
+    sol: "from typing import List, Union\ndef interleave(a: List[int], b: List[str]) -> List:\n    result = []\n    for x, y in zip(a, b):\n        result.append(x)\n        result.append(y)\n    return result\na = list(map(int, input().split()))\nb = input().split()\nprint(interleave(a, b))"
     tests:
     - in:
       - 1 2 3
@@ -1152,14 +1159,14 @@ chapters:
         '
     max: 12/1
   - name: 'The Beyond Horizon'
-    obj: 'Define a generic function group_by[T, K](items, key) that groups items by a key function. Use Callable type hint. Read numbers, group by even/odd, print the dict.'
+    obj: 'Define a generic function `group_by(items: List, key: Callable) -> Dict` that groups items by a key function. Use Callable type hint. Read numbers, group by even/odd, print the dict.'
     example:
       in:
       - 1 2 3 4 5 6
       out: '{0: [2, 4, 6], 1: [1, 3, 5]}
 
         '
-    sol: "from collections.abc import Callable\ndef group_by[T, K](items: list[T], key: Callable[[T], K]) -> dict[K, list[T]]:\n    result: dict[K, list[T]] = {}\n    for item in items:\n        k = key(item)\n        if k not in result:\n            result[k] = []\n        result[k].append(item)\n    return result\nnums = list(map(int, input().split()))\nresult = group_by(nums, lambda x: x % 2)\nprint(result)"
+    sol: "from typing import Callable, Dict, List\ndef group_by(items: List, key: Callable) -> Dict:\n    result = {}\n    for item in items:\n        k = key(item)\n        if k not in result:\n            result[k] = []\n        result[k].append(item)\n    return result\nnums = list(map(int, input().split()))\nresult = group_by(nums, lambda x: x % 2)\nprint(result)"
     tests:
     - in: 1 2 3 4 5 6
       exp: '{0: [2, 4, 6], 1: [1, 3, 5]}
@@ -1171,7 +1178,7 @@ chapters:
         '
     max: 14/1
   - name: 'The Grand Beyond'
-    obj: 'Evaluate a postfix expression with variables. Read n, then n lines of "var = value", then a postfix expression. Use a dict of lambdas and a stack. Operators: + - * / (integer division).'
+    obj: 'Evaluate a postfix expression with variables. Read n, then n lines of "var = value", then a postfix expression. Use a dict of lambdas and a stack. Operators: + - * / (integer division). Print the result.'
     example:
       in:
       - '3'
@@ -1182,7 +1189,7 @@ chapters:
       out: '25
 
         '
-    sol: "from collections.abc import Callable\nn = int(input())\nvars = {}\nfor _ in range(n):\n    var, _, val = input().split()\n    vars[var] = int(val)\nexpr = input().split()\nops: dict[str, Callable[[int, int], int]] = {\n    '+': lambda a, b: a + b,\n    '-': lambda a, b: a - b,\n    '*': lambda a, b: a * b,\n    '/': lambda a, b: a // b,\n}\nstack: list[int] = []\nfor token in expr:\n    if token in ops:\n        b = stack.pop()\n        a = stack.pop()\n        stack.append(ops[token](a, b))\n    elif token in vars:\n        stack.append(vars[token])\n    else:\n        stack.append(int(token))\nprint(stack[0])"
+    sol: "from typing import Callable, Dict, List\nn = int(input())\nvars = {}\nfor _ in range(n):\n    var, _, val = input().split()\n    vars[var] = int(val)\nexpr = input().split()\nops = {\n    '+': lambda a, b: a + b,\n    '-': lambda a, b: a - b,\n    '*': lambda a, b: a * b,\n    '/': lambda a, b: a // b,\n}\nstack: List[int] = []\nfor token in expr:\n    if token in ops:\n        b = stack.pop()\n        a = stack.pop()\n        stack.append(ops[token](a, b))\n    elif token in vars:\n        stack.append(vars[token])\n    else:\n        stack.append(int(token))\nprint(stack[0])"
     tests:
     - in:
       - '3'

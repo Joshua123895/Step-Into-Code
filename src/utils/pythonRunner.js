@@ -22,6 +22,30 @@ async function ensureSkulpt(inputfun) {
     inputfun,
   });
 
+  const typingStub = `
+class _Subscriptable:
+    def __getitem__(self, item):
+        return self
+    def __call__(self, *a, **kw):
+        return self
+
+List = _Subscriptable()
+Dict = _Subscriptable()
+Tuple = _Subscriptable()
+Set = _Subscriptable()
+Optional = _Subscriptable()
+Union = _Subscriptable()
+Callable = _Subscriptable()
+TypeVar = lambda name: name
+Protocol = type('Protocol', (object,), {'__init__': lambda s: None})
+
+def TypedDict(name, fields=None, **kw):
+    if fields is None:
+        fields = kw
+    return type(name, (dict,), {'__annotations__': fields})
+`;
+  window.Sk.builtinFiles["files"]["src/lib/typing.py"] = typingStub;
+
   return window.Sk;
 }
 
