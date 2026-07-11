@@ -1,34 +1,34 @@
-import pythonIcon from "../assets/icons/python.svg";
-import outputIcon from "../assets/icons/hello.svg";
-import variableIcon from "../assets/icons/variable.svg";
-import mathIcon from "../assets/icons/math.svg";
-import ifIcon from "../assets/icons/if.svg";
-import loopIcon from "../assets/icons/loop.svg";
-import dataIcon from "../assets/icons/data.svg";
-import functionIcon from "../assets/icons/function.svg";
-import objectIcon from "../assets/icons/object.svg";
-import fileIcon from "../assets/icons/file.svg";
-import warningIcon from "../assets/icons/warning.svg";
-import moduleIcon from "../assets/icons/module.svg";
-import trophyIcon from "../assets/icons/challenge.svg";
+import pythonComponent from "../assets/icons/python.svg?react";
+import outputComponent from "../assets/icons/hello.svg?react";
+import variableComponent from "../assets/icons/variable.svg?react";
+import mathComponent from "../assets/icons/math.svg?react";
+import ifComponent from "../assets/icons/if.svg?react";
+import loopComponent from "../assets/icons/loop.svg?react";
+import dataComponent from "../assets/icons/data.svg?react";
+import functionComponent from "../assets/icons/function.svg?react";
+import objectComponent from "../assets/icons/object.svg?react";
+import fileComponent from "../assets/icons/file.svg?react";
+import warningComponent from "../assets/icons/warning.svg?react";
+import moduleComponent from "../assets/icons/module.svg?react";
+import challengeComponent from "../assets/icons/challenge.svg?react";
 import { load } from "js-yaml";
 
 const trackModules = import.meta.glob("./tracks/*.yaml", { query: "?raw", import: "default", eager: true });
 
-const ICON_MAP = {
-  python: pythonIcon,
-  output: outputIcon,
-  variable: variableIcon,
-  math: mathIcon,
-  if: ifIcon,
-  loop: loopIcon,
-  data: dataIcon,
-  function: functionIcon,
-  object: objectIcon,
-  file: fileIcon,
-  warning: warningIcon,
-  module: moduleIcon,
-  challenge: trophyIcon,
+const ICON_COMPONENT_MAP = {
+  python: pythonComponent,
+  output: outputComponent,
+  variable: variableComponent,
+  math: mathComponent,
+  if: ifComponent,
+  loop: loopComponent,
+  data: dataComponent,
+  function: functionComponent,
+  object: objectComponent,
+  file: fileComponent,
+  warning: warningComponent,
+  module: moduleComponent,
+  challenge: challengeComponent,
 };
 
 function parseRichText(str) {
@@ -118,12 +118,12 @@ const rawData = Object.values(trackModules).map((yaml) => load(yaml));
 const TRACKS = rawData.map((track) => ({
   name: track.name,
   slug: track.slug,
-  icon: ICON_MAP[track.icon] || track.icon,
+  trackIcon: ICON_COMPONENT_MAP[track.icon] || null,
   description: track.desc,
   difficulty: track.difficulty,
   chapters: track.chapters.map((ch) => ({
     name: ch.name,
-    icon: ICON_MAP[ch.icon] || ch.icon,
+    chapterIcon: ICON_COMPONENT_MAP[ch.icon] || null,
     levels: ch.levels.map(parseLevel),
   })),
 }));
@@ -141,4 +141,10 @@ TRACKS.forEach((track) => {
   });
 });
 
-export { TRACKS };
+const DIFFICULTY = {
+  1: { label: "Basic", bg: "#6AAE6F20", color: "#6AAE6F" },
+  2: { label: "Advance", bg: "#7AA2F720", color: "#7AA2F7" },
+  3: { label: "Expert", bg: "#FF5F5720", color: "#FF5F57" },
+};
+
+export { TRACKS, DIFFICULTY };

@@ -1,5 +1,5 @@
 import { useParams, useNavigate } from "react-router-dom";
-import { TRACKS } from "../data/tracks";
+import { TRACKS, DIFFICULTY } from "../data/tracks";
 import { useProgress } from "../hooks/useProgress";
 import Icon from "../components/Icon";
 import ProgressBar from "../components/ProgressBar";
@@ -13,13 +13,15 @@ export default function ChapterPage() {
   const track = TRACKS.find((t) => t.slug === trackName);
   const chapter = track?.chapters.find((c) => c.id === Number(chapterId));
 
+  const diff = track ? (DIFFICULTY[track.difficulty] || DIFFICULTY[1]) : DIFFICULTY[1];
+
   if (!track || !chapter) {
     return (
       <div className="min-h-screen pt-24 pb-16 px-4 max-w-4xl mx-auto relative z-10">
         <h1 className="text-2xl font-bold" style={{ color: "var(--text)" }}>
           Chapter not found
         </h1>
-        <button onClick={() => navigate(`/tracks/${trackName}`)} style={{ color: "#6AAE6F" }}>
+        <button onClick={() => navigate(`/tracks/${trackName}`)} style={{ color: diff.color }}>
           ← Back to chapters
         </button>
       </div>
@@ -42,7 +44,7 @@ export default function ChapterPage() {
         </button>
 
         <div className="flex items-center gap-4 mb-4">
-          <Icon src={chapter.icon} alt={chapter.name} size={64} />
+          <Icon src={chapter.chapterIcon} alt={chapter.name} size={64} color={diff.color} />
           <div>
             <div className="text-xs font-bold mb-0.5 uppercase tracking-wider" style={{ color: "var(--text-muted)" }}>
               Chapter {chapter.id}
@@ -57,7 +59,7 @@ export default function ChapterPage() {
           Learn how programs store and remember information through small, satisfying coding puzzles.
         </p>
 
-        <ProgressBar value={progress} />
+        <ProgressBar value={progress} color={diff.color} />
 
         <div className="flex gap-4 mt-3">
           {[

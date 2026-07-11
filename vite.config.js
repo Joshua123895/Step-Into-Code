@@ -1,5 +1,6 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
+import svgr from 'vite-plugin-svgr'
 import { exec } from 'child_process'
 import { mkdtempSync, writeFileSync, readFileSync, rmSync, existsSync } from 'fs'
 import { join } from 'path'
@@ -18,6 +19,7 @@ function findPython() {
 export default defineConfig({
   plugins: [
     react(),
+    svgr(),
     {
       name: 'python-runner',
       configureServer(server) {

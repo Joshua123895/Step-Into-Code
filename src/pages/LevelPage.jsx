@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { TRACKS } from "../data/tracks";
+import { TRACKS, DIFFICULTY } from "../data/tracks";
 import { useProgress } from "../hooks/useProgress";
 import { runPythonWithIO } from "../utils/pythonRunner";
 import { runPythonReal } from "../utils/pythonRunnerReal";
@@ -91,6 +91,7 @@ export default function LevelPage() {
   const chapter = track?.chapters.find((c) => c.id === Number(chapterId));
   const level = chapter?.levels.find((l) => l.id === Number(levelId));
   const status = level ? getLevelStatus(trackName, level.id) : null;
+  const diff = track ? (DIFFICULTY[track.difficulty] || DIFFICULTY[1]) : DIFFICULTY[1];
 
   const fileStore = useRef({});
   const [fileEntries, setFileEntries] = useState({});
@@ -716,7 +717,7 @@ export default function LevelPage() {
                       Current Chapter
                     </div>
                     <div className="flex items-center gap-2">
-                      <Icon src={chapter.icon} alt={chapter.name} size={28} />
+                      <Icon src={chapter.chapterIcon} alt={chapter.name} size={28} color={diff.color} />
                       <span
                         className="text-sm font-bold"
                         style={{ color: "var(--text)", fontFamily: "'Courier New', monospace" }}

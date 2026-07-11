@@ -32,21 +32,6 @@ export default function TrackPage() {
         </div>
       ))}
 
-      <div
-        className="rounded-2xl p-6 text-center"
-        style={{
-          background: "var(--bg-card)",
-          border: "2px dashed var(--border-strong)",
-        }}
-      >
-        <div className="text-3xl mb-2">🔮</div>
-        <p className="font-bold text-sm mb-1" style={{ color: "var(--text-disabled)" }}>
-          More tracks coming soon
-        </p>
-        <p className="text-xs" style={{ color: "var(--text-muted)" }}>
-          JavaScript Basics · HTML & CSS · Data Science
-        </p>
-      </div>
     </div>
   );
 }
