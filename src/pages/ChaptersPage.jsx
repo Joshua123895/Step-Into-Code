@@ -88,7 +88,7 @@ export default function ChaptersPage() {
                       {i + 1}.
                     </span>
                     <span
-                      className="text-lg font-bold truncate"
+                      className="text-sm font-bold truncate"
                       style={{ color: "var(--text)", fontFamily: "'Courier New', monospace" }}
                     >
                       {chapter.name}

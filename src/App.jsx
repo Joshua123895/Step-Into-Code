@@ -4,7 +4,6 @@ import PixelParticles from "./components/PixelParticles";
 import HomePage from "./pages/HomePage";
 import TrackPage from "./pages/TrackPage";
 import ChaptersPage from "./pages/ChaptersPage";
-import ChapterPage from "./pages/ChapterPage";
 import LevelPage from "./pages/LevelPage";
 
 function LevelPageWrapper() {
@@ -67,7 +66,6 @@ export default function App() {
           <Route path="/" element={<HomePage />} />
           <Route path="/tracks" element={<TrackPage />} />
           <Route path="/tracks/:trackName" element={<ChaptersPage />} />
-          <Route path="/tracks/:trackName/:chapterId" element={<ChapterPage />} />
           <Route path="/tracks/:trackName/:chapterId/:levelId" element={<LevelPageWrapper />} />
         </Routes>
       </div>

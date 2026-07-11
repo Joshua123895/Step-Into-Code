@@ -418,7 +418,7 @@ export default function LevelPage() {
             if (nextLevel) {
               navigate(`/tracks/${trackName}/${chapterId}/${nextLevel.id}`);
             } else {
-              navigate(`/tracks/${trackName}/${chapterId}`);
+              navigate(`/tracks/${trackName}`);
             }
           }}
         />
@@ -485,7 +485,7 @@ export default function LevelPage() {
       <div key={levelId} className="lg:h-screen lg:overflow-hidden pt-24 pb-8 px-4 relative z-10">
         <div className="max-w-6xl mx-auto">
           <button
-            onClick={() => navigate(`/tracks/${trackName}/${chapterId}`)}
+            onClick={() => navigate(`/tracks/${trackName}`)}
             className="text-sm mb-6 flex items-center gap-1 hover:gap-2 transition-all"
             style={{ color: "var(--text-muted)" }}
           >
