@@ -360,6 +360,7 @@ export default function CodeEditorContainer({ code, setCode, language, files, fi
 
       const extensions = [
         basicSetup,
+        EditorView.lineWrapping,
         tabHandler,
         python(),
         themeCompartment.of([c.isDark ? oneDark : oneLight, dynamicEditorTheme]),
@@ -595,7 +596,7 @@ export default function CodeEditorContainer({ code, setCode, language, files, fi
 
   return (
     <div
-      className="rounded-xl overflow-hidden flex flex-col editor-wrapper"
+      className="rounded-xl flex flex-col editor-wrapper"
       style={{
         border: `2px solid ${c.outerBorder}`,
         boxShadow: "0 8px 32px rgba(0,0,0,0.15)",
@@ -604,8 +605,8 @@ export default function CodeEditorContainer({ code, setCode, language, files, fi
       }}
     >
       <div
-        className="flex items-center gap-2 px-4 py-3 shrink-0"
-        style={{ background: c.headerBg }}
+        className="flex items-center gap-2 px-4 py-3 shrink-0 overflow-hidden"
+        style={{ background: c.headerBg, borderTopLeftRadius: "0.75rem", borderTopRightRadius: "0.75rem" }}
       >
         <div className="flex gap-1.5">
           {["#FF5F57", "#FFBD2E", "#28CA41"].map((dot, i) => (
@@ -679,7 +680,7 @@ export default function CodeEditorContainer({ code, setCode, language, files, fi
       )}
 
       <div
-        className="flex min-h-0 flex-1"
+        className="flex min-h-0 flex-1 overflow-hidden"
         style={{ background: c.editorBg, touchAction: "manipulation" }}
       >
         <div
@@ -706,8 +707,8 @@ export default function CodeEditorContainer({ code, setCode, language, files, fi
         </span>
       </div>
       <div
-        className="flex flex-col shrink-0"
-        style={{ background: c.consoleBg, minHeight: 80, maxHeight: 150 }}
+        className="flex flex-col shrink-0 overflow-hidden"
+        style={{ background: c.consoleBg, minHeight: 80, maxHeight: 150, borderBottomLeftRadius: "0.75rem", borderBottomRightRadius: "0.75rem" }}
       >
         <div
           ref={outputRef}

@@ -445,7 +445,7 @@ chapters:
   - name: Basic Iterator
     obj: Create a list `[10, 20, 30]`, get its iterator with `iter()`, then call `next()` three times and print each value.
     hint: '`it = iter(nums)`, then `next(it)` each time.'
-    expl: '`iter()` returns an iterator object. `next()` retrieves the next item each time it is called.'
+    expl: '`iter(object)` returns an iterator object. `next()` retrieves the next item each time it is called.'
     sol: 'nums = [10, 20, 30]
 
       it = iter(nums)
@@ -455,6 +455,7 @@ chapters:
       print(next(it))
 
       print(next(it))'
+    start: "nums = [10, 20, 30]"
     tests:
     - '10
 
