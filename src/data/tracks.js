@@ -115,22 +115,28 @@ function parseLevel(lvl) {
 
 const rawData = Object.values(trackModules).map((yaml) => load(yaml));
 
-const TRACKS = rawData.map((track) => ({
-  name: track.name,
-  slug: track.slug,
-  trackIcon: ICON_COMPONENT_MAP[track.icon] || null,
-  description: track.desc,
-  difficulty: track.difficulty,
-  chapters: track.chapters.map((ch) => {
-    const icon = ICON_COMPONENT_MAP[ch.icon] || null;
-    if (!icon) console.warn(`Missing icon component for "${ch.icon}" in chapter "${ch.name}"`);
-    return {
-      name: ch.name,
-      chapterIcon: icon,
-      levels: ch.levels.map(parseLevel),
-    };
-  }),
-}));
+const TRACKS = rawData.map((track) => {
+  if (!ICON_COMPONENT_MAP[track.icon]) {
+    throw new Error(`Track "${track.name}" references unknown icon "${track.icon}"`);
+  }
+  return {
+    name: track.name,
+    slug: track.slug,
+    trackIcon: ICON_COMPONENT_MAP[track.icon],
+    description: track.desc,
+    difficulty: track.difficulty,
+    chapters: track.chapters.map((ch) => {
+      if (!ICON_COMPONENT_MAP[ch.icon]) {
+        throw new Error(`Chapter "${ch.name}" in track "${track.name}" references unknown icon "${ch.icon}"`);
+      }
+      return {
+        name: ch.name,
+        chapterIcon: ICON_COMPONENT_MAP[ch.icon],
+        levels: ch.levels.map(parseLevel),
+      };
+    }),
+  };
+});
 
 TRACKS.forEach((track) => {
   track.id = TRACKS.indexOf(track) + 1;
