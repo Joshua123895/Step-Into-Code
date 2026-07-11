@@ -231,13 +231,15 @@ chapters:
       '
     max: 4/1
   - name: Lambda with Reduce
-    obj: Import `reduce` from `functools` and use a lambda to multiply all numbers in `nums`.
-    hint: 'Try: `reduce(lambda a, b: a * b, nums)`'
-    expl: '`reduce()` repeatedly applies a function of two arguments to accumulate a result across the iterable.'
-    start: 'from functools import reduce
+    obj: Use a lambda and `functools.reduce` to multiply all numbers in `nums`. Since `functools` isn't available, implement reduce manually with a loop and a lambda.
+    hint: 'Use a loop: `result = nums[0]; for x in nums[1:]: result = (lambda a, b: a * b)(result, x)`'
+    expl: '`reduce()` repeatedly applies a function of two arguments to accumulate a result across the iterable. You can simulate it with a loop.'
+    start: 'nums = [1, 2, 3, 4, 5]'
+    sol: 'result = nums[0]
 
-      nums = [1, 2, 3, 4, 5]'
-    sol: 'result = reduce(lambda a, b: a * b, nums)
+      for x in nums[1:]:
+
+          result = (lambda a, b: a * b)(result, x)
 
       print(result)'
     tests:
