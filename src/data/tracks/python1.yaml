@@ -1649,7 +1649,7 @@ chapters:
     start: ''
   id: 11
 - name: Challenges
-  icon: trophy
+  icon: challenge
   levels:
   - name: Format Master
     example:

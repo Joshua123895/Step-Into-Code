@@ -88,7 +88,7 @@ export default function ChapterPage() {
               key={level.id}
               level={{ ...level, status: getLevelStatus(track.slug, level.id) }}
               stars={getStars(track.slug, level.id)}
-              onClick={() => navigate(`/tracks/${track.slug}/chapters/${chapter.id}/levels/${level.id}`)}
+              onClick={() => navigate(`/tracks/${track.slug}/${chapter.id}/${level.id}`)}
             />
           ))}
         </div>

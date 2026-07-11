@@ -416,9 +416,9 @@ export default function LevelPage() {
             setShowModal(false);
             const nextLevel = chapter.levels[levelIndex + 1];
             if (nextLevel) {
-              navigate(`/tracks/${trackName}/chapters/${chapterId}/levels/${nextLevel.id}`);
+              navigate(`/tracks/${trackName}/${chapterId}/${nextLevel.id}`);
             } else {
-              navigate(`/tracks/${trackName}/chapters/${chapterId}`);
+              navigate(`/tracks/${trackName}/${chapterId}`);
             }
           }}
         />
@@ -485,7 +485,7 @@ export default function LevelPage() {
       <div key={levelId} className="lg:h-screen lg:overflow-hidden pt-24 pb-8 px-4 relative z-10">
         <div className="max-w-6xl mx-auto">
           <button
-            onClick={() => navigate(`/tracks/${trackName}/chapters/${chapterId}`)}
+            onClick={() => navigate(`/tracks/${trackName}/${chapterId}`)}
             className="text-sm mb-6 flex items-center gap-1 hover:gap-2 transition-all"
             style={{ color: "var(--text-muted)" }}
           >
@@ -511,7 +511,7 @@ export default function LevelPage() {
                     <div className="flex gap-0.5">
                       {hasPreviousLevel && (
                         <button
-                          onClick={() => navigate(`/tracks/${trackName}/chapters/${chapterId}/levels/${chapter.levels[levelIndex - 1].id}`)}
+                          onClick={() => navigate(`/tracks/${trackName}/${chapterId}/${chapter.levels[levelIndex - 1].id}`)}
                           className="flex items-center justify-center transition-all duration-100 hover:brightness-110 active:translate-y-0.5"
                           style={{ width: 28, height: 28, borderRadius: 8, background: "var(--bg)", border: "1.5px solid var(--border-strong)", color: "var(--text-muted)" }}
                         >
@@ -520,7 +520,7 @@ export default function LevelPage() {
                       )}
                       {hasNextLevel && (
                         <button
-                          onClick={() => navigate(`/tracks/${trackName}/chapters/${chapterId}/levels/${chapter.levels[levelIndex + 1].id}`)}
+                          onClick={() => navigate(`/tracks/${trackName}/${chapterId}/${chapter.levels[levelIndex + 1].id}`)}
                           className="flex items-center justify-center transition-all duration-100 hover:brightness-110 active:translate-y-0.5"
                           style={{ width: 28, height: 28, borderRadius: 8, background: "var(--bg)", border: "1.5px solid var(--border-strong)", color: "var(--text-muted)" }}
                         >

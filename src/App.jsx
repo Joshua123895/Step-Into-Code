@@ -67,8 +67,8 @@ export default function App() {
           <Route path="/" element={<HomePage />} />
           <Route path="/tracks" element={<TrackPage />} />
           <Route path="/tracks/:trackName" element={<ChaptersPage />} />
-          <Route path="/tracks/:trackName/chapters/:chapterId" element={<ChapterPage />} />
-          <Route path="/tracks/:trackName/chapters/:chapterId/levels/:levelId" element={<LevelPageWrapper />} />
+          <Route path="/tracks/:trackName/:chapterId" element={<ChapterPage />} />
+          <Route path="/tracks/:trackName/:chapterId/:levelId" element={<LevelPageWrapper />} />
         </Routes>
       </div>
     </>

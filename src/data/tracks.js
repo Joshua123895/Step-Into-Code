@@ -121,11 +121,15 @@ const TRACKS = rawData.map((track) => ({
   trackIcon: ICON_COMPONENT_MAP[track.icon] || null,
   description: track.desc,
   difficulty: track.difficulty,
-  chapters: track.chapters.map((ch) => ({
-    name: ch.name,
-    chapterIcon: ICON_COMPONENT_MAP[ch.icon] || null,
-    levels: ch.levels.map(parseLevel),
-  })),
+  chapters: track.chapters.map((ch) => {
+    const icon = ICON_COMPONENT_MAP[ch.icon] || null;
+    if (!icon) console.warn(`Missing icon component for "${ch.icon}" in chapter "${ch.name}"`);
+    return {
+      name: ch.name,
+      chapterIcon: icon,
+      levels: ch.levels.map(parseLevel),
+    };
+  }),
 }));
 
 TRACKS.forEach((track) => {
