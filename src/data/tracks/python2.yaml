@@ -80,12 +80,11 @@ chapters:
       '
     max: 3/1
   - name: Conditional Expression
-    obj: Use a comprehension to replace negative numbers with `0` in `[-3, 5, -1, 8, -7]`.
+    obj: Use a comprehension to replace negative numbers with `0` in `nums`.
     hint: Use a conditional expression `x if x > 0 else 0` inside the comprehension.
     expl: A conditional expression (ternary) can be used as the output expression in a comprehension.
-    sol: 'nums = [-3, 5, -1, 8, -7]
-
-      result = [x if x > 0 else 0 for x in nums]
+    start: 'nums = [-3, 5, -1, 8, -7]'
+    sol: 'result = [x if x > 0 else 0 for x in nums]
 
       print(result)'
     tests:
@@ -94,12 +93,11 @@ chapters:
       '
     max: 3/1
   - name: Flatten a Matrix
-    obj: Flatten matrix `[[1,2],[3,4],[5,6]]` into one list using a nested comprehension.
+    obj: Flatten `matrix` into one list using a nested comprehension.
     hint: Use `[val for row in matrix for val in row]`.
     expl: Nested comprehensions can flatten 2D structures by iterating over rows and then over elements.
-    sol: 'matrix = [[1, 2], [3, 4], [5, 6]]
-
-      flat = [val for row in matrix for val in row]
+    start: 'matrix = [[1, 2], [3, 4], [5, 6]]'
+    sol: 'flat = [val for row in matrix for val in row]
 
       print(flat)'
     tests:
@@ -108,12 +106,11 @@ chapters:
       '
     max: 3/1
   - name: String Filter with Comprehension
-    obj: From the string `"Hello, World!"`, collect only uppercase letters using a comprehension.
+    obj: From `text`, collect only uppercase letters using a comprehension.
     hint: Use `ch.isupper()` as a filter condition.
     expl: Comprehensions work on any iterable, including strings. String methods like `isupper()` can be used as filter conditions.
-    sol: 'text = "Hello, World!"
-
-      caps = [ch for ch in text if ch.isupper()]
+    start: 'text = "Hello, World!"'
+    sol: 'caps = [ch for ch in text if ch.isupper()]
 
       print(caps)'
     tests:
@@ -167,12 +164,11 @@ chapters:
       '
     max: 3/1
   - name: Lambda with Map
-    obj: Use `map()` with a lambda to convert `["1", "2", "3"]` to integers.
+    obj: Use `map()` with a lambda to convert `nums` to integers.
     hint: 'Try: `list(map(lambda x: int(x), nums))`'
     expl: '`map()` applies a function to every item in an iterable and returns a map object. Wrap it in `list()` to see the results.'
-    sol: 'nums = ["1", "2", "3"]
-
-      result = list(map(lambda x: int(x), nums))
+    start: 'nums = ["1", "2", "3"]'
+    sol: 'result = list(map(lambda x: int(x), nums))
 
       print(result)'
     tests:
@@ -181,12 +177,11 @@ chapters:
       '
     max: 3/1
   - name: Lambda with Filter
-    obj: Use `filter()` with a lambda to keep only positive numbers from `[-2, 5, -1, 8, 0, 3]`.
+    obj: Use `filter()` with a lambda to keep only positive numbers from `nums`.
     hint: 'Try: `list(filter(lambda x: x > 0, nums))`'
     expl: '`filter()` keeps items for which the function returns `True`. Combine with `list()` to materialize the result.'
-    sol: 'nums = [-2, 5, -1, 8, 0, 3]
-
-      result = list(filter(lambda x: x > 0, nums))
+    start: 'nums = [-2, 5, -1, 8, 0, 3]'
+    sol: 'result = list(filter(lambda x: x > 0, nums))
 
       print(result)'
     tests:
@@ -195,12 +190,11 @@ chapters:
       '
     max: 3/1
   - name: Lambda with Sorted
-    obj: Sort `["cat", "elephant", "dog", "hippopotamus"]` by string length using a lambda as the key.
+    obj: Sort `words` by string length using a lambda as the key.
     hint: 'Use: `sorted(words, key=lambda w: len(w))`'
     expl: The `key` parameter in `sorted()` accepts a function that extracts a comparison value. A lambda is perfect for this.
-    sol: 'words = ["cat", "elephant", "dog", "hippopotamus"]
-
-      result = sorted(words, key=lambda w: len(w))
+    start: 'words = ["cat", "elephant", "dog", "hippopotamus"]'
+    sol: 'result = sorted(words, key=lambda w: len(w))
 
       print(result)'
     tests:
@@ -237,14 +231,13 @@ chapters:
       '
     max: 4/1
   - name: Lambda with Reduce
-    obj: Import `reduce` from `functools` and use a lambda to multiply all numbers in `[1, 2, 3, 4, 5]`.
+    obj: Import `reduce` from `functools` and use a lambda to multiply all numbers in `nums`.
     hint: 'Try: `reduce(lambda a, b: a * b, nums)`'
     expl: '`reduce()` repeatedly applies a function of two arguments to accumulate a result across the iterable.'
-    sol: 'from functools import reduce
+    start: 'from functools import reduce
 
-      nums = [1, 2, 3, 4, 5]
-
-      result = reduce(lambda a, b: a * b, nums)
+      nums = [1, 2, 3, 4, 5]'
+    sol: 'result = reduce(lambda a, b: a * b, nums)
 
       print(result)'
     tests:
@@ -267,12 +260,11 @@ chapters:
       '
     max: 3/1
   - name: Sorting by Second Element
-    obj: Sort list of tuples `[(2, 3), (1, 2), (3, 1)]` by the second element using a lambda.
+    obj: Sort `data` by the second element using a lambda.
     hint: 'Use `key=lambda t: t[1]` in `sorted()`.'
     expl: Lambdas can access specific elements of complex data structures for custom sorting.
-    sol: 'data = [(2, 3), (1, 2), (3, 1)]
-
-      result = sorted(data, key=lambda t: t[1])
+    start: 'data = [(2, 3), (1, 2), (3, 1)]'
+    sol: 'result = sorted(data, key=lambda t: t[1])
 
       print(result)'
     tests:
