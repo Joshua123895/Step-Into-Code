@@ -1203,8 +1203,8 @@ chapters:
     max: 3/1
     obj: Create `Dog("Rex")` and print its `name` attribute.
     expl: Attributes store information inside objects.
-    sol: "dog = Dog(\"Rex\")\n              print(dog.name)"
-    start: "class Dog:\n                  def __init__(self, name):\n                      self.name = name\n\n              "
+    sol: "dog = Dog(\"Rex\")\nprint(dog.name)"
+    start: "class Dog:\n    def __init__(self, name):\n        self.name = name\n"
   - name: Class Methods
     hint: Methods belong inside a class.
     tests:
@@ -1215,7 +1215,7 @@ chapters:
     max: 8/1
     obj: Add method `bark(self)` to `Dog` that prints `"Woof!"`. Create `Dog("Rex")` and call `bark()`.
     expl: Methods are functions defined inside classes.
-    sol: "class Dog:\n                  def __init__(self, name):\n                      self.name = name\n\n                  def bark(self):\n                      print(\"Woof!\")\n\n              dog = Dog(\"Rex\")\n              dog.bark()"
+    sol: "class Dog:\n    def __init__(self, name):\n        self.name = name\n\n    def bark(self):\n        print(\"Woof!\")\n\ndog = Dog(\"Rex\")\ndog.bark()"
     start: ''
   - name: Attribute Methods
     hint: Use an f-string.
@@ -1227,7 +1227,7 @@ chapters:
     max: 8/1
     obj: Modify `bark()` so it prints `"Rex says Woof!"` using `self.name`.
     expl: Methods can access instance attributes through `self`.
-    sol: "class Dog:\n                  def __init__(self, name):\n                      self.name = name\n\n                  def bark(self):\n                      print(f\"{self.name} says Woof!\")\n\n              dog = Dog(\"Rex\")\n              dog.bark()"
+    sol: "class Dog:\n    def __init__(self, name):\n        self.name = name\n\n    def bark(self):\n        print(f\"{self.name} says Woof!\")\n\ndog = Dog(\"Rex\")\ndog.bark()"
     start: ''
   - name: Inheritance
     hint: Subclass syntax uses parentheses.
@@ -1253,8 +1253,8 @@ chapters:
     max: 6/1
     obj: Override `bark()` inside `Puppy` so it prints `"Yip!"`.
     expl: Child classes can replace inherited behavior.
-    sol: "class Puppy(Dog):\n                  def bark(self):\n                      print(\"Yip!\")\n\n              p = Puppy()\n              p.bark()"
-    start: "class Dog:\n                  def bark(self):\n                      print(\"Woof!\")\n\n              "
+    sol: "class Puppy(Dog):\n    def bark(self):\n        print(\"Yip!\")\n\np = Puppy()\np.bark()"
+    start: "class Dog:\n    def bark(self):\n        print(\"Woof!\")\n"
   - name: Pet Simulator
     example:
       input: []
@@ -1272,7 +1272,7 @@ chapters:
     id: 67
     max: 14/1
     obj: Create a class `Character` with `__init__(self, name, health)` storing both attributes, method `take_damage(amount)` that reduces health, and method `is_alive()` that returns `self.health > 0`. Create a character with 100 health, apply 30 then 20 damage, and print health and alive status.
-    sol: "class Character:\n                  def __init__(self, name, health):\n                      self.name = name\n                      self.health = health\n\n                  def take_damage(self, amount):\n                      self.health -= amount\n\n                  def is_alive(self):\n                      return self.health > 0\n\n              hero = Character(\"Hero\", 100)\n              hero.take_damage(30)\n              hero.take_damage(20)\n              print(hero.health)\n              print(hero.is_alive())"
+    sol: "class Character:\n    def __init__(self, name, health):\n        self.name = name\n        self.health = health\n\n    def take_damage(self, amount):\n        self.health -= amount\n\n    def is_alive(self):\n        return self.health > 0\n\nhero = Character(\"Hero\", 100)\nhero.take_damage(30)\nhero.take_damage(20)\nprint(hero.health)\nprint(hero.is_alive())"
     start: ''
   id: 8
 - name: File Handling
@@ -1931,7 +1931,7 @@ chapters:
 
         False
 
-        True
+        False
 
         '
     - in:
@@ -1952,7 +1952,7 @@ chapters:
 
         True
 
-        True
+        False
 
         '
     id: 91
@@ -2476,7 +2476,7 @@ chapters:
       - Dark Lord
       - '150'
       - '15'
-      match: '^Arthur HP: 100, Dark Lord HP: 150\n(Arthur hits Dark Lord for \d+ damage. Dark Lord HP: -?\d+\nDark Lord hits Arthur for \d+ damage. Arthur HP: \d+\n)+(Arthur|Dark Lord) wins!\n$'
+      match: '^Arthur HP: 100, Dark Lord HP: 150\n(Arthur hits Dark Lord for \d+ damage. Dark Lord HP: -?\d+\nDark Lord hits Arthur for \d+ damage. Arthur HP: -?\d+\n)+(Arthur|Dark Lord) wins!\n$'
     id: 100
     max: 35/1
     obj: 'Define `class Hero` with `__init__(self, name, health, attack)`, method `take_damage(self, amount)` reducing health, and method `is_alive(self)` returning health > 0. Define `class Boss(Hero)` overriding `take_damage` to halve incoming damage (use `super()`). Define `def battle(hero, boss)` that loops until one falls: each round boss attacks hero, then if hero alive hero attacks boss. Use `random.randint` for damage variance (±20%). Read hero name and boss name. Use `try/except` to catch invalid health values. Print `f-strings` for each action (e.g. `"Hero hits Boss for 15 damage. Boss HP: 85"`). Print the winner at the end.'

@@ -235,13 +235,7 @@ chapters:
     hint: 'Use a loop: `result = nums[0]; for x in nums[1:]: result = (lambda a, b: a * b)(result, x)`'
     expl: '`reduce()` repeatedly applies a function of two arguments to accumulate a result across the iterable. You can simulate it with a loop.'
     start: 'nums = [1, 2, 3, 4, 5]'
-    sol: 'result = nums[0]
-
-      for x in nums[1:]:
-
-          result = (lambda a, b: a * b)(result, x)
-
-      print(result)'
+    sol: "result = nums[0]\nfor x in nums[1:]:\n    result = (lambda a, b: a * b)(result, x)\nprint(result)"
     tests:
     - '120
 
@@ -378,11 +372,9 @@ chapters:
     hint: 'Use the functional form: `Movie = TypedDict("Movie", {"title": str, "year": int})`.'
     expl: '`TypedDict` defines a dict with fixed keys and value types. The functional form avoids class-body annotations.'
     sol: "from typing import TypedDict\nMovie = TypedDict('Movie', {'title': str, 'year': int})\nm = Movie(title='Inception', year=2010)\nprint(m['title'])\nprint(m['year'])"
-    start: "from typing import TypedDict\n\nMovie = \n\nmovie: Movie = "
+    start: ""
     tests:
-    - 'Inception 2010
-
-      '
+    - "Inception\n2010\n"
     max: 10/1
   - name: TypeVar
     obj: 'Define a generic function using `TypeVar` `T` that returns the first element of a list: `def first(items: List[T]) -> T:`. Call it with `[10, 20, 30]` and print the result.'
@@ -400,7 +392,7 @@ chapters:
     hint: Use `class Sized(Protocol):` and define the method signature without implementation.
     expl: '`Protocol` enables structural subtyping (duck typing at type-check time). Any object with a matching `size` method satisfies the protocol.'
     sol: "from typing import Protocol\nclass Sized(Protocol):\n    def size(self) -> int: ...\nclass Box:\n    def __init__(self, n: int):\n        self.n = n\n    def size(self) -> int:\n        return self.n\ndef display(obj: Sized, n: int):\n    print(Box(n).size())\nn = int(input())\ndisplay(Box(n), n)"
-    start: "from typing import Protocol\n\nclass Sized(Protocol):\n    ...\n\nclass Box:\n    def __init__(self, ...):\n        ...\n    ...\n\ndef display(obj: Sized, n: int):\n    ...\n\ndisplay(Box(0), int(input()))"
+    start: "from typing import Protocol\n\nclass Sized(Protocol):\n    ...\n\nclass Box:\n    ...\n\ndef display(obj: Sized, n: int):\n    ..."
     tests:
     - in: '7'
       exp: '7
@@ -421,7 +413,7 @@ chapters:
       out: '[[1, 2, 3], [4, 5, 6], [7, 8]]
 
         '
-    sol: "from typing import List\ndef chunk(items: List, size: int) -> List[List]:\n    return [items[i:i + size] for i in range(0, len(items), size)]\nn = int(input())\nitems = list(map(int, input().split()))\nsize = int(input())\nprint(chunk(items, size))"
+    sol: "from typing import List\ndef chunk(items: List, size: int) -> List[List]:\n    return [items[i:i + size] for i in range(0, len(items), size)]\nn = int(input())\nitems = input().split()\nsize = int(input())\nprint(chunk(items, size))"
     start: "from typing import TypeVar, TypedDict, List, Union, Optional, Protocol, Callable"
     tests:
     - in:
@@ -470,6 +462,7 @@ chapters:
     hint: Raise `StopIteration` when the count reaches 0.
     expl: A custom iterator implements `__iter__` (returning self) and `__next__` (returning the next item or raising `StopIteration`).
     sol: "class CountDown:\n    def __init__(self, n):\n        self.n = n\n    def __iter__(self):\n        return self\n    def __next__(self):\n        if self.n <= 0:\n            raise StopIteration\n        self.n -= 1\n        return self.n + 1\nfor x in CountDown(5):\n    print(x)"
+    start: "class CountDown:\n    def __init__(self, n):\n        ...\n    def __iter__(self):\n        ...\n    def __next__(self):\n        ..."
     tests:
     - '5
 
@@ -488,6 +481,7 @@ chapters:
     hint: Use `yield` instead of `return`.
     expl: A generator function uses `yield` to produce a sequence of values lazily. Each call to `next()` resumes where it left off.
     sol: "def count_to(n):\n    for i in range(1, n + 1):\n        yield i\nfor x in count_to(4):\n    print(x)"
+    start: ""
     tests:
     - '1
 
@@ -500,10 +494,10 @@ chapters:
       '
     max: 5/1
   - name: Yield From
-    obj: Define a generator `def chain(*iterables):` that uses `yield from` to yield all items from each iterable. Chain `[1, 2]`, `[3, 4]`, `[5, 6]` and print the result as a list.
-    hint: Use `yield from it` inside a loop over `iterables`.
-    expl: '`yield from` delegates part of the iteration to another iterable, making generator composition cleaner.'
-    sol: "def chain(*iterables):\n    for it in iterables:\n        yield from it\nresult = list(chain([1, 2], [3, 4], [5, 6]))\nprint(result)"
+    obj: Define a generator `def chain(*iterables):` that yields all items from each iterable. Chain `[1, 2]`, `[3, 4]`, `[5, 6]` and print the result as a list.
+    hint: Loop over `iterables`, then loop over each item and `yield` it.
+    expl: A generator can delegate to another iterable by looping and yielding each item. This is equivalent to `yield from` in newer Python.
+    sol: "def chain(*iterables):\n    for it in iterables:\n        for item in it:\n            yield item\nresult = list(chain([1, 2], [3, 4], [5, 6]))\nprint(result)"
     tests:
     - '[1, 2, 3, 4, 5, 6]
 
@@ -594,13 +588,13 @@ chapters:
       out: '[(1, 2, 3), (2, 3, 4), (3, 4, 5)]
 
         '
-    sol: "def windows(items, n):\n    it = iter(items)\n    window = []\n    for _ in range(n):\n        window.append(next(it))\n    yield tuple(window)\n    for item in it:\n        window.pop(0)\n        window.append(item)\n        yield tuple(window)\nn = int(input())\nnums = list(map(int, input().split()))\nsize = int(input())\nprint(list(windows(nums, size)))"
+    sol: "def windows(items, n):\n    it = iter(items)\n    window = []\n    for _ in range(n):\n        window.append(next(it))\n    yield tuple(window)\n    for item in it:\n        window.pop(0)\n        window.append(item)\n        yield tuple(window)\nn = int(input())\nitems = input().split()\nsize = int(input())\nprint(list(windows(items, size)))"
     tests:
     - in:
       - '5'
       - 1 2 3 4 5
       - '3'
-      exp: '[(1, 2, 3), (2, 3, 4), (3, 4, 5)]
+      exp: '[(''1'', ''2'', ''3''), (''2'', ''3'', ''4''), (''3'', ''4'', ''5'')]
 
         '
     - in:
@@ -956,7 +950,7 @@ chapters:
     obj: Define `def run_tests():` that collects all functions starting with `test_` from the global scope and runs them, printing results.
     hint: Use `globals()` to find functions whose name starts with `test_`.
     expl: A simple test runner introspects the global namespace to discover and execute test functions automatically.
-    sol: "def test_add():\n    assert 1 + 1 == 2\ndef test_sub():\n    assert 3 - 1 == 2\ndef run_tests():\n    passed = 0\n    for name, func in globals().items():\n        if name.startswith(\"test_\") and callable(func):\n            func()\n            passed += 1\n    print(f\"{passed} tests passed\")\nrun_tests()"
+    sol: "def test_add():\n    assert 1 + 1 == 2\ndef test_sub():\n    assert 3 - 1 == 2\ndef run_tests():\n    passed = 0\n    for name, func in list(globals().items()):\n        if name.startswith(\"test_\") and callable(func):\n            func()\n            passed += 1\n    print(f\"{passed} tests passed\")\nrun_tests()"
     tests:
     - '2 tests passed
 
@@ -979,7 +973,7 @@ chapters:
       out: '4 tests passed
 
         '
-    sol: "def is_palindrome(s):\n    return s == s[::-1]\ndef test_racecar():\n    assert is_palindrome(\"racecar\")\ndef test_hello():\n    assert not is_palindrome(\"hello\")\ndef test_empty():\n    assert is_palindrome(\"\")\ndef test_single():\n    assert is_palindrome(\"a\")\ntests_run = 0\nfor name, func in globals().items():\n    if name.startswith(\"test_\") and callable(func):\n        func()\n        tests_run += 1\nprint(f\"{tests_run} tests passed\")"
+    sol: "def is_palindrome(s):\n    return s == s[::-1]\ndef test_racecar():\n    assert is_palindrome(\"racecar\")\ndef test_hello():\n    assert not is_palindrome(\"hello\")\ndef test_empty():\n    assert is_palindrome(\"\")\ndef test_single():\n    assert is_palindrome(\"a\")\ntests_run = 0\nfor name, func in list(globals().items()):\n    if name.startswith(\"test_\") and callable(func):\n        func()\n        tests_run += 1\nprint(f\"{tests_run} tests passed\")"
     tests:
     - '4 tests passed
 
@@ -1134,7 +1128,7 @@ chapters:
       out: '5 tests passed
 
         '
-    sol: "def prime_factors(n):\n    i = 2\n    factors = []\n    while i * i <= n:\n        while n % i == 0:\n            factors.append(i)\n            n //= i\n        i += 1\n    if n > 1:\n        factors.append(n)\n    return factors\ndef test_two():\n    assert prime_factors(2) == [2]\ndef test_composite():\n    assert prime_factors(12) == [2, 2, 3]\ndef test_large_prime():\n    assert prime_factors(17) == [17]\ndef test_one():\n    assert prime_factors(1) == []\ndef test_perfect_square():\n    assert prime_factors(36) == [2, 2, 3, 3]\ntests_run = 0\nfor name, fn in globals().items():\n    if name.startswith(\"test_\") and callable(fn):\n        fn()\n        tests_run += 1\nprint(f\"{tests_run} tests passed\")"
+    sol: "def prime_factors(n):\n    i = 2\n    factors = []\n    while i * i <= n:\n        while n % i == 0:\n            factors.append(i)\n            n //= i\n        i += 1\n    if n > 1:\n        factors.append(n)\n    return factors\ndef test_two():\n    assert prime_factors(2) == [2]\ndef test_composite():\n    assert prime_factors(12) == [2, 2, 3]\ndef test_large_prime():\n    assert prime_factors(17) == [17]\ndef test_one():\n    assert prime_factors(1) == []\ndef test_perfect_square():\n    assert prime_factors(36) == [2, 2, 3, 3]\ntests_run = 0\nfor name, fn in list(globals().items()):\n    if name.startswith(\"test_\") and callable(fn):\n        fn()\n        tests_run += 1\nprint(f\"{tests_run} tests passed\")"
     tests:
     - exp: '5 tests passed
 
@@ -1170,7 +1164,7 @@ chapters:
     sol: "from typing import Callable, Dict, List\ndef group_by(items: List, key: Callable) -> Dict:\n    result = {}\n    for item in items:\n        k = key(item)\n        if k not in result:\n            result[k] = []\n        result[k].append(item)\n    return result\nnums = list(map(int, input().split()))\nresult = group_by(nums, lambda x: x % 2)\nprint(result)"
     tests:
     - in: 1 2 3 4 5 6
-      exp: '{0: [2, 4, 6], 1: [1, 3, 5]}
+      exp: '{1: [1, 3, 5], 0: [2, 4, 6]}
 
         '
     - in: 10 15 20 25

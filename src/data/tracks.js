@@ -79,7 +79,7 @@ function parseChecks(checks) {
 function parseFiles(files) {
   if (!files) return undefined;
   const f = {};
-  if (files.init) f.initial = files.init;
+  if (files.initial) f.initial = files.initial;
   if (files.track) f.track = files.track;
   return f;
 }

@@ -99,11 +99,13 @@ export default function LevelPage() {
   const serverCacheRef = useRef(new Map());
   const prevLevelIdRef = useRef(null);
   const solutionCacheRef = useRef(null);
+  const initialFileSnapshotRef = useRef(null);
 
   if (prevLevelIdRef.current !== levelId) {
     prevLevelIdRef.current = levelId;
     const initial = level?.files?.initial ? { ...level.files.initial } : {};
     fileStore.current = initial;
+    initialFileSnapshotRef.current = { ...initial };
     setFileEntries(initial);
   }
 
@@ -680,7 +682,7 @@ export default function LevelPage() {
             </div>
 
             <div className="lg:col-span-6 lg:self-start">
-              <CodeEditorContainer code={code} setCode={setCode} language={track.name.split(" ")[0]} files={level.files} fileEntries={fileEntries} fileStore={fileStore} onFileUpdate={syncFileStore} fileEntriesBefore={fileEntriesBefore} />
+              <CodeEditorContainer code={code} setCode={setCode} language={track.name.split(" ")[0]} files={level.files} fileEntries={fileEntries} fileStore={fileStore} onFileUpdate={syncFileStore} fileEntriesBefore={fileEntriesBefore} initialFileSnapshot={initialFileSnapshotRef.current} />
 
               <p className="text-xs mt-4 text-center" style={{ color: "var(--text-muted)" }}>
                 Write your code above, then click Run to test or Submit to check your answer.
