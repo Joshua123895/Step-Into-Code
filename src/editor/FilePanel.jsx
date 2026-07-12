@@ -45,11 +45,12 @@ function buildTabs(files, fileEntries) {
 
 export default function FilePanel({ files, fileEntries, fileEntriesBefore, beforeSnapshot, initialSnapshot, activeTab, onTabChange, isDark, dynamicTheme, c }) {
   const fileViewerRef = useRef(null);
+  const fileViewerInnerRef = useRef(null);
   const fileViewInstance = useRef(null);
   const allTabs = useMemo(() => buildTabs(files, fileEntries), [files, fileEntries]);
 
   useEffect(() => {
-    if (activeTab !== "main.py" && fileViewerRef.current) {
+    if (activeTab !== "main.py" && fileViewerInnerRef.current) {
       const content = resolveContent(activeTab, fileEntries, fileEntriesBefore, beforeSnapshot, initialSnapshot);
       const isPy = getRealName(activeTab).endsWith(".py");
 
@@ -67,8 +68,9 @@ export default function FilePanel({ files, fileEntries, fileEntriesBefore, befor
               EditorState.tabSize.of(4),
             ].flat(),
           }),
-          parent: fileViewerRef.current,
+          parent: fileViewerInnerRef.current,
         });
+        fileViewInstance.current.requestMeasure();
       } else {
         const current = fileViewInstance.current.state.doc.toString();
         if (current !== content) {
@@ -131,9 +133,15 @@ export default function FilePanel({ files, fileEntries, fileEntriesBefore, befor
       </div>
       <div
         ref={fileViewerRef}
-        className="flex-1"
-        style={{ display: activeTab !== "main.py" ? "" : "none", touchAction: "manipulation" }}
-      />
+        className="flex min-h-0 flex-1 overflow-hidden"
+        style={{ display: activeTab !== "main.py" ? "" : "none", background: c.editorBg, touchAction: "manipulation" }}
+      >
+        <div
+          ref={fileViewerInnerRef}
+          className="flex-1"
+          style={{ touchAction: "manipulation" }}
+        />
+      </div>
     </>
   );
 }

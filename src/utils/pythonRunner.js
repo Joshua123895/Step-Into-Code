@@ -83,7 +83,12 @@ export async function runPython(code, onInput, onOutput) {
         sk.importMainWithBody("<stdin>", false, code, true)
       );
     } catch (e) {
-      if (onOutput) onOutput(String(e));
+      const msg = String(e);
+      if (msg.includes('lineno')) {
+        onOutput('Skulpt cannot parse this code (likely type annotations or advanced Python 3 syntax).\nThis level requires the server to run — make sure you are connected.\n');
+      } else {
+        onOutput(msg);
+      }
     }
 
     sk.output = () => {};

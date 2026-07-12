@@ -206,12 +206,12 @@ export default function CodeEditorContainer({ code, setCode, language, files, fi
 
       <div
         className="flex min-h-0 flex-1 overflow-hidden"
-        style={{ background: c.editorBg, touchAction: "manipulation" }}
+        style={{ display: activeTab === "main.py" ? "" : "none", background: c.editorBg, touchAction: "manipulation" }}
       >
         <div
           ref={editorRef}
           className="flex-1"
-          style={{ display: activeTab === "main.py" ? "" : "none", touchAction: "manipulation" }}
+          style={{ touchAction: "manipulation" }}
         />
       </div>
 

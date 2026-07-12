@@ -317,7 +317,7 @@ chapters:
         start: ''
       - name: List Type Hints
         obj: 'Define `def total(nums: List[int]) -> int:` that returns the sum, then call it with `[1, 2, 3, 4]` and print the result.'
-        hint: You must `from typing import List` first, then use `List[int]` as the parameter type.
+        hint: Use `List[int]` as the parameter type hint for the list argument.
         expl: '`List[int]` hints that the parameter is a list containing integers. Import it from `typing`.'
         sol: |-
           from typing import List
@@ -331,7 +331,7 @@ chapters:
         start: from typing import List
       - name: Optional Type
         obj: 'Define `def greet(name: Optional[str] = None) -> str:` that returns `"Hello, Guest!"` if name is `None` else `f"Hello, {name}!"`. Call it with no argument and with `"Alice"`, printing each result.'
-        hint: Import `Optional` from `typing` and use `Optional[str]` for the parameter.
+        hint: Use `Optional[str]` for the parameter type and check `if name is None`.
         expl: '`Optional[str]` means the value can be a string or None. It is shorthand for `Union[str, None]` or `str | None`.'
         sol: |-
           from typing import Optional
@@ -347,7 +347,7 @@ chapters:
         start: from typing import Optional
       - name: Union Type
         obj: 'Define `def parse(value: Union[int, str]) -> int:` that converts a string to int or squares an int. Call it with `"42"` and `5`, printing each result.'
-        hint: Use `from typing import Union` and `Union[int, str]`.
+        hint: Use `Union[int, str]` as the type hint and `isinstance()` to check which type it is.
         expl: '`Union[int, str]` means the value can be either an int or a string. Same thing we did as `int | str`, but much cleaner. Use `isinstance()` to check which type it is.'
         sol: |-
           from typing import Union
@@ -365,7 +365,7 @@ chapters:
         max: 6/1
       - name: Type Alias
         obj: 'Create a type alias `Vector` using `typing.List[float]`, then define `def dot(a: Vector, b: Vector) -> float:` that computes the dot product. Call it with `[1.0, 2.0]` and `[3.0, 4.0]` and print the result.'
-        hint: '`from typing import List` then `Vector = List[float]`. Do NOT use `list[float]` — it won''t work here.'
+        hint: Create `Vector = List[float]` and use it as a type hint. Do NOT use `list[float]` — it won't work here.
         expl: Type aliases make complex type signatures more readable. Assign a type to a variable and use it as a hint.
         sol: |-
           from typing import List
@@ -413,7 +413,7 @@ chapters:
         max: 10/1
       - name: TypeVar
         obj: 'Define a generic function using `TypeVar` `T` that returns the first element of a list: `def first(items: List[T]) -> T:`. Call it with `[10, 20, 30]` and print the result.'
-        hint: Use `T = TypeVar("T")` to declare a type variable, like `List[T]` instead of `List[int]`.
+        hint: Use `List[T]` as the parameter type instead of `List[int]` to make it generic.
         expl: Type variables allow functions to work with any type while preserving type information. Use `TypeVar("T")` from `typing`.
         sol: |-
           from typing import TypeVar, List
@@ -431,7 +431,7 @@ chapters:
         max: 5/1
       - name: Protocol Types
         obj: 'Define a `Protocol` called `Sized` with method `def size(self) -> int:` with nothing inside, then define `def display(obj: Sized, n: int):` that creates a `Box(n)` and prints its size. Import `Protocol` from `typing`.'
-        hint: Use `class Sized(Protocol):` and define the method signature without implementation.
+        hint: Define the method signature inside the Protocol without implementation (use `pass` or `...`).
         expl: '`Protocol` enables structural subtyping (duck typing at type-check time). Any object with a matching `size` method satisfies the protocol.'
         sol: |-
           from typing import Protocol
@@ -691,7 +691,7 @@ chapters:
         max: 7/1
       - name: itertools Chain
         obj: Write a function `def chain(iterables):` that yields items from each iterable in sequence. Read two space-separated integers for a range, then chain two ranges and print the result as a list.
-        hint: Use a `for` loop over each iterable and `yield` each item. Use `map(int, input().split())` to parse input.
+        hint: Use a `for` loop over each iterable and `yield` each item.
         expl: Chaining iterables lets you treat multiple sequences as one. The `yield from` syntax can also delegate to sub-iterators.
         sol: |-
           def chain(iterables):
@@ -758,293 +758,13 @@ chapters:
           n = int(input())
           items = input().split()
           size = int(input())
-  - name: Dataclasses
-    icon: object
-    levels:
-      - name: Basic Dataclass
-        obj: 'Import `dataclass` from `dataclasses` and define `class Point:` with fields `x: int` and `y: int`. Create `Point(3, 4)` and print it.'
-        hint: Add `@dataclass` decorator above the class definition.
-        expl: A dataclass auto-generates `__init__`, `__repr__`, `__eq__`, and other methods based on the annotated fields.
-        sol: |-
-          from dataclasses import dataclass
-          @dataclass
-          class Point:
-              x: int
-              y: int
-          p = Point(3, 4)
-          print(p)
-        tests:
-          - |
-            Point(x=3, y=4)
-        max: 6/1
-        start: |-
-          from dataclasses import dataclass
-
-          @dataclass
-          class Point:
-              ...
-      - name: Default Values
-        obj: 'Define `@dataclass class Item:` with fields `name: str = "unknown"` and `price: float = 0.0`. Create one default and one custom, printing each.'
-        hint: Assign default values directly in the field annotations.
-        expl: Dataclass fields can have default values, just like regular function parameters. Fields without defaults must come first.
-        sol: |-
-          from dataclasses import dataclass
-          @dataclass
-          class Item:
-              name: str = "unknown"
-              price: float = 0.0
-          print(Item())
-          print(Item("Apple", 1.5))
-        tests:
-          - |
-            Item(name='unknown', price=0.0)
-            Item(name='Apple', price=1.5)
-        max: 7/1
-        start: |-
-          from dataclasses import dataclass
-
-          @dataclass
-          class Item:
-              ...
-      - name: Immutable Dataclass
-        obj: 'Define `@dataclass(frozen=True) class Point:` with `x: int` and `y: int`. Create `Point(1, 2)` and print it.'
-        hint: Set `frozen=True` in the decorator.
-        expl: A frozen dataclass is immutable â€” fields cannot be modified after creation, similar to a named tuple.
-        sol: |-
-          from dataclasses import dataclass
-          @dataclass(frozen=True)
-          class Point:
-              x: int
-              y: int
-          print(Point(1, 2))
-        tests:
-          - |
-            Point(x=1, y=2)
-        max: 5/1
-        start: |-
-          from dataclasses import dataclass
-
-          @dataclass(frozen=True)
-          class Point:
-              ...
-      - name: Field with Default Factory
-        obj: 'Define `@dataclass class Student:` with `name: str` and `grades: list[int] = field(default_factory=list)` that uses `field()` from `dataclasses`. Create a student, append some grades, and print the student.'
-        hint: Use `default_factory=list` to avoid mutable default argument issues.
-        expl: '`field(default_factory=list)` creates a new empty list for each instance, avoiding the shared mutable default problem.'
-        sol: |-
-          from dataclasses import dataclass, field
-          @dataclass
-          class Student:
-              name: str
-              grades: list[int] = field(default_factory=list)
-          s = Student("Alice")
-          s.grades.append(95)
-          s.grades.append(87)
-          print(s)
-        tests:
-          - |
-            Student(name='Alice', grades=[95, 87])
-        max: 7/1
-        start: |-
-          from dataclasses import dataclass, field
-
-          @dataclass
-          class Student:
-              name: str
-              grades: ...
-      - name: Dataclass Methods
-        obj: Add a method `def area(self) -> float:` to `Rectangle` that returns `self.width * self.height`. Create a `Rectangle(5.0, 3.0)` and print its area.
-        hint: Define methods inside a dataclass just like a regular class.
-        expl: Dataclasses are regular classes with auto-generated boilerplate. You can add any methods you like.
-        sol: |-
-          from dataclasses import dataclass
-          @dataclass
-          class Rectangle:
-              width: float
-              height: float
-              def area(self) -> float:
-                  return self.width * self.height
-          r = Rectangle(5.0, 3.0)
-          print(r.area())
-        tests:
-          - |
-            15.0
-        max: 7/1
-        start: |-
-          from dataclasses import dataclass
-
-          @dataclass
-          class Rectangle:
-              ...
-              def area(self):
-                  ...
-      - name: Inheritance in Dataclasses
-        obj: 'Define `@dataclass class Animal:` with `name: str`, then `@dataclass class Dog(Animal):` with `breed: str`. Print `Dog("Rex", "Husky")`.'
-        hint: Child dataclasses inherit parent fields and add their own.
-        expl: Dataclasses support inheritance. The child class includes all parent fields plus its own, in order.
-        sol: |-
-          from dataclasses import dataclass
-          @dataclass
-          class Animal:
-              name: str
-          @dataclass
-          class Dog(Animal):
-              breed: str
-          print(Dog("Rex", "Husky"))
-        tests:
-          - |
-            Dog(name='Rex', breed='Husky')
-        max: 7/1
-        start: |-
-          from dataclasses import dataclass
-
-          @dataclass
-          class Animal:
-              name: str
-
-          @dataclass
-          class Dog(Animal):
-              ...
-      - name: Post-Init Processing
-        obj: Add `__post_init__` to `Rectangle` that swaps width and height if width < height, so width is always larger. Create `Rectangle(3.0, 5.0)` and print it.
-        hint: '`__post_init__` runs after the generated `__init__`.'
-        expl: '`__post_init__` is called automatically after `__init__`. Use it for validation, normalization, or derived fields.'
-        sol: |-
-          from dataclasses import dataclass
-          @dataclass
-          class Rectangle:
-              width: float
-              height: float
-              def __post_init__(self):
-                  if self.width < self.height:
-                      self.width, self.height = self.height, self.width
-          r = Rectangle(3.0, 5.0)
-          print(r)
-        tests:
-          - |
-            Rectangle(width=5.0, height=3.0)
-        max: 8/1
-        start: |-
-          from dataclasses import dataclass
-
-          @dataclass
-          class Rectangle:
-              ...
-              def __post_init__(self):
-                  ...
-      - name: Dataclass with Property
-        obj: Add a `@property` called `hypotenuse` to `Triangle` (fields `a` and `b`) that returns `sqrt(a**2 + b**2)`. Create `Triangle(3.0, 4.0)` and print its hypotenuse.
-        hint: Import `math.sqrt` and use the `@property` decorator.
-        expl: Properties allow method calls to be accessed as attributes. They work seamlessly within dataclasses.
-        sol: |-
-          from dataclasses import dataclass
-          from math import sqrt
-          @dataclass
-          class Triangle:
-              a: float
-              b: float
-              @property
-              def hypotenuse(self) -> float:
-                  return sqrt(self.a ** 2 + self.b ** 2)
-          t = Triangle(3.0, 4.0)
-          print(t.hypotenuse)
-        tests:
-          - |
-            5.0
-        max: 8/1
-        start: |-
-          from dataclasses import dataclass
-
-          @dataclass
-          class Triangle:
-              ...
-              @property
-              def hypotenuse(self):
-                  ...
-      - name: Dataclass asdict
-        obj: Use `asdict` from `dataclasses` to convert a dataclass to a dict. Read `name`, `age`, then define `@dataclass class Person:` and print `asdict(p)`.
-        hint: '`from dataclasses import dataclass, asdict` â€” call `asdict(person)` to get a dictionary.'
-        expl: '`asdict` recursively converts a dataclass into a plain dictionary. Useful for serialization.'
-        sol: |-
-          from dataclasses import dataclass, asdict
-          @dataclass
-          class Person:
-              name: str
-              age: int
-          name = input()
-          age = int(input())
-          p = Person(name, age)
-          print(asdict(p))
-        tests:
-          - in:
-              - Alice
-              - '30'
-            exp: |
-              {'name': 'Alice', 'age': 30}
-          - in:
-              - Bob
-              - '25'
-            exp: |
-              {'name': 'Bob', 'age': 25}
-        max: 8/1
-        start: |-
-          from dataclasses import dataclass, asdict
-
-          @dataclass
-          class Person:
-              ...
-
-          name = input()
-          age = int(input())
-      - name: The Records of Olympus
-        obj: Define a dataclass Student with name, score, and a grade() method returning A/B/C/D. Read name and score, create a Student, print the formatted result.
-        example:
-          in:
-            - Alice 85
-          out: |
-            Alice: 85 -> B
-        sol: |-
-          from dataclasses import dataclass
-          @dataclass
-          class Student:
-              name: str
-              score: int
-              def grade(self) -> str:
-                  if self.score >= 90:
-                      return 'A'
-                  if self.score >= 80:
-                      return 'B'
-                  if self.score >= 70:
-                      return 'C'
-                  return 'D'
-          name, score = input().split()
-          s = Student(name, int(score))
-          print(f"{s.name}: {s.score} -> {s.grade()}")
-        tests:
-          - in: Alice 85
-            exp: |
-              Alice: 85 -> B
-          - in: Bob 92
-            exp: |
-              Bob: 92 -> A
-        max: 10/1
-        start: |-
-          from dataclasses import dataclass
-
-          @dataclass
-          class Student:
-              ...
-              def grade(self):
-                  ...
-
-          name, score = input().split()
   - name: Context Managers
     icon: file
     levels:
       - name: Basic With Statement
         obj: Open `"test.txt"` in write mode using `with` and write `"Hello, Context!"`. Then read it back in read mode and print.
         hint: Use `with open("test.txt", "w") as f:` and then a separate `with open("test.txt") as f:`.
-        expl: The `with` statement ensures resources are properly released when the block exits, even if an error occurs.
+        expl: The `with` statement ensures resources are properly released when the block exits, even if an error occurs. That is why this website never teaches manual file opening and closing.
         sol: |-
           with open("test.txt", "w") as f:
               f.write("Hello, Context!")
@@ -1175,7 +895,7 @@ chapters:
         start: from contextlib import suppress
       - name: Redirect Output
         obj: Import `redirect_stdout` from `contextlib` and redirect print output to a `StringIO` buffer. Print the captured text.
-        hint: '`from io import StringIO` and `with redirect_stdout(buffer):`.'
+        hint: Use `with redirect_stdout(buffer):` to capture print output, then read from the buffer.
         expl: '`redirect_stdout` temporarily redirects all `print()` output to a stream like `StringIO`. Useful for capturing logs or test output.'
         sol: |-
           from contextlib import redirect_stdout
@@ -1220,7 +940,7 @@ chapters:
               ...
       - name: ExitStack
         obj: Use `ExitStack` from `contextlib` to manage two `redirect_stdout` contexts. Read a name, capture two print outputs, and print the captured text.
-        hint: '`from contextlib import ExitStack, redirect_stdout` â€” use `stack.enter_context(redirect_stdout(buf))` to redirect.'
+        hint: Use `stack.enter_context(redirect_stdout(buf))` to dynamically enter context managers.
         expl: '`ExitStack` lets you manage multiple context managers dynamically. All entered contexts are cleaned up when you exit the stack, even if you don''t know the number upfront.'
         sol: |-
           from contextlib import ExitStack, redirect_stdout
