@@ -27,7 +27,7 @@ export function buildFileTeardown(trackList) {
 
 export function parseFileCaptures(output) {
   const files = {};
-  const lines = output.split("\n");
+  const lines = output.replace(/\r\n/g, "\n").split("\n");
   for (const line of lines) {
     if (line.startsWith(FILE_MARKER)) {
       try {
@@ -42,7 +42,7 @@ export function parseFileCaptures(output) {
 }
 
 export function stripFileCaptures(output) {
-  return output.split("\n").filter((l) => !l.startsWith(FILE_MARKER)).join("\n");
+  return output.replace(/\r\n/g, "\n").split("\n").filter((l) => !l.startsWith(FILE_MARKER)).join("\n");
 }
 
 export function mergeFileStore(existing, initial, captures) {

@@ -19,7 +19,7 @@ import wrongSound from "../assets/sounds/wrong.mp3";
 const FILE_CAPTURE_PREFIX = "__FILE_SAVE__";
 
 function stripFileCaptures(output) {
-  return output.split("\n").filter((l) => !l.startsWith(FILE_CAPTURE_PREFIX)).join("\n");
+  return output.replace(/\r\n/g, "\n").split("\n").filter((l) => !l.startsWith(FILE_CAPTURE_PREFIX)).join("\n");
 }
 
 export default function LevelPage() {

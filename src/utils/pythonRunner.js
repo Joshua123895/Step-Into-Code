@@ -46,6 +46,23 @@ def TypedDict(name, fields=None, **kw):
 `;
   window.Sk.builtinFiles["files"]["src/lib/typing.py"] = typingStub;
 
+  const contextlibStub = `
+class suppress:
+    def __init__(self, *exceptions):
+        self._exceptions = exceptions
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        if exc_type is not None:
+            for exc in self._exceptions:
+                if issubclass(exc_type, exc):
+                    return True
+        return False
+`;
+  window.Sk.builtinFiles["files"]["src/lib/contextlib.py"] = contextlibStub;
+
   return window.Sk;
 }
 

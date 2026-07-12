@@ -821,7 +821,9 @@ chapters:
             Start
             Working
             End
-        max: 7/1
+        max: 8/1
+        files:
+          track: []
         start: |-
           from contextlib import contextmanager
 
@@ -908,6 +910,8 @@ chapters:
           - |
             Captured!
         max: 7/1
+        files:
+          track: []
         start: |-
           from contextlib import redirect_stdout
           from io import StringIO
@@ -931,6 +935,8 @@ chapters:
           print("Done")
         tests: []
         max: 9/1
+        files:
+          track: []
         start: |-
           from contextlib import contextmanager
           import time
@@ -965,6 +971,8 @@ chapters:
               Hello, Bob
               Welcome, Bob
         max: 14/1
+        files:
+          track: []
         start: |-
           from contextlib import ExitStack, redirect_stdout
           from io import StringIO
@@ -997,6 +1005,8 @@ chapters:
             exp: |
               HELLO BOB
         max: 10/1
+        files:
+          track: []
         start: |-
           from contextlib import contextmanager, redirect_stdout
           from io import StringIO
