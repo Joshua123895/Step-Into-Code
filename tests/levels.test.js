@@ -114,9 +114,7 @@ describe("Python Fundamentals", () => {
   const levels = loadTracks("python1.yaml");
 
   for (const { chapter, level } of levels) {
-    const startCode = dedent(level.start || "");
-    const solCode = dedent(level.sol);
-    const solutionCode = (startCode ? startCode + "\n" : "") + solCode;
+    const solutionCode = dedent(level.sol);
 
     if (level.tests && level.tests.length > 0) {
       describe(chapter, () => {
@@ -148,9 +146,7 @@ describe("Python Advance", () => {
   const levels = loadTracks("python2.yaml");
 
   for (const { chapter, level } of levels) {
-    const startCode = dedent(level.start || "");
-    const solCode = dedent(level.sol);
-    const solutionCode = (startCode ? startCode + "\n" : "") + solCode;
+    const solutionCode = dedent(level.sol);
 
     if (level.tests && level.tests.length > 0) {
       describe(chapter, () => {

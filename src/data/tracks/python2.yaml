@@ -4,1203 +4,1834 @@ icon: python
 desc: 'Master advanced Python: comprehensions, lambdas, generators, and beyond.'
 difficulty: 2
 chapters:
-- name: Comprehensions
-  icon: data
-  levels:
-  - name: Basic List Comprehension
-    obj: Use a list comprehension to create a list of numbers from `0` to `9` and print the list.
-    hint: 'Try: `[x for x in range(10)]`'
-    expl: A list comprehension creates a new list by applying an expression to each item in an iterable.
-    sol: 'nums = [x for x in range(10)]
-
-      print(nums)'
-    tests:
-    - '[0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
-
-      '
-    max: 2/1
-  - name: Transform with Comprehension
-    obj: Use a comprehension to create a list of squares for numbers `0` through `4` and print the list.
-    hint: 'Try: `[x**2 for x in range(5)]`'
-    expl: The expression before `for` is applied to each element before adding it to the result list.
-    sol: 'squares = [x**2 for x in range(5)]
-
-      print(squares)'
-    tests:
-    - '[0, 1, 4, 9, 16]
-
-      '
-    max: 2/1
-  - name: Filter with Condition
-    obj: Use a comprehension to collect even numbers from `0` to `9` and print the list.
-    hint: Add an `if` clause after the `for` part.
-    expl: A condition after the `for` clause filters which elements are included in the result.
-    sol: 'evens = [x for x in range(10) if x % 2 == 0]
-
-      print(evens)'
-    tests:
-    - '[0, 2, 4, 6, 8]
-
-      '
-    max: 2/1
-  - name: Nested Loops in Comprehension
-    obj: Create a list of tuples `(x, y)` for `x` in `0..2` and `y` in `0..1` using a comprehension and print the list.
-    hint: Use two `for` clauses in one comprehension.
-    expl: Multiple `for` clauses in a comprehension work like nested loops, with the rightmost loop varying fastest.
-    sol: 'pairs = [(x, y) for x in range(3) for y in range(2)]
-
-      print(pairs)'
-    tests:
-    - '[(0, 0), (0, 1), (1, 0), (1, 1), (2, 0), (2, 1)]
-
-      '
-    max: 2/1
-  - name: Dict Comprehension
-    obj: Create a dictionary mapping numbers `0` through `4` to their squares using a comprehension and print it.
-    hint: 'Use curly braces and `key: value` syntax: `{x: x**2 for x in range(5)}`'
-    expl: Dictionary comprehensions use `{}` with a key-value pair expression instead of a single value.
-    sol: 'squares = {x: x**2 for x in range(5)}
-
-      print(squares)'
-    tests:
-    - '{0: 0, 1: 1, 2: 4, 3: 9, 4: 16}
-
-      '
-    max: 2/1
-  - name: Set Comprehension
-    obj: Use a comprehension to find the unique remainders when numbers `0..9` are divided by `3` and print them sorted.
-    hint: Use `{}` with a single expression (no colon) to create a set.
-    expl: Set comprehensions use curly braces like dict comprehensions, but with a single expression instead of a key-value pair.
-    sol: 'remainders = {x % 3 for x in range(10)}
-
-      print(sorted(remainders))'
-    tests:
-    - '[0, 1, 2]
-
-      '
-    max: 3/1
-  - name: Conditional Expression
-    obj: Use a comprehension to replace negative numbers with `0` in `nums` and print the result.
-    hint: Use a conditional expression `x if x > 0 else 0` inside the comprehension.
-    expl: A conditional expression (ternary) can be used as the output expression in a comprehension.
-    start: 'nums = [-3, 5, -1, 8, -7]'
-    sol: 'result = [x if x > 0 else 0 for x in nums]
-
-      print(result)'
-    tests:
-    - '[0, 5, 0, 8, 0]
-
-      '
-    max: 3/1
-  - name: Flatten a Matrix
-    obj: Flatten `matrix` into one list using a nested comprehension and print the result.
-    hint: Use `[val for row in matrix for val in row]`.
-    expl: Nested comprehensions can flatten 2D structures by iterating over rows and then over elements.
-    start: 'matrix = [[1, 2], [3, 4], [5, 6]]'
-    sol: 'flat = [val for row in matrix for val in row]
-
-      print(flat)'
-    tests:
-    - '[1, 2, 3, 4, 5, 6]
-
-      '
-    max: 3/1
-  - name: String Filter with Comprehension
-    obj: From `text`, collect only uppercase letters using a comprehension and print the list.
-    hint: Use `ch.isupper()` as a filter condition.
-    expl: Comprehensions work on any iterable, including strings. String methods like `isupper()` can be used as filter conditions.
-    start: 'text = "Hello, World!"'
-    sol: 'caps = [ch for ch in text if ch.isupper()]
-
-      print(caps)'
-    tests:
-    - '[''H'', ''W'']
-
-      '
-    max: 3/1
-  - name: 'The Shadow Index'
-    obj: 'Read n and n integers. Use a single dict comprehension to map each unique value to the list of its indices in the original list. Print the dict.'
-    example:
-      in:
-      - '7'
-      - 4 2 4 1 2 4 3
-      out: '{1: [3], 2: [1, 4], 3: [6], 4: [0, 2, 5]}
-
-        '
-    sol: 'n = int(input())
-
-      nums = list(map(int, input().split()))
-
-      result = {x: [i for i, v in enumerate(nums) if v == x] for x in set(nums)}
-
-      print(result)'
-    tests:
-    - in:
-      - '7'
-      - 4 2 4 1 2 4 3
-      exp: '{1: [3], 2: [1, 4], 3: [6], 4: [0, 2, 5]}
-
-        '
-    - in:
-      - '5'
-      - 1 1 1 1 1
-      exp: '{1: [0, 1, 2, 3, 4]}
-
-        '
-    max: 10/1
-- name: Lambda Functions
-  icon: function
-  levels:
-  - name: Basic Lambda
-    obj: Create a lambda that doubles a number and assign it to `double`. Call it on `5` and print.
-    hint: 'Try: `double = lambda x: x * 2`'
-    expl: A lambda is a small anonymous function defined with the `lambda` keyword. It can have any number of arguments but only one expression.
-    sol: 'double = lambda x: x * 2
-
-      print(double(5))'
-    tests:
-    - '10
-
-      '
-    max: 3/1
-  - name: Lambda with Map
-    obj: Use `map()` with a lambda to convert `nums` to integers and print the result.
-    hint: 'Try: `list(map(lambda x: int(x), nums))`'
-    expl: '`map()` applies a function to every item in an iterable and returns a map object. Wrap it in `list()` to see the results.'
-    start: 'nums = ["1", "2", "3"]'
-    sol: 'result = list(map(lambda x: int(x), nums))
-
-      print(result)'
-    tests:
-    - '[1, 2, 3]
-
-      '
-    max: 3/1
-  - name: Lambda with Filter
-    obj: Use `filter()` with a lambda to keep only positive numbers from `nums` and print the result.
-    hint: 'Try: `list(filter(lambda x: x > 0, nums))`'
-    expl: '`filter()` keeps items for which the function returns `True`. Combine with `list()` to materialize the result.'
-    start: 'nums = [-2, 5, -1, 8, 0, 3]'
-    sol: 'result = list(filter(lambda x: x > 0, nums))
-
-      print(result)'
-    tests:
-    - '[5, 8, 3]
-
-      '
-    max: 3/1
-  - name: Lambda with Sorted
-    obj: Sort `words` by string length using a lambda as the key and print the result.
-    hint: 'Use: `sorted(words, key=lambda w: len(w))`'
-    expl: The `key` parameter in `sorted()` accepts a function that extracts a comparison value. A lambda is perfect for this.
-    start: 'words = ["cat", "elephant", "dog", "hippopotamus"]'
-    sol: 'result = sorted(words, key=lambda w: len(w))
-
-      print(result)'
-    tests:
-    - '[''cat'', ''dog'', ''elephant'', ''hippopotamus'']
-
-      '
-    max: 3/1
-  - name: Lambda with Multiple Args
-    obj: Create a lambda that takes two arguments and returns their product. Call it with `7` and `8` and print the result.
-    hint: 'Try: `lambda a, b: a * b`'
-    expl: Lambdas can accept multiple arguments separated by commas. The expression uses them just like a regular function.
-    sol: 'multiply = lambda a, b: a * b
-
-      print(multiply(7, 8))'
-    tests:
-    - '56
-
-      '
-    max: 3/1
-  - name: Lambda in Dictionary
-    obj: Create a dict `ops` mapping `"add"` and `"mul"` to lambdas that operate on two numbers. Call and print `ops["add"](3, 4)` and `ops["mul"](3, 4)`.
-    hint: Store lambdas as dictionary values.
-    expl: Lambdas are first-class objects and can be stored in data structures like dictionaries for dynamic dispatch.
-    sol: 'ops = {"add": lambda a, b: a + b, "mul": lambda a, b: a * b}
-
-      print(ops["add"](3, 4))
-
-      print(ops["mul"](3, 4))'
-    tests:
-    - '7
-
-      12
-
-      '
-    max: 4/1
-  - name: Lambda with Reduce
-    obj: Use a lambda and a loop to multiply all numbers in `nums` (simulating `reduce`). Print the product.
-    hint: 'Use a loop: `result = nums[0]; for x in nums[1:]: result = (lambda a, b: a * b)(result, x)`'
-    expl: '`reduce()` repeatedly applies a function of two arguments to accumulate a result across the iterable. You can simulate it with a loop.'
-    start: 'nums = [1, 2, 3, 4, 5]'
-    sol: "result = nums[0]\nfor x in nums[1:]:\n    result = (lambda a, b: a * b)(result, x)\nprint(result)"
-    tests:
-    - '120
-
-      '
-    max: 4/1
-  - name: Lambda with Conditional
-    obj: Use a lambda that returns `"even"` if a number is even and `"odd"` otherwise. Map it over `[1..5]` and print the result.
-    hint: 'Use a conditional expression inside the lambda: `lambda x: "even" if x % 2 == 0 else "odd"`.'
-    expl: Lambdas can contain a conditional expression (ternary), which evaluates to one of two values based on a condition.
-    sol: 'parity = lambda x: "even" if x % 2 == 0 else "odd"
-
-      result = list(map(parity, range(1, 6)))
-
-      print(result)'
-    tests:
-    - '[''odd'', ''even'', ''odd'', ''even'', ''odd'']
-
-      '
-    max: 3/1
-  - name: Sorting by Second Element
-    obj: Sort `data` by the second element using a lambda and print the result.
-    hint: 'Use `key=lambda t: t[1]` in `sorted()`.'
-    expl: Lambdas can access specific elements of complex data structures for custom sorting.
-    start: 'data = [(2, 3), (1, 2), (3, 1)]'
-    sol: 'result = sorted(data, key=lambda t: t[1])
-
-      print(result)'
-    tests:
-    - '[(3, 1), (1, 2), (2, 3)]
-
-      '
-    max: 2/1
-  - name: 'The Judge''s Scale'
-    obj: 'Read n students each with name and variable scores. Compute each student''s average. Use sorted() with a lambda to rank by average desc, name asc. Print the ranked names.'
-    example:
-      in:
-      - '3'
-      - Alice 85 90 78
-      - Bob 92 88
-      - Charlie 70
-      out: '[''Bob'', ''Alice'', ''Charlie'']
-
-        '
-    sol: "n = int(input())\ndata = [input().split() for _ in range(n)]\nstudents = [(name, sum(map(int, scores)) / len(scores)) for name, *scores in data]\nresult = sorted(students, key=lambda s: (-s[1], s[0]))\nprint([name for name, _ in result])"
-    tests:
-    - in:
-      - '3'
-      - Alice 85 90 78
-      - Bob 92 88
-      - Charlie 70
-      exp: '[''Bob'', ''Alice'', ''Charlie'']
-
-        '
-    - in:
-      - '2'
-      - Zed 100
-      - Aaron 100
-      exp: '[''Aaron'', ''Zed'']
-
-        '
-    max: 10/1
-- name: Type Hints
-  icon: variable
-  levels:
-  - name: Basic Function Hints
-    obj: 'Define `def add(x: int, y: int) -> int:` that returns the sum, then print `add(3, 5)`.'
-    hint: 'Add `: int` after each parameter and `-> int` after the parentheses.'
-    expl: Type hints indicate expected argument types and return type. They help with documentation and tooling but don't affect runtime.
-    sol: "def add(x: int, y: int) -> int:\n    return x + y\nprint(add(3, 5))"
-    tests:
-    - '8
-
-      '
-    max: 4/1
-  - name: List Type Hints
-    obj: 'Define `def total(nums: List[int]) -> int:` that returns the sum, then call it with `[1, 2, 3, 4]` and print the result.'
-    hint: 'You must `from typing import List` first, then use `List[int]` as the parameter type.'
-    expl: '`List[int]` hints that the parameter is a list containing integers. Import it from `typing`.'
-    sol: "from typing import List\ndef total(nums: List[int]) -> int:\n    return sum(nums)\nprint(total([1, 2, 3, 4]))"
-    tests:
-    - '10
-
-      '
-    max: 4/1
-  - name: Optional Type
-    obj: 'Define `def greet(name: Optional[str] = None) -> str:` that returns `"Hello, Guest!"` if name is `None` else `f"Hello, {name}!"`. Call it with no argument and with `"Alice"`, printing each result.'
-    hint: 'Import `Optional` from `typing` and use `Optional[str]` for the parameter.'
-    expl: '`Optional[str]` means the value can be a string or None. It is shorthand for `Union[str, None]` or `str | None`.'
-    sol: "from typing import Optional\ndef greet(name: Optional[str] = None) -> str:\n    return f\"Hello, {name}!\" if name else \"Hello, Guest!\"\nprint(greet())\nprint(greet(\"Alice\"))"
-    tests:
-    - 'Hello, Guest!
-
-      Hello, Alice!
-
-      '
-    max: 5/1
-  - name: Union Type
-    obj: 'Define `def parse(value: Union[int, str]) -> int:` that converts a string to int or squares an int. Call it with `"42"` and `5`, printing each result.'
-    hint: 'Use `from typing import Union` and `Union[int, str]`.'
-    expl: '`Union[int, str]` means the value can be either an int or a string. Same thing we did as `int | str`, but much cleaner. Use `isinstance()` to check which type it is.'
-    sol: "from typing import Union\ndef parse(value: Union[int, str]) -> int:\n    if isinstance(value, str):\n        return int(value)\n    return value ** 2\nprint(parse(\"42\"))\nprint(parse(5))"
-    start: "from typing import Union"
-    tests:
-    - '42
-
-      25
-
-      '
-    max: 6/1
-  - name: Type Alias
-    obj: 'Create a type alias `Vector` using `typing.List[float]`, then define `def dot(a: Vector, b: Vector) -> float:` that computes the dot product. Call it with `[1.0, 2.0]` and `[3.0, 4.0]` and print the result.'
-    hint: '`from typing import List` then `Vector = List[float]`. Do NOT use `list[float]` — it won''t work here.'
-    expl: 'Type aliases make complex type signatures more readable. Assign a type to a variable and use it as a hint.'
-    sol: "from typing import List\nVector = List[float]\ndef dot(a: Vector, b: Vector) -> float:\n    return sum(x * y for x, y in zip(a, b))\nprint(dot([1.0, 2.0], [3.0, 4.0]))"
-    start: "from typing import List\n\nVector = ..."
-    tests:
-    - '11.0
-
-      '
-    max: 6/1
-  - name: Callable Type
-    obj: 'Define `def apply(func: Callable[[int], int], val: int) -> int:` that calls `func(val)`. Import `Callable` from `typing`. Call it with `lambda x: x * 10` and `7`, printing the result.'
-    hint: '`Callable[[int], int]` means a function taking one int and returning an int.'
-    expl: '`Callable` hints that a parameter should be a function with a specific signature. The first list is parameter types, the last is return type.'
-    sol: "from typing import Callable\ndef apply(func: Callable[[int], int], val: int) -> int:\n    return func(val)\nprint(apply(lambda x: x * 10, 7))"
-    start: "from typing import Callable"
-    tests:
-    - '70
-
-      '
-    max: 4/1
-  - name: TypedDict
-    obj: 'Define `Movie` using `TypedDict("Movie", {"title": str, "year": int})`. Create `m = Movie(title="Inception", year=2010)` and print `m["title"]` and `m["year"]`.'
-    hint: 'Use the functional form: `Movie = TypedDict("Movie", {"title": str, "year": int})`.'
-    expl: '`TypedDict` defines a dict with fixed keys and value types. The functional form avoids class-body annotations.'
-    sol: "from typing import TypedDict\nMovie = TypedDict('Movie', {'title': str, 'year': int})\nm = Movie(title='Inception', year=2010)\nprint(m['title'])\nprint(m['year'])"
-    start: ""
-    tests:
-    - "Inception\n2010\n"
-    max: 10/1
-  - name: TypeVar
-    obj: 'Define a generic function using `TypeVar` `T` that returns the first element of a list: `def first(items: List[T]) -> T:`. Call it with `[10, 20, 30]` and print the result.'
-    hint: 'Use `T = TypeVar("T")` to declare a type variable, like `List[T]` instead of `List[int]`.'
-    expl: 'Type variables allow functions to work with any type while preserving type information. Use `TypeVar("T")` from `typing`.'
-    sol: "from typing import TypeVar, List\nT = TypeVar('T')\ndef first(items: List[T]) -> T:\n    return items[0]\nprint(first([10, 20, 30]))"
-    start: "from typing import TypeVar, List\n\nT = TypeVar('T')"
-    tests:
-    - '10
-
-      '
-    max: 5/1
-  - name: Protocol Types
-    obj: 'Define a `Protocol` called `Sized` with method `def size(self) -> int:` with nothing inside, then define `def display(obj: Sized, n: int):` that creates a `Box(n)` and prints its size. Import `Protocol` from `typing`.'
-    hint: Use `class Sized(Protocol):` and define the method signature without implementation.
-    expl: '`Protocol` enables structural subtyping (duck typing at type-check time). Any object with a matching `size` method satisfies the protocol.'
-    sol: "from typing import Protocol\nclass Sized(Protocol):\n    def size(self) -> int: ...\nclass Box:\n    def __init__(self, n: int):\n        self.n = n\n    def size(self) -> int:\n        return self.n\ndef display(obj: Sized, n: int):\n    print(Box(n).size())\nn = int(input())\ndisplay(Box(n), n)"
-    start: "from typing import Protocol\n\nclass Sized(Protocol):\n    ...\n\nclass Box:\n    ...\n\ndef display(obj: Sized, n: int):\n    ..."
-    tests:
-    - in: '7'
-      exp: '7
-
-        '
-    - in: '42'
-      exp: '42
-
-        '
-    max: 15/1
-  - name: 'The Phantom Protocol'
-    obj: 'Define a generic function `chunk(items: List, size: int) -> List[List]` that splits a list into chunks. Use proper type hints. Read n, items, and size, then print the chunked list. No need to use all `typing` module.'
-    example:
-      in:
-      - '8'
-      - 1 2 3 4 5 6 7 8
-      - '3'
-      out: '[[1, 2, 3], [4, 5, 6], [7, 8]]
-
-        '
-    sol: "from typing import List\ndef chunk(items: List, size: int) -> List[List]:\n    return [items[i:i + size] for i in range(0, len(items), size)]\nn = int(input())\nitems = input().split()\nsize = int(input())\nprint(chunk(items, size))"
-    start: "from typing import TypeVar, TypedDict, List, Union, Optional, Protocol, Callable"
-    tests:
-    - in:
-      - '8'
-      - 1 2 3 4 5 6 7 8
-      - '3'
-      exp: '[[''1'', ''2'', ''3''], [''4'', ''5'', ''6''], [''7'', ''8'']]
-
-        '
-    - in:
-      - '5'
-      - a b c d e
-      - '2'
-      exp: '[[''a'', ''b''], [''c'', ''d''], [''e'']]
-
-        '
-    max: 10/1
-- name: Iterators & Generators
-  icon: loop
-  levels:
-  - name: Basic Iterator
-    obj: Create a list `[10, 20, 30]`, get its iterator with `iter()`, then call `next()` three times and print each value.
-    hint: '`it = iter(nums)`, then `next(it)` each time.'
-    expl: '`iter(object)` returns an iterator object. `next()` retrieves the next item each time it is called.'
-    sol: 'nums = [10, 20, 30]
-
-      it = iter(nums)
-
-      print(next(it))
-
-      print(next(it))
-
-      print(next(it))'
-    start: "nums = [10, 20, 30]"
-    tests:
-    - '10
-
-      20
-
-      30
-
-      '
-    max: 5/1
-  - name: Custom Iterator Class
-    obj: Define `class CountDown:` with `__init__(self, n)` and `__iter__` / `__next__` methods that count down from `n` to `1`. Iterate and print each value.
-    hint: Raise `StopIteration` when the count reaches 0.
-    expl: A custom iterator implements `__iter__` (returning self) and `__next__` (returning the next item or raising `StopIteration`).
-    sol: "class CountDown:\n    def __init__(self, n):\n        self.n = n\n    def __iter__(self):\n        return self\n    def __next__(self):\n        if self.n <= 0:\n            raise StopIteration\n        self.n -= 1\n        return self.n + 1\nfor x in CountDown(5):\n    print(x)"
-    start: "class CountDown:\n    def __init__(self, n):\n        ...\n    def __iter__(self):\n        ...\n    def __next__(self):\n        ..."
-    tests:
-    - '5
-
-      4
-
-      3
-
-      2
-
-      1
-
-      '
-    max: 9/1
-  - name: Generator Function
-    obj: Define a generator `def count_to(n):` that yields numbers from `1` to `n`. Loop over `count_to(4)` and print each.
-    hint: Use `yield` instead of `return`.
-    expl: A generator function uses `yield` to produce a sequence of values lazily. Each call to `next()` resumes where it left off.
-    sol: "def count_to(n):\n    for i in range(1, n + 1):\n        yield i\nfor x in count_to(4):\n    print(x)"
-    start: ""
-    tests:
-    - '1
-
-      2
-
-      3
-
-      4
-
-      '
-    max: 5/1
-  - name: Yield From
-    obj: Define a generator `def chain(*iterables):` that yields all items from each iterable. Chain `[1, 2]`, `[3, 4]`, `[5, 6]` and print the result as a list.
-    hint: Loop over `iterables`, then loop over each item and `yield` it.
-    expl: A generator can delegate to another iterable by looping and yielding each item. This is equivalent to `yield from` in newer Python.
-    sol: "def chain(*iterables):\n    for it in iterables:\n        for item in it:\n            yield item\nresult = list(chain([1, 2], [3, 4], [5, 6]))\nprint(result)"
-    tests:
-    - '[1, 2, 3, 4, 5, 6]
-
-      '
-    max: 5/1
-  - name: Generator Expression
-    obj: Create a generator expression that produces squares of numbers `0..4`, convert it to a list, and print the list.
-    hint: Use `(x**2 for x in range(5))` instead of list brackets.
-    expl: Generator expressions use `()` instead of `[]`. They produce values lazily, saving memory for large sequences.
-    sol: 'squares = (x**2 for x in range(5))
-
-      print(list(squares))'
-    tests:
-    - '[0, 1, 4, 9, 16]
-
-      '
-    max: 2/1
-  - name: Infinite Generator
-    obj: Define a generator `def fibonacci():` that yields Fibonacci numbers infinitely. Print first 8 by using `zip` with `range`.
-    hint: Use `zip(range(8), fibonacci())` to limit the iteration.
-    expl: Generators can represent infinite sequences. Use tools like `zip()` or `itertools.islice()` to consume a limited portion.
-    sol: "def fibonacci():\n    a, b = 0, 1\n    while True:\n        yield a\n        a, b = b, a + b\nfib = fibonacci()\nfor _ in range(8):\n    print(next(fib))"
-    tests:
-    - '0
-
-      1
-
-      1
-
-      2
-
-      3
-
-      5
-
-      8
-
-      13
-
-      '
-    max: 7/1
-  - name: Generator with Send
-    obj: Define a generator `def accumulate():` that accepts values via `send()` and yields the running total. Send `10`, `5`, `3` and print each yielded total.
-    hint: Use `total = yield` to receive sent values.
-    expl: The `send()` method sends a value back into a generator. The value becomes the result of the `yield` expression.
-    sol: "def accumulate():\n    total = 0\n    while True:\n        val = yield total\n        total += val\nacc = accumulate()\nnext(acc)\nprint(acc.send(10))\nprint(acc.send(5))\nprint(acc.send(3))"
-    tests:
-    - '10
-
-      15
-
-      18
-
-      '
-    max: 8/1
-  - name: Chaining Generators
-    obj: Define `def squares(nums):` that yields squares of input values, and `def evens(nums):` that yields only even numbers. Pipe `range(6)` through both and print the result as a list.
-    hint: Chain by calling one generator inside the other's loop.
-    expl: Generators can be composed into pipelines. Each generator yields values that feed into the next.
-    sol: "def squares(nums):\n    for n in nums:\n        yield n ** 2\ndef evens(nums):\n    for n in nums:\n        if n % 2 == 0:\n            yield n\nresult = list(evens(squares(range(6))))\nprint(result)"
-    tests:
-    - '[0, 4, 16]
-
-      '
-    max: 7/1
-  - name: itertools Chain
-    obj: Write a function `def chain(*iters):` that yields items from each iterable in sequence. Read two space-separated integers for a range, then chain two ranges and print the result as a list.
-    hint: Use a `for` loop over each iterable and `yield` each item. Use `map(int, input().split())` to parse input.
-    expl: Chaining iterables lets you treat multiple sequences as one. The `yield from` syntax can also delegate to sub-iterators.
-    sol: "def chain(*iters):\n    for it in iters:\n        for item in it:\n            yield item\na, b = map(int, input().split())\nresult = list(chain(range(a), range(b)))\nprint(result)"
-    tests:
-    - in: 3 2
-      exp: '[0, 1, 2, 0, 1]
-
-        '
-    - in: 0 4
-      exp: '[0, 1, 2, 3]
-
-        '
-    max: 7/1
-  - name: 'The Labyrinth of Yields'
-    obj: 'Define a generator windows(items, n) that yields all sliding windows of size n. Read n, items, and window size, then print the list of window tuples.'
-    example:
-      in:
-      - '5'
-      - 1 2 3 4 5
-      - '3'
-      out: '[(1, 2, 3), (2, 3, 4), (3, 4, 5)]
-
-        '
-    sol: "def windows(items, n):\n    it = iter(items)\n    window = []\n    for _ in range(n):\n        window.append(next(it))\n    yield tuple(window)\n    for item in it:\n        window.pop(0)\n        window.append(item)\n        yield tuple(window)\nn = int(input())\nitems = input().split()\nsize = int(input())\nprint(list(windows(items, size)))"
-    tests:
-    - in:
-      - '5'
-      - 1 2 3 4 5
-      - '3'
-      exp: '[(''1'', ''2'', ''3''), (''2'', ''3'', ''4''), (''3'', ''4'', ''5'')]
-
-        '
-    - in:
-      - '4'
-      - a b c d
-      - '2'
-      exp: '[(''a'', ''b''), (''b'', ''c''), (''c'', ''d'')]
-
-        '
-    max: 12/1
-- name: Dataclasses
-  icon: object
-  levels:
-  - name: Basic Dataclass
-    obj: 'Import `dataclass` from `dataclasses` and define `class Point:` with fields `x: int` and `y: int`. Create `Point(3, 4)` and print it.'
-    hint: Add `@dataclass` decorator above the class definition.
-    expl: A dataclass auto-generates `__init__`, `__repr__`, `__eq__`, and other methods based on the annotated fields.
-    sol: "from dataclasses import dataclass\n@dataclass\nclass Point:\n    x: int\n    y: int\np = Point(3, 4)\nprint(p)"
-    tests:
-    - 'Point(x=3, y=4)
-
-      '
-    max: 6/1
-  - name: Default Values
-    obj: 'Define `@dataclass class Item:` with fields `name: str = "unknown"` and `price: float = 0.0`. Create one default and one custom, printing each.'
-    hint: Assign default values directly in the field annotations.
-    expl: Dataclass fields can have default values, just like regular function parameters. Fields without defaults must come first.
-    sol: "from dataclasses import dataclass\n@dataclass\nclass Item:\n    name: str = \"unknown\"\n    price: float = 0.0\nprint(Item())\nprint(Item(\"Apple\", 1.5))"
-    tests:
-    - 'Item(name=''unknown'', price=0.0)
-
-      Item(name=''Apple'', price=1.5)
-
-      '
-    max: 7/1
-  - name: Immutable Dataclass
-    obj: 'Define `@dataclass(frozen=True) class Point:` with `x: int` and `y: int`. Create `Point(1, 2)` and print it.'
-    hint: Set `frozen=True` in the decorator.
-    expl: A frozen dataclass is immutable â€” fields cannot be modified after creation, similar to a named tuple.
-    sol: "from dataclasses import dataclass\n@dataclass(frozen=True)\nclass Point:\n    x: int\n    y: int\nprint(Point(1, 2))"
-    tests:
-    - 'Point(x=1, y=2)
-
-      '
-    max: 5/1
-  - name: Field with Default Factory
-    obj: 'Define `@dataclass class Student:` with `name: str` and `grades: list[int] = field(default_factory=list)` that uses `field()` from `dataclasses`. Create a student, append some grades, and print the student.'
-    hint: Use `default_factory=list` to avoid mutable default argument issues.
-    expl: '`field(default_factory=list)` creates a new empty list for each instance, avoiding the shared mutable default problem.'
-    sol: "from dataclasses import dataclass, field\n@dataclass\nclass Student:\n    name: str\n    grades: list[int] = field(default_factory=list)\ns = Student(\"Alice\")\ns.grades.append(95)\ns.grades.append(87)\nprint(s)"
-    tests:
-    - 'Student(name=''Alice'', grades=[95, 87])
-
-      '
-    max: 7/1
-  - name: Dataclass Methods
-    obj: Add a method `def area(self) -> float:` to `Rectangle` that returns `self.width * self.height`. Create a `Rectangle(5.0, 3.0)` and print its area.
-    hint: Define methods inside a dataclass just like a regular class.
-    expl: Dataclasses are regular classes with auto-generated boilerplate. You can add any methods you like.
-    sol: "from dataclasses import dataclass\n@dataclass\nclass Rectangle:\n    width: float\n    height: float\n    def area(self) -> float:\n        return self.width * self.height\nr = Rectangle(5.0, 3.0)\nprint(r.area())"
-    tests:
-    - '15.0
-
-      '
-    max: 7/1
-  - name: Inheritance in Dataclasses
-    obj: 'Define `@dataclass class Animal:` with `name: str`, then `@dataclass class Dog(Animal):` with `breed: str`. Print `Dog("Rex", "Husky")`.'
-    hint: Child dataclasses inherit parent fields and add their own.
-    expl: Dataclasses support inheritance. The child class includes all parent fields plus its own, in order.
-    sol: "from dataclasses import dataclass\n@dataclass\nclass Animal:\n    name: str\n@dataclass\nclass Dog(Animal):\n    breed: str\nprint(Dog(\"Rex\", \"Husky\"))"
-    tests:
-    - 'Dog(name=''Rex'', breed=''Husky'')
-
-      '
-    max: 7/1
-  - name: Post-Init Processing
-    obj: Add `__post_init__` to `Rectangle` that swaps width and height if width < height, so width is always larger. Create `Rectangle(3.0, 5.0)` and print it.
-    hint: '`__post_init__` runs after the generated `__init__`.'
-    expl: '`__post_init__` is called automatically after `__init__`. Use it for validation, normalization, or derived fields.'
-    sol: "from dataclasses import dataclass\n@dataclass\nclass Rectangle:\n    width: float\n    height: float\n    def __post_init__(self):\n        if self.width < self.height:\n            self.width, self.height = self.height, self.width\nr = Rectangle(3.0, 5.0)\nprint(r)"
-    tests:
-    - 'Rectangle(width=5.0, height=3.0)
-
-      '
-    max: 8/1
-  - name: Dataclass with Property
-    obj: Add a `@property` called `hypotenuse` to `Triangle` (fields `a` and `b`) that returns `sqrt(a**2 + b**2)`. Create `Triangle(3.0, 4.0)` and print its hypotenuse.
-    hint: Import `math.sqrt` and use the `@property` decorator.
-    expl: Properties allow method calls to be accessed as attributes. They work seamlessly within dataclasses.
-    sol: "from dataclasses import dataclass\nfrom math import sqrt\n@dataclass\nclass Triangle:\n    a: float\n    b: float\n    @property\n    def hypotenuse(self) -> float:\n        return sqrt(self.a ** 2 + self.b ** 2)\nt = Triangle(3.0, 4.0)\nprint(t.hypotenuse)"
-    tests:
-    - '5.0
-
-      '
-    max: 8/1
-  - name: Dataclass asdict
-    obj: Use `asdict` from `dataclasses` to convert a dataclass to a dict. Read `name`, `age`, then define `@dataclass class Person:` and print `asdict(p)`.
-    hint: '`from dataclasses import dataclass, asdict` â€” call `asdict(person)` to get a dictionary.'
-    expl: '`asdict` recursively converts a dataclass into a plain dictionary. Useful for serialization.'
-    sol: "from dataclasses import dataclass, asdict\n@dataclass\nclass Person:\n    name: str\n    age: int\nname = input()\nage = int(input())\np = Person(name, age)\nprint(asdict(p))"
-    tests:
-    - in:
-      - Alice
-      - '30'
-      exp: '{''name'': ''Alice'', ''age'': 30}
-
-        '
-    - in:
-      - Bob
-      - '25'
-      exp: '{''name'': ''Bob'', ''age'': 25}
-
-        '
-    max: 8/1
-  - name: 'The Records of Olympus'
-    obj: 'Define a dataclass Student with name, score, and a grade() method returning A/B/C/D. Read name and score, create a Student, print the formatted result.'
-    example:
-      in:
-      - Alice 85
-      out: 'Alice: 85 -> B
-
-        '
-    sol: "from dataclasses import dataclass\n@dataclass\nclass Student:\n    name: str\n    score: int\n    def grade(self) -> str:\n        if self.score >= 90:\n            return 'A'\n        if self.score >= 80:\n            return 'B'\n        if self.score >= 70:\n            return 'C'\n        return 'D'\nname, score = input().split()\ns = Student(name, int(score))\nprint(f\"{s.name}: {s.score} -> {s.grade()}\")"
-    tests:
-    - in: Alice 85
-      exp: 'Alice: 85 -> B
-
-        '
-    - in: Bob 92
-      exp: 'Bob: 92 -> A
-
-        '
-    max: 10/1
-- name: Context Managers
-  icon: file
-  levels:
-  - name: Basic With Statement
-    obj: Open `"test.txt"` in write mode using `with` and write `"Hello, Context!"`. Then read it back in read mode and print.
-    hint: Use `with open("test.txt", "w") as f:` and then a separate `with open("test.txt") as f:`.
-    expl: The `with` statement ensures resources are properly released when the block exits, even if an error occurs.
-    sol: "with open(\"test.txt\", \"w\") as f:\n    f.write(\"Hello, Context!\")\nwith open(\"test.txt\") as f:\n    print(f.read())"
-    tests:
-    - 'Hello, Context!
-
-      '
-    max: 5/1
-    files:
-      track:
-      - test.txt
-  - name: Custom Context Manager Class
-    obj: Define `class ManagedFile:` with `__enter__` (print "Enter") and `__exit__` (print "Exit"), then use it with `with`.
-    hint: '`__exit__` takes `(self, exc_type, exc_val, exc_tb)`.'
-    expl: A context manager class must implement `__enter__` (returns the bound resource) and `__exit__` (releases it).
-    sol: "class ManagedFile:\n    def __enter__(self):\n        print(\"Enter\")\n        return self\n    def __exit__(self, *args):\n        print(\"Exit\")\nwith ManagedFile() as m:\n    print(\"Inside\")"
-    tests:
-    - 'Enter
-
-      Inside
-
-      Exit
-
-      '
-    max: 9/1
-  - name: contextmanager Decorator
-    obj: Import `contextmanager` from `contextlib` and use `@contextmanager` to create a simple timer that prints "Start" and "End".
-    hint: '`yield` separates the setup code from the teardown code.'
-    expl: The `@contextmanager` decorator lets you write a context manager as a generator. Code before `yield` runs on enter, code after runs on exit.
-    sol: "from contextlib import contextmanager\n@contextmanager\ndef timer():\n    print(\"Start\")\n    yield\n    print(\"End\")\nwith timer():\n    print(\"Working\")"
-    tests:
-    - 'Start
-
-      Working
-
-      End
-
-      '
-    max: 7/1
-  - name: Nested Context Managers
-    obj: Open two files `"a.txt"` and `"b.txt"` in a single `with` statement, writing "File A" and "File B" respectively. Then read both files and print their contents.
-    hint: 'Separate multiple context managers with commas: `with open(...) as a, open(...) as b:`.'
-    expl: Multiple context managers can be combined in one `with` statement. Both are entered left-to-right and exited right-to-left.
-    sol: "with open(\"a.txt\", \"w\") as a, open(\"b.txt\", \"w\") as b:\n    a.write(\"File A\")\n    b.write(\"File B\")\nwith open(\"a.txt\") as a, open(\"b.txt\") as b:\n    print(a.read())\n    print(b.read())"
-    tests:
-    - 'File A
-
-      File B
-
-      '
-    max: 7/1
-    files:
-      track:
-      - a.txt
-      - b.txt
-  - name: Exception Handling in CM
-    obj: Define a context manager that catches `ValueError` inside `__exit__` and prints "Handled", returning `True` to suppress it.
-    hint: '`__exit__` returning `True` suppresses the exception.'
-    expl: If `__exit__` returns `True`, the exception is swallowed. The `exc_type` parameter tells you which exception occurred.
-    sol: "class Suppressor:\n    def __enter__(self):\n        return self\n    def __exit__(self, exc_type, exc_val, exc_tb):\n        if exc_type is ValueError:\n            print(\"Handled\")\n            return True\nwith Suppressor():\n    raise ValueError(\"oops\")\nprint(\"Still running\")"
-    tests:
-    - 'Handled
-
-      Still running
-
-      '
-    max: 10/1
-  - name: contextlib.suppress
-    obj: Import `suppress` from `contextlib` and use it to suppress `FileNotFoundError` when opening a non-existent file. Print "No crash!" after the context block.
-    hint: '`with suppress(FileNotFoundError):` will not crash if the error occurs.'
-    expl: '`contextlib.suppress` is a built-in context manager that suppresses specified exceptions, similar to `pass` on error.'
-    sol: "from contextlib import suppress\nwith suppress(FileNotFoundError):\n    with open(\"nope.txt\") as f:\n        print(f.read())\nprint(\"No crash!\")"
-    tests:
-    - 'No crash!
-
-      '
-    max: 5/1
-  - name: Redirect Output
-    obj: Import `redirect_stdout` from `contextlib` and redirect print output to a `StringIO` buffer. Print the captured text.
-    hint: '`from io import StringIO` and `with redirect_stdout(buffer):`.'
-    expl: '`redirect_stdout` temporarily redirects all `print()` output to a stream like `StringIO`. Useful for capturing logs or test output.'
-    sol: "from contextlib import redirect_stdout\nfrom io import StringIO\nbuf = StringIO()\nwith redirect_stdout(buf):\n    print(\"Captured!\")\nprint(buf.getvalue().strip())"
-    tests:
-    - 'Captured!
-
-      '
-    max: 7/1
-  - name: Timer Context Manager
-    obj: Use `@contextmanager` to create a `timer` that prints elapsed time in seconds on exit. Import `time`.
-    hint: Record `start = time.time()` before `yield`, then subtract after.
-    expl: Context managers are great for measuring execution time â€” setup records the start, teardown computes and reports the delta.
-    sol: "from contextlib import contextmanager\nimport time\n@contextmanager\ndef timer():\n    start = time.time()\n    yield\n    elapsed = time.time() - start\n    print(f\"{elapsed:.3f}s\")\nwith timer():\n    total = sum(range(100000))\nprint(\"Done\")"
-    tests: []
-    max: 9/1
-  - name: ExitStack
-    obj: Use `ExitStack` from `contextlib` to manage two `redirect_stdout` contexts. Read a name, capture two print outputs, and print the captured text.
-    hint: '`from contextlib import ExitStack, redirect_stdout` â€” use `stack.enter_context(redirect_stdout(buf))` to redirect.'
-    expl: '`ExitStack` lets you manage multiple context managers dynamically. All entered contexts are cleaned up when you exit the stack, even if you don''t know the number upfront.'
-    sol: "from contextlib import ExitStack, redirect_stdout\nfrom io import StringIO\nname = input()\nbuf1 = StringIO()\nbuf2 = StringIO()\nwith ExitStack() as stack:\n    stack.enter_context(redirect_stdout(buf1))\n    print(f\"Hello, {name}\")\n    stack.enter_context(redirect_stdout(buf2))\n    print(f\"Welcome, {name}\")\nprint(buf1.getvalue().strip())\nprint(buf2.getvalue().strip())"
-    tests:
-    - in: Alice
-      exp: 'Hello, Alice
-
-        Welcome, Alice
-
-        '
-    - in: Bob
-      exp: 'Hello, Bob
-
-        Welcome, Bob
-
-        '
-    max: 14/1
-  - name: 'The Gatekeeper''s Trial'
-    obj: 'Define a @contextmanager called shout that uppercases all print output inside its block. Read a name, print a greeting inside the context, producing an uppercased output.'
-    example:
-      in:
-      - Alice
-      out: 'HELLO ALICE
-
-        '
-    sol: "from contextlib import contextmanager, redirect_stdout\nfrom io import StringIO\n@contextmanager\ndef shout():\n    buf = StringIO()\n    with redirect_stdout(buf):\n        yield\n    print(buf.getvalue().upper().strip())\nname = input()\nwith shout():\n    print(f\"hello {name}\")"
-    tests:
-    - in: Alice
-      exp: 'HELLO ALICE
-
-        '
-    - in: Bob
-      exp: 'HELLO BOB
-
-        '
-    max: 10/1
-- name: Unit Testing
-  icon: warning
-  levels:
-  - name: Basic Assert
-    obj: Write three `assert` statements checking that `2 + 2 == 4`, `3 * 5 == 15`, and `10 - 3 == 7`. Print "All passed" if they succeed.
-    hint: If all asserts pass, print "All passed".
-    expl: '`assert` raises `AssertionError` if the condition is falsy. It is the simplest form of testing in Python.'
-    sol: 'assert 2 + 2 == 4
-
-      assert 3 * 5 == 15
-
-      assert 10 - 3 == 7
-
-      print("All passed")'
-    tests:
-    - 'All passed
-
-      '
-    max: 5/1
-  - name: Test Function
-    obj: Define `def test_add():` that asserts `add(2, 3) == 5` and `add(-1, 1) == 0`. Define `add(a, b)` above, call the test, and print "test_add passed".
-    hint: Group related assertions inside a function named `test_*`.
-    expl: Wrapping assertions in functions lets you organize and name your tests. A function returning without error means it passed.
-    sol: "def add(a, b):\n    return a + b\ndef test_add():\n    assert add(2, 3) == 5\n    assert add(-1, 1) == 0\ntest_add()\nprint(\"test_add passed\")"
-    tests:
-    - 'test_add passed
-
-      '
-    max: 7/1
-  - name: Test Class
-    obj: Define `class TestMath:` with methods `test_add` and `test_mul`. Run both and print "All class tests passed".
-    hint: Create each test as a method starting with `test_`.
-    expl: Grouping tests in a class provides better organization. Instantiate the class and call each method to run them.
-    sol: "class TestMath:\n    def test_add(self):\n        assert 1 + 1 == 2\n    def test_mul(self):\n        assert 2 * 3 == 6\nt = TestMath()\nt.test_add()\nt.test_mul()\nprint(\"All class tests passed\")"
-    tests:
-    - 'All class tests passed
-
-      '
-    max: 7/1
-  - name: SetUp and TearDown
-    obj: Define a test class with `setup()` creating a list `[1, 2, 3]` and `teardown()` printing "Clean". Store data in `self`.
-    hint: Use `self.data` to share state between setup and test methods.
-    expl: Setup prepares test data before each test, teardown cleans up afterward. This keeps tests independent and repeatable.
-    sol: "class TestList:\n    def setup(self):\n        self.data = [1, 2, 3]\n    def teardown(self):\n        print(\"Clean\")\n    def test_length(self):\n        assert len(self.data) == 3\n    def test_sum(self):\n        assert sum(self.data) == 6\nt = TestList()\nt.setup()\nt.test_length()\nt.teardown()\nt.setup()\nt.test_sum()\nt.teardown()"
-    tests:
-    - 'Clean
-
-      Clean
-
-      '
-    max: 12/1
-  - name: Testing Exceptions
-    obj: Define `def divide(a, b):` that raises `ValueError` when `b` is zero. Test that it raises correctly using `try/except`, then print "Exception test passed".
-    hint: 'Use `try: divide(5, 0); assert False except ValueError: pass` pattern.'
-    expl: Testing that code raises the right exception is crucial. Use a `try/except` block that fails the test if no exception occurs.
-    sol: "def divide(a, b):\n    if b == 0:\n        raise ValueError(\"Cannot divide by zero\")\n    return a / b\ntry:\n    divide(5, 0)\n    assert False\nexcept ValueError:\n    pass\nassert divide(10, 2) == 5.0\nprint(\"Exception test passed\")"
-    tests:
-    - 'Exception test passed
-
-      '
-    max: 11/1
-  - name: Multiple Test Cases
-    obj: Define a function `is_even(n)` and test it against `[(2,True),(3,False),(0,True),(-2,True),(-3,False)]`. Print "All cases passed".
-    hint: Loop over test cases and assert each one.
-    expl: Parameterized testing runs the same logic against multiple inputs. A loop over `(input, expected)` pairs is the simplest approach.
-    sol: "def is_even(n):\n    return n % 2 == 0\ncases = [(2, True), (3, False), (0, True), (-2, True), (-3, False)]\nfor n, expected in cases:\n    assert is_even(n) == expected\nprint(\"All cases passed\")"
-    tests:
-    - 'All cases passed
-
-      '
-    max: 7/1
-  - name: Testing with Fixtures
-    obj: 'Define a function `load_data()` that returns `{"users": ["Alice", "Bob"], "count": 2}`. Test that keys exist and types match, then print "Fixture test passed".'
-    hint: Store the fixture result in a variable and write assertions against it.
-    expl: A fixture provides repeatable test data. Load it once and assert properties about the returned structure.
-    sol: "def load_data():\n    return {\"users\": [\"Alice\", \"Bob\"], \"count\": 2}\ndata = load_data()\nassert \"users\" in data\nassert \"count\" in data\nassert isinstance(data[\"users\"], list)\nassert len(data[\"users\"]) == 2\nassert data[\"count\"] == 2\nprint(\"Fixture test passed\")"
-    tests:
-    - 'Fixture test passed
-
-      '
-    max: 8/1
-  - name: Test Runner
-    obj: Define `def run_tests():` that collects all functions starting with `test_` from the global scope and runs them, printing results.
-    hint: Use `globals()` to find functions whose name starts with `test_`.
-    expl: A simple test runner introspects the global namespace to discover and execute test functions automatically.
-    sol: "def test_add():\n    assert 1 + 1 == 2\ndef test_sub():\n    assert 3 - 1 == 2\ndef run_tests():\n    passed = 0\n    for name, func in list(globals().items()):\n        if name.startswith(\"test_\") and callable(func):\n            func()\n            passed += 1\n    print(f\"{passed} tests passed\")\nrun_tests()"
-    tests:
-    - '2 tests passed
-
-      '
-    max: 12/1
-  - name: Test Discovery
-    obj: Write a `run_tests` function that uses `TestLoader` to discover and run all tests in a `class TestMath(unittest.TestCase):` with methods `test_add` and `test_sub`. Print the number of tests run.
-    hint: Use `loader = unittest.TestLoader(); suite = loader.loadTestsFromTestCase(TestMath); runner = unittest.TextTestRunner(verbosity=0); result = runner.run(suite); print(result.testsRun)`.
-    expl: Test discovery lets you automatically find and run tests without manually listing them. `loadTestsFromTestCase` collects all test_ methods.
-    sol: "import unittest\nclass TestMath(unittest.TestCase):\n    def test_add(self):\n        self.assertEqual(1 + 1, 2)\n    def test_sub(self):\n        self.assertEqual(5 - 3, 2)\ndef run_tests():\n    loader = unittest.TestLoader()\n    suite = loader.loadTestsFromTestCase(TestMath)\n    runner = unittest.TextTestRunner(verbosity=0)\n    result = runner.run(suite)\n    print(result.testsRun)\nrun_tests()"
-    tests:
-    - '2
-
-      '
-    max: 16/1
-  - name: 'The Oracle''s Verdict'
-    obj: 'Write a function is_palindrome(s) and a test suite with 4 test cases. Use the test-discovery runner pattern to run them and print the count of passed tests.'
-    example:
-      in: []
-      out: '4 tests passed
-
-        '
-    sol: "def is_palindrome(s):\n    return s == s[::-1]\ndef test_racecar():\n    assert is_palindrome(\"racecar\")\ndef test_hello():\n    assert not is_palindrome(\"hello\")\ndef test_empty():\n    assert is_palindrome(\"\")\ndef test_single():\n    assert is_palindrome(\"a\")\ntests_run = 0\nfor name, func in list(globals().items()):\n    if name.startswith(\"test_\") and callable(func):\n        func()\n        tests_run += 1\nprint(f\"{tests_run} tests passed\")"
-    tests:
-    - '4 tests passed
-
-      '
-    max: 12/1
-- name: Challenges
-  icon: challenge
-  levels:
-  - name: 'The Sieve of Comprehension'
-    obj: 'Read n and use a nested list comprehension to find all Pythagorean triples (a,b,c) with 1 <= a <= b <= c <= n where a^2 + b^2 = c^2. Print the list.'
-    example:
-      in:
-      - '20'
-      out: '[(3, 4, 5), (5, 12, 13), (6, 8, 10), (8, 15, 17), (9, 12, 15), (12, 16, 20)]
-
-        '
-    sol: 'n = int(input())
-
-      triples = [(a, b, c) for a in range(1, n + 1) for b in range(a, n + 1) for c in range(b, n + 1) if a * a + b * b == c * c]
-
-      print(triples)'
-    tests:
-    - in: '20'
-      exp: '[(3, 4, 5), (5, 12, 13), (6, 8, 10), (8, 15, 17), (9, 12, 15), (12, 16, 20)]
-
-        '
-    - in: '10'
-      exp: '[(3, 4, 5), (6, 8, 10)]
-
-        '
-    max: 12/1
-  - name: 'The Lambda''s Crucible'
-    obj: 'Read n students with names and two scores. Compute weighted average (40% first, 60% second). Use sorted() with a lambda to rank by average desc, name asc. Print names.'
-    example:
-      in:
-      - '3'
-      - Alice 85 90
-      - Bob 70 95
-      - Charlie 60 80
-      out: '[''Alice'', ''Bob'', ''Charlie'']
-
-        '
-    sol: "n = int(input())\nstudents = []\nfor _ in range(n):\n    parts = input().split()\n    name = parts[0]\n    s1, s2 = map(float, parts[1:])\n    avg = s1 * 0.4 + s2 * 0.6\n    students.append((name, avg))\nresult = sorted(students, key=lambda s: (-s[1], s[0]))\nprint([name for name, _ in result])"
-    tests:
-    - in:
-      - '3'
-      - Alice 85 90
-      - Bob 70 95
-      - Charlie 60 80
-      exp: '[''Alice'', ''Bob'', ''Charlie'']
-
-        '
-    - in:
-      - '2'
-      - Zed 100 100
-      - Aaron 90 90
-      exp: '[''Zed'', ''Aaron'']
-
-        '
-    max: 10/1
-  - name: 'The Type Maze'
-    obj: 'Define a generic function `interleave(a: List[int], b: List[str]) -> List` that interleaves two lists element by element. Use proper type hints. Read int list and string list, interleave, print.'
-    example:
-      in:
-      - 1 2 3
-      - a b c
-      out: '[1, ''a'', 2, ''b'', 3, ''c'']
-
-        '
-    sol: "from typing import List, Union\ndef interleave(a: List[int], b: List[str]) -> List:\n    result = []\n    for x, y in zip(a, b):\n        result.append(x)\n        result.append(y)\n    return result\na = list(map(int, input().split()))\nb = input().split()\nprint(interleave(a, b))"
-    tests:
-    - in:
-      - 1 2 3
-      - a b c
-      exp: '[1, ''a'', 2, ''b'', 3, ''c'']
-
-        '
-    - in:
-      - 10 20
-      - x y z
-      exp: '[10, ''x'', 20, ''y'']
-
-        '
-    max: 10/1
-  - name: 'The Generator''s Gambit'
-    obj: 'Define a generator that yields the Collatz sequence for a starting number. Read n, generate the sequence until reaching 1, and print as a list.'
-    example:
-      in:
-      - '6'
-      out: '[6, 3, 10, 5, 16, 8, 4, 2, 1]
-
-        '
-    sol: "def collatz(n):\n    yield n\n    while n != 1:\n        n = n // 2 if n % 2 == 0 else 3 * n + 1\n        yield n\nn = int(input())\nprint(list(collatz(n)))"
-    tests:
-    - in: '6'
-      exp: '[6, 3, 10, 5, 16, 8, 4, 2, 1]
-
-        '
-    - in: '3'
-      exp: '[3, 10, 5, 16, 8, 4, 2, 1]
-
-        '
-    max: 10/1
-  - name: 'The Dataclass Dynasty'
-    obj: 'Define a dataclass hierarchy: Item(name, price) and DiscountedItem(Item, discount) with a final_price property that applies the discount. Read input and print formatted result.'
-    example:
-      in:
-      - Laptop 1000 20
-      out: 'Item(name=''Laptop'', final_price=800.0)
-
-        '
-    sol: "from dataclasses import dataclass\n@dataclass\nclass Item:\n    name: str\n    price: float\n@dataclass\nclass DiscountedItem(Item):\n    discount: float = 0.0\n    @property\n    def final_price(self) -> float:\n        return self.price * (1 - self.discount / 100)\nname, price, disc = input().split()\nitem = DiscountedItem(name, float(price), float(disc))\nprint(f\"Item(name='{item.name}', final_price={item.final_price})\")"
-    tests:
-    - in: Laptop 1000 20
-      exp: 'Item(name=''Laptop'', final_price=800.0)
-
-        '
-    - in: Book 50 10
-      exp: 'Item(name=''Book'', final_price=45.0)
-
-        '
-    max: 14/1
-  - name: 'The Context Crucible'
-    obj: 'Define a @contextmanager that duplicates all print output inside its block. Read a string and print it inside the context, producing two copies.'
-    example:
-      in:
-      - Hello
-      out: 'Hello
-
-        Hello
-
-        '
-    sol: "from contextlib import contextmanager, redirect_stdout\nfrom io import StringIO\n@contextmanager\ndef duplicate():\n    buf = StringIO()\n    with redirect_stdout(buf):\n        yield\n    lines = buf.getvalue().strip().split('\\n')\n    for line in lines:\n        print(line)\n        print(line)\nmsg = input()\nwith duplicate():\n    print(msg)"
-    tests:
-    - in: Hello
-      exp: 'Hello
-
-        Hello
-
-        '
-    - in: Python
-      exp: 'Python
-
-        Python
-
-        '
-    max: 12/1
-  - name: 'The Test of Champions'
-    obj: 'Write a function prime_factors(n) and a test suite with at least 5 test cases covering edge cases. Use the test-discovery runner pattern to print passed count.'
-    example:
-      in: []
-      out: '5 tests passed
-
-        '
-    sol: "def prime_factors(n):\n    i = 2\n    factors = []\n    while i * i <= n:\n        while n % i == 0:\n            factors.append(i)\n            n //= i\n        i += 1\n    if n > 1:\n        factors.append(n)\n    return factors\ndef test_two():\n    assert prime_factors(2) == [2]\ndef test_composite():\n    assert prime_factors(12) == [2, 2, 3]\ndef test_large_prime():\n    assert prime_factors(17) == [17]\ndef test_one():\n    assert prime_factors(1) == []\ndef test_perfect_square():\n    assert prime_factors(36) == [2, 2, 3, 3]\ntests_run = 0\nfor name, fn in list(globals().items()):\n    if name.startswith(\"test_\") and callable(fn):\n        fn()\n        tests_run += 1\nprint(f\"{tests_run} tests passed\")"
-    tests:
-    - exp: '5 tests passed
-
-        '
-    max: 18/1
-  - name: 'The Gauntlet of Shadows'
-    obj: 'Read numbers. Use sorted() with a lambda on digit sum, filter odds with comprehension, map to binary with lambda. Print the list.'
-    example:
-      in:
-      - 5 12 7 3 18
-      out: '[''11'', ''101'', ''111'']
-
-        '
-    sol: "def digit_sum(n):\n    return sum(int(d) for d in str(n))\nnums = list(map(int, input().split()))\nsorted_nums = sorted(nums, key=lambda n: digit_sum(n))\nodds = [x for x in sorted_nums if x % 2 == 1]\nresult = list(map(lambda x: bin(x)[2:], odds))\nprint(result)"
-    tests:
-    - in: 5 12 7 3 18
-      exp: '[''11'', ''101'', ''111'']
-
-        '
-    - in: 10 3 22 7 11
-      exp: '[''1011'', ''11'', ''111'']
-
-        '
-    max: 12/1
-  - name: 'The Beyond Horizon'
-    obj: 'Define a generic function `group_by(items: List, key: Callable) -> Dict` that groups items by a key function. Use Callable type hint. Read numbers, group by even/odd, print the dict.'
-    example:
-      in:
-      - 1 2 3 4 5 6
-      out: '{0: [2, 4, 6], 1: [1, 3, 5]}
-
-        '
-    sol: "from typing import Callable, Dict, List\ndef group_by(items: List, key: Callable) -> Dict:\n    result = {}\n    for item in items:\n        k = key(item)\n        if k not in result:\n            result[k] = []\n        result[k].append(item)\n    return result\nnums = list(map(int, input().split()))\nresult = group_by(nums, lambda x: x % 2)\nprint(result)"
-    tests:
-    - in: 1 2 3 4 5 6
-      exp: '{1: [1, 3, 5], 0: [2, 4, 6]}
-
-        '
-    - in: 10 15 20 25
-      exp: '{0: [10, 20], 1: [15, 25]}
-
-        '
-    max: 14/1
-  - name: 'The Grand Beyond'
-    obj: 'Evaluate a postfix expression with variables. Read n, then n lines of "var = value", then a postfix expression. Use a dict of lambdas and a stack. Operators: + - * / (integer division). Print the result.'
-    example:
-      in:
-      - '3'
-      - x = 5
-      - y = 10
-      - z = 2
-      - x y * z /
-      out: '25
-
-        '
-    sol: "from typing import Callable, Dict, List\nn = int(input())\nvars = {}\nfor _ in range(n):\n    var, _, val = input().split()\n    vars[var] = int(val)\nexpr = input().split()\nops = {\n    '+': lambda a, b: a + b,\n    '-': lambda a, b: a - b,\n    '*': lambda a, b: a * b,\n    '/': lambda a, b: a // b,\n}\nstack: List[int] = []\nfor token in expr:\n    if token in ops:\n        b = stack.pop()\n        a = stack.pop()\n        stack.append(ops[token](a, b))\n    elif token in vars:\n        stack.append(vars[token])\n    else:\n        stack.append(int(token))\nprint(stack[0])"
-    tests:
-    - in:
-      - '3'
-      - x = 5
-      - y = 10
-      - z = 2
-      - x y * z /
-      exp: '25
-
-        '
-    - in:
-      - '2'
-      - a = 7
-      - b = 3
-      - a b + 2 *
-      exp: '20
-
-        '
-    max: 20/1
+  - name: Comprehensions
+    icon: data
+    levels:
+      - name: Basic List Comprehension
+        obj: Use a list comprehension to create a list of numbers from `0` to `9` and print the list.
+        hint: 'Try: `[x for x in range(10)]`'
+        expl: A list comprehension creates a new list by applying an expression to each item in an iterable.
+        sol: |-
+          nums = [x for x in range(10)]
+          print(nums)
+        tests:
+          - |
+            [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+        max: 2/1
+        start: ''
+      - name: Transform with Comprehension
+        obj: Use a comprehension to create a list of squares for numbers `0` through `4` and print the list.
+        hint: 'Try: `[x**2 for x in range(5)]`'
+        expl: The expression before `for` is applied to each element before adding it to the result list.
+        sol: |-
+          squares = [x**2 for x in range(5)]
+          print(squares)
+        tests:
+          - |
+            [0, 1, 4, 9, 16]
+        max: 2/1
+        start: ''
+      - name: Filter with Condition
+        obj: Use a comprehension to collect even numbers from `0` to `9` and print the list.
+        hint: Add an `if` clause after the `for` part.
+        expl: A condition after the `for` clause filters which elements are included in the result.
+        sol: |-
+          evens = [x for x in range(10) if x % 2 == 0]
+          print(evens)
+        tests:
+          - |
+            [0, 2, 4, 6, 8]
+        max: 2/1
+        start: ''
+      - name: Nested Loops in Comprehension
+        obj: Create a list of tuples `(x, y)` for `x` in `0..2` and `y` in `0..1` using a comprehension and print the list.
+        hint: Use two `for` clauses in one comprehension.
+        expl: Multiple `for` clauses in a comprehension work like nested loops, with the rightmost loop varying fastest.
+        sol: |-
+          pairs = [(x, y) for x in range(3) for y in range(2)]
+          print(pairs)
+        tests:
+          - |
+            [(0, 0), (0, 1), (1, 0), (1, 1), (2, 0), (2, 1)]
+        max: 2/1
+        start: ''
+      - name: Dict Comprehension
+        obj: Create a dictionary mapping numbers `0` through `4` to their squares using a comprehension and print it.
+        hint: 'Use curly braces and `key: value` syntax: `{x: x**2 for x in range(5)}`'
+        expl: Dictionary comprehensions use `{}` with a key-value pair expression instead of a single value.
+        sol: |-
+          squares = {x: x**2 for x in range(5)}
+          print(squares)
+        tests:
+          - |
+            {0: 0, 1: 1, 2: 4, 3: 9, 4: 16}
+        max: 2/1
+        start: ''
+      - name: Set Comprehension
+        obj: Use a comprehension to find the unique remainders when numbers `0..9` are divided by `3` and print them sorted.
+        hint: Use `{}` with a single expression (no colon) to create a set.
+        expl: Set comprehensions use curly braces like dict comprehensions, but with a single expression instead of a key-value pair.
+        sol: |-
+          remainders = {x % 3 for x in range(10)}
+          print(sorted(remainders))
+        tests:
+          - |
+            [0, 1, 2]
+        max: 3/1
+        start: ''
+      - name: Conditional Expression
+        obj: Use a comprehension to replace negative numbers with `0` in `nums` and print the result.
+        hint: Use a conditional expression `x if x > 0 else 0` inside the comprehension.
+        expl: A conditional expression (ternary) can be used as the output expression in a comprehension.
+        start: nums = [-3, 5, -1, 8, -7]
+        sol: |-
+          nums = [-3, 5, -1, 8, -7]
+          result = [x if x > 0 else 0 for x in nums]
+          print(result)
+        tests:
+          - |
+            [0, 5, 0, 8, 0]
+        max: 3/1
+      - name: Flatten a Matrix
+        obj: Flatten `matrix` into one list using a nested comprehension and print the result.
+        hint: Use `[val for row in matrix for val in row]`.
+        expl: Nested comprehensions can flatten 2D structures by iterating over rows and then over elements.
+        start: matrix = [[1, 2], [3, 4], [5, 6]]
+        sol: |-
+          matrix = [[1, 2], [3, 4], [5, 6]]
+          flat = [val for row in matrix for val in row]
+          print(flat)
+        tests:
+          - |
+            [1, 2, 3, 4, 5, 6]
+        max: 3/1
+      - name: String Filter with Comprehension
+        obj: From `text`, collect only uppercase letters using a comprehension and print the list.
+        hint: Use `ch.isupper()` as a filter condition.
+        expl: Comprehensions work on any iterable, including strings. String methods like `isupper()` can be used as filter conditions.
+        start: text = "Hello, World!"
+        sol: |-
+          text = "Hello, World!"
+          caps = [ch for ch in text if ch.isupper()]
+          print(caps)
+        tests:
+          - |
+            ['H', 'W']
+        max: 3/1
+      - name: The Shadow Index
+        obj: Read n and n integers. Use a single dict comprehension to map each unique value to the list of its indices in the original list. Print the dict.
+        example:
+          in:
+            - '7'
+            - 4 2 4 1 2 4 3
+          out: |
+            {1: [3], 2: [1, 4], 3: [6], 4: [0, 2, 5]}
+        sol: |-
+          n = int(input())
+          nums = list(map(int, input().split()))
+          result = {x: [i for i, v in enumerate(nums) if v == x] for x in set(nums)}
+          print(result)
+        tests:
+          - in:
+              - '7'
+              - 4 2 4 1 2 4 3
+            exp: |
+              {1: [3], 2: [1, 4], 3: [6], 4: [0, 2, 5]}
+          - in:
+              - '5'
+              - 1 1 1 1 1
+            exp: |
+              {1: [0, 1, 2, 3, 4]}
+        max: 10/1
+        start: |-
+          n = int(input())
+          nums = list(map(int, input().split()))
+  - name: Lambda Functions
+    icon: function
+    levels:
+      - name: Basic Lambda
+        obj: Create a lambda that doubles a number and assign it to `double`. Call it on `5` and print.
+        hint: 'Try: `double = lambda x: x * 2`'
+        expl: A lambda is a small anonymous function defined with the `lambda` keyword. It can have any number of arguments but only one expression.
+        sol: |-
+          double = lambda x: x * 2
+          print(double(5))
+        tests:
+          - |
+            10
+        max: 3/1
+        start: ''
+      - name: Lambda with Map
+        obj: Use `map()` with a lambda to convert `nums` to integers and print the result.
+        hint: 'Try: `list(map(lambda x: int(x), nums))`'
+        expl: '`map()` applies a function to every item in an iterable and returns a map object. Wrap it in `list()` to see the results.'
+        start: nums = ["1", "2", "3"]
+        sol: |-
+          nums = ["1", "2", "3"]
+          result = list(map(lambda x: int(x), nums))
+          print(result)
+        tests:
+          - |
+            [1, 2, 3]
+        max: 3/1
+      - name: Lambda with Filter
+        obj: Use `filter()` with a lambda to keep only positive numbers from `nums` and print the result.
+        hint: 'Try: `list(filter(lambda x: x > 0, nums))`'
+        expl: '`filter()` keeps items for which the function returns `True`. Combine with `list()` to materialize the result.'
+        start: nums = [-2, 5, -1, 8, 0, 3]
+        sol: |-
+          nums = [-2, 5, -1, 8, 0, 3]
+          result = list(filter(lambda x: x > 0, nums))
+          print(result)
+        tests:
+          - |
+            [5, 8, 3]
+        max: 3/1
+      - name: Lambda with Sorted
+        obj: Sort `words` by string length using a lambda as the key and print the result.
+        hint: 'Use: `sorted(words, key=lambda w: len(w))`'
+        expl: The `key` parameter in `sorted()` accepts a function that extracts a comparison value. A lambda is perfect for this.
+        start: words = ["cat", "elephant", "dog", "hippopotamus"]
+        sol: |-
+          words = ["cat", "elephant", "dog", "hippopotamus"]
+          result = sorted(words, key=lambda w: len(w))
+          print(result)
+        tests:
+          - |
+            ['cat', 'dog', 'elephant', 'hippopotamus']
+        max: 3/1
+      - name: Lambda with Multiple Args
+        obj: Create a lambda that takes two arguments and returns their product. Call it with `7` and `8` and print the result.
+        hint: 'Try: `lambda a, b: a * b`'
+        expl: Lambdas can accept multiple arguments separated by commas. The expression uses them just like a regular function.
+        sol: |-
+          multiply = lambda a, b: a * b
+          print(multiply(7, 8))
+        tests:
+          - |
+            56
+        max: 3/1
+        start: ''
+      - name: Lambda in Dictionary
+        obj: Create a dict `ops` mapping `"add"` and `"mul"` to lambdas that operate on two numbers. Call and print `ops["add"](3, 4)` and `ops["mul"](3, 4)`.
+        hint: Store lambdas as dictionary values.
+        expl: Lambdas are first-class objects and can be stored in data structures like dictionaries for dynamic dispatch.
+        sol: |-
+          ops = {"add": lambda a, b: a + b, "mul": lambda a, b: a * b}
+          print(ops["add"](3, 4))
+          print(ops["mul"](3, 4))
+        tests:
+          - |
+            7
+            12
+        max: 4/1
+        start: ''
+      - name: Lambda with Reduce
+        obj: Use a lambda and a loop to multiply all numbers in `nums` (simulating `reduce`). Print the product.
+        hint: 'Use a loop: `result = nums[0]; for x in nums[1:]: result = (lambda a, b: a * b)(result, x)`'
+        expl: '`reduce()` repeatedly applies a function of two arguments to accumulate a result across the iterable. You can simulate it with a loop.'
+        start: nums = [1, 2, 3, 4, 5]
+        sol: |-
+          nums = [1, 2, 3, 4, 5]
+          result = nums[0]
+          for x in nums[1:]:
+              result = (lambda a, b: a * b)(result, x)
+          print(result)
+        tests:
+          - |
+            120
+        max: 4/1
+      - name: Lambda with Conditional
+        obj: Use a lambda that returns `"even"` if a number is even and `"odd"` otherwise. Map it over `[1..5]` and print the result.
+        hint: 'Use a conditional expression inside the lambda: `lambda x: "even" if x % 2 == 0 else "odd"`.'
+        expl: Lambdas can contain a conditional expression (ternary), which evaluates to one of two values based on a condition.
+        sol: |-
+          parity = lambda x: "even" if x % 2 == 0 else "odd"
+          result = list(map(parity, range(1, 6)))
+          print(result)
+        tests:
+          - |
+            ['odd', 'even', 'odd', 'even', 'odd']
+        max: 3/1
+        start: ''
+      - name: Sorting by Second Element
+        obj: Sort `data` by the second element using a lambda and print the result.
+        hint: 'Use `key=lambda t: t[1]` in `sorted()`.'
+        expl: Lambdas can access specific elements of complex data structures for custom sorting.
+        start: data = [(2, 3), (1, 2), (3, 1)]
+        sol: |-
+          data = [(2, 3), (1, 2), (3, 1)]
+          result = sorted(data, key=lambda t: t[1])
+          print(result)
+        tests:
+          - |
+            [(3, 1), (1, 2), (2, 3)]
+        max: 2/1
+      - name: The Judge's Scale
+        obj: Read n students each with name and variable scores. Compute each student's average. Use sorted() with a lambda to rank by average desc, name asc. Print the ranked names.
+        example:
+          in:
+            - '3'
+            - Alice 85 90 78
+            - Bob 92 88
+            - Charlie 70
+          out: |
+            ['Bob', 'Alice', 'Charlie']
+        sol: |-
+          n = int(input())
+          data = [input().split() for _ in range(n)]
+          students = [(name, sum(map(int, scores)) / len(scores)) for name, *scores in data]
+          result = sorted(students, key=lambda s: (-s[1], s[0]))
+          print([name for name, _ in result])
+        tests:
+          - in:
+              - '3'
+              - Alice 85 90 78
+              - Bob 92 88
+              - Charlie 70
+            exp: |
+              ['Bob', 'Alice', 'Charlie']
+          - in:
+              - '2'
+              - Zed 100
+              - Aaron 100
+            exp: |
+              ['Aaron', 'Zed']
+        max: 10/1
+        start: n = int(input())
+  - name: Type Hints
+    icon: variable
+    levels:
+      - name: Basic Function Hints
+        obj: 'Define `def add(x: int, y: int) -> int:` that returns the sum, then print `add(3, 5)`.'
+        hint: 'Add `: int` after each parameter and `-> int` after the parentheses.'
+        expl: Type hints indicate expected argument types and return type. They help with documentation and tooling but don't affect runtime.
+        sol: |-
+          def add(x: int, y: int) -> int:
+              return x + y
+          print(add(3, 5))
+        tests:
+          - |
+            8
+        max: 4/1
+        start: ''
+      - name: List Type Hints
+        obj: 'Define `def total(nums: List[int]) -> int:` that returns the sum, then call it with `[1, 2, 3, 4]` and print the result.'
+        hint: You must `from typing import List` first, then use `List[int]` as the parameter type.
+        expl: '`List[int]` hints that the parameter is a list containing integers. Import it from `typing`.'
+        sol: |-
+          from typing import List
+          def total(nums: List[int]) -> int:
+              return sum(nums)
+          print(total([1, 2, 3, 4]))
+        tests:
+          - |
+            10
+        max: 4/1
+        start: from typing import List
+      - name: Optional Type
+        obj: 'Define `def greet(name: Optional[str] = None) -> str:` that returns `"Hello, Guest!"` if name is `None` else `f"Hello, {name}!"`. Call it with no argument and with `"Alice"`, printing each result.'
+        hint: Import `Optional` from `typing` and use `Optional[str]` for the parameter.
+        expl: '`Optional[str]` means the value can be a string or None. It is shorthand for `Union[str, None]` or `str | None`.'
+        sol: |-
+          from typing import Optional
+          def greet(name: Optional[str] = None) -> str:
+              return f"Hello, {name}!" if name else "Hello, Guest!"
+          print(greet())
+          print(greet("Alice"))
+        tests:
+          - |
+            Hello, Guest!
+            Hello, Alice!
+        max: 5/1
+        start: from typing import Optional
+      - name: Union Type
+        obj: 'Define `def parse(value: Union[int, str]) -> int:` that converts a string to int or squares an int. Call it with `"42"` and `5`, printing each result.'
+        hint: Use `from typing import Union` and `Union[int, str]`.
+        expl: '`Union[int, str]` means the value can be either an int or a string. Same thing we did as `int | str`, but much cleaner. Use `isinstance()` to check which type it is.'
+        sol: |-
+          from typing import Union
+          def parse(value: Union[int, str]) -> int:
+              if isinstance(value, str):
+                  return int(value)
+              return value ** 2
+          print(parse("42"))
+          print(parse(5))
+        start: from typing import Union
+        tests:
+          - |
+            42
+            25
+        max: 6/1
+      - name: Type Alias
+        obj: 'Create a type alias `Vector` using `typing.List[float]`, then define `def dot(a: Vector, b: Vector) -> float:` that computes the dot product. Call it with `[1.0, 2.0]` and `[3.0, 4.0]` and print the result.'
+        hint: '`from typing import List` then `Vector = List[float]`. Do NOT use `list[float]` — it won''t work here.'
+        expl: Type aliases make complex type signatures more readable. Assign a type to a variable and use it as a hint.
+        sol: |-
+          from typing import List
+          Vector = List[float]
+          def dot(a: Vector, b: Vector) -> float:
+              return sum(x * y for x, y in zip(a, b))
+          print(dot([1.0, 2.0], [3.0, 4.0]))
+        start: |-
+          from typing import List
+
+          Vector = ...
+        tests:
+          - |
+            11.0
+        max: 6/1
+      - name: Callable Type
+        obj: 'Define `def apply(func: Callable[[int], int], val: int) -> int:` that calls `func(val)`. Import `Callable` from `typing`. Call it with `lambda x: x * 10` and `7`, printing the result.'
+        hint: '`Callable[[int], int]` means a function taking one int and returning an int.'
+        expl: '`Callable` hints that a parameter should be a function with a specific signature. The first list is parameter types, the last is return type.'
+        sol: |-
+          from typing import Callable
+          def apply(func: Callable[[int], int], val: int) -> int:
+              return func(val)
+          print(apply(lambda x: x * 10, 7))
+        start: from typing import Callable
+        tests:
+          - |
+            70
+        max: 4/1
+      - name: TypedDict
+        obj: 'Define `Movie` using `TypedDict("Movie", {"title": str, "year": int})`. Create `m = Movie(title="Inception", year=2010)` and print `m["title"]` and `m["year"]`.'
+        hint: 'Use the functional form: `Movie = TypedDict("Movie", {"title": str, "year": int})`.'
+        expl: '`TypedDict` defines a dict with fixed keys and value types. The functional form avoids class-body annotations.'
+        sol: |-
+          from typing import TypedDict
+          Movie = TypedDict('Movie', {'title': str, 'year': int})
+          m = Movie(title='Inception', year=2010)
+          print(m['title'])
+          print(m['year'])
+        start: ''
+        tests:
+          - |
+            Inception
+            2010
+        max: 10/1
+      - name: TypeVar
+        obj: 'Define a generic function using `TypeVar` `T` that returns the first element of a list: `def first(items: List[T]) -> T:`. Call it with `[10, 20, 30]` and print the result.'
+        hint: Use `T = TypeVar("T")` to declare a type variable, like `List[T]` instead of `List[int]`.
+        expl: Type variables allow functions to work with any type while preserving type information. Use `TypeVar("T")` from `typing`.
+        sol: |-
+          from typing import TypeVar, List
+          T = TypeVar('T')
+          def first(items: List[T]) -> T:
+              return items[0]
+          print(first([10, 20, 30]))
+        start: |-
+          from typing import TypeVar, List
+
+          T = TypeVar('T')
+        tests:
+          - |
+            10
+        max: 5/1
+      - name: Protocol Types
+        obj: 'Define a `Protocol` called `Sized` with method `def size(self) -> int:` with nothing inside, then define `def display(obj: Sized, n: int):` that creates a `Box(n)` and prints its size. Import `Protocol` from `typing`.'
+        hint: Use `class Sized(Protocol):` and define the method signature without implementation.
+        expl: '`Protocol` enables structural subtyping (duck typing at type-check time). Any object with a matching `size` method satisfies the protocol.'
+        sol: |-
+          from typing import Protocol
+          class Sized(Protocol):
+              def size(self) -> int: ...
+          class Box:
+              def __init__(self, n: int):
+                  self.n = n
+              def size(self) -> int:
+                  return self.n
+          def display(obj: Sized, n: int):
+              print(Box(n).size())
+          n = int(input())
+          display(Box(n), n)
+        start: |-
+          from typing import Protocol
+
+          class Sized(Protocol):
+              ...
+
+          class Box:
+              ...
+
+          def display(obj: Sized, n: int):
+              ...
+        tests:
+          - in: '7'
+            exp: |
+              7
+          - in: '42'
+            exp: |
+              42
+        max: 15/1
+      - name: The Phantom Protocol
+        obj: 'Define a generic function `chunk(items: List, size: int) -> List[List]` that splits a list into chunks. Use proper type hints. Read n, items, and size, then print the chunked list. No need to use all `typing` module.'
+        example:
+          in:
+            - '8'
+            - 1 2 3 4 5 6 7 8
+            - '3'
+          out: |
+            [[1, 2, 3], [4, 5, 6], [7, 8]]
+        sol: |-
+          from typing import List
+          def chunk(items: List, size: int) -> List[List]:
+              return [items[i:i + size] for i in range(0, len(items), size)]
+          n = int(input())
+          items = input().split()
+          size = int(input())
+          print(chunk(items, size))
+        start: from typing import TypeVar, TypedDict, List, Union, Optional, Protocol, Callable
+        tests:
+          - in:
+              - '8'
+              - 1 2 3 4 5 6 7 8
+              - '3'
+            exp: |
+              [['1', '2', '3'], ['4', '5', '6'], ['7', '8']]
+          - in:
+              - '5'
+              - a b c d e
+              - '2'
+            exp: |
+              [['a', 'b'], ['c', 'd'], ['e']]
+        max: 10/1
+  - name: Iterators & Generators
+    icon: loop
+    levels:
+      - name: Basic Iterator
+        obj: Create a list `[10, 20, 30]`, get its iterator with `iter()`, then call `next()` three times and print each value.
+        hint: '`it = iter(nums)`, then `next(it)` each time.'
+        expl: '`iter(object)` returns an iterator object. `next()` retrieves the next item each time it is called.'
+        sol: |-
+          nums = [10, 20, 30]
+          it = iter(nums)
+          print(next(it))
+          print(next(it))
+          print(next(it))
+        start: nums = [10, 20, 30]
+        tests:
+          - |
+            10
+            20
+            30
+        max: 5/1
+      - name: Custom Iterator Class
+        obj: Define `class CountDown:` with `__init__(self, n)` and `__iter__` / `__next__` methods that count down from `n` to `1`. Iterate and print each value.
+        hint: Raise `StopIteration` when the count reaches 0.
+        expl: A custom iterator implements `__iter__` (returning self) and `__next__` (returning the next item or raising `StopIteration`).
+        sol: |-
+          class CountDown:
+              def __init__(self, n):
+                  self.n = n
+              def __iter__(self):
+                  return self
+              def __next__(self):
+                  if self.n <= 0:
+                      raise StopIteration
+                  self.n -= 1
+                  return self.n + 1
+          for x in CountDown(5):
+              print(x)
+        start: |-
+          class CountDown:
+              def __init__(self, n):
+                  ...
+              def __iter__(self):
+                  ...
+              def __next__(self):
+                  ...
+        tests:
+          - |
+            5
+            4
+            3
+            2
+            1
+        max: 9/1
+      - name: Generator Function
+        obj: Define a generator `def count_to(n):` that yields numbers from `1` to `n`. Loop over `count_to(4)` and print each.
+        hint: Use `yield` instead of `return`.
+        expl: A generator function uses `yield` to produce a sequence of values lazily. Each call to `next()` resumes where it left off.
+        sol: |-
+          def count_to(n):
+              for i in range(1, n + 1):
+                  yield i
+          for x in count_to(4):
+              print(x)
+        tests:
+          - |
+            1
+            2
+            3
+            4
+        max: 5/1
+        start: |-
+          def count_to(n):
+              ...
+
+          for x in count_to(4):
+              print(x)
+      - name: Yield From
+        obj: Define a generator `def chain(iterables):` that yields all items from each iterable. Chain `[1, 2]`, `[3, 4]`, `[5, 6]` and print the result as a list.
+        hint: Loop over `iterables`, then loop over each item and `yield` it.
+        expl: A generator can delegate to another iterable by looping and yielding each item. This is equivalent to `yield from` in newer Python.
+        sol: |-
+          def chain(iterables):
+              for it in iterables:
+                  for item in it:
+                      yield item
+          result = []
+          for x in chain([[1, 2], [3, 4], [5, 6]]):
+              result.append(x)
+          print(result)
+        start: |-
+          def chain(iterables):
+              ...
+          result = [...]
+          print(result)
+        tests:
+          - |
+            [1, 2, 3, 4, 5, 6]
+        max: 6/1
+      - name: Generator Expression
+        obj: Create a generator expression that produces squares of numbers `0..4`, convert it to a list, and print the list.
+        hint: Use `(x**2 for x in range(5))` instead of list brackets.
+        expl: Generator expressions use `()` instead of `[]`. They produce values lazily, saving memory for large sequences.
+        sol: |-
+          squares = (x**2 for x in range(5))
+          print(list(squares))
+        tests:
+          - |
+            [0, 1, 4, 9, 16]
+        max: 2/1
+        start: ''
+      - name: Infinite Generator
+        obj: Define a generator `def fibonacci():` that yields Fibonacci numbers infinitely. Print first 8 by using `zip` with `range`.
+        hint: Use `zip(range(8), fibonacci())` to limit the iteration.
+        expl: Generators can represent infinite sequences. Use tools like `zip()` or `itertools.islice()` to consume a limited portion.
+        sol: |-
+          def fibonacci():
+              a, b = 0, 1
+              while True:
+                  yield a
+                  a, b = b, a + b
+          fib = fibonacci()
+          for _ in range(8):
+              print(next(fib))
+        start: |-
+
+
+          fib = fibonacci()
+          for _ in range(8):
+              ...
+        tests:
+          - |
+            0
+            1
+            1
+            2
+            3
+            5
+            8
+            13
+        max: 7/1
+      - name: Generator with Send
+        obj: Define a generator `def accumulate():` that accepts values via `send()` and yields the running total. Send `10`, `5`, `3` and print each yielded total.
+        hint: Use `total = yield` to receive sent values.
+        expl: The `send()` method sends a value back into a generator. The value becomes the result of the `yield` expression.
+        sol: |-
+          def accumulate():
+              total = 0
+              while True:
+                  val = yield total
+                  total += val
+          acc = accumulate()
+          next(acc)
+          print(acc.send(10))
+          print(acc.send(5))
+          print(acc.send(3))
+        start: |-
+
+
+          acc = accumulate()
+          next(acc)
+          print(acc.send(10))
+          ...
+        tests:
+          - |
+            10
+            15
+            18
+        max: 10/1
+      - name: Chaining Generators
+        obj: Define `def squares(nums):` that yields squares of input values, and `def evens(nums):` that yields only even numbers. Pipe `range(6)` through both and print the result as a list.
+        hint: Chain by calling one generator inside the other's loop.
+        expl: Generators can be composed into pipelines. Each generator yields values that feed into the next.
+        sol: |-
+          def squares(nums):
+              for n in nums:
+                  yield n ** 2
+          def evens(nums):
+              for n in nums:
+                  if n % 2 == 0:
+                      yield n
+          result = []
+          for x in evens(squares(range(6))):
+              result.append(x)
+          print(result)
+        start: |-
+
+
+          result = list(evens(squares(range(6))))
+        tests:
+          - |
+            [0, 4, 16]
+        max: 7/1
+      - name: itertools Chain
+        obj: Write a function `def chain(iterables):` that yields items from each iterable in sequence. Read two space-separated integers for a range, then chain two ranges and print the result as a list.
+        hint: Use a `for` loop over each iterable and `yield` each item. Use `map(int, input().split())` to parse input.
+        expl: Chaining iterables lets you treat multiple sequences as one. The `yield from` syntax can also delegate to sub-iterators.
+        sol: |-
+          def chain(iterables):
+              for it in iterables:
+                  for item in it:
+                      yield item
+          a, b = map(int, input().split())
+          result = []
+          for x in chain([range(a), range(b)]):
+              result.append(x)
+          print(result)
+        tests:
+          - in: 3 2
+            exp: |
+              [0, 1, 2, 0, 1]
+          - in: 0 4
+            exp: |
+              [0, 1, 2, 3]
+        max: 9/1
+        start: |-
+          def chain(iterables):
+              ...
+
+          a, b = map(int, input().split())
+      - name: The Labyrinth of Yields
+        obj: Define a generator windows(items, n) that yields all sliding windows of size n. Read n, items, and window size, then print the list of window tuples.
+        example:
+          in:
+            - '5'
+            - 1 2 3 4 5
+            - '3'
+          out: |
+            [(1, 2, 3), (2, 3, 4), (3, 4, 5)]
+        sol: |-
+          def windows(items, n):
+              it = iter(items)
+              window = []
+              for _ in range(n):
+                  window.append(next(it))
+              yield tuple(window)
+              for item in it:
+                  window.pop(0)
+                  window.append(item)
+                  yield tuple(window)
+          n = int(input())
+          items = input().split()
+          size = int(input())
+          print(list(windows(items, size)))
+        tests:
+          - in:
+              - '5'
+              - 1 2 3 4 5
+              - '3'
+            exp: |
+              [('1', '2', '3'), ('2', '3', '4'), ('3', '4', '5')]
+          - in:
+              - '4'
+              - a b c d
+              - '2'
+            exp: |
+              [('a', 'b'), ('b', 'c'), ('c', 'd')]
+        max: 12/1
+        start: |-
+          n = int(input())
+          items = input().split()
+          size = int(input())
+  - name: Dataclasses
+    icon: object
+    levels:
+      - name: Basic Dataclass
+        obj: 'Import `dataclass` from `dataclasses` and define `class Point:` with fields `x: int` and `y: int`. Create `Point(3, 4)` and print it.'
+        hint: Add `@dataclass` decorator above the class definition.
+        expl: A dataclass auto-generates `__init__`, `__repr__`, `__eq__`, and other methods based on the annotated fields.
+        sol: |-
+          from dataclasses import dataclass
+          @dataclass
+          class Point:
+              x: int
+              y: int
+          p = Point(3, 4)
+          print(p)
+        tests:
+          - |
+            Point(x=3, y=4)
+        max: 6/1
+        start: |-
+          from dataclasses import dataclass
+
+          @dataclass
+          class Point:
+              ...
+      - name: Default Values
+        obj: 'Define `@dataclass class Item:` with fields `name: str = "unknown"` and `price: float = 0.0`. Create one default and one custom, printing each.'
+        hint: Assign default values directly in the field annotations.
+        expl: Dataclass fields can have default values, just like regular function parameters. Fields without defaults must come first.
+        sol: |-
+          from dataclasses import dataclass
+          @dataclass
+          class Item:
+              name: str = "unknown"
+              price: float = 0.0
+          print(Item())
+          print(Item("Apple", 1.5))
+        tests:
+          - |
+            Item(name='unknown', price=0.0)
+            Item(name='Apple', price=1.5)
+        max: 7/1
+        start: |-
+          from dataclasses import dataclass
+
+          @dataclass
+          class Item:
+              ...
+      - name: Immutable Dataclass
+        obj: 'Define `@dataclass(frozen=True) class Point:` with `x: int` and `y: int`. Create `Point(1, 2)` and print it.'
+        hint: Set `frozen=True` in the decorator.
+        expl: A frozen dataclass is immutable â€” fields cannot be modified after creation, similar to a named tuple.
+        sol: |-
+          from dataclasses import dataclass
+          @dataclass(frozen=True)
+          class Point:
+              x: int
+              y: int
+          print(Point(1, 2))
+        tests:
+          - |
+            Point(x=1, y=2)
+        max: 5/1
+        start: |-
+          from dataclasses import dataclass
+
+          @dataclass(frozen=True)
+          class Point:
+              ...
+      - name: Field with Default Factory
+        obj: 'Define `@dataclass class Student:` with `name: str` and `grades: list[int] = field(default_factory=list)` that uses `field()` from `dataclasses`. Create a student, append some grades, and print the student.'
+        hint: Use `default_factory=list` to avoid mutable default argument issues.
+        expl: '`field(default_factory=list)` creates a new empty list for each instance, avoiding the shared mutable default problem.'
+        sol: |-
+          from dataclasses import dataclass, field
+          @dataclass
+          class Student:
+              name: str
+              grades: list[int] = field(default_factory=list)
+          s = Student("Alice")
+          s.grades.append(95)
+          s.grades.append(87)
+          print(s)
+        tests:
+          - |
+            Student(name='Alice', grades=[95, 87])
+        max: 7/1
+        start: |-
+          from dataclasses import dataclass, field
+
+          @dataclass
+          class Student:
+              name: str
+              grades: ...
+      - name: Dataclass Methods
+        obj: Add a method `def area(self) -> float:` to `Rectangle` that returns `self.width * self.height`. Create a `Rectangle(5.0, 3.0)` and print its area.
+        hint: Define methods inside a dataclass just like a regular class.
+        expl: Dataclasses are regular classes with auto-generated boilerplate. You can add any methods you like.
+        sol: |-
+          from dataclasses import dataclass
+          @dataclass
+          class Rectangle:
+              width: float
+              height: float
+              def area(self) -> float:
+                  return self.width * self.height
+          r = Rectangle(5.0, 3.0)
+          print(r.area())
+        tests:
+          - |
+            15.0
+        max: 7/1
+        start: |-
+          from dataclasses import dataclass
+
+          @dataclass
+          class Rectangle:
+              ...
+              def area(self):
+                  ...
+      - name: Inheritance in Dataclasses
+        obj: 'Define `@dataclass class Animal:` with `name: str`, then `@dataclass class Dog(Animal):` with `breed: str`. Print `Dog("Rex", "Husky")`.'
+        hint: Child dataclasses inherit parent fields and add their own.
+        expl: Dataclasses support inheritance. The child class includes all parent fields plus its own, in order.
+        sol: |-
+          from dataclasses import dataclass
+          @dataclass
+          class Animal:
+              name: str
+          @dataclass
+          class Dog(Animal):
+              breed: str
+          print(Dog("Rex", "Husky"))
+        tests:
+          - |
+            Dog(name='Rex', breed='Husky')
+        max: 7/1
+        start: |-
+          from dataclasses import dataclass
+
+          @dataclass
+          class Animal:
+              name: str
+
+          @dataclass
+          class Dog(Animal):
+              ...
+      - name: Post-Init Processing
+        obj: Add `__post_init__` to `Rectangle` that swaps width and height if width < height, so width is always larger. Create `Rectangle(3.0, 5.0)` and print it.
+        hint: '`__post_init__` runs after the generated `__init__`.'
+        expl: '`__post_init__` is called automatically after `__init__`. Use it for validation, normalization, or derived fields.'
+        sol: |-
+          from dataclasses import dataclass
+          @dataclass
+          class Rectangle:
+              width: float
+              height: float
+              def __post_init__(self):
+                  if self.width < self.height:
+                      self.width, self.height = self.height, self.width
+          r = Rectangle(3.0, 5.0)
+          print(r)
+        tests:
+          - |
+            Rectangle(width=5.0, height=3.0)
+        max: 8/1
+        start: |-
+          from dataclasses import dataclass
+
+          @dataclass
+          class Rectangle:
+              ...
+              def __post_init__(self):
+                  ...
+      - name: Dataclass with Property
+        obj: Add a `@property` called `hypotenuse` to `Triangle` (fields `a` and `b`) that returns `sqrt(a**2 + b**2)`. Create `Triangle(3.0, 4.0)` and print its hypotenuse.
+        hint: Import `math.sqrt` and use the `@property` decorator.
+        expl: Properties allow method calls to be accessed as attributes. They work seamlessly within dataclasses.
+        sol: |-
+          from dataclasses import dataclass
+          from math import sqrt
+          @dataclass
+          class Triangle:
+              a: float
+              b: float
+              @property
+              def hypotenuse(self) -> float:
+                  return sqrt(self.a ** 2 + self.b ** 2)
+          t = Triangle(3.0, 4.0)
+          print(t.hypotenuse)
+        tests:
+          - |
+            5.0
+        max: 8/1
+        start: |-
+          from dataclasses import dataclass
+
+          @dataclass
+          class Triangle:
+              ...
+              @property
+              def hypotenuse(self):
+                  ...
+      - name: Dataclass asdict
+        obj: Use `asdict` from `dataclasses` to convert a dataclass to a dict. Read `name`, `age`, then define `@dataclass class Person:` and print `asdict(p)`.
+        hint: '`from dataclasses import dataclass, asdict` â€” call `asdict(person)` to get a dictionary.'
+        expl: '`asdict` recursively converts a dataclass into a plain dictionary. Useful for serialization.'
+        sol: |-
+          from dataclasses import dataclass, asdict
+          @dataclass
+          class Person:
+              name: str
+              age: int
+          name = input()
+          age = int(input())
+          p = Person(name, age)
+          print(asdict(p))
+        tests:
+          - in:
+              - Alice
+              - '30'
+            exp: |
+              {'name': 'Alice', 'age': 30}
+          - in:
+              - Bob
+              - '25'
+            exp: |
+              {'name': 'Bob', 'age': 25}
+        max: 8/1
+        start: |-
+          from dataclasses import dataclass, asdict
+
+          @dataclass
+          class Person:
+              ...
+
+          name = input()
+          age = int(input())
+      - name: The Records of Olympus
+        obj: Define a dataclass Student with name, score, and a grade() method returning A/B/C/D. Read name and score, create a Student, print the formatted result.
+        example:
+          in:
+            - Alice 85
+          out: |
+            Alice: 85 -> B
+        sol: |-
+          from dataclasses import dataclass
+          @dataclass
+          class Student:
+              name: str
+              score: int
+              def grade(self) -> str:
+                  if self.score >= 90:
+                      return 'A'
+                  if self.score >= 80:
+                      return 'B'
+                  if self.score >= 70:
+                      return 'C'
+                  return 'D'
+          name, score = input().split()
+          s = Student(name, int(score))
+          print(f"{s.name}: {s.score} -> {s.grade()}")
+        tests:
+          - in: Alice 85
+            exp: |
+              Alice: 85 -> B
+          - in: Bob 92
+            exp: |
+              Bob: 92 -> A
+        max: 10/1
+        start: |-
+          from dataclasses import dataclass
+
+          @dataclass
+          class Student:
+              ...
+              def grade(self):
+                  ...
+
+          name, score = input().split()
+  - name: Context Managers
+    icon: file
+    levels:
+      - name: Basic With Statement
+        obj: Open `"test.txt"` in write mode using `with` and write `"Hello, Context!"`. Then read it back in read mode and print.
+        hint: Use `with open("test.txt", "w") as f:` and then a separate `with open("test.txt") as f:`.
+        expl: The `with` statement ensures resources are properly released when the block exits, even if an error occurs.
+        sol: |-
+          with open("test.txt", "w") as f:
+              f.write("Hello, Context!")
+          with open("test.txt") as f:
+              print(f.read())
+        tests:
+          - |
+            Hello, Context!
+        max: 5/1
+        files:
+          track:
+            - test.txt
+        start: ''
+      - name: Custom Context Manager Class
+        obj: Define `class ManagedFile:` with `__enter__` (print "Enter") and `__exit__` (print "Exit"), then use it with `with`.
+        hint: '`__exit__` takes `(self, exc_type, exc_val, exc_tb)`.'
+        expl: A context manager class must implement `__enter__` (returns the bound resource) and `__exit__` (releases it).
+        sol: |-
+          class ManagedFile:
+              def __enter__(self):
+                  print("Enter")
+                  return self
+              def __exit__(self, *args):
+                  print("Exit")
+          with ManagedFile() as m:
+              print("Inside")
+        tests:
+          - |
+            Enter
+            Inside
+            Exit
+        max: 9/1
+        start: |-
+          class ManagedFile:
+              def __enter__(self):
+                  ...
+              def __exit__(self, *args):
+                  ...
+      - name: contextmanager Decorator
+        obj: Import `contextmanager` from `contextlib` and use `@contextmanager` to create a simple timer that prints "Start" and "End".
+        hint: '`yield` separates the setup code from the teardown code.'
+        expl: The `@contextmanager` decorator lets you write a context manager as a generator. Code before `yield` runs on enter, code after runs on exit.
+        sol: |-
+          from contextlib import contextmanager
+          @contextmanager
+          def timer():
+              print("Start")
+              yield
+              print("End")
+          with timer():
+              print("Working")
+        tests:
+          - |
+            Start
+            Working
+            End
+        max: 7/1
+        start: |-
+          from contextlib import contextmanager
+
+          @contextmanager
+          def timer():
+              ...
+
+          with timer():
+              ...
+      - name: Nested Context Managers
+        obj: Open two files `"a.txt"` and `"b.txt"` in a single `with` statement, writing "File A" and "File B" respectively. Then read both files and print their contents.
+        hint: 'Separate multiple context managers with commas: `with open(...) as a, open(...) as b:`.'
+        expl: Multiple context managers can be combined in one `with` statement. Both are entered left-to-right and exited right-to-left.
+        sol: |-
+          with open("a.txt", "w") as a, open("b.txt", "w") as b:
+              a.write("File A")
+              b.write("File B")
+          with open("a.txt") as a, open("b.txt") as b:
+              print(a.read())
+              print(b.read())
+        tests:
+          - |
+            File A
+            File B
+        max: 7/1
+        files:
+          track:
+            - a.txt
+            - b.txt
+        start: ''
+      - name: Exception Handling in CM
+        obj: Define a context manager that catches `ValueError` inside `__exit__` and prints "Handled", returning `True` to suppress it.
+        hint: '`__exit__` returning `True` suppresses the exception.'
+        expl: If `__exit__` returns `True`, the exception is swallowed. The `exc_type` parameter tells you which exception occurred.
+        sol: |-
+          class Suppressor:
+              def __enter__(self):
+                  return self
+              def __exit__(self, exc_type, exc_val, exc_tb):
+                  if exc_type is ValueError:
+                      print("Handled")
+                      return True
+          with Suppressor():
+              raise ValueError("oops")
+          print("Still running")
+        tests:
+          - |
+            Handled
+            Still running
+        max: 10/1
+        start: |-
+          class Suppressor:
+              def __enter__(self):
+                  ...
+              def __exit__(self, exc_type, exc_val, exc_tb):
+                  ...
+      - name: contextlib.suppress
+        obj: Import `suppress` from `contextlib` and use it to suppress `FileNotFoundError` when opening a non-existent file. Print "No crash!" after the context block.
+        hint: '`with suppress(FileNotFoundError):` will not crash if the error occurs.'
+        expl: '`contextlib.suppress` is a built-in context manager that suppresses specified exceptions, similar to `pass` on error.'
+        sol: |-
+          from contextlib import suppress
+          with suppress(FileNotFoundError):
+              with open("nope.txt") as f:
+                  print(f.read())
+          print("No crash!")
+        tests:
+          - |
+            No crash!
+        max: 5/1
+        start: from contextlib import suppress
+      - name: Redirect Output
+        obj: Import `redirect_stdout` from `contextlib` and redirect print output to a `StringIO` buffer. Print the captured text.
+        hint: '`from io import StringIO` and `with redirect_stdout(buffer):`.'
+        expl: '`redirect_stdout` temporarily redirects all `print()` output to a stream like `StringIO`. Useful for capturing logs or test output.'
+        sol: |-
+          from contextlib import redirect_stdout
+          from io import StringIO
+          buf = StringIO()
+          with redirect_stdout(buf):
+              print("Captured!")
+          print(buf.getvalue().strip())
+        tests:
+          - |
+            Captured!
+        max: 7/1
+        start: |-
+          from contextlib import redirect_stdout
+          from io import StringIO
+
+          buf = StringIO()
+      - name: Timer Context Manager
+        obj: Use `@contextmanager` to create a `timer` that prints elapsed time in seconds on exit. Import `time`.
+        hint: Record `start = time.time()` before `yield`, then subtract after.
+        expl: Context managers are great for measuring execution time â€” setup records the start, teardown computes and reports the delta.
+        sol: |-
+          from contextlib import contextmanager
+          import time
+          @contextmanager
+          def timer():
+              start = time.time()
+              yield
+              elapsed = time.time() - start
+              print(f"{elapsed:.3f}s")
+          with timer():
+              total = sum(range(100000))
+          print("Done")
+        tests: []
+        max: 9/1
+        start: |-
+          from contextlib import contextmanager
+          import time
+
+          @contextmanager
+          def timer():
+              ...
+      - name: ExitStack
+        obj: Use `ExitStack` from `contextlib` to manage two `redirect_stdout` contexts. Read a name, capture two print outputs, and print the captured text.
+        hint: '`from contextlib import ExitStack, redirect_stdout` â€” use `stack.enter_context(redirect_stdout(buf))` to redirect.'
+        expl: '`ExitStack` lets you manage multiple context managers dynamically. All entered contexts are cleaned up when you exit the stack, even if you don''t know the number upfront.'
+        sol: |-
+          from contextlib import ExitStack, redirect_stdout
+          from io import StringIO
+          name = input()
+          buf1 = StringIO()
+          buf2 = StringIO()
+          with ExitStack() as stack:
+              stack.enter_context(redirect_stdout(buf1))
+              print(f"Hello, {name}")
+              stack.enter_context(redirect_stdout(buf2))
+              print(f"Welcome, {name}")
+          print(buf1.getvalue().strip())
+          print(buf2.getvalue().strip())
+        tests:
+          - in: Alice
+            exp: |
+              Hello, Alice
+              Welcome, Alice
+          - in: Bob
+            exp: |
+              Hello, Bob
+              Welcome, Bob
+        max: 14/1
+        start: |-
+          from contextlib import ExitStack, redirect_stdout
+          from io import StringIO
+
+          name = input()
+      - name: The Gatekeeper's Trial
+        obj: Define a @contextmanager called shout that uppercases all print output inside its block. Read a name, print a greeting inside the context, producing an uppercased output.
+        example:
+          in:
+            - Alice
+          out: |
+            HELLO ALICE
+        sol: |-
+          from contextlib import contextmanager, redirect_stdout
+          from io import StringIO
+          @contextmanager
+          def shout():
+              buf = StringIO()
+              with redirect_stdout(buf):
+                  yield
+              print(buf.getvalue().upper().strip())
+          name = input()
+          with shout():
+              print(f"hello {name}")
+        tests:
+          - in: Alice
+            exp: |
+              HELLO ALICE
+          - in: Bob
+            exp: |
+              HELLO BOB
+        max: 10/1
+        start: |-
+          from contextlib import contextmanager, redirect_stdout
+          from io import StringIO
+
+          name = input()
+  - name: Unit Testing
+    icon: warning
+    levels:
+      - name: Basic Assert
+        obj: Write three `assert` statements checking that `2 + 2 == 4`, `3 * 5 == 15`, and `10 - 3 == 7`. Print "All passed" if they succeed.
+        hint: If all asserts pass, print "All passed".
+        expl: '`assert` raises `AssertionError` if the condition is falsy. It is the simplest form of testing in Python.'
+        sol: |-
+          assert 2 + 2 == 4
+          assert 3 * 5 == 15
+          assert 10 - 3 == 7
+          print("All passed")
+        tests:
+          - |
+            All passed
+        max: 5/1
+        start: ''
+      - name: Test Function
+        obj: Define `def test_add():` that asserts `add(2, 3) == 5` and `add(-1, 1) == 0`. Define `add(a, b)` above, call the test, and print "test_add passed".
+        hint: Group related assertions inside a function named `test_*`.
+        expl: Wrapping assertions in functions lets you organize and name your tests. A function returning without error means it passed.
+        sol: |-
+          def add(a, b):
+              return a + b
+          def test_add():
+              assert add(2, 3) == 5
+              assert add(-1, 1) == 0
+          test_add()
+          print("test_add passed")
+        tests:
+          - |
+            test_add passed
+        max: 7/1
+        start: ''
+      - name: Test Class
+        obj: Define `class TestMath:` with methods `test_add` and `test_mul`. Run both and print "All class tests passed".
+        hint: Create each test as a method starting with `test_`.
+        expl: Grouping tests in a class provides better organization. Instantiate the class and call each method to run them.
+        sol: |-
+          class TestMath:
+              def test_add(self):
+                  assert 1 + 1 == 2
+              def test_mul(self):
+                  assert 2 * 3 == 6
+          t = TestMath()
+          t.test_add()
+          t.test_mul()
+          print("All class tests passed")
+        tests:
+          - |
+            All class tests passed
+        max: 7/1
+        start: ''
+      - name: SetUp and TearDown
+        obj: Define a test class with `setup()` creating a list `[1, 2, 3]` and `teardown()` printing "Clean". Store data in `self`.
+        hint: Use `self.data` to share state between setup and test methods.
+        expl: Setup prepares test data before each test, teardown cleans up afterward. This keeps tests independent and repeatable.
+        sol: |-
+          class TestList:
+              def setup(self):
+                  self.data = [1, 2, 3]
+              def teardown(self):
+                  print("Clean")
+              def test_length(self):
+                  assert len(self.data) == 3
+              def test_sum(self):
+                  assert sum(self.data) == 6
+          t = TestList()
+          t.setup()
+          t.test_length()
+          t.teardown()
+          t.setup()
+          t.test_sum()
+          t.teardown()
+        tests:
+          - |
+            Clean
+            Clean
+        max: 12/1
+        start: ''
+      - name: Testing Exceptions
+        obj: Define `def divide(a, b):` that raises `ValueError` when `b` is zero. Test that it raises correctly using `try/except`, then print "Exception test passed".
+        hint: 'Use `try: divide(5, 0); assert False except ValueError: pass` pattern.'
+        expl: Testing that code raises the right exception is crucial. Use a `try/except` block that fails the test if no exception occurs.
+        sol: |-
+          def divide(a, b):
+              if b == 0:
+                  raise ValueError("Cannot divide by zero")
+              return a / b
+          try:
+              divide(5, 0)
+              assert False
+          except ValueError:
+              pass
+          assert divide(10, 2) == 5.0
+          print("Exception test passed")
+        tests:
+          - |
+            Exception test passed
+        max: 11/1
+        start: ''
+      - name: Multiple Test Cases
+        obj: Define a function `is_even(n)` and test it against `[(2,True),(3,False),(0,True),(-2,True),(-3,False)]`. Print "All cases passed".
+        hint: Loop over test cases and assert each one.
+        expl: Parameterized testing runs the same logic against multiple inputs. A loop over `(input, expected)` pairs is the simplest approach.
+        sol: |-
+          def is_even(n):
+              return n % 2 == 0
+          cases = [(2, True), (3, False), (0, True), (-2, True), (-3, False)]
+          for n, expected in cases:
+              assert is_even(n) == expected
+          print("All cases passed")
+        tests:
+          - |
+            All cases passed
+        max: 7/1
+        start: ''
+      - name: Testing with Fixtures
+        obj: 'Define a function `load_data()` that returns `{"users": ["Alice", "Bob"], "count": 2}`. Test that keys exist and types match, then print "Fixture test passed".'
+        hint: Store the fixture result in a variable and write assertions against it.
+        expl: A fixture provides repeatable test data. Load it once and assert properties about the returned structure.
+        sol: |-
+          def load_data():
+              return {"users": ["Alice", "Bob"], "count": 2}
+          data = load_data()
+          assert "users" in data
+          assert "count" in data
+          assert isinstance(data["users"], list)
+          assert len(data["users"]) == 2
+          assert data["count"] == 2
+          print("Fixture test passed")
+        tests:
+          - |
+            Fixture test passed
+        max: 8/1
+        start: ''
+      - name: Test Runner
+        obj: Define `def run_tests():` that collects all functions starting with `test_` from the global scope and runs them, printing results.
+        hint: Use `globals()` to find functions whose name starts with `test_`.
+        expl: A simple test runner introspects the global namespace to discover and execute test functions automatically.
+        sol: |-
+          def test_add():
+              assert 1 + 1 == 2
+          def test_sub():
+              assert 3 - 1 == 2
+          def run_tests():
+              passed = 0
+              for name, func in list(globals().items()):
+                  if name.startswith("test_") and callable(func):
+                      func()
+                      passed += 1
+              print(f"{passed} tests passed")
+          run_tests()
+        tests:
+          - |
+            2 tests passed
+        max: 12/1
+        start: ''
+      - name: Test Discovery
+        obj: Write a `run_tests` function that uses `TestLoader` to discover and run all tests in a `class TestMath(unittest.TestCase):` with methods `test_add` and `test_sub`. Print the number of tests run.
+        hint: Use `loader = unittest.TestLoader(); suite = loader.loadTestsFromTestCase(TestMath); runner = unittest.TextTestRunner(verbosity=0); result = runner.run(suite); print(result.testsRun)`.
+        expl: Test discovery lets you automatically find and run tests without manually listing them. `loadTestsFromTestCase` collects all test_ methods.
+        sol: |-
+          import unittest
+          class TestMath(unittest.TestCase):
+              def test_add(self):
+                  self.assertEqual(1 + 1, 2)
+              def test_sub(self):
+                  self.assertEqual(5 - 3, 2)
+          def run_tests():
+              loader = unittest.TestLoader()
+              suite = loader.loadTestsFromTestCase(TestMath)
+              runner = unittest.TextTestRunner(verbosity=0)
+              result = runner.run(suite)
+              print(result.testsRun)
+          run_tests()
+        tests:
+          - |
+            2
+        max: 16/1
+        start: import unittest
+      - name: The Oracle's Verdict
+        obj: Write a function is_palindrome(s) and a test suite with 4 test cases. Use the test-discovery runner pattern to run them and print the count of passed tests.
+        example:
+          in: []
+          out: |
+            4 tests passed
+        sol: |-
+          def is_palindrome(s):
+              return s == s[::-1]
+          def test_racecar():
+              assert is_palindrome("racecar")
+          def test_hello():
+              assert not is_palindrome("hello")
+          def test_empty():
+              assert is_palindrome("")
+          def test_single():
+              assert is_palindrome("a")
+          tests_run = 0
+          for name, func in list(globals().items()):
+              if name.startswith("test_") and callable(func):
+                  func()
+                  tests_run += 1
+          print(f"{tests_run} tests passed")
+        tests:
+          - |
+            4 tests passed
+        max: 12/1
+        start: ''
+  - name: Challenges
+    icon: challenge
+    levels:
+      - name: The Sieve of Comprehension
+        obj: Read n and use a nested list comprehension to find all Pythagorean triples (a,b,c) with 1 <= a <= b <= c <= n where a^2 + b^2 = c^2. Print the list.
+        example:
+          in:
+            - '20'
+          out: |
+            [(3, 4, 5), (5, 12, 13), (6, 8, 10), (8, 15, 17), (9, 12, 15), (12, 16, 20)]
+        sol: |-
+          n = int(input())
+          triples = [(a, b, c) for a in range(1, n + 1) for b in range(a, n + 1) for c in range(b, n + 1) if a * a + b * b == c * c]
+          print(triples)
+        tests:
+          - in: '20'
+            exp: |
+              [(3, 4, 5), (5, 12, 13), (6, 8, 10), (8, 15, 17), (9, 12, 15), (12, 16, 20)]
+          - in: '10'
+            exp: |
+              [(3, 4, 5), (6, 8, 10)]
+        max: 12/1
+        start: n = int(input())
+      - name: The Lambda's Crucible
+        obj: Read n students with names and two scores. Compute weighted average (40% first, 60% second). Use sorted() with a lambda to rank by average desc, name asc. Print names.
+        example:
+          in:
+            - '3'
+            - Alice 85 90
+            - Bob 70 95
+            - Charlie 60 80
+          out: |
+            ['Alice', 'Bob', 'Charlie']
+        sol: |-
+          n = int(input())
+          students = []
+          for _ in range(n):
+              parts = input().split()
+              name = parts[0]
+              s1, s2 = map(float, parts[1:])
+              avg = s1 * 0.4 + s2 * 0.6
+              students.append((name, avg))
+          result = sorted(students, key=lambda s: (-s[1], s[0]))
+          print([name for name, _ in result])
+        tests:
+          - in:
+              - '3'
+              - Alice 85 90
+              - Bob 70 95
+              - Charlie 60 80
+            exp: |
+              ['Alice', 'Bob', 'Charlie']
+          - in:
+              - '2'
+              - Zed 100 100
+              - Aaron 90 90
+            exp: |
+              ['Zed', 'Aaron']
+        max: 10/1
+        start: n = int(input())
+      - name: The Type Maze
+        obj: 'Define a generic function `interleave(a: List[int], b: List[str]) -> List` that interleaves two lists element by element. Use proper type hints. Read int list and string list, interleave, print.'
+        example:
+          in:
+            - 1 2 3
+            - a b c
+          out: |
+            [1, 'a', 2, 'b', 3, 'c']
+        sol: |-
+          from typing import List, Union
+          def interleave(a: List[int], b: List[str]) -> List:
+              result = []
+              for x, y in zip(a, b):
+                  result.append(x)
+                  result.append(y)
+              return result
+          a = list(map(int, input().split()))
+          b = input().split()
+          print(interleave(a, b))
+        tests:
+          - in:
+              - 1 2 3
+              - a b c
+            exp: |
+              [1, 'a', 2, 'b', 3, 'c']
+          - in:
+              - 10 20
+              - x y z
+            exp: |
+              [10, 'x', 20, 'y']
+        max: 10/1
+        start: |-
+          from typing import List, Union
+
+          a = list(map(int, input().split()))
+          b = input().split()
+      - name: The Generator's Gambit
+        obj: Define a generator that yields the Collatz sequence for a starting number. Read n, generate the sequence until reaching 1, and print as a list.
+        example:
+          in:
+            - '6'
+          out: |
+            [6, 3, 10, 5, 16, 8, 4, 2, 1]
+        sol: |-
+          def collatz(n):
+              yield n
+              while n != 1:
+                  n = n // 2 if n % 2 == 0 else 3 * n + 1
+                  yield n
+          n = int(input())
+          print(list(collatz(n)))
+        tests:
+          - in: '6'
+            exp: |
+              [6, 3, 10, 5, 16, 8, 4, 2, 1]
+          - in: '3'
+            exp: |
+              [3, 10, 5, 16, 8, 4, 2, 1]
+        max: 10/1
+        start: n = int(input())
+      - name: The Dataclass Dynasty
+        obj: 'Define a dataclass hierarchy: Item(name, price) and DiscountedItem(Item, discount) with a final_price property that applies the discount. Read input and print formatted result.'
+        example:
+          in:
+            - Laptop 1000 20
+          out: |
+            Item(name='Laptop', final_price=800.0)
+        sol: |-
+          from dataclasses import dataclass
+          @dataclass
+          class Item:
+              name: str
+              price: float
+          @dataclass
+          class DiscountedItem(Item):
+              discount: float = 0.0
+              @property
+              def final_price(self) -> float:
+                  return self.price * (1 - self.discount / 100)
+          name, price, disc = input().split()
+          item = DiscountedItem(name, float(price), float(disc))
+          print(f"Item(name='{item.name}', final_price={item.final_price})")
+        tests:
+          - in: Laptop 1000 20
+            exp: |
+              Item(name='Laptop', final_price=800.0)
+          - in: Book 50 10
+            exp: |
+              Item(name='Book', final_price=45.0)
+        max: 14/1
+        start: |-
+          from dataclasses import dataclass, property
+
+          name, price, disc = input().split()
+      - name: The Context Crucible
+        obj: Define a @contextmanager that duplicates all print output inside its block. Read a string and print it inside the context, producing two copies.
+        example:
+          in:
+            - Hello
+          out: |
+            Hello
+            Hello
+        sol: |-
+          from contextlib import contextmanager, redirect_stdout
+          from io import StringIO
+          @contextmanager
+          def duplicate():
+              buf = StringIO()
+              with redirect_stdout(buf):
+                  yield
+              lines = buf.getvalue().strip().split('\n')
+              for line in lines:
+                  print(line)
+                  print(line)
+          msg = input()
+          with duplicate():
+              print(msg)
+        tests:
+          - in: Hello
+            exp: |
+              Hello
+              Hello
+          - in: Python
+            exp: |
+              Python
+              Python
+        max: 12/1
+        start: |-
+          from contextlib import contextmanager, redirect_stdout
+          from io import StringIO
+
+          msg = input()
+      - name: The Test of Champions
+        obj: Write a function prime_factors(n) and a test suite with at least 5 test cases covering edge cases. Use the test-discovery runner pattern to print passed count.
+        example:
+          in: []
+          out: |
+            5 tests passed
+        sol: |-
+          def prime_factors(n):
+              i = 2
+              factors = []
+              while i * i <= n:
+                  while n % i == 0:
+                      factors.append(i)
+                      n //= i
+                  i += 1
+              if n > 1:
+                  factors.append(n)
+              return factors
+          def test_two():
+              assert prime_factors(2) == [2]
+          def test_composite():
+              assert prime_factors(12) == [2, 2, 3]
+          def test_large_prime():
+              assert prime_factors(17) == [17]
+          def test_one():
+              assert prime_factors(1) == []
+          def test_perfect_square():
+              assert prime_factors(36) == [2, 2, 3, 3]
+          tests_run = 0
+          for name, fn in list(globals().items()):
+              if name.startswith("test_") and callable(fn):
+                  fn()
+                  tests_run += 1
+          print(f"{tests_run} tests passed")
+        tests:
+          - exp: |
+              5 tests passed
+        max: 18/1
+        start: ''
+      - name: The Gauntlet of Shadows
+        obj: Read numbers. Use sorted() with a lambda on digit sum, filter odds with comprehension, map to binary with lambda. Print the list.
+        example:
+          in:
+            - 5 12 7 3 18
+          out: |
+            ['11', '101', '111']
+        sol: |-
+          def digit_sum(n):
+              return sum(int(d) for d in str(n))
+          nums = list(map(int, input().split()))
+          sorted_nums = sorted(nums, key=lambda n: digit_sum(n))
+          odds = [x for x in sorted_nums if x % 2 == 1]
+          result = list(map(lambda x: bin(x)[2:], odds))
+          print(result)
+        tests:
+          - in: 5 12 7 3 18
+            exp: |
+              ['11', '101', '111']
+          - in: 10 3 22 7 11
+            exp: |
+              ['1011', '11', '111']
+        max: 12/1
+        start: nums = list(map(int, input().split()))
+      - name: The Beyond Horizon
+        obj: 'Define a generic function `group_by(items: List, key: Callable) -> Dict` that groups items by a key function. Use Callable type hint. Read numbers, group by even/odd, print the dict.'
+        example:
+          in:
+            - 1 2 3 4 5 6
+          out: |
+            {0: [2, 4, 6], 1: [1, 3, 5]}
+        sol: |-
+          from typing import Callable, Dict, List
+          def group_by(items: List, key: Callable) -> Dict:
+              result = {}
+              for item in items:
+                  k = key(item)
+                  if k not in result:
+                      result[k] = []
+                  result[k].append(item)
+              return result
+          nums = list(map(int, input().split()))
+          result = group_by(nums, lambda x: x % 2)
+          print(result)
+        tests:
+          - in: 1 2 3 4 5 6
+            exp: |
+              {1: [1, 3, 5], 0: [2, 4, 6]}
+          - in: 10 15 20 25
+            exp: |
+              {0: [10, 20], 1: [15, 25]}
+        max: 14/1
+        start: |-
+          from typing import Callable, Dict, List
+
+          nums = list(map(int, input().split()))
+      - name: The Grand Beyond
+        obj: 'Evaluate a postfix expression with variables. Read n, then n lines of "var = value", then a postfix expression. Use a dict of lambdas and a stack. Operators: + - * / (integer division). Print the result.'
+        example:
+          in:
+            - '3'
+            - x = 5
+            - y = 10
+            - z = 2
+            - x y * z /
+          out: |
+            25
+        sol: |-
+          from typing import Callable, Dict, List
+          n = int(input())
+          vars = {}
+          for _ in range(n):
+              var, _, val = input().split()
+              vars[var] = int(val)
+          expr = input().split()
+          ops = {
+              '+': lambda a, b: a + b,
+              '-': lambda a, b: a - b,
+              '*': lambda a, b: a * b,
+              '/': lambda a, b: a // b,
+          }
+          stack: List[int] = []
+          for token in expr:
+              if token in ops:
+                  b = stack.pop()
+                  a = stack.pop()
+                  stack.append(ops[token](a, b))
+              elif token in vars:
+                  stack.append(vars[token])
+              else:
+                  stack.append(int(token))
+          print(stack[0])
+        tests:
+          - in:
+              - '3'
+              - x = 5
+              - y = 10
+              - z = 2
+              - x y * z /
+            exp: |
+              25
+          - in:
+              - '2'
+              - a = 7
+              - b = 3
+              - a b + 2 *
+            exp: |
+              20
+        max: 20/1
+        start: |-
+          from typing import Callable, Dict, List
+
+          n = int(input())
