@@ -78,18 +78,25 @@ function normalizeTest(t) {
   return out;
 }
 
+function norm(s) {
+  const lines = (s || "").replace(/\r\n/g, "\n").split("\n");
+  while (lines.length && lines[0] === "") lines.shift();
+  while (lines.length && lines[lines.length - 1] === "") lines.pop();
+  return lines.join("\n");
+}
+
 function checkOutput(actual, test) {
-  const clean = actual.replace(/\r\n/g, "\n");
-  const expected = test.expected !== undefined ? test.expected.replace(/\r\n/g, "\n") : undefined;
+  const clean = norm(actual);
 
   if (test.expectAnyOf) {
-    return test.expectAnyOf.some((e) => clean === e.replace(/\r\n/g, "\n"));
+    return test.expectAnyOf.some((e) => clean === norm(e));
   }
   if (test.expectMatch) {
-    return new RegExp(test.expectMatch, "s").test(clean);
+    const raw = (actual || "").replace(/\r\n/g, "\n");
+    return new RegExp(test.expectMatch, "s").test(raw);
   }
-  if (expected !== undefined) {
-    return clean === expected;
+  if (test.expected !== undefined) {
+    return clean === norm(test.expected);
   }
   return true;
 }

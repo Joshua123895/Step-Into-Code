@@ -1,7 +1,7 @@
 import { useRef, useEffect, useState, useCallback, useMemo } from "react";
 import { runPython } from "../utils/pythonRunner";
 import { runPythonReal } from "../utils/pythonRunnerReal";
-import { buildFileSetup, buildFileTeardown, parseFileCaptures, mergeFileStore } from "../utils/fileManager";
+import { mergeFileStore } from "../utils/fileManager";
 import { useTheme } from "../context/ThemeContext";
 import useCodeMirror, { makeDynamicEditorTheme } from "../editor/useCodeMirror";
 import FilePanel from "../editor/FilePanel";
@@ -44,7 +44,7 @@ export default function CodeEditorContainer({ code, setCode, language, files, fi
   const outputRef = useRef(null);
   const rawOutputRef = useRef("");
   const onFileUpdateRef = useRef(onFileUpdate);
-  const beforeSnapshotRef = useRef({});
+  const [beforeSnapshot, setBeforeSnapshot] = useState({});
 
   const { editorRef, viewRef } = useCodeMirror({ code, setCode, isDark: c.isDark, dynamicTheme });
 
@@ -80,7 +80,7 @@ export default function CodeEditorContainer({ code, setCode, language, files, fi
         const val = (fileStoreRef?.current || {})[name];
         if (val !== undefined) snap[name] = val;
       }
-      beforeSnapshotRef.current = snap;
+      setBeforeSnapshot(snap);
       const result = await runPythonReal(userCode, fileStoreRef?.current || {}, files.track || []);
       if (result.files && Object.keys(result.files).length > 0 && fileStoreRef) {
         fileStoreRef.current = mergeFileStore(fileStoreRef.current, null, result.files);
@@ -96,12 +96,10 @@ export default function CodeEditorContainer({ code, setCode, language, files, fi
         const val = (fileStoreRef?.current || {})[name];
         if (val !== undefined) snap[name] = val;
       }
-      beforeSnapshotRef.current = snap;
+      setBeforeSnapshot(snap);
       const onOutput = (text) => {
         rawOutputRef.current += text;
-        const lines = rawOutputRef.current.split("\n");
-        const display = lines.filter((l) => !l.startsWith("__FILE_SAVE__")).join("\n");
-        setOutput(display);
+        setOutput(rawOutputRef.current);
       };
 
       const onInput = (resolve) => {
@@ -109,19 +107,7 @@ export default function CodeEditorContainer({ code, setCode, language, files, fi
         setWaitingInput(true);
       };
 
-      const store = fileStoreRef?.current || {};
-      const setup = buildFileSetup(store);
-      const track = files?.track;
-      const teardown = track && track.length > 0 ? buildFileTeardown(track) : "";
-      const wrappedCode = setup + userCode + teardown;
-
-      await runPython(wrappedCode, onInput, onOutput);
-
-      const captures = parseFileCaptures(rawOutputRef.current);
-      if (Object.keys(captures).length > 0 && fileStoreRef) {
-        fileStoreRef.current = mergeFileStore(fileStoreRef.current, null, captures);
-        onFileUpdateRef.current?.();
-      }
+      await runPython(userCode, onInput, onOutput);
     }
 
     setRunning(false);
@@ -134,9 +120,7 @@ export default function CodeEditorContainer({ code, setCode, language, files, fi
       pendingResolve.current(inputBuffer);
       pendingResolve.current = null;
       rawOutputRef.current += inputBuffer + "\n";
-      const lines = rawOutputRef.current.split("\n");
-      const display = lines.filter((l) => !l.startsWith("__FILE_SAVE__")).join("\n");
-      setOutput(display);
+      setOutput(rawOutputRef.current);
       setInputBuffer("");
       setWaitingInput(false);
     }
@@ -181,7 +165,14 @@ export default function CodeEditorContainer({ code, setCode, language, files, fi
         <button
           onClick={handleRun}
           disabled={running}
-          className="text-xs px-3 py-1 rounded font-bold hover:brightness-110"
+          className="
+            text-xs px-3 py-1 rounded font-bold
+            bg-[#6AAE6F]
+            hover:brightness-110
+            active:brightness-90
+            active:scale-[0.98]
+            disabled:cursor-not-allowed
+          "
           style={{
             background: running ? c.runDisabledBg : "#6AAE6F",
             color: "#fff",
@@ -195,7 +186,7 @@ export default function CodeEditorContainer({ code, setCode, language, files, fi
         files={files}
         fileEntries={fileEntries}
         fileEntriesBefore={fileEntriesBefore}
-        beforeSnapshot={beforeSnapshotRef.current}
+        beforeSnapshot={beforeSnapshot}
         initialSnapshot={initialFileSnapshot}
         activeTab={activeTab}
         onTabChange={setActiveTab}

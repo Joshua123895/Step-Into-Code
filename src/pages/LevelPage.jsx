@@ -4,8 +4,9 @@ import { TRACKS, DIFFICULTY } from "../data/tracks";
 import { useProgress } from "../hooks/useProgress";
 import { runPythonWithIO } from "../utils/pythonRunner";
 import { runPythonReal } from "../utils/pythonRunnerReal";
-import { buildFileSetup, buildFileTeardown, mergeFileStore } from "../utils/fileManager";
+import { mergeFileStore } from "../utils/fileManager";
 import { validateStructure } from "../utils/structureValidator";
+import { ensurePyodide } from "../utils/pyodide";
 import CompletionModal from "../components/CompletionModal";
 import CodeEditorContainer from "../components/CodeEditorContainer";
 import ProgressBar from "../components/ProgressBar";
@@ -16,14 +17,32 @@ import completeSound from "../assets/sounds/complete.mp3";
 import collectSound from "../assets/sounds/collect.mp3";
 import wrongSound from "../assets/sounds/wrong.mp3";
 
-const FILE_CAPTURE_PREFIX = "__FILE_SAVE__";
-
-function stripFileCaptures(output) {
-  return output.replace(/\r\n/g, "\n").split("\n").filter((l) => !l.startsWith(FILE_CAPTURE_PREFIX)).join("\n");
-}
-
 export default function LevelPage() {
   const { trackName, chapterId, levelId } = useParams();
+
+  function norm(s) {
+    return (s || "").replace(/\r\n/g, "\n").split("\n").reduce((lines, l, i, arr) => {
+      if (lines.length === 0 && l === "") return lines;
+      if (i === arr.length - 1 && l === "") return lines;
+      lines.push(l);
+      return lines;
+    }, []).join("\n");
+  }
+
+  const DEV = import.meta.env.DEV;
+  function debugFail(label, info) { if (DEV) console.debug(`[validation] ${label}`, info); }
+  function diffStrings(a, b) {
+    if (!DEV) return null;
+    const na = (a || "").replace(/\r\n/g, "\n"), nb = (b || "").replace(/\r\n/g, "\n");
+    if (na === nb) return null;
+    const la = na.split("\n"), lb = nb.split("\n");
+    const diffs = [];
+    const max = Math.max(la.length, lb.length);
+    for (let i = 0; i < max; i++) {
+      if (la[i] !== lb[i]) diffs.push({ line: i + 1, expected: JSON.stringify(la[i] ?? "(missing)"), actual: JSON.stringify(lb[i] ?? "(missing)") });
+    }
+    return diffs.length ? diffs : { expectedLen: na.length, actualLen: nb.length, expectedBytes: [...na].map(c => c.charCodeAt(0)), actualBytes: [...nb].map(c => c.charCodeAt(0)) };
+  }
 
   const audioContextRef = useRef(null);
   const completeBufferRef = useRef(null);
@@ -80,10 +99,6 @@ export default function LevelPage() {
     return result;
   }
 
-  useEffect(() => {
-    runPythonWithIO("print(1)", []);
-  }, []);
-
   const navigate = useNavigate();
   const { getLevelStatus, getStars, completeLevel, getTotalStars } = useProgress();
 
@@ -129,13 +144,6 @@ export default function LevelPage() {
     setFileEntries({ ...fileStore.current });
   }
 
-  function wrapCodeWithFiles(rawCode) {
-    const setup = buildFileSetup(fileStore.current);
-    const track = level?.files?.track;
-    const teardown = track && track.length > 0 ? buildFileTeardown(track) : "";
-    return setup + rawCode + teardown;
-  }
-
   async function runWithFiles(rawCode, inputs) {
     if (level?.files) {
       const result = await cachedRunPythonReal(rawCode, fileStore.current, level.files.track || [], inputs || []);
@@ -145,16 +153,14 @@ export default function LevelPage() {
       }
       return result.stdout || "";
     }
-    const wrapped = wrapCodeWithFiles(rawCode);
-    return runPythonWithIO(wrapped, inputs);
+    return runPythonWithIO(rawCode, inputs);
   }
 
   async function runCodeFrom(rawCode, initialFiles, inputs) {
     if (level?.files) {
       return await cachedRunPythonReal(rawCode, initialFiles, level.files.track || [], inputs || []);
     }
-    const wrapped = wrapCodeWithFiles(rawCode);
-    const stdout = await runPythonWithIO(wrapped, inputs);
+    const stdout = await runPythonWithIO(rawCode, inputs);
     return { stdout, files: {} };
   }
 
@@ -173,13 +179,14 @@ export default function LevelPage() {
     setTestFailure(null);
     setTesting(true);
 
+    await ensurePyodide().then((p) => p.runPythonAsync("print(1)"));
+
     const tracked = level?.files?.track || [];
     const snapshot = {};
     for (const name of tracked) {
       snapshot[name] = fileStore.current[name];
     }
     setFileEntriesBefore(snapshot);
-    await runPythonReal("print(1)", {}, [], []);
 
     const startTime = performance.now();
 
@@ -199,15 +206,16 @@ export default function LevelPage() {
         for (const test of level.tests) {
           const inputs = test.input ? (Array.isArray(test.input) ? test.input : [test.input]) : [];
           const output = await runWithFiles(code, inputs);
-          const clean = stripFileCaptures(output);
+          const clean = norm(output);
           const match = test.expectAnyOf
             ? test.expectAnyOf.includes(clean)
             : test.expectMatch
-            ? new RegExp(test.expectMatch).test(clean)
-            : clean === test.expected;
+            ? new RegExp(test.expectMatch).test(output.replace(/\r\n/g, "\n"))
+            : clean === norm(test.expected);
         if (!match) {
+          debugFail("test mismatch", { level: level.name, inputs, matchMode: test.expectAnyOf ? "anyOf" : test.expectMatch ? "regex" : "exact", expected: norm(test.expected) ?? test.expectAnyOf, actual: clean, raw: output, diff: diffStrings(norm(test.expected) ?? "", clean) });
           playWrongSound();
-          setTestFailure({ input: test.input, expected: test.expected ?? test.expectAnyOf, actual: clean });
+          setTestFailure({ input: test.input, expected: test.expected ?? test.expectAnyOf, actual: norm(clean) });
           setTesting(false);
           return;
         }
@@ -236,7 +244,7 @@ export default function LevelPage() {
 
         execTime = (performance.now() - startTime) / 1000;
 
-        if (stripFileCaptures(actualOutput) === expectedOutput) {
+        if (norm(actualOutput) === norm(expectedOutput)) {
           let stars = 1;
           if (lineCount <= maxLines) stars++;
           if (execTime <= maxTime) stars++;
@@ -246,8 +254,9 @@ export default function LevelPage() {
           setResultInfo({ lineCount, maxLines, execTime, maxTime });
           setShowModal(true);
         } else {
+          debugFail("print mismatch", { level: level.name, rawActual: actualOutput, rawExpected: expectedOutput, diff: diffStrings(norm(expectedOutput), norm(actualOutput)) });
           playWrongSound();
-          setTestFailure({ input: "", expected: expectedOutput, actual: stripFileCaptures(actualOutput) });
+          setTestFailure({ input: "", expected: norm(expectedOutput), actual: norm(actualOutput) });
         }
         setTesting(false);
         return;
@@ -266,7 +275,7 @@ export default function LevelPage() {
 
         execTime = (performance.now() - startTime) / 1000;
 
-        if (stripFileCaptures(actualOutput) === stripFileCaptures(expectedOutput)) {
+        if (norm(actualOutput) === norm(expectedOutput)) {
           let stars = 1;
           if (lineCount <= maxLines) stars++;
           if (execTime <= maxTime) stars++;
@@ -276,8 +285,9 @@ export default function LevelPage() {
           setResultInfo({ lineCount, maxLines, execTime, maxTime });
           setShowModal(true);
         } else {
+          debugFail("var mismatch", { level: level.name, varName, rawActual: actualOutput, rawExpected: expectedOutput, diff: diffStrings(norm(expectedOutput), norm(actualOutput)) });
           playWrongSound();
-          setTestFailure({ input: inputDisplay, expected: stripFileCaptures(expectedOutput), actual: stripFileCaptures(actualOutput) });
+          setTestFailure({ input: inputDisplay, expected: norm(expectedOutput), actual: norm(actualOutput) });
         }
         setTesting(false);
         return;
@@ -323,6 +333,7 @@ export default function LevelPage() {
           setResultInfo({ lineCount, maxLines, execTime, maxTime });
           setShowModal(true);
         } else {
+          debugFail("file mismatch", { level: level.name, fileName: mismatchInfo.fileName, expected: mismatchInfo.expected, actual: mismatchInfo.actual, diff: diffStrings(mismatchInfo.expected, mismatchInfo.actual) });
           playWrongSound();
           setTestFailure({
             input: "",
@@ -342,13 +353,14 @@ export default function LevelPage() {
 
       execTime = (performance.now() - startTime) / 1000;
 
-      const strippedActual = stripFileCaptures(actualOutput);
-      const strippedExpected = stripFileCaptures(expectedOutput);
+      const strippedActual = norm(actualOutput);
+      const strippedExpected = norm(expectedOutput);
 
       if (strippedActual === strippedExpected) {
         if (strippedActual === "" && strippedExpected === "" && level.sourceChecks) {
           const result = await validateStructure(code, level.sourceChecks);
           if (!result.valid) {
+            debugFail("source check failed", { level: level.name, sourceChecks: level.sourceChecks, error: result.error });
             playWrongSound();
             setTestFailure({ input: "", expected: "", actual: result.error });
             setTesting(false);
@@ -364,6 +376,7 @@ export default function LevelPage() {
         setResultInfo({ lineCount, maxLines, execTime, maxTime });
         setShowModal(true);
       } else {
+        debugFail("output mismatch", { level: level.name, rawActual: actualOutput, rawExpected: expectedOutput, diff: diffStrings(strippedExpected, strippedActual) });
         playWrongSound();
         setTestFailure({ input: "", expected: strippedExpected, actual: strippedActual });
       }

@@ -822,8 +822,6 @@ chapters:
             Working
             End
         max: 8/1
-        files:
-          track: []
         start: |-
           from contextlib import contextmanager
 
@@ -910,8 +908,6 @@ chapters:
           - |
             Captured!
         max: 7/1
-        files:
-          track: []
         start: |-
           from contextlib import redirect_stdout
           from io import StringIO
@@ -935,8 +931,6 @@ chapters:
           print("Done")
         tests: []
         max: 9/1
-        files:
-          track: []
         start: |-
           from contextlib import contextmanager
           import time
@@ -971,8 +965,6 @@ chapters:
               Hello, Bob
               Welcome, Bob
         max: 14/1
-        files:
-          track: []
         start: |-
           from contextlib import ExitStack, redirect_stdout
           from io import StringIO
@@ -1005,8 +997,6 @@ chapters:
             exp: |
               HELLO BOB
         max: 10/1
-        files:
-          track: []
         start: |-
           from contextlib import contextmanager, redirect_stdout
           from io import StringIO
@@ -1221,6 +1211,204 @@ chapters:
             4 tests passed
         max: 12/1
         start: ''
+  - name: Dataclasses
+    icon: object
+    levels:
+      - name: Basic Dataclass
+        obj: 'Import `dataclass` from `dataclasses` and define `class Point:` with fields `x: int` and `y: int`. Create `Point(3, 4)` and print it.'
+        hint: 'Add `@dataclass` decorator above the class definition.'
+        expl: 'A dataclass auto-generates `__init__`, `__repr__`, `__eq__`, and other methods based on the annotated fields.'
+        sol: |-
+          from dataclasses import dataclass
+          @dataclass
+          class Point:
+              x: int
+              y: int
+          p = Point(3, 4)
+          print(p)
+        tests:
+          - |
+            Point(x=3, y=4)
+        max: 6/1
+      - name: Default Values
+        obj: 'Define `@dataclass class Item:` with fields `name: str = "unknown"` and `price: float = 0.0`. Create one default and one custom.'
+        hint: Assign default values directly in the field annotations.
+        expl: 'Dataclass fields can have default values, just like regular function parameters. Fields without defaults must come first.'
+        sol: |-
+          from dataclasses import dataclass
+          @dataclass
+          class Item:
+              name: str = "unknown"
+              price: float = 0.0
+          print(Item())
+          print(Item("Apple", 1.5))
+        tests:
+          - |
+            Item(name='unknown', price=0.0)
+            Item(name='Apple', price=1.5)
+        max: 7/1
+      - name: Immutable Dataclass
+        obj: 'Define `@dataclass(frozen=True) class Point:` with `x: int` and `y: int`. Create `Point(1, 2)` and print it.'
+        hint: 'Set `frozen=True` in the decorator.'
+        expl: 'A frozen dataclass is immutable — fields cannot be modified after creation, similar to a named tuple.'
+        sol: |-
+          from dataclasses import dataclass
+          @dataclass(frozen=True)
+          class Point:
+              x: int
+              y: int
+          print(Point(1, 2))
+        tests:
+          - |
+            Point(x=1, y=2)
+        max: 5/1
+      - name: Field with Default Factory
+        obj: 'Define `@dataclass class Student:` with `name: str` and `grades: list[int] = field(default_factory=list)` that uses `field()` from `dataclasses`.'
+        hint: 'Use `default_factory=list` to avoid mutable default argument issues.'
+        expl: '`field(default_factory=list)` creates a new empty list for each instance, avoiding the shared mutable default problem.'
+        sol: |-
+          from dataclasses import dataclass, field
+          @dataclass
+          class Student:
+              name: str
+              grades: list[int] = field(default_factory=list)
+          s = Student("Alice")
+          s.grades.append(95)
+          s.grades.append(87)
+          print(s)
+        tests:
+          - |
+            Student(name='Alice', grades=[95, 87])
+        max: 7/1
+      - name: Dataclass Methods
+        obj: 'Add a method `def area(self) -> float:` to `Rectangle` that returns `self.width * self.height`.'
+        hint: Define methods inside a dataclass just like a regular class.
+        expl: Dataclasses are regular classes with auto-generated boilerplate. You can add any methods you like.
+        sol: |-
+          from dataclasses import dataclass
+          @dataclass
+          class Rectangle:
+              width: float
+              height: float
+              def area(self) -> float:
+                  return self.width * self.height
+          r = Rectangle(5.0, 3.0)
+          print(r.area())
+        tests:
+          - |
+            15.0
+        max: 7/1
+      - name: Inheritance in Dataclasses
+        obj: 'Define `@dataclass class Animal:` with `name: str`, then `@dataclass class Dog(Animal):` with `breed: str`. Print `Dog("Rex", "Husky")`.'
+        hint: Child dataclasses inherit parent fields and add their own.
+        expl: 'Dataclasses support inheritance. The child class includes all parent fields plus its own, in order.'
+        sol: |-
+          from dataclasses import dataclass
+          @dataclass
+          class Animal:
+              name: str
+          @dataclass
+          class Dog(Animal):
+              breed: str
+          print(Dog("Rex", "Husky"))
+        tests:
+          - |
+            Dog(name='Rex', breed='Husky')
+        max: 7/1
+      - name: Post-Init Processing
+        obj: 'Add `__post_init__` to `Rectangle` that swaps width and height if width < height, so width is always larger.'
+        hint: '`__post_init__` runs after the generated `__init__`.'
+        expl: '`__post_init__` is called automatically after `__init__`. Use it for validation, normalization, or derived fields.'
+        sol: |-
+          from dataclasses import dataclass
+          @dataclass
+          class Rectangle:
+              width: float
+              height: float
+              def __post_init__(self):
+                  if self.width < self.height:
+                      self.width, self.height = self.height, self.width
+          r = Rectangle(3.0, 5.0)
+          print(r)
+        tests:
+          - |
+            Rectangle(width=5.0, height=3.0)
+        max: 8/1
+      - name: Dataclass with Property
+        obj: 'Add a `@property` called `hypotenuse` to `Triangle` (fields `a` and `b`) that returns `sqrt(a**2 + b**2)`.'
+        hint: 'Import `math.sqrt` and use the `@property` decorator.'
+        expl: Properties allow method calls to be accessed as attributes. They work seamlessly within dataclasses.
+        sol: |-
+          from dataclasses import dataclass
+          from math import sqrt
+          @dataclass
+          class Triangle:
+              a: float
+              b: float
+              @property
+              def hypotenuse(self) -> float:
+                  return sqrt(self.a ** 2 + self.b ** 2)
+          t = Triangle(3.0, 4.0)
+          print(t.hypotenuse)
+        tests:
+          - |
+            5.0
+        max: 8/1
+      - name: Dataclass asdict
+        obj: 'Use `asdict` from `dataclasses` to convert a dataclass to a dict. Define `@dataclass class Person:` with `name: str` and `age: int`, create `Person("Alice", 30)`, and print `asdict(p)`.'
+        hint: '`from dataclasses import dataclass, asdict` — call `asdict(person)` to get a dictionary.'
+        expl: '`asdict` recursively converts a dataclass into a plain dictionary. Useful for serialization.'
+        sol: |-
+          from dataclasses import dataclass, asdict
+          @dataclass
+          class Person:
+              name: str
+              age: int
+          p = Person("Alice", 30)
+          print(asdict(p))
+        tests:
+          - |
+            {'name': 'Alice', 'age': 30}
+        max: 8/1
+      - name: Dataclass Puzzle
+        obj: 'Given a name and a line of grades (count followed by values), create a Student dataclass that computes average and pass/fail status in `__post_init__`.'
+        hint: 'Parse the count first, then read that many grades.'
+        expl: 'Combine `__post_init__`, `field(default_factory=list)`, and input parsing into a single dataclass solution.'
+        example:
+          in:
+            - Jack
+            - 5 80 90 70 85 95
+          out: |
+            Student(name='Jack', grades=[80, 90, 70, 85, 95], average=84.0, status='Passed')
+        sol: |-
+          from dataclasses import dataclass, field
+          @dataclass
+          class Student:
+              name: str
+              grades: list[int] = field(default_factory=list)
+              average: float = 0.0
+              status: str = ""
+              def __post_init__(self):
+                  self.average = sum(self.grades) / len(self.grades) if self.grades else 0.0
+                  self.status = "Passed" if self.average >= 60 else "Failed"
+          name = input()
+          parts = [int(x) for x in input().split()]
+          count = parts[0]
+          grades = parts[1:1+count]
+          s = Student(name=name, grades=grades)
+          print(s)
+        tests:
+          - in:
+              - Jack
+              - 5 80 90 70 85 95
+            exp: |
+              Student(name='Jack', grades=[80, 90, 70, 85, 95], average=84.0, status='Passed')
+          - in:
+              - Eve
+              - 4 45 50 55 40
+            exp: |
+              Student(name='Eve', grades=[45, 50, 55, 40], average=47.5, status='Failed')
+        max: 10/1
   - name: Challenges
     icon: challenge
     levels:

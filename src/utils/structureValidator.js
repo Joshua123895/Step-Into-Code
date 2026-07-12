@@ -1,64 +1,56 @@
-async function ensureSkulptLoaded() {
-  if (window.Sk && window.Sk.parse) return;
-  await import("skulpt/dist/skulpt.min.js");
-  await import("skulpt/dist/skulpt-stdlib.js");
-}
+import { ensurePyodide } from "./pyodide";
 
 export async function validateStructure(code, sourceChecks) {
   if (!sourceChecks) return { valid: true };
 
-  await ensureSkulptLoaded();
-
-  const sk = window.Sk;
-  if (!sk || !sk.parse) return { valid: true };
+  const pyodide = await ensurePyodide();
 
   try {
-    const parsed = sk.parse("<stdin>", code);
-    const ast = sk.astFromParse(parsed.cst, "<stdin>", parsed.flags);
+    pyodide.globals.set("__check_code__", code);
+    const raw = pyodide.runPython(`
+import ast, json
 
-    const classNames = [];
-    const functionNames = [];
-    const classMethods = {};
-    const inheritance = {};
+tree = ast.parse(__check_code__)
 
-    function walk(node, currentClass = null) {
-      if (!node || typeof node !== "object") return;
+classes = []
+functions = []
+class_methods = {}
+inheritance = {}
 
-      if (node.constructor === sk.astnodes.ClassDef) {
-        const className = node.name.v;
-        classNames.push(className);
-        const bases = (node.bases || [])
-          .map((b) => {
-            if (b.constructor === sk.astnodes.Name) return b.id.v;
-            if (b.constructor === sk.astnodes.Attribute) return b.attr.v;
-            return null;
-          })
-          .filter(Boolean);
-        if (bases.length > 0) inheritance[className] = bases;
-        if (Array.isArray(node.body)) {
-          for (const stmt of node.body) walk(stmt, className);
-        }
-        return;
-      } else if (node.constructor === sk.astnodes.FunctionDef) {
-        const fnName = node.name.v;
-        if (currentClass) {
-          if (!classMethods[currentClass]) classMethods[currentClass] = [];
-          classMethods[currentClass].push(fnName);
-        } else {
-          functionNames.push(fnName);
-        }
-      }
+for node in ast.walk(tree):
+    if isinstance(node, ast.ClassDef):
+        classes.append(node.name)
+        bases = []
+        for base in node.bases:
+            if isinstance(base, ast.Name):
+                bases.append(base.id)
+            elif isinstance(base, ast.Attribute):
+                bases.append(base.attr)
+        if bases:
+            inheritance[node.name] = bases
+        for item in node.body:
+            if isinstance(item, ast.FunctionDef):
+                if node.name not in class_methods:
+                    class_methods[node.name] = []
+                class_methods[node.name].append(item.name)
 
-      if (Array.isArray(node.body)) {
-        for (const stmt of node.body) walk(stmt, currentClass);
-      }
-    }
+for node in tree.body:
+    if isinstance(node, ast.FunctionDef):
+        functions.append(node.name)
 
-    walk(ast);
+json.dumps({
+    "classes": classes,
+    "functions": functions,
+    "classMethods": class_methods,
+    "inheritance": inheritance
+})
+`);
+
+    const result = JSON.parse(raw);
 
     if (sourceChecks.classes) {
       for (const required of sourceChecks.classes) {
-        if (!classNames.includes(required)) {
+        if (!result.classes.includes(required)) {
           return { valid: false, error: `Class "${required}" not found in your code.` };
         }
       }
@@ -66,7 +58,7 @@ export async function validateStructure(code, sourceChecks) {
 
     if (sourceChecks.functions) {
       for (const required of sourceChecks.functions) {
-        if (!functionNames.includes(required)) {
+        if (!result.functions.includes(required)) {
           return { valid: false, error: `Function "${required}" not found in your code.` };
         }
       }
@@ -74,7 +66,7 @@ export async function validateStructure(code, sourceChecks) {
 
     if (sourceChecks.inheritance) {
       for (const [child, parent] of Object.entries(sourceChecks.inheritance)) {
-        const bases = inheritance[child];
+        const bases = result.inheritance[child];
         if (!bases || !bases.includes(parent)) {
           return { valid: false, error: `Class "${child}" does not inherit from "${parent}".` };
         }
@@ -83,7 +75,7 @@ export async function validateStructure(code, sourceChecks) {
 
     if (sourceChecks.methods) {
       for (const [className, methods] of Object.entries(sourceChecks.methods)) {
-        const existingMethods = classMethods[className] || [];
+        const existingMethods = result.classMethods[className] || [];
         for (const method of methods) {
           if (!existingMethods.includes(method)) {
             return { valid: false, error: `Method "${method}" not found in class "${className}".` };
