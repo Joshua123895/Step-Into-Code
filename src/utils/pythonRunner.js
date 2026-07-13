@@ -6,8 +6,8 @@ export async function runPythonWithIO(code, inputs = []) {
   let stdout = "";
   let inputIndex = 0;
 
-  pyodide.setStdout({ batched: (text) => { stdout += text; } });
-  pyodide.setStderr({ batched: (text) => { stdout += text; } });
+  pyodide.setStdout({ write: (buf) => { stdout += new TextDecoder().decode(buf); return buf.length; }, isatty: true });
+  pyodide.setStderr({ write: (buf) => { stdout += new TextDecoder().decode(buf); return buf.length; }, isatty: true });
   pyodide.setStdin({
     stdin: () => {
       if (inputIndex < inputs.length) {
@@ -81,8 +81,8 @@ export async function runPython(code, onInput, onOutput) {
 
     let stdout = "";
 
-    pyodide.setStdout({ batched: (text) => { stdout += text; if (onOutput) onOutput(text); } });
-    pyodide.setStderr({ batched: (text) => { stdout += text; if (onOutput) onOutput(text); } });
+    pyodide.setStdout({ write: (buf) => { const text = new TextDecoder().decode(buf); stdout += text; if (onOutput) onOutput(text); return buf.length; }, isatty: true });
+    pyodide.setStderr({ write: (buf) => { const text = new TextDecoder().decode(buf); stdout += text; if (onOutput) onOutput(text); return buf.length; }, isatty: true });
     pyodide.setStdin({
       stdin: () => "",
     });

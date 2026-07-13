@@ -1,0 +1,16 @@
+<svg width="128" height="128" viewBox="0 0 128 128" fill="none" xmlns="http://www.w3.org/2000/svg">
+<rect x="1" y="1" width="126" height="126" rx="19" fill="currentColor" fill-opacity="0.5" fill="currentColor" stroke-width="2"/>
+<circle cx="28" cy="39" r="11" fill="currentColor" fill-opacity="0.5" fill="currentColor" stroke-width="2"/>
+<circle cx="68" cy="57" r="11" fill="currentColor" fill-opacity="0.5" fill="currentColor" stroke-width="2"/>
+<circle cx="35" cy="81" r="11" fill="currentColor" fill-opacity="0.5" fill="currentColor" stroke-width="2"/>
+<circle cx="80" cy="100" r="11" fill="currentColor" fill-opacity="0.5" fill="currentColor" stroke-width="2"/>
+<circle cx="98" cy="33" r="11" fill="currentColor" fill-opacity="0.5" fill="currentColor" stroke-width="2"/>
+<path d="M39 43L58 51" fill="currentColor" stroke-width="2" stroke-linecap="round"/>
+<path d="M44 74L59 64" fill="currentColor" stroke-width="2" stroke-linecap="round"/>
+<path d="M70 68L77 89" fill="currentColor" stroke-width="2" stroke-linecap="round"/>
+<path d="M39 36L86 31" fill="currentColor" stroke-opacity="0.5" stroke-width="2" stroke-linecap="round"/>
+<path d="M76 49L89 40" fill="currentColor" stroke-width="2" stroke-linecap="round"/>
+<path d="M98 45L83 89" fill="currentColor" stroke-opacity="0.5" stroke-width="2" stroke-linecap="round"/>
+<path d="M45 86L69 97" fill="currentColor" stroke-width="2" stroke-linecap="round"/>
+<path d="M34 70L29 50" fill="currentColor" stroke-opacity="0.5" stroke-width="2" stroke-linecap="round"/>
+</svg>

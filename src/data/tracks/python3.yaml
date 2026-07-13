@@ -1,0 +1,1771 @@
+name: Object-Oriented Programming
+slug: oop
+icon: oop
+desc: Master OOP in Python from defining your first class to metaclasses and design patterns.
+difficulty: 2
+chapters:
+  - name: Classes & Objects
+    icon: object
+    levels:
+      - name: Define a Class
+        obj: 'Define an empty `class Dog:` with `pass` inside.'
+        hint: 'Write `class Dog:` on one line, then `pass` indented on the next line.'
+        expl: |-
+          A class is a blueprint for creating objects. The `class` keyword creates a new type. `pass` is a placeholder that does nothing — it fills the body so Python doesn't complain about an empty class.
+        sol: |-
+          class Dog:
+              pass
+        start: ''
+        tests: []
+        max: 3/1
+      - name: Create an Instance
+        obj: 'Define `class Dog: pass`, then create `dog = Dog()`.'
+        hint: 'Write `dog = Dog()` to create an instance by calling the class like a function.'
+        expl: |-
+          Calling a class `Dog()` creates a new instance (object) of that class. The variable `dog` now holds that instance. You can create as many independent instances as you want.
+        sol: |-
+          class Dog:
+              pass
+          dog = Dog()
+        start: ''
+        tests: []
+        max: 4/1
+      - name: The Constructor
+        obj: 'Add `def __init__(self):` to `Dog` that prints `"A dog is born!"`.'
+        hint: '`def __init__(self): print("A dog is born!")` — `__init__` runs automatically on creation.'
+        expl: |-
+          `__init__` is the constructor method. Python calls it automatically right after creating a new instance. `self` is the newly created instance itself. Code inside `__init__` runs once per object at creation time.
+        sol: |-
+          class Dog:
+              def __init__(self):
+                  print("A dog is born!")
+          Dog()
+        start: ''
+        tests:
+          - |
+            A dog is born!
+        max: 5/1
+      - name: Instance Attributes
+        obj: 'Add `def __init__(self, name):` and store `self.name = name`. Create `Dog("Rex")`.'
+        hint: '`self.name = name` inside `__init__` saves the parameter as an instance attribute.'
+        expl: |-
+          Parameters passed to `Dog("Rex")` go into `__init__`. Assigning `self.name = name` stores the value on the instance, making it accessible later via `dog.name`. Each instance has its own copy.
+        sol: |-
+          class Dog:
+              def __init__(self, name):
+                  self.name = name
+          dog = Dog("Rex")
+        start: ''
+        tests: []
+        max: 5/1
+      - name: Use an Attribute
+        obj: 'Create `Dog("Rex")` and `print(dog.name)`.'
+        hint: '`dog.name` accesses the attribute stored by `__init__`.'
+        expl: |-
+          After `self.name = name` stores the value, you read it back with `dog.name`. The dot operator (`.`) accesses attributes on an object. Every instance of Dog has its own `name`.
+        sol: |-
+          class Dog:
+              def __init__(self, name):
+                  self.name = name
+          dog = Dog("Rex")
+          print(dog.name)
+        start: |-
+          class Dog:
+              def __init__(self, name):
+                  self.name = name
+        tests:
+          - |
+            Rex
+        max: 6/1
+      - name: Instance Methods
+        obj: 'Add `def bark(self):` that prints `"Woof!"`. Create `Dog("Rex")` and call `dog.bark()`.'
+        hint: '`def bark(self): print("Woof!")` — methods always take `self` as the first parameter.'
+        expl: |-
+          Methods are functions defined inside a class. They always take `self` as the first parameter, which refers to the instance calling the method. Call them with `instance.method()` — Python automatically passes `self`.
+        sol: |-
+          class Dog:
+              def __init__(self, name):
+                  self.name = name
+              def bark(self):
+                  print("Woof!")
+          dog = Dog("Rex")
+          dog.bark()
+        start: ''
+        tests:
+          - |
+            Woof!
+        max: 7/1
+      - name: Methods with Parameters
+        obj: 'Add `def greet(self, other):` that prints `f"{self.name} says hi to {other}"`. Test with `dog.greet("Buddy")`.'
+        hint: '`def greet(self, other): print(f"{self.name} says hi to {other}")`'
+        expl: |-
+          Methods can take extra parameters after `self`. Here `other` is a plain string argument. Inside the method, `self.name` accesses the calling instance's attribute while `other` is the argument passed.
+        sol: |-
+          class Dog:
+              def __init__(self, name):
+                  self.name = name
+              def greet(self, other):
+                  print(f"{self.name} says hi to {other}")
+          dog = Dog("Rex")
+          dog.greet("Buddy")
+        start: ''
+        tests:
+          - |
+            Rex says hi to Buddy
+        max: 8/1
+      - name: Method Return Values
+        obj: 'Define `class Circle:` with `__init__(self, radius)` and `def area(self) -> float:` returning `3.14 * self.radius ** 2`. Print the area.'
+        hint: '`return 3.14159 * self.radius ** 2` — use `return` to give a value back to the caller.'
+        expl: |-
+          Methods can return values using `return`. The caller receives the returned value. Here `area()` computes and returns the circle's area. `print(circle.area())` prints the returned number.
+        sol: |-
+          class Circle:
+              def __init__(self, radius):
+                  self.radius = radius
+              def area(self):
+                  return 3.14159 * self.radius ** 2
+          c = Circle(5)
+          print(c.area())
+        start: ''
+        tests:
+          - |
+            78.53975
+        max: 7/1
+      - name: Multiple Attributes
+        obj: 'Define `class Book:` with `__init__(self, title, author, pages)`. Store all three. Create `Book("1984", "Orwell", 328)` and print its attributes.'
+        hint: 'Store each parameter with `self.title = title`, `self.author = author`, `self.pages = pages`.'
+        expl: |-
+          A class can store any number of attributes. Here we store three: title, author, and pages. Each attribute is independent and accessed with dot notation: `book.title`, `book.author`, `book.pages`.
+        sol: |-
+          class Book:
+              def __init__(self, title, author, pages):
+                  self.title = title
+                  self.author = author
+                  self.pages = pages
+          b = Book("1984", "Orwell", 328)
+          print(b.title, b.author, b.pages)
+        start: ''
+        tests:
+          - |
+            1984 Orwell 328
+        max: 7/1
+      - name: 'Test: BankAccount'
+        obj: 'Define `class BankAccount:` with `__init__(self, owner, balance=0)`, `deposit(self, amount)`, `withdraw(self, amount)`, and `__str__` returning `f"{self.owner}: ${self.balance}"`. Create an account, deposit 100, withdraw 30, print the account.'
+        example:
+          in: []
+          out: |
+            Alice: $70
+        sol: |-
+          class BankAccount:
+              def __init__(self, owner, balance=0):
+                  self.owner = owner
+                  self.balance = balance
+              def deposit(self, amount):
+                  self.balance += amount
+              def withdraw(self, amount):
+                  self.balance -= amount
+              def __str__(self):
+                  return f"{self.owner}: ${self.balance}"
+          acc = BankAccount("Alice")
+          acc.deposit(100)
+          acc.withdraw(30)
+          print(acc)
+        tests:
+          - |
+            Alice: $70
+        max: 12/1
+        start: ''
+  - name: Class Mechanics
+    icon: variable
+    levels:
+      - name: Class Variables
+        obj: 'Add `species = "Canine"` as a class variable in `Dog`. Print `Dog.species` and also access it via an instance.'
+        hint: 'Define `species = "Canine"` directly inside the class, outside any method. Access with `Dog.species` or `self.species`.'
+        expl: |-
+          A class variable is defined directly in the class body, not inside a method. It is shared across all instances. Access it via `ClassName.variable` or `instance.variable`. Changing it via the class affects all instances.
+        sol: |-
+          class Dog:
+              species = "Canine"
+              def __init__(self, name):
+                  self.name = name
+          print(Dog.species)
+          d = Dog("Rex")
+          print(d.species)
+        start: ''
+        tests:
+          - |
+            Canine
+            Canine
+        max: 7/1
+      - name: Class Methods
+        obj: 'Add `@classmethod def description(cls):` that returns `"I am a Dog"`. Call `Dog.description()`.'
+        hint: '`@classmethod` decorator makes the method receive the class (`cls`) instead of the instance (`self`).'
+        expl: |-
+          A class method receives the class itself as the first argument (`cls`), not an instance. Use `@classmethod` above the method. Call it on the class directly: `Dog.description()`. Class methods are often used as alternative constructors.
+        sol: |-
+          class Dog:
+              @classmethod
+              def description(cls):
+                  return "I am a Dog"
+          print(Dog.description())
+        start: ''
+        tests:
+          - |
+            I am a Dog
+        max: 5/1
+      - name: Static Methods
+        obj: 'Add `@staticmethod def info():` that returns `"Dogs are loyal"`. Call `Dog.info()`.'
+        hint: '`@staticmethod` creates a method that takes neither `self` nor `cls` — it is just a function in the class namespace.'
+        expl: |-
+          A static method is a regular function placed inside a class for organizational purposes. Use `@staticmethod` and omit `self`/`cls`. Call it on the class: `Dog.info()`. It cannot access class or instance data.
+        sol: |-
+          class Dog:
+              @staticmethod
+              def info():
+                  return "Dogs are loyal"
+          print(Dog.info())
+        start: ''
+        tests:
+          - |
+            Dogs are loyal
+        max: 5/1
+      - name: Property Getter
+        obj: 'Define `class Circle:` with `radius` and a `@property` called `diameter` that returns `radius * 2`. Print `c.diameter`.'
+        hint: '`@property def diameter(self): return self.radius * 2` — access it without parentheses: `c.diameter`.'
+        expl: |-
+          `@property` turns a method into a read-only computed attribute. You access it without parentheses: `c.diameter` not `c.diameter()`. The value is computed on-the-fly — change `radius` and `diameter` changes too.
+        sol: |-
+          class Circle:
+              def __init__(self, radius):
+                  self.radius = radius
+              @property
+              def diameter(self):
+                  return self.radius * 2
+          c = Circle(5)
+          print(c.diameter)
+        start: ''
+        tests:
+          - |
+            10
+        max: 7/1
+      - name: Property Setter
+        obj: 'Add a setter for `diameter` that updates `radius`. Set `c.diameter = 20` and print `c.radius`.'
+        hint: '`@diameter.setter def diameter(self, value): self.radius = value / 2`'
+        expl: |-
+          `@property.setter` lets you assign to a property. When you write `c.diameter = 20`, the setter method runs with `value=20`. It updates `self.radius = 10`. This controls how the attribute is modified.
+        sol: |-
+          class Circle:
+              def __init__(self, radius):
+                  self.radius = radius
+              @property
+              def diameter(self):
+                  return self.radius * 2
+              @diameter.setter
+              def diameter(self, value):
+                  self.radius = value / 2
+          c = Circle(5)
+          c.diameter = 20
+          print(c.radius)
+        start: ''
+        tests:
+          - |
+            10.0
+        max: 9/1
+      - name: Name Mangling
+        obj: 'Define `class Secret:` with `__secret = "hidden"` and `def reveal(self):` returning `self.__secret`. Access via method but demonstrate direct access fails.'
+        hint: '`__secret` (double underscore) triggers name mangling to `_Secret__secret`. Access it via a method.'
+        expl: |-
+          Double underscore prefix `__attr` triggers name mangling. Python renames it to `_ClassName__attr` internally. This prevents accidental access from outside the class — `obj.__secret` raises AttributeError but `obj._Secret__secret` works.
+        sol: |-
+          class Secret:
+              __secret = "hidden"
+              def reveal(self):
+                  return self.__secret
+          s = Secret()
+          print(s.reveal())
+        start: ''
+        tests:
+          - |
+            hidden
+        max: 6/1
+      - name: Slots
+        obj: 'Define `class Point:` with `__slots__ = ("x", "y")` and `__init__` assigning both. Create `Point(3, 4)` and print its attributes.'
+        hint: '`__slots__ = ("x", "y")` restricts the instance to only those attributes, saving memory.'
+        expl: |-
+          `__slots__` tells Python to allocate only the named attributes, preventing `__dict__` creation. This saves memory (important for millions of instances) and prevents adding arbitrary attributes. Instances with slots can still use properties and methods.
+        sol: |-
+          class Point:
+              __slots__ = ("x", "y")
+              def __init__(self, x, y):
+                  self.x = x
+                  self.y = y
+          p = Point(3, 4)
+          print(p.x, p.y)
+        start: ''
+        tests:
+          - |
+            3 4
+        max: 7/1
+      - name: Object Dict
+        obj: 'Define `class Person:` with `__init__(self, name, age)`. Create an instance and `print(person.__dict__)`.'
+        hint: '`instance.__dict__` returns a dictionary of all instance attributes and their values.'
+        expl: |-
+          Every instance has a `__dict__` attribute that stores all its instance attributes as a dictionary. `person.__dict__` returns `{"name": "Alice", "age": 30}`. This is how attribute lookup works internally — Python checks `__dict__` first.
+        sol: |-
+          class Person:
+              def __init__(self, name, age):
+                  self.name = name
+                  self.age = age
+          p = Person("Alice", 30)
+          print(p.__dict__)
+        start: ''
+        tests:
+          - |
+            {'name': 'Alice', 'age': 30}
+        max: 6/1
+      - name: 'Test: Temperature'
+        obj: 'Define `class Temperature:` with `__init__(self, celsius)` and `@property` `fahrenheit` that converts (celsius * 9/5 + 32) plus a setter that converts back. Set to 100 Fahrenheit, print celsius. Then create from 0 celsius, print fahrenheit.'
+        example:
+          in: []
+          out: |
+            37.777...
+            32.0
+        sol: |-
+          class Temperature:
+              def __init__(self, celsius=0):
+                  self._celsius = celsius
+              @property
+              def celsius(self):
+                  return self._celsius
+              @celsius.setter
+              def celsius(self, value):
+                  self._celsius = value
+              @property
+              def fahrenheit(self):
+                  return self._celsius * 9 / 5 + 32
+              @fahrenheit.setter
+              def fahrenheit(self, value):
+                  self._celsius = (value - 32) * 5 / 9
+          t = Temperature()
+          t.fahrenheit = 100
+          print(t.celsius)
+          t2 = Temperature(0)
+          print(t2.fahrenheit)
+        tests:
+          - |
+            37.77777777777778
+            32.0
+        max: 14/1
+        start: ''
+  - name: Inheritance
+    icon: function
+    levels:
+      - name: Basic Inheritance
+        obj: 'Define `class Animal:` with `__init__(self, name)` and `class Dog(Animal): pass`. Create `Dog("Rex")` and print its name.'
+        hint: '`class Dog(Animal):` — put the parent class in parentheses after the child class name.'
+        expl: |-
+          Inheritance lets a child class reuse the parent's code. `class Dog(Animal):` means Dog inherits all attributes and methods from Animal. Since `__init__` is not defined in Dog, Python looks up the chain and uses Animal's `__init__`.
+        sol: |-
+          class Animal:
+              def __init__(self, name):
+                  self.name = name
+          class Dog(Animal):
+              pass
+          dog = Dog("Rex")
+          print(dog.name)
+        start: ''
+        tests:
+          - |
+            Rex
+        max: 7/1
+      - name: Super Init
+        obj: 'Define `class Animal:` with `__init__(self, name)` and `class Dog(Animal):` with `__init__(self, name, breed)` calling `super().__init__(name)` and storing `self.breed`.'
+        hint: '`super().__init__(name)` calls the parent class constructor. Then set `self.breed = breed`.'
+        expl: |-
+          `super()` returns a temporary object of the parent class, letting you call its methods. `super().__init__(name)` invokes Animal's constructor to set `self.name`. Then Dog's `__init__` adds `self.breed`. This avoids duplicating parent logic.
+        sol: |-
+          class Animal:
+              def __init__(self, name):
+                  self.name = name
+          class Dog(Animal):
+              def __init__(self, name, breed):
+                  super().__init__(name)
+                  self.breed = breed
+          dog = Dog("Rex", "Husky")
+          print(dog.name, dog.breed)
+        start: ''
+        tests:
+          - |
+            Rex Husky
+        max: 9/1
+      - name: Method Overriding
+        obj: 'Define `class Animal:` with `def speak(self): print("...")` and `class Dog(Animal):` overriding `speak` to print `"Woof!"`.'
+        hint: 'Define a method with the exact same name in the child class. It replaces the parent version.'
+        expl: |-
+          When a child class defines a method with the same name as the parent, it overrides the parent's version. Calling `dog.speak()` runs Dog's version, not Animal's. This is how polymorphism works — each subclass can provide its own behavior.
+        sol: |-
+          class Animal:
+              def speak(self):
+                  print("...")
+          class Dog(Animal):
+              def speak(self):
+                  print("Woof!")
+          Dog().speak()
+        start: ''
+        tests:
+          - |
+            Woof!
+        max: 7/1
+      - name: Extending Parent
+        obj: 'Define `class Animal:` with `speak(self)` printing `"..."`. `class Dog(Animal):` overriding `speak` to call `super().speak()` then print `"Woof!"`.'
+        hint: '`super().speak()` runs the parent version first, then add your own code after.'
+        expl: |-
+          Overriding doesn't have to replace everything. `super().speak()` calls the parent's `speak` method, and then the child adds its own logic. This pattern is common when extending parent behavior rather than replacing it entirely.
+        sol: |-
+          class Animal:
+              def speak(self):
+                  print("...")
+          class Dog(Animal):
+              def speak(self):
+                  super().speak()
+                  print("Woof!")
+          Dog().speak()
+        start: ''
+        tests:
+          - |
+            ...
+            Woof!
+        max: 8/1
+      - name: Isinstance Check
+        obj: 'Define `class Animal: pass` and `class Dog(Animal): pass`. Create `d = Dog()`. Print `isinstance(d, Animal)` and `isinstance(d, Dog)`.'
+        hint: '`isinstance(obj, Class)` returns True if obj is an instance of Class or any subclass.'
+        expl: |-
+          `isinstance()` checks whether an object belongs to a class or any of its parent classes. `isinstance(Dog(), Animal)` is True because Dog inherits from Animal. `issubclass(Dog, Animal)` also works for checking inheritance relationships.
+        sol: |-
+          class Animal:
+              pass
+          class Dog(Animal):
+              pass
+          d = Dog()
+          print(isinstance(d, Animal))
+          print(isinstance(d, Dog))
+        start: ''
+        tests:
+          - |
+            True
+            True
+        max: 7/1
+      - name: Multiple Inheritance
+        obj: 'Define `class Flyer:` with `def fly(self): print("Flying")`, `class Swimmer:` with `def swim(self): print("Swimming")`, and `class Duck(Flyer, Swimmer): pass`. Call both methods.'
+        hint: '`class Duck(Flyer, Swimmer):` — list multiple parents in parentheses. Duck inherits methods from both.'
+        expl: |-
+          Python supports multiple inheritance — a class can inherit from several parent classes. `Duck(Flyer, Swimmer)` inherits `fly()` from Flyer and `swim()` from Swimmer. Method lookup goes left-to-right, then up the hierarchy (MRO).
+        sol: |-
+          class Flyer:
+              def fly(self):
+                  print("Flying")
+          class Swimmer:
+              def swim(self):
+                  print("Swimming")
+          class Duck(Flyer, Swimmer):
+              pass
+          d = Duck()
+          d.fly()
+          d.swim()
+        start: ''
+        tests:
+          - |
+            Flying
+            Swimming
+        max: 8/1
+      - name: MRO
+        obj: 'Define `class A: pass`, `class B(A): pass`, `class C(A): pass`, `class D(B, C): pass`. Print `D.__mro__`.'
+        hint: '`ClassName.__mro__` shows the method resolution order as a tuple of classes.'
+        expl: |-
+          MRO (Method Resolution Order) determines which class's method is called first. Python uses C3 linearization. `D.__mro__` shows `(D, B, C, A, object)`. D inherits from B and C; B and C both inherit from A. MRO ensures each class is visited only once.
+        sol: |-
+          class A:
+              pass
+          class B(A):
+              pass
+          class C(A):
+              pass
+          class D(B, C):
+              pass
+          print(D.__mro__)
+        start: ''
+        tests:
+          - |
+            (<class 'D'>, <class 'B'>, <class 'C'>, <class 'A'>, <class 'object'>)
+        max: 7/1
+      - name: Mixins
+        obj: 'Define mixins `JSONMixin` with `to_json(self)` and `LogMixin` with `log(self)`. Create `class User(JSONMixin, LogMixin):` with `__init__(self, name)`. Call both methods.'
+        hint: 'Mixins are small classes that add specific reusable behavior. Combine them via multiple inheritance.'
+        expl: |-
+          A mixin is a class that provides reusable methods intended to be combined with other classes. Mixins are not meant to stand alone — they add focused behavior. `JSONMixin` adds serialization, `LogMixin` adds logging. Combine several mixins for rich functionality.
+        sol: |-
+          class JSONMixin:
+              def to_json(self):
+                  return f'{{"name": "{self.name}"}}'
+          class LogMixin:
+              def log(self):
+                  print(f"Log: {self.name}")
+          class User(JSONMixin, LogMixin):
+              def __init__(self, name):
+                  self.name = name
+          u = User("Alice")
+          print(u.to_json())
+          u.log()
+        start: ''
+        tests:
+          - |
+            {"name": "Alice"}
+            Log: Alice
+        max: 11/1
+      - name: 'Test: Shape Hierarchy'
+        obj: 'Define `class Shape:` with `area(self)` raising `NotImplementedError`. `class Circle(Shape):` with `__init__(self, radius)` and `area` returning `pi * r**2`. `class Rectangle(Shape):` with `__init__(self, w, h)` and `area` returning `w * h`. Create both and print their areas.'
+        example:
+          in: []
+          out: |
+            78.53981633974483
+            24
+        sol: |-
+          import math
+          class Shape:
+              def area(self):
+                  raise NotImplementedError
+          class Circle(Shape):
+              def __init__(self, radius):
+                  self.radius = radius
+              def area(self):
+                  return math.pi * self.radius ** 2
+          class Rectangle(Shape):
+              def __init__(self, w, h):
+                  self.w = w
+                  self.h = h
+              def area(self):
+                  return self.w * self.h
+          print(Circle(5).area())
+          print(Rectangle(4, 6).area())
+        tests:
+          - |
+            78.53981633974483
+            24
+        max: 12/1
+        start: ''
+  - name: Dunder Methods
+    icon: math
+    levels:
+      - name: Str and Repr
+        obj: 'Define `class Person:` with `__init__(self, name, age)`, `__str__` returning `f"{self.name} ({self.age})"`, and `__repr__` returning `f"Person({self.name!r}, {self.age})"`. Print the instance.'
+        hint: '`__str__` is for display to users, `__repr__` is for developers/debugging. Return strings from both.'
+        expl: |-
+          `__str__` is called by `print()` and `str()` — it should be human-readable. `__repr__` is called in the REPL and debugger — it should be unambiguous and ideally show how to recreate the object. `print(obj)` uses `__str__`; `repr(obj)` uses `__repr__`.
+        sol: |-
+          class Person:
+              def __init__(self, name, age):
+                  self.name = name
+                  self.age = age
+              def __str__(self):
+                  return f"{self.name} ({self.age})"
+              def __repr__(self):
+                  return f"Person({self.name!r}, {self.age})"
+          p = Person("Alice", 30)
+          print(p)
+          print(repr(p))
+        start: ''
+        tests:
+          - |
+            Alice (30)
+            Person('Alice', 30)
+        max: 9/1
+      - name: Equality and Hash
+        obj: 'Define `class Point:` with `__init__(self, x, y)`, `__eq__(self, other)` comparing both coordinates, and `__hash__(self)` returning `hash((self.x, self.y))`. Test equality and set membership.'
+        hint: '`__eq__` returns True/False. `__hash__` must return an int. Equal objects must have the same hash.'
+        expl: |-
+          `__eq__` defines what "equal" means for custom objects. `__hash__` makes objects usable in sets and as dict keys. Rule: if `a == b` then `hash(a) == hash(b)`. Use `hash((self.x, self.y))` to combine fields into a hash.
+        sol: |-
+          class Point:
+              def __init__(self, x, y):
+                  self.x = x
+                  self.y = y
+              def __eq__(self, other):
+                  return self.x == other.x and self.y == other.y
+              def __hash__(self):
+                  return hash((self.x, self.y))
+          p1 = Point(1, 2)
+          p2 = Point(1, 2)
+          print(p1 == p2)
+          print(len({p1, p2}))
+        start: ''
+        tests:
+          - |
+            True
+            1
+        max: 10/1
+      - name: Comparison Methods
+        obj: 'Define `class Score:` with `__init__(self, value)`, `__lt__`, `__le__`, `__gt__`, `__ge__` comparing `self.value` to `other.value`. Test with `Score(5) < Score(10)`.'
+        hint: '`def __lt__(self, other): return self.value < other.value` — implement all four for full comparison support.'
+        expl: |-
+          `__lt__` (<), `__le__` (<=), `__gt__` (>), `__ge__` (>=) let you use comparison operators on custom objects. Implement at least `__lt__` and `__eq__`, then use `@functools.total_ordering` to fill in the rest automatically.
+        sol: |-
+          class Score:
+              def __init__(self, value):
+                  self.value = value
+              def __lt__(self, other):
+                  return self.value < other.value
+              def __le__(self, other):
+                  return self.value <= other.value
+              def __gt__(self, other):
+                  return self.value > other.value
+              def __ge__(self, other):
+                  return self.value >= other.value
+          print(Score(5) < Score(10))
+          print(Score(5) >= Score(5))
+        start: ''
+        tests:
+          - |
+            True
+            True
+        max: 11/1
+      - name: Len and Bool
+        obj: 'Define `class Team:` with `__init__(self, members)` (list), `__len__` returning `len(self.members)`, and `__bool__` returning `len(self) > 0`. Test both.'
+        hint: '`__len__` is called by `len()`. `__bool__` is called by `if obj:`. If `__bool__` is not defined, Python uses `__len__` (0=False, nonzero=True).'
+        expl: |-
+          `__len__` enables `len(obj)`. `__bool__` controls truthiness in `if obj:` and `bool(obj)`. If `__bool__` is not defined, Python falls back to `__len__`: 0 is falsy, anything else is truthy. Here an empty team is falsy.
+        sol: |-
+          class Team:
+              def __init__(self, members):
+                  self.members = members
+              def __len__(self):
+                  return len(self.members)
+              def __bool__(self):
+                  return len(self) > 0
+          t = Team(["Alice", "Bob"])
+          print(len(t))
+          print(bool(t))
+          print(bool(Team([])))
+        start: ''
+        tests:
+          - |
+            2
+            True
+            False
+        max: 9/1
+      - name: Getitem and Setitem
+        obj: 'Define `class SimpleList:` with `__init__(self)` creating `self.items = []`, `__getitem__(self, i)` returning `self.items[i]`, `__setitem__(self, i, v)` setting `self.items[i] = v`, and `append(self, v)`. Test indexing.'
+        hint: '`obj[i]` calls `__getitem__`, `obj[i] = v` calls `__setitem__`.'
+        expl: |-
+          `__getitem__` enables bracket access `obj[key]`. `__setitem__` enables assignment `obj[key] = value`. These make your class behave like a list or dict. Together they let users interact with your objects using familiar syntax.
+        sol: |-
+          class SimpleList:
+              def __init__(self):
+                  self.items = []
+              def append(self, v):
+                  self.items.append(v)
+              def __getitem__(self, i):
+                  return self.items[i]
+              def __setitem__(self, i, v):
+                  self.items[i] = v
+          s = SimpleList()
+          s.append(10)
+          s.append(20)
+          s[1] = 25
+          print(s[0], s[1])
+        start: ''
+        tests:
+          - |
+            10 25
+        max: 10/1
+      - name: Iter and Next
+        obj: 'Define `class CountDown:` with `__init__(self, n)`, `__iter__(self)` returning `self`, and `__next__(self)` counting down to 0 then raising `StopIteration`. Loop over it.'
+        hint: '`__iter__` returns `self`. `__next__` returns the next value or raises `StopIteration`.'
+        expl: |-
+          `__iter__` returns an iterator object (usually `self`). `__next__` returns the next value each time it's called, and raises `StopIteration` when done. Together they make your class work with `for x in obj:` loops.
+        sol: |-
+          class CountDown:
+              def __init__(self, n):
+                  self.n = n
+              def __iter__(self):
+                  return self
+              def __next__(self):
+                  if self.n <= 0:
+                      raise StopIteration
+                  self.n -= 1
+                  return self.n + 1
+          for x in CountDown(3):
+              print(x)
+        start: ''
+        tests:
+          - |
+            3
+            2
+            1
+        max: 9/1
+      - name: Context Manager
+        obj: 'Define `class ManagedFile:` with `__enter__(self)` printing "Open" and `__exit__(self, *args)` printing "Close". Use it with `with`.'
+        hint: '`__enter__` runs when entering `with` block. `__exit__` runs when leaving (even on exceptions). It receives `(exc_type, exc_val, exc_tb)`.'
+        expl: |-
+          `__enter__` sets up the resource and returns it (here the object itself). `__exit__` cleans up when the `with` block ends, even if an exception occurred. Parameters of `__exit__` are `(exc_type, exc_val, exc_tb)` — all None if no error.
+        sol: |-
+          class ManagedFile:
+              def __enter__(self):
+                  print("Open")
+                  return self
+              def __exit__(self, *args):
+                  print("Close")
+          with ManagedFile():
+              print("Working")
+        start: ''
+        tests:
+          - |
+            Open
+            Working
+            Close
+        max: 8/1
+      - name: Callable Objects
+        obj: 'Define `class Multiplier:` with `__init__(self, factor)` and `__call__(self, x)` returning `x * self.factor`. Create `double = Multiplier(2)` and call `double(5)`.'
+        hint: '`__call__` makes an instance callable like a function: `obj(args)` executes `__call__`.'
+        expl: |-
+          `__call__` lets instances be used as functions. `double = Multiplier(2)` creates an instance, and `double(5)` calls `__call__(self, 5)` which returns `5 * 2 = 10`. This is useful for creating function-like objects that retain state.
+        sol: |-
+          class Multiplier:
+              def __init__(self, factor):
+                  self.factor = factor
+              def __call__(self, x):
+                  return x * self.factor
+          double = Multiplier(2)
+          print(double(5))
+          print(double(3))
+        start: ''
+        tests:
+          - |
+            10
+            6
+        max: 7/1
+      - name: 'Test: Custom Collection'
+        obj: 'Define `class RangeCollection:` that works with `len()`, indexing, iteration, and `in` (via `__contains__`). Backed by a list built from `range(start, end)`. Print length, first element, iterate, check membership.'
+        example:
+          in: []
+          out: |
+            5
+            0
+            0 1 2 3 4
+            True
+        sol: |-
+          class RangeCollection:
+              def __init__(self, start, end):
+                  self.items = list(range(start, end))
+              def __len__(self):
+                  return len(self.items)
+              def __getitem__(self, i):
+                  return self.items[i]
+              def __iter__(self):
+                  return iter(self.items)
+              def __contains__(self, x):
+                  return x in self.items
+          rc = RangeCollection(0, 5)
+          print(len(rc))
+          print(rc[0])
+          for x in rc:
+              print(x, end=" ")
+          print()
+          print(3 in rc)
+        tests:
+          - |
+            5
+            0
+            0 1 2 3 4
+            True
+        max: 13/1
+        start: ''
+  - name: Abstract & Protocols
+    icon: data_structure
+    levels:
+      - name: Abstract Base Class
+        obj: 'Define `from abc import ABC, abstractmethod`. Create `class Shape(ABC):` with `@abstractmethod def area(self): pass`. Try to instantiate Shape (it will fail).'
+        hint: 'Classes with abstract methods cannot be instantiated. They must be subclassed and all abstract methods implemented.'
+        expl: |-
+          An abstract class is a class you cannot instantiate directly. It serves as a template. Subclasses must implement all `@abstractmethod` methods or they too become abstract. `ABC` (Abstract Base Class) marks the class as abstract.
+        sol: |-
+          from abc import ABC, abstractmethod
+          class Shape(ABC):
+              @abstractmethod
+              def area(self):
+                  pass
+        start: ''
+        tests: []
+        max: 5/1
+      - name: Concrete Subclass
+        obj: 'Define `class Circle(Shape):` with `__init__(self, r)` and `area` returning `3.14 * r**2`. Create and print its area.'
+        hint: 'Implement the abstract method with the exact same signature. Missing it raises TypeError at instantiation time.'
+        expl: |-
+          A concrete subclass must implement every abstract method from its parent. `Circle(Shape)` provides `area()` so it can be instantiated. If it didn't, Python would refuse to create the object. This enforces a contract.
+        sol: |-
+          from abc import ABC, abstractmethod
+          class Shape(ABC):
+              @abstractmethod
+              def area(self):
+                  pass
+          class Circle(Shape):
+              def __init__(self, r):
+                  self.r = r
+              def area(self):
+                  return 3.14 * self.r ** 2
+          print(Circle(5).area())
+        start: ''
+        tests:
+          - |
+            78.5
+        max: 9/1
+      - name: Abstract Property
+        obj: 'Define `class Employee(ABC):` with `@property @abstractmethod def salary(self): pass`. `class Manager(Employee):` with `@property def salary(self): return 50000`. Create and print salary.'
+        hint: 'Chain `@property` and `@abstractmethod` to enforce that subclasses provide a property.'
+        expl: |-
+          You can make abstract properties by stacking `@property` and `@abstractmethod`. Subclasses must implement the property. This is useful when every subclass must expose certain computed attributes but the formula differs.
+        sol: |-
+          from abc import ABC, abstractmethod
+          class Employee(ABC):
+              @property
+              @abstractmethod
+              def salary(self):
+                  pass
+          class Manager(Employee):
+              @property
+              def salary(self):
+                  return 50000
+          print(Manager().salary)
+        start: ''
+        tests:
+          - |
+            50000
+        max: 9/1
+      - name: Protocol
+        obj: 'Define `from typing import Protocol`. Create `class Drawable(Protocol):` with `def draw(self) -> str: ...`. Then `def render(obj: Drawable): print(obj.draw())`. Create a class that satisfies the protocol without explicit inheritance.'
+        hint: 'Protocols use structural subtyping — if a class has the right methods, it satisfies the protocol without inheriting.'
+        expl: |-
+          Protocols are "duck typing" interfaces. A class satisfies a Protocol if it has all the methods/attributes with matching signatures — no explicit inheritance needed. This is structural subtyping. Three dots `...` are the method body (placeholder).
+        sol: |-
+          from typing import Protocol
+          class Drawable(Protocol):
+              def draw(self) -> str: ...
+          class Circle:
+              def draw(self) -> str:
+                  return "Circle"
+          def render(obj: Drawable):
+              print(obj.draw())
+          render(Circle())
+        start: ''
+        tests:
+          - |
+            Circle
+        max: 9/1
+      - name: Runtime Checkable
+        obj: 'Add `@runtime_checkable` to a `Protocol`. Define `class Flyable(Protocol):` with `def fly(self): ...`. Use `isinstance()` to check if an object satisfies the protocol at runtime.'
+        hint: '`@runtime_checkable` enables `isinstance(obj, ProtocolClass)` for structural type checking at runtime.'
+        expl: |-
+          By default, protocols only work with static type checkers (mypy). Adding `@runtime_checkable` allows `isinstance()` and `issubclass()` to check structural conformance at runtime. The object must have all the protocol methods.
+        sol: |-
+          from typing import Protocol, runtime_checkable
+          @runtime_checkable
+          class Flyable(Protocol):
+              def fly(self): ...
+          class Bird:
+              def fly(self):
+                  print("Soaring")
+          class Airplane:
+              def fly(self):
+                  print("Engine on")
+          print(isinstance(Bird(), Flyable))
+          print(isinstance(42, Flyable))
+        start: ''
+        tests:
+          - |
+            True
+            False
+        max: 10/1
+      - name: Multiple ABCs
+        obj: 'Define `class Flyer(ABC):` with `@abstractmethod def fly(self): pass` and `class Swimmer(ABC):` with `@abstractmethod def swim(self): pass`. `class Duck(Flyer, Swimmer):` implementing both. Create and call both methods.'
+        hint: 'A class can inherit from multiple ABCs. It must implement all abstract methods from all parents.'
+        expl: |-
+          A class can implement multiple abstract base classes. This is like multiple inheritance with contracts. The class must provide concrete implementations for all abstract methods from all parents, or it cannot be instantiated.
+        sol: |-
+          from abc import ABC, abstractmethod
+          class Flyer(ABC):
+              @abstractmethod
+              def fly(self): pass
+          class Swimmer(ABC):
+              @abstractmethod
+              def swim(self): pass
+          class Duck(Flyer, Swimmer):
+              def fly(self):
+                  print("Flying")
+              def swim(self):
+                  print("Swimming")
+          d = Duck()
+          d.fly()
+          d.swim()
+        start: ''
+        tests:
+          - |
+            Flying
+            Swimming
+        max: 12/1
+      - name: Virtual Subclass
+        obj: 'Use `Shape.register(Circle)` to make `Circle` a virtual subclass without inheritance. Then check `issubclass(Circle, Shape)`.'
+        hint: '`register()` adds a class as a virtual subclass. No actual inheritance — just makes `issubclass`/`isinstance` return True.'
+        expl: |-
+          `register()` creates a virtual subclass: `issubclass(Circle, Shape)` returns True even though Circle doesn't inherit from Shape. No methods are inherited. Useful for adapting external classes to your interface without modifying them.
+        sol: |-
+          from abc import ABC
+          class Shape(ABC):
+              pass
+          class Circle:
+              pass
+          Shape.register(Circle)
+          print(issubclass(Circle, Shape))
+        start: ''
+        tests:
+          - |
+            True
+        max: 6/1
+      - name: Dataclass Review
+        obj: 'Use `@dataclass` to define `class Point:` with `x: int` and `y: int`. Create `Point(3, 4)` and print it.'
+        hint: '`from dataclasses import dataclass`. Add `@dataclass` above the class. Fields are annotated with types.'
+        expl: |-
+          `@dataclass` auto-generates `__init__`, `__repr__`, `__eq__`, and `__hash__` based on type-annotated fields. `class Point:` with `x: int, y: int` gets all that boilerplate for free. Print shows `Point(x=3, y=4)`.
+        sol: |-
+          from dataclasses import dataclass
+          @dataclass
+          class Point:
+              x: int
+              y: int
+          print(Point(3, 4))
+        start: ''
+        tests:
+          - |
+            Point(x=3, y=4)
+        max: 5/1
+      - name: 'Test: Plugin System'
+        obj: 'Define `class Renderer(ABC):` with `@abstractmethod def render(self, data) -> str: pass`. Create `class JSONRenderer(Renderer):` and `class HTMLRenderer(Renderer):` each implementing `render`. Use a list of renderers and call each.'
+        example:
+          in: []
+          out: |
+            {"name": "test"}
+            <div>test</div>
+        sol: |-
+          from abc import ABC, abstractmethod
+          class Renderer(ABC):
+              @abstractmethod
+              def render(self, data) -> str:
+                  pass
+          class JSONRenderer(Renderer):
+              def render(self, data) -> str:
+                  return f'{{"name": "{data}"}}'
+          class HTMLRenderer(Renderer):
+              def render(self, data) -> str:
+                  return f"<div>{data}</div>"
+          for r in [JSONRenderer(), HTMLRenderer()]:
+              print(r.render("test"))
+        tests:
+          - |
+            {"name": "test"}
+            <div>test</div>
+        max: 11/1
+        start: ''
+  - name: Advanced OOP
+    icon: algorithm
+    levels:
+      - name: New vs Init
+        obj: 'Define `class Singleton:` with `__new__(cls)` that prints "New" and `__init__(self)` that prints "Init". Create an instance and observe the order.'
+        hint: '`__new__` creates the object (called first), `__init__` initializes it (called second). `__new__` returns the instance.'
+        expl: |-
+          `__new__` is a static method that creates and returns a new instance. It receives the class as first argument. `__init__` then initializes the already-created instance. `__new__` runs first, then `__init__`. Most classes only need `__init__`.
+        sol: |-
+          class Demo:
+              def __new__(cls):
+                  print("New")
+                  return super().__new__(cls)
+              def __init__(self):
+                  print("Init")
+          d = Demo()
+        start: ''
+        tests:
+          - |
+            New
+            Init
+        max: 7/1
+      - name: Descriptors
+        obj: 'Define `class Positive:` with `__set_name__(self, owner, name)`, `__get__(self, obj, objtype)`, and `__set__(self, obj, value)` that validates `value > 0`. Use it in `class Person:` with `age = Positive()`.'
+        hint: 'A descriptor is an object that controls attribute access via `__get__`, `__set__`, `__delete__`. `__set_name__` captures the attribute name.'
+        expl: |-
+          A descriptor is an object that defines `__get__`, `__set__`, or `__delete__`. When you access `person.age`, Python finds `Positive` (a descriptor) and calls its `__get__`/`__set__`. Descriptors power `@property`, `@classmethod`, and `@staticmethod`.
+        sol: |-
+          class Positive:
+              def __set_name__(self, owner, name):
+                  self.name = name
+              def __get__(self, obj, objtype=None):
+                  return obj.__dict__[self.name]
+              def __set__(self, obj, value):
+                  if value <= 0:
+                      raise ValueError("Must be positive")
+                  obj.__dict__[self.name] = value
+          class Person:
+              age = Positive()
+              def __init__(self, age):
+                  self.age = age
+          p = Person(25)
+          print(p.age)
+        start: ''
+        tests:
+          - |
+            25
+        max: 12/1
+      - name: Property as Descriptor
+        obj: 'Create a descriptor `class Celsius:` with `__get__` returning the value and `__set__` converting Fahrenheit to Celsius. Use it in a class. Show how `property()` works similarly.'
+        hint: '`property()` is a built-in descriptor. Your custom descriptor works the same way — intercepting `obj.attr` access.'
+        expl: |-
+          `property()` is implemented as a descriptor. Understanding descriptors demystifies properties. Here `Celsius` is a custom descriptor that could convert units on assignment. Every time you use `@property`, Python creates a descriptor behind the scenes.
+        sol: |-
+          class Celsius:
+              def __set_name__(self, owner, name):
+                  self.name = name
+              def __get__(self, obj, objtype=None):
+                  if obj is None:
+                      return self
+                  return obj.__dict__.get(self.name, 0)
+              def __set__(self, obj, value):
+                  obj.__dict__[self.name] = value
+          class Temperature:
+              temp = Celsius()
+              def __init__(self, temp):
+                  self.temp = temp
+          t = Temperature(100)
+          print(t.temp)
+        start: ''
+        tests:
+          - |
+            100
+        max: 11/1
+      - name: Init Subclass
+        obj: 'Define `class Base:` with `def __init_subclass__(cls, **kwargs):` printing `f"Subclass {cls.__name__} created"`. Then define `class Derived(Base): pass`.'
+        hint: '`__init_subclass__` is called automatically when a subclass is defined. It receives the new subclass as `cls`.'
+        expl: |-
+          `__init_subclass__` is called on the parent class whenever a child class is defined. It receives the child class as `cls`. This is useful for validating subclasses, registering them, or automatically adding attributes. Pattern: "when you extend me, this runs."
+        sol: |-
+          class Base:
+              def __init_subclass__(cls, **kwargs):
+                  super().__init_subclass__(**kwargs)
+                  print(f"Subclass {cls.__name__} created")
+          class Derived(Base):
+              pass
+        start: ''
+        tests:
+          - |
+            Subclass Derived created
+        max: 7/1
+      - name: Metaclass Basics
+        obj: 'Define `class Meta(type):` that prints `f"Creating class {name}"` in `__new__`. Then define `class MyClass(metaclass=Meta): pass`.'
+        hint: 'A metaclass is the class of a class. `type` is the default metaclass. Custom metaclasses inherit from `type`.'
+        expl: |-
+          A metaclass is a class that creates classes. Just as a class creates instances, a metaclass creates classes. `type` is the built-in metaclass. Custom metaclasses inherit from `type` and override `__new__` to intercept class creation. They run at class definition time.
+        sol: |-
+          class Meta(type):
+              def __new__(mcs, name, bases, namespace):
+                  print(f"Creating class {name}")
+                  return super().__new__(mcs, name, bases, namespace)
+          class MyClass(metaclass=Meta):
+              pass
+        start: ''
+        tests:
+          - |
+            Creating class MyClass
+        max: 7/1
+      - name: Metaclass Singleton
+        obj: 'Define `class SingletonMeta(type):` that stores instances in a dict and returns the same instance on repeated construction. `class Database(metaclass=SingletonMeta): pass`. Verify `Database() is Database()`.'
+        hint: 'Override `__call__` in the metaclass to control instance creation. Store instances in `cls._instances`.'
+        expl: |-
+          Metaclass `__call__` runs when you call the class (`MyClass()`). By overriding it, you control instance creation. The Singleton pattern stores created instances in a dict keyed by class. If the class already has an instance, return it; otherwise create and store.
+        sol: |-
+          class SingletonMeta(type):
+              _instances = {}
+              def __call__(cls, *args, **kwargs):
+                  if cls not in cls._instances:
+                      cls._instances[cls] = super().__call__(*args, **kwargs)
+                  return cls._instances[cls]
+          class Database(metaclass=SingletonMeta):
+              pass
+          d1 = Database()
+          d2 = Database()
+          print(d1 is d2)
+        start: ''
+        tests:
+          - |
+            True
+        max: 9/1
+      - name: Subclass Hook
+        obj: 'Define `class Shape(ABC):` with `@classmethod def __subclasshook__(cls, subclass):` checking for `area` method. Test `issubclass(Circle, Shape)` without explicit inheritance.'
+        hint: '`__subclasshook__` customizes `issubclass()`. Return True if the subclass conforms to the interface (has `area` method).'
+        expl: |-
+          `__subclasshook__` lets you define custom logic for `issubclass()`. If it returns True, the class is considered a subclass even without explicit inheritance. This is how Protocols work internally. `__subclasshook__` is checked before the normal inheritance chain.
+        sol: |-
+          from abc import ABC
+          class Shape(ABC):
+              @classmethod
+              def __subclasshook__(cls, subclass):
+                  return (hasattr(subclass, "area") and
+                          callable(subclass.area))
+          class Circle:
+              def area(self):
+                  return 3.14
+          print(issubclass(Circle, Shape))
+        start: ''
+        tests:
+          - |
+            True
+        max: 8/1
+      - name: Total Ordering
+        obj: 'Use `@functools.total_ordering` on `class Person:` with `__init__(self, name, age)`, `__eq__`, and `__lt__`. All other comparisons are auto-generated. Compare two persons with <=.'
+        hint: '`@total_ordering` fills in missing comparison methods (`__le__`, `__gt__`, `__ge__`) given `__eq__` and `__lt__`.'
+        expl: |-
+          `@functools.total_ordering` is a class decorator that generates all rich comparison methods from just `__eq__` and `__lt__`. It saves boilerplate. Define `__eq__` (equality) and `__lt__` (less than), and the decorator fills in `__le__`, `__gt__`, `__ge__`.
+        sol: |-
+          from functools import total_ordering
+          @total_ordering
+          class Person:
+              def __init__(self, name, age):
+                  self.name = name
+                  self.age = age
+              def __eq__(self, other):
+                  return self.age == other.age
+              def __lt__(self, other):
+                  return self.age < other.age
+          print(Person("A", 30) <= Person("B", 25))
+          print(Person("A", 30) >= Person("B", 25))
+        start: ''
+        tests:
+          - |
+            False
+            True
+        max: 10/1
+      - name: 'Test: Mini ORM'
+        obj: 'Define a descriptor `class Field:` that stores values. `class Model:` with `def __init_subclass__(cls):` collecting `Field` descriptors. `class User(Model):` with `name = Field()` and `email = Field()`. Create `User(name="Alice")` and print the fields.'
+        example:
+          in: []
+          out: |
+            name=Alice
+            email=None
+        sol: |-
+          class Field:
+              def __set_name__(self, owner, name):
+                  self.name = name
+              def __get__(self, obj, objtype=None):
+                  if obj is None:
+                      return self
+                  return obj.__dict__.get(self.name)
+              def __set__(self, obj, value):
+                  obj.__dict__[self.name] = value
+          class Model:
+              def __init__(self, **kwargs):
+                  for k, v in kwargs.items():
+                      setattr(self, k, v)
+          class User(Model):
+              name = Field()
+              email = Field()
+          u = User(name="Alice")
+          print(f"name={u.name}")
+          print(f"email={u.email}")
+        tests:
+          - |
+            name=Alice
+            email=None
+        max: 14/1
+        start: ''
+  - name: OOP Design
+    icon: module
+    levels:
+      - name: Singleton
+        obj: 'Implement `class Logger:` with `_instance = None` and `def __new__(cls):` returning the existing instance or creating one. Verify `Logger() is Logger()`.'
+        hint: 'Override `__new__` to control instance creation. Store the single instance as a class variable.'
+        expl: |-
+          Singleton ensures a class has only one instance. Override `__new__` to check `cls._instance`. If None, create the instance via `super().__new__` and store it. Always return the stored instance. All calls to `Logger()` get the exact same object.
+        sol: |-
+          class Logger:
+              _instance = None
+              def __new__(cls):
+                  if cls._instance is None:
+                      cls._instance = super().__new__(cls)
+                  return cls._instance
+          a = Logger()
+          b = Logger()
+          print(a is b)
+        start: ''
+        tests:
+          - |
+            True
+        max: 7/1
+      - name: Factory
+        obj: 'Define `class AnimalFactory:` with `@staticmethod def create(animal_type)` returning `Dog()` or `Cat()`. Define both classes with `speak()`. Test creating both.'
+        hint: 'Factory centralizes object creation logic. Based on a parameter, it returns instances of different classes.'
+        expl: |-
+          The Factory pattern centralizes creation logic. Instead of calling `Dog()` or `Cat()` directly, call `AnimalFactory.create("dog")` which returns the right instance. This decouples the caller from the concrete class. Add new types without changing existing code.
+        sol: |-
+          class Dog:
+              def speak(self):
+                  return "Woof!"
+          class Cat:
+              def speak(self):
+                  return "Meow!"
+          class AnimalFactory:
+              @staticmethod
+              def create(animal_type):
+                  if animal_type == "dog":
+                      return Dog()
+                  elif animal_type == "cat":
+                      return Cat()
+          print(AnimalFactory.create("dog").speak())
+          print(AnimalFactory.create("cat").speak())
+        start: ''
+        tests:
+          - |
+            Woof!
+            Meow!
+        max: 11/1
+      - name: Observer
+        obj: 'Define `class Subject:` with `attach(self, observer)` and `notify(self)` calling `observer.update(self)`. `class Observer:` with `update(self, subject)` printing "Updated". Test the notification.'
+        hint: 'Observers register with a subject. When the subject changes, it calls all observers. This is publish/subscribe.'
+        expl: |-
+          The Observer pattern defines a one-to-many dependency. When the subject changes state, all its dependents (observers) are notified automatically. `attach()` adds an observer, `notify()` loops through all observers calling their `update()` method.
+        sol: |-
+          class Subject:
+              def __init__(self):
+                  self._observers = []
+              def attach(self, observer):
+                  self._observers.append(observer)
+              def notify(self):
+                  for obs in self._observers:
+                      obs.update(self)
+          class Observer:
+              def update(self, subject):
+                  print("Updated")
+          sub = Subject()
+          sub.attach(Observer())
+          sub.attach(Observer())
+          sub.notify()
+        start: ''
+        tests:
+          - |
+            Updated
+            Updated
+        max: 12/1
+      - name: Strategy
+        obj: 'Define `class Strategy:` with `@abstractmethod def execute(self, a, b)`. `class Add(Strategy):` and `class Multiply(Strategy):`. `class Context:` that takes a Strategy and calls it. Test both strategies.'
+        hint: 'Strategy pattern lets you swap algorithms at runtime. Each strategy is a class with a common interface.'
+        expl: |-
+          The Strategy pattern defines a family of interchangeable algorithms. Each strategy implements the same interface. The context uses a strategy without knowing the concrete implementation. You can swap strategies at runtime — `Context(Add())` vs `Context(Multiply())`.
+        sol: |-
+          from abc import ABC, abstractmethod
+          class Strategy(ABC):
+              @abstractmethod
+              def execute(self, a, b): pass
+          class Add(Strategy):
+              def execute(self, a, b):
+                  return a + b
+          class Multiply(Strategy):
+              def execute(self, a, b):
+                  return a * b
+          class Context:
+              def __init__(self, strategy):
+                  self.strategy = strategy
+              def run(self, a, b):
+                  return self.strategy.execute(a, b)
+          print(Context(Add()).run(3, 4))
+          print(Context(Multiply()).run(3, 4))
+        start: ''
+        tests:
+          - |
+            7
+            12
+        max: 13/1
+      - name: Decorator Pattern
+        obj: 'Define `class Coffee:` with `cost(self)` returning 5. `class MilkDecorator:` wrapping a coffee and adding 2 to cost. `class SugarDecorator:` adding 1. Chain them.'
+        hint: 'Decorator pattern wraps an object to add behavior. Each decorator takes a component and extends its methods.'
+        expl: |-
+          The Decorator pattern dynamically adds behavior by wrapping objects. `MilkDecorator` takes a `Coffee` object and overrides `cost()` to add 2. `SugarDecorator` adds 1. Chain them: `SugarDecorator(MilkDecorator(Coffee()))` stacks the costs: 5 + 2 + 1 = 8.
+        sol: |-
+          class Coffee:
+              def cost(self):
+                  return 5
+          class MilkDecorator:
+              def __init__(self, component):
+                  self.component = component
+              def cost(self):
+                  return self.component.cost() + 2
+          class SugarDecorator:
+              def __init__(self, component):
+                  self.component = component
+              def cost(self):
+                  return self.component.cost() + 1
+          coffee = SugarDecorator(MilkDecorator(Coffee()))
+          print(coffee.cost())
+        start: ''
+        tests:
+          - |
+            8
+        max: 13/1
+      - name: Adapter
+        obj: 'Define `class EuropeanSocket:` with `voltage()` returning 230. `class USAdapter:` wrapping it and `voltage()` returning 120. Make a `class USDevice:` that works with 120V.'
+        hint: 'Adapter converts one interface to another that the client expects. Wrap the incompatible object.'
+        expl: |-
+          The Adapter pattern lets incompatible classes work together. `USAdapter` wraps `EuropeanSocket` and converts its voltage from 230 to 120. The client (`USDevice`) receives the expected interface. The adapter translates calls between the two.
+        sol: |-
+          class EuropeanSocket:
+              def voltage(self):
+                  return 230
+          class USAdapter:
+              def __init__(self, socket):
+                  self.socket = socket
+              def voltage(self):
+                  return self.socket.voltage() // 2
+          class USDevice:
+              def __init__(self, adapter):
+                  self.adapter = adapter
+              def plug_in(self):
+                  return f"Running at {self.adapter.voltage()}V"
+          adapter = USAdapter(EuropeanSocket())
+          device = USDevice(adapter)
+          print(device.plug_in())
+        start: ''
+        tests:
+          - |
+            Running at 115V
+        max: 12/1
+      - name: Composite
+        obj: 'Define `class Component:` with `@abstractmethod def operation(self)`. `class Leaf(Component):` returning "Leaf". `class Composite(Component):` with children list, `add`, `remove`, and `operation` collecting all children results. Build a tree and display.'
+        hint: 'Composite lets you treat individual objects and compositions uniformly. `operation()` on a Composite calls it on all children.'
+        expl: |-
+          The Composite pattern composes objects into tree structures. `Leaf` is a single object. `Composite` can contain both Leaf and other Composite objects. Calling `operation()` on a Composite iterates through children and aggregates results. This enables recursive tree processing.
+        sol: |-
+          from abc import ABC, abstractmethod
+          class Component(ABC):
+              @abstractmethod
+              def operation(self): pass
+          class Leaf(Component):
+              def operation(self):
+                  return "Leaf"
+          class Composite(Component):
+              def __init__(self):
+                  self.children = []
+              def add(self, c):
+                  self.children.append(c)
+              def operation(self):
+                  return " + ".join(c.operation() for c in self.children)
+          tree = Composite()
+          tree.add(Leaf())
+          branch = Composite()
+          branch.add(Leaf())
+          branch.add(Leaf())
+          tree.add(branch)
+          print(tree.operation())
+        start: ''
+        tests:
+          - |
+            Leaf + Leaf + Leaf
+        max: 14/1
+      - name: Template Method
+        obj: 'Define `class DataProcessor:` with `def process(self):` calling `load()`, `transform()`, `save()` (abstract). `class CSVProcessor:` implementing the three steps. `process()` orchestrates the algorithm.'
+        hint: 'Template Method defines the skeleton of an algorithm in a base class. Subclasses implement the steps without changing the structure.'
+        expl: |-
+          Template Method defines the algorithm structure in a base class method. The steps (abstract methods) are implemented by subclasses. `process()` calls `load()`, `transform()`, `save()` in order. Subclasses fill in the details while the overall flow stays fixed.
+        sol: |-
+          from abc import ABC, abstractmethod
+          class DataProcessor(ABC):
+              def process(self):
+                  self.load()
+                  self.transform()
+                  self.save()
+              @abstractmethod
+              def load(self): pass
+              @abstractmethod
+              def transform(self): pass
+              @abstractmethod
+              def save(self): pass
+          class CSVProcessor(DataProcessor):
+              def load(self):
+                  print("Loading CSV")
+              def transform(self):
+                  print("Transforming data")
+              def save(self):
+                  print("Saving output")
+          CSVProcessor().process()
+        start: ''
+        tests:
+          - |
+            Loading CSV
+            Transforming data
+            Saving output
+        max: 13/1
+      - name: 'Test: Notification System'
+        obj: 'Build a notification system using multiple patterns. Define `class Notification:` with `send(self, msg)`. `class EmailNotification(Notification):` printing "Email: {msg}". `class SMSNotification(Notification):` printing "SMS: {msg}". `class Notifier:` that holds a list of Notification strategies and a `send_all(self, msg)` method. Use the Strategy pattern. Test with both notification types.'
+        example:
+          in: []
+          out: |
+            Email: Hello
+            SMS: Hello
+        sol: |-
+          class Notification:
+              def send(self, msg):
+                  pass
+          class EmailNotification(Notification):
+              def send(self, msg):
+                  print(f"Email: {msg}")
+          class SMSNotification(Notification):
+              def send(self, msg):
+                  print(f"SMS: {msg}")
+          class Notifier:
+              def __init__(self):
+                  self.channels = []
+              def add(self, channel):
+                  self.channels.append(channel)
+              def send_all(self, msg):
+                  for c in self.channels:
+                      c.send(msg)
+          notifier = Notifier()
+          notifier.add(EmailNotification())
+          notifier.add(SMSNotification())
+          notifier.send_all("Hello")
+        tests:
+          - |
+            Email: Hello
+            SMS: Hello
+        max: 14/1
+        start: ''
+  - name: Challenges
+    icon: challenge
+    levels:
+      - name: The Class Architect
+        obj: 'Define `class Building:` with `__init__(self, name, floors)` and `class Office(Building):` adding `companies` list. Include `add_company(self, name)` and `__str__`. Create an office building and print it.'
+        example:
+          in: []
+          out: |
+            Tower: 10 floors, 2 companies
+        sol: |-
+          class Building:
+              def __init__(self, name, floors):
+                  self.name = name
+                  self.floors = floors
+          class Office(Building):
+              def __init__(self, name, floors):
+                  super().__init__(name, floors)
+                  self.companies = []
+              def add_company(self, name):
+                  self.companies.append(name)
+              def __str__(self):
+                  return f"{self.name}: {self.floors} floors, {len(self.companies)} companies"
+          b = Office("Tower", 10)
+          b.add_company("Acme")
+          b.add_company("Globex")
+          print(b)
+        tests:
+          - |
+            Tower: 10 floors, 2 companies
+        max: 12/1
+        start: ''
+      - name: The Property Master
+        obj: 'Define `class Student:` with `@property` `grade` that returns a letter based on `self.score` (90+="A", 80+="B", 70+="C", 60+="D", else "F"). Include a setter that clamps score to 0-100. Test with valid and invalid scores.'
+        example:
+          in: []
+          out: |
+            A
+            F
+            0
+        sol: |-
+          class Student:
+              def __init__(self, score=0):
+                  self.score = score
+              @property
+              def grade(self):
+                  if self.score >= 90: return "A"
+                  if self.score >= 80: return "B"
+                  if self.score >= 70: return "C"
+                  if self.score >= 60: return "D"
+                  return "F"
+              @grade.setter
+              def grade(self, value):
+                  pass
+              @property
+              def score(self):
+                  return self._score
+              @score.setter
+              def score(self, value):
+                  self._score = max(0, min(100, value))
+          s = Student(95)
+          print(s.grade)
+          s.score = -10
+          print(s.grade)
+          print(s.score)
+        tests:
+          - |
+            A
+            F
+            0
+        max: 14/1
+        start: ''
+      - name: The Diamond of Death
+        obj: 'Define `class A:` with `def m(self): print("A")`. `class B(A):` overriding `m` to print "B" and call `super().m()`. `class C(A):` overriding `m` to print "C" and call `super().m()`. `class D(B, C):` overriding `m` to print "D" and call `super().m()`. Call `D().m()` and show the MRO.'
+        example:
+          in: []
+          out: |
+            D
+            B
+            C
+            A
+        sol: |-
+          class A:
+              def m(self):
+                  print("A")
+          class B(A):
+              def m(self):
+                  print("B")
+                  super().m()
+          class C(A):
+              def m(self):
+                  print("C")
+                  super().m()
+          class D(B, C):
+              def m(self):
+                  print("D")
+                  super().m()
+          D().m()
+          print(D.__mro__)
+        tests:
+          - |
+            D
+            B
+            C
+            A
+            (<class 'D'>, <class 'B'>, <class 'C'>, <class 'A'>, <class 'object'>)
+        max: 13/1
+        start: ''
+      - name: The Magic Container
+        obj: 'Define `class RangeCollection:` implementing `__len__`, `__getitem__`, `__setitem__`, `__iter__`, `__contains__`, `__add__` (concat), and `__repr__`. Backed by a list. Test various operations.'
+        example:
+          in: []
+          out: |
+            3
+            20
+            True
+            [10, 20, 30, 40, 50]
+        sol: |-
+          class RangeCollection:
+              def __init__(self, items):
+                  self.items = list(items)
+              def __len__(self):
+                  return len(self.items)
+              def __getitem__(self, i):
+                  return self.items[i]
+              def __setitem__(self, i, v):
+                  self.items[i] = v
+              def __iter__(self):
+                  return iter(self.items)
+              def __contains__(self, x):
+                  return x in self.items
+              def __add__(self, other):
+                  return RangeCollection(self.items + other.items)
+              def __repr__(self):
+                  return repr(self.items)
+          a = RangeCollection([10, 20, 30])
+          a[1] = 20
+          print(len(a))
+          print(a[1])
+          print(30 in a)
+          b = RangeCollection([40, 50])
+          print(a + b)
+        tests:
+          - |
+            3
+            20
+            True
+            [10, 20, 30, 40, 50]
+        max: 15/1
+        start: ''
+      - name: The Abstract Forge
+        obj: 'Define `class Vehicle(ABC):` with `@abstractmethod def max_speed(self) -> int:`. `class Car(Vehicle):` and `class Boat(Vehicle):` each implementing `max_speed`. Use `@runtime_checkable` Protocol `Drivable` with `def drive(self):` and make Car satisfy it.'
+        example:
+          in: []
+          out: |
+            200
+            40
+            Vroom!
+        sol: |-
+          from abc import ABC, abstractmethod
+          from typing import Protocol, runtime_checkable
+          class Vehicle(ABC):
+              @abstractmethod
+              def max_speed(self) -> int:
+                  pass
+          class Car(Vehicle):
+              def max_speed(self) -> int:
+                  return 200
+              def drive(self):
+                  print("Vroom!")
+          class Boat(Vehicle):
+              def max_speed(self) -> int:
+                  return 40
+          @runtime_checkable
+          class Drivable(Protocol):
+              def drive(self): ...
+          print(Car().max_speed())
+          print(Boat().max_speed())
+          car = Car()
+          if isinstance(car, Drivable):
+              car.drive()
+        tests:
+          - |
+            200
+            40
+            Vroom!
+        max: 15/1
+        start: ''
+      - name: The Descriptor Gauntlet
+        obj: 'Define `class Validated:` descriptor with `__set_name__`, `__get__`, and `__set__` that validates via `validate(self, value)`. `class Positive(Validated):` with `validate` raising if not positive. `class Person:` with `age = Positive()`. Test valid and invalid assignment.'
+        example:
+          in: []
+          out: |
+            25
+            Caught error
+        sol: |-
+          class Validated:
+              def __set_name__(self, owner, name):
+                  self.name = name
+              def __get__(self, obj, objtype=None):
+                  if obj is None:
+                      return self
+                  return obj.__dict__.get(self.name)
+              def __set__(self, obj, value):
+                  self.validate(value)
+                  obj.__dict__[self.name] = value
+              def validate(self, value):
+                  pass
+          class Positive(Validated):
+              def validate(self, value):
+                  if value <= 0:
+                      raise ValueError("Must be positive")
+          class Person:
+              age = Positive()
+              def __init__(self, age):
+                  self.age = age
+          p = Person(25)
+          print(p.age)
+          try:
+              Person(-5)
+          except ValueError:
+              print("Caught error")
+        tests:
+          - |
+            25
+            Caught error
+        max: 16/1
+        start: ''
+      - name: The Singleton Protocol
+        obj: 'Create a metaclass `SingletonMeta` that enforces singleton behavior. Then define `class Config(metaclass=SingletonMeta):` with `__init__(self)` printing "Init once". Create two instances — `__init__` should run only once. Print identity comparison.'
+        example:
+          in: []
+          out: |
+            Init once
+            True
+        sol: |-
+          class SingletonMeta(type):
+              _instances = {}
+              def __call__(cls, *args, **kwargs):
+                  if cls not in cls._instances:
+                      cls._instances[cls] = super().__call__(*args, **kwargs)
+                  return cls._instances[cls]
+          class Config(metaclass=SingletonMeta):
+              def __init__(self):
+                  print("Init once")
+          a = Config()
+          b = Config()
+          print(a is b)
+        tests:
+          - |
+            Init once
+            True
+        max: 10/1
+        start: ''
+      - name: The Design Master
+        obj: 'Implement `class EventSystem:` with `on(self, event, handler)` to register and `emit(self, event, data)` to notify all handlers. Define `class Button:` that emits "click" when `click()` is called. Use the Observer pattern.'
+        example:
+          in: []
+          out: |
+            Button was clicked!
+            Alert: click event
+        sol: |-
+          class EventSystem:
+              def __init__(self):
+                  self.handlers = {}
+              def on(self, event, handler):
+                  if event not in self.handlers:
+                      self.handlers[event] = []
+                  self.handlers[event].append(handler)
+              def emit(self, event, data):
+                  for handler in self.handlers.get(event, []):
+                      handler(data)
+          class Button:
+              def __init__(self):
+                  self.events = EventSystem()
+              def click(self):
+                  self.events.emit("click", "Button was clicked!")
+          def handle_click(msg):
+              print(msg)
+          def alert_click(msg):
+              print(f"Alert: click event")
+          btn = Button()
+          btn.events.on("click", handle_click)
+          btn.events.on("click", alert_click)
+          btn.click()
+        tests:
+          - |
+            Button was clicked!
+            Alert: click event
+        max: 18/1
+        start: ''
+      - name: The Ultimate Challenge
+        obj: 'Define `class EntityMeta(type):` that auto-registers all subclasses in `EntityMeta.registry`. Define `class Entity(metaclass=EntityMeta):` with `@abstractmethod def attack(self) -> int:`. `class Player(Entity):` and `class Monster(Entity):`. Create instances and show all registered subclasses have at least one instance.'
+        example:
+          in: []
+          out: |
+            Player: 10
+            Monster: 8
+            2 classes registered
+        sol: |-
+          class EntityMeta(type):
+              registry = {}
+              def __new__(mcs, name, bases, namespace):
+                  cls = super().__new__(mcs, name, bases, namespace)
+                  if name != "Entity":
+                      EntityMeta.registry[name] = cls
+                  return cls
+          from abc import abstractmethod
+          class Entity(metaclass=EntityMeta):
+              @abstractmethod
+              def attack(self) -> int:
+                  pass
+          class Player(Entity):
+              def attack(self) -> int:
+                  return 10
+          class Monster(Entity):
+              def attack(self) -> int:
+                  return 8
+          p = Player()
+          m = Monster()
+          print(f"Player: {p.attack()}")
+          print(f"Monster: {m.attack()}")
+          print(f"{len(EntityMeta.registry)} classes registered")
+        tests:
+          - |
+            Player: 10
+            Monster: 8
+            2 classes registered
+        max: 16/1
+        start: ''

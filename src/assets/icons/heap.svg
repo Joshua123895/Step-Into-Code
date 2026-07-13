@@ -1,0 +1,17 @@
+<svg width="128" height="128" viewBox="0 0 128 128" fill="none" xmlns="http://www.w3.org/2000/svg">
+<rect x="1" y="1" width="126" height="126" rx="19" fill="currentColor" fill-opacity="0.5" fill="currentColor" stroke-width="2"/>
+<path d="M24 90C24 87.7909 25.7909 86 28 86H44V106H28C25.7909 106 24 104.209 24 102V90Z" fill="currentColor" fill-opacity="0.5"/>
+<path d="M44 86H64V106H44V86Z" fill="currentColor" fill-opacity="0.5"/>
+<path d="M64 86H84V106H64V86Z" fill="currentColor" fill-opacity="0.5"/>
+<path d="M84 86H100C102.209 86 104 87.7909 104 90V102C104 104.209 102.209 106 100 106H84V86Z" fill="currentColor" fill-opacity="0.5"/>
+<path d="M44 86H28C25.7909 86 24 87.7909 24 90V102C24 104.209 25.7909 106 28 106H44M44 86V106M44 86H64M44 106H64M64 86V106M64 86H84M64 106H84M84 86V106M84 86H100C102.209 86 104 87.7909 104 90V102C104 104.209 102.209 106 100 106H84" fill="currentColor" stroke-width="2"/>
+<rect x="34" y="52" width="20" height="20" rx="4" fill="currentColor" fill-opacity="0.5" fill="currentColor" stroke-width="2"/>
+<rect x="74" y="52" width="20" height="20" rx="4" fill="currentColor" fill-opacity="0.5" fill="currentColor" stroke-width="2"/>
+<rect x="55" y="23" width="18" height="18" rx="3" fill="currentColor" fill-opacity="0.5" fill="currentColor" stroke-width="2"/>
+<path d="M64 41L44 52" fill="currentColor" stroke-opacity="0.5" stroke-width="2" stroke-linecap="round"/>
+<path d="M64 41L84 52" fill="currentColor" stroke-width="2" stroke-linecap="round"/>
+<path d="M44 72L34 86" fill="currentColor" stroke-opacity="0.5" stroke-width="2" stroke-linecap="round"/>
+<path d="M44 72L54 86" fill="currentColor" stroke-opacity="0.5" stroke-width="2" stroke-linecap="round"/>
+<path d="M84 72L74 86" fill="currentColor" stroke-width="2" stroke-linecap="round"/>
+<path d="M84 72L94 86" fill="currentColor" stroke-opacity="0.5" stroke-width="2" stroke-linecap="round"/>
+</svg>

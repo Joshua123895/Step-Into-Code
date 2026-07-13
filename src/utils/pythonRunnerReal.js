@@ -19,8 +19,8 @@ export async function runPythonReal(code, initialFiles = {}, trackedFiles = [], 
     let stdout = "";
     let inputIndex = 0;
 
-    pyodide.setStdout({ batched: (text) => { stdout += text; } });
-    pyodide.setStderr({ batched: (text) => { stdout += text; } });
+    pyodide.setStdout({ write: (buf) => { stdout += new TextDecoder().decode(buf); return buf.length; }, isatty: true });
+    pyodide.setStderr({ write: (buf) => { stdout += new TextDecoder().decode(buf); return buf.length; }, isatty: true });
     pyodide.setStdin({
       stdin: () => {
         if (inputIndex < inputs.length) {

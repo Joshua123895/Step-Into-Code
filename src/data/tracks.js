@@ -11,6 +11,9 @@ import fileComponent from "../assets/icons/file.svg?react";
 import warningComponent from "../assets/icons/warning.svg?react";
 import moduleComponent from "../assets/icons/module.svg?react";
 import challengeComponent from "../assets/icons/challenge.svg?react";
+import oopComponent from "../assets/icons/oop.svg?react";
+import algorithmComponent from "../assets/icons/algorithm.svg?react";
+import dataStructureComponent from "../assets/icons/data_structure.svg?react";
 import { load } from "js-yaml";
 
 const trackModules = import.meta.glob("./tracks/*.yaml", { query: "?raw", import: "default", eager: true });
@@ -29,6 +32,9 @@ const ICON_COMPONENT_MAP = {
   warning: warningComponent,
   module: moduleComponent,
   challenge: challengeComponent,
+  oop: oopComponent,
+  algorithm: algorithmComponent,
+  data_structure: dataStructureComponent,
 };
 
 function parseRichText(str) {

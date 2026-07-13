@@ -21,12 +21,11 @@ export default function LevelPage() {
   const { trackName, chapterId, levelId } = useParams();
 
   function norm(s) {
-    return (s || "").replace(/\r\n/g, "\n").split("\n").reduce((lines, l, i, arr) => {
-      if (lines.length === 0 && l === "") return lines;
-      if (i === arr.length - 1 && l === "") return lines;
-      lines.push(l);
-      return lines;
-    }, []).join("\n");
+    const lines = (s || "").replace(/\r\n/g, "\n").split("\n");
+    let start = 0, end = lines.length;
+    while (start < end && lines[start] === "") start++;
+    while (end > start && lines[end - 1] === "") end--;
+    return lines.slice(start, end).join("\n");
   }
 
   const DEV = import.meta.env.DEV;
@@ -574,7 +573,7 @@ export default function LevelPage() {
                   >
                     🎯 Objective
                   </div>
-                  <p className="text-sm leading-relaxed" style={{ color: "var(--text)" }}>
+                  <p className="text-sm" style={{ color: "var(--text)" }}>
                     {level.objective.map((seg, i) =>
                       seg.type === "code" ? (
                         <code
