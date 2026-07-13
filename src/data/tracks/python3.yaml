@@ -176,7 +176,7 @@ chapters:
         max: 12/1
         start: ''
   - name: Class Mechanics
-    icon: variable
+    icon: mechanism
     levels:
       - name: Class Variables
         obj: 'Add `species = "Canine"` as a class variable in `Dog`. Print `Dog.species` and also access it via an instance.'
@@ -358,7 +358,7 @@ chapters:
         max: 14/1
         start: ''
   - name: Inheritance
-    icon: function
+    icon: inheritance
     levels:
       - name: Basic Inheritance
         obj: 'Define `class Animal:` with `__init__(self, name)` and `class Dog(Animal): pass`. Create `Dog("Rex")` and print its name.'
@@ -554,7 +554,7 @@ chapters:
         max: 12/1
         start: ''
   - name: Dunder Methods
-    icon: math
+    icon: magic
     levels:
       - name: Str and Repr
         obj: 'Define `class Person:` with `__init__(self, name, age)`, `__str__` returning `f"{self.name} ({self.age})"`, and `__repr__` returning `f"Person({self.name!r}, {self.age})"`. Print the instance.'
@@ -780,7 +780,7 @@ chapters:
         max: 13/1
         start: ''
   - name: Abstract & Protocols
-    icon: data_structure
+    icon: connection
     levels:
       - name: Abstract Base Class
         obj: 'Define `from abc import ABC, abstractmethod`. Create `class Shape(ABC):` with `@abstractmethod def area(self): pass`. Try to instantiate Shape (it will fail).'
@@ -974,7 +974,7 @@ chapters:
         max: 11/1
         start: ''
   - name: Advanced OOP
-    icon: algorithm
+    icon: object_advance
     levels:
       - name: New vs Init
         obj: 'Define `class Singleton:` with `__new__(cls)` that prints "New" and `__init__(self)` that prints "Init". Create an instance and observe the order.'
@@ -1182,7 +1182,7 @@ chapters:
         max: 14/1
         start: ''
   - name: OOP Design
-    icon: module
+    icon: nodes
     levels:
       - name: Singleton
         obj: 'Implement `class Logger:` with `_instance = None` and `def __new__(cls):` returning the existing instance or creating one. Verify `Logger() is Logger()`.'

@@ -1,10 +1,10 @@
 <svg width="128" height="128" viewBox="0 0 128 128" fill="none" xmlns="http://www.w3.org/2000/svg">
-<rect x="1" y="1" width="126" height="126" rx="19" fill="currentColor" fill-opacity="0.5" fill="currentColor" stroke-width="2"/>
-<path d="M49 29.75V47.25L64 56L79 47.25V29.75L64 21L49 29.75ZM79 29.75L64 38.5M64 56V38.5M49 29.75L64 38.5" fill="currentColor" stroke-width="2" stroke-linejoin="round"/>
-<path d="M54 97.75V109.25L64 115L74 109.25V97.75L64 92L54 97.75ZM74 97.75L64 103.5M64 115V103.5M54 97.75L64 103.5" fill="currentColor" stroke-width="2" stroke-linejoin="round"/>
-<path d="M22 80.75V92.25L32 98L42 92.25V80.75L32 75L22 80.75ZM42 80.75L32 86.5M32 98V86.5M22 80.75L32 86.5" fill="currentColor" stroke-width="2" stroke-linejoin="round"/>
-<path d="M86 80.75V92.25L96 98L106 92.25V80.75L96 75L86 80.75ZM106 80.75L96 86.5M96 98V86.5M86 80.75L96 86.5" fill="currentColor" stroke-width="2" stroke-linejoin="round"/>
-<path d="M64 63L64 85" fill="currentColor" stroke-width="2" stroke-linecap="round"/>
-<path d="M76 56L85.6177 72.6583" fill="currentColor" stroke-width="2" stroke-linecap="round"/>
-<path d="M51.6177 56L42 72.6583" fill="currentColor" stroke-width="2" stroke-linecap="round"/>
+<rect x="1" y="1" width="126" height="126" rx="19" fill="currentColor" fill-opacity="0.25" stroke="currentColor" stroke-width="2"/>
+<path d="M49 29.75V47.25L64 56L79 47.25V29.75L64 21L49 29.75ZM79 29.75L64 38.5M64 56V38.5M49 29.75L64 38.5" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+<path d="M54 97.75V109.25L64 115L74 109.25V97.75L64 92L54 97.75ZM74 97.75L64 103.5M64 115V103.5M54 97.75L64 103.5" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+<path d="M22 80.75V92.25L32 98L42 92.25V80.75L32 75L22 80.75ZM42 80.75L32 86.5M32 98V86.5M22 80.75L32 86.5" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+<path d="M86 80.75V92.25L96 98L106 92.25V80.75L96 75L86 80.75ZM106 80.75L96 86.5M96 98V86.5M86 80.75L96 86.5" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+<path d="M64 63L64 85" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+<path d="M76 56L85.6177 72.6583" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+<path d="M51.6177 56L42 72.6583" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
 </svg>

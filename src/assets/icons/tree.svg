@@ -1,16 +1,16 @@
 <svg width="128" height="128" viewBox="0 0 128 128" fill="none" xmlns="http://www.w3.org/2000/svg">
-<rect x="1" y="1" width="126" height="126" rx="19" fill="currentColor" fill-opacity="0.5" fill="currentColor" stroke-width="2"/>
+<rect x="1" y="1" width="126" height="126" rx="19" fill="currentColor" fill-opacity="0.25" stroke="currentColor" stroke-width="2"/>
 <path d="M55.5177 41.8556C55.944 41.5045 56.0578 40.8368 55.7719 40.3643C55.486 39.8918 54.9087 39.7933 54.4823 40.1444L55 41L55.5177 41.8556ZM37.4823 54.1444C37.056 54.4955 36.9422 55.1632 37.2281 55.6357C37.514 56.1082 38.0913 56.2067 38.5177 55.8556L38 55L37.4823 54.1444ZM55 41L54.4823 40.1444L37.4823 54.1444L38 55L38.5177 55.8556L55.5177 41.8556L55 41Z" fill="currentColor"/>
 <path d="M72.4823 41.8556C72.056 41.5045 71.9422 40.8368 72.2281 40.3643C72.514 39.8918 73.0913 39.7933 73.5177 40.1444L73 41L72.4823 41.8556ZM90.5177 54.1444C90.944 54.4955 91.0578 55.1632 90.7719 55.6357C90.486 56.1082 89.9087 56.2067 89.4823 55.8556L90 55L90.5177 54.1444ZM73 41L73.5177 40.1444L90.5177 54.1444L90 55L89.4823 55.8556L72.4823 41.8556L73 41Z" fill="currentColor"/>
 <path d="M24.1284 89.5097C23.9041 90.0144 24.1125 90.643 24.5939 90.9138C25.0752 91.1846 25.6473 90.9949 25.8716 90.4903L25 90L24.1284 89.5097ZM33.8716 72.4903C34.0959 71.9856 33.8875 71.357 33.4061 71.0862C32.9248 70.8154 32.3527 71.0051 32.1284 71.5097L33 72L33.8716 72.4903ZM25 90L25.8716 90.4903L33.8716 72.4903L33 72L32.1284 71.5097L24.1284 89.5097L25 90Z" fill="currentColor"/>
 <path d="M51.8716 89.5097C52.0959 90.0144 51.8875 90.643 51.4061 90.9138C50.9248 91.1846 50.3527 90.9949 50.1284 90.4903L51 90L51.8716 89.5097ZM42.1284 72.4903C41.9041 71.9856 42.1125 71.357 42.5939 71.0862C43.0752 70.8154 43.6473 71.0051 43.8716 71.5097L43 72L42.1284 72.4903ZM51 90L50.1284 90.4903L42.1284 72.4903L43 72L43.8716 71.5097L51.8716 89.5097L51 90Z" fill="currentColor"/>
 <path d="M103.872 89.5097C104.096 90.0144 103.887 90.643 103.406 90.9138C102.925 91.1846 102.353 90.9949 102.128 90.4903L103 90L103.872 89.5097ZM94.1284 72.4903C93.9041 71.9856 94.1125 71.357 94.5939 71.0862C95.0752 70.8154 95.6473 71.0051 95.8716 71.5097L95 72L94.1284 72.4903ZM103 90L102.128 90.4903L94.1284 72.4903L95 72L95.8716 71.5097L103.872 89.5097L103 90Z" fill="currentColor"/>
 <path d="M76.1284 89.5097C75.9041 90.0144 76.1125 90.643 76.5939 90.9138C77.0752 91.1846 77.6473 90.9949 77.8716 90.4903L77 90L76.1284 89.5097ZM85.8716 72.4903C86.0959 71.9856 85.8875 71.357 85.4061 71.0862C84.9248 70.8154 84.3527 71.0051 84.1284 71.5097L85 72L85.8716 72.4903ZM77 90L77.8716 90.4903L85.8716 72.4903L85 72L84.1284 71.5097L76.1284 89.5097L77 90Z" fill="currentColor"/>
-<circle cx="64" cy="34" r="11" fill="currentColor" fill-opacity="0.5" fill="currentColor" stroke-width="2"/>
-<circle cx="38" cy="64" r="9" fill="currentColor" fill-opacity="0.5" fill="currentColor" stroke-width="2"/>
-<circle cx="90" cy="64" r="9" fill="currentColor" fill-opacity="0.5" fill="currentColor" stroke-width="2"/>
-<circle cx="25" cy="97" r="7" fill="currentColor" fill-opacity="0.5" fill="currentColor" stroke-width="2"/>
-<circle cx="51" cy="97" r="7" fill="currentColor" fill-opacity="0.5" fill="currentColor" stroke-width="2"/>
-<circle cx="77" cy="97" r="7" fill="currentColor" fill-opacity="0.5" fill="currentColor" stroke-width="2"/>
-<circle cx="103" cy="97" r="7" fill="currentColor" fill-opacity="0.5" fill="currentColor" stroke-width="2"/>
+<circle cx="64" cy="34" r="11" fill="currentColor" fill-opacity="0.25" stroke="currentColor" stroke-width="2"/>
+<circle cx="38" cy="64" r="9" fill="currentColor" fill-opacity="0.25" stroke="currentColor" stroke-width="2"/>
+<circle cx="90" cy="64" r="9" fill="currentColor" fill-opacity="0.25" stroke="currentColor" stroke-width="2"/>
+<circle cx="25" cy="97" r="7" fill="currentColor" fill-opacity="0.25" stroke="currentColor" stroke-width="2"/>
+<circle cx="51" cy="97" r="7" fill="currentColor" fill-opacity="0.25" stroke="currentColor" stroke-width="2"/>
+<circle cx="77" cy="97" r="7" fill="currentColor" fill-opacity="0.25" stroke="currentColor" stroke-width="2"/>
+<circle cx="103" cy="97" r="7" fill="currentColor" fill-opacity="0.25" stroke="currentColor" stroke-width="2"/>
 </svg>
