@@ -98,7 +98,18 @@ export async function runPython(code, onInput, onOutput) {
     pyodide.setStdout({ write: (buf) => { const text = new TextDecoder().decode(buf); stdout += text; if (onOutput) onOutput(text); return buf.length; }, isatty: true });
     pyodide.setStderr({ write: (buf) => { const text = new TextDecoder().decode(buf); stdout += text; if (onOutput) onOutput(text); return buf.length; }, isatty: true });
     pyodide.setStdin({
-      stdin: () => "",
+      stdin: async () => {
+        return new Promise((resolve) => {
+          if (onInput) {
+            onInput((value) => {
+              if (onOutput) onOutput(value + "\n");
+              resolve(value);
+            });
+          } else {
+            resolve("");
+          }
+        });
+      },
     });
 
     try {
