@@ -120,15 +120,12 @@ export default function CodeEditorContainer({ code, setCode, language, files, fi
             const promptRaw = inputMatches[i][1] || "";
             const prompt = promptRaw.replace(/^['"`]|['"`]$/g, '');
 
-            onOutput(prompt);
-
             const value = await new Promise((resolve) => {
               pendingResolve.current = resolve;
               setWaitingInput(true);
             });
 
             inputs.push(value);
-            onOutput(value + "\n");
           }
 
           const result = await runPythonWithIO(userCode, inputs);
