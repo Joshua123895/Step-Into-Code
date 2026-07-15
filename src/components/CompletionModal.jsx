@@ -80,7 +80,7 @@ export default function CompletionModal({ level, stars, resultInfo, onContinue, 
             </PixelButton>
           )}
           <PixelButton onClick={onContinue} size="lg">
-            Continue <ArrowRight size={18} className="inline ml-1" style={{ filter: "drop-shadow(0 0 2px currentColor)" }} />
+            Continue <ArrowRight size={18} className="inline ml-1" />
           </PixelButton>
         </div>
       </div>

@@ -77,7 +77,7 @@ function parseTests(tests) {
 
 function parseExample(ex) {
   if (!ex) return undefined;
-  return { input: ex.in, output: ex.out };
+  return { input: ex.in ?? ex.input, output: ex.out ?? ex.output };
 }
 
 function parseChecks(checks) {

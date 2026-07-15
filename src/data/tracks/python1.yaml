@@ -1770,7 +1770,7 @@ chapters:
               City: Tokyo
               Job: Student
         id: 89
-        max: 8/1
+        max: 9/1
         obj: Read a traveler's name, age (int), height (float), city, and job. Print a formatted passport card with `f-strings` - height with 1 decimal, age as integer, city and job as strings. Use `print()` with multiple arguments on the first line to show `name` and `age` together, then separate lines for the rest.
         sol: |-
           name = input()

@@ -28,8 +28,8 @@ export default function TrackCard({ track }) {
         style={{ background: diff.color }}
       />
       <div className="relative">
-        <div className="flex gap-4 mb-4">
-          <Icon src={track.trackIcon} alt={track.name} size={56} color={diff.color} className="shrink-0 mt-1" />
+        <div className="flex mb-4">
+          <Icon src={track.trackIcon} alt={track.name} size={56} color={diff.color} className="shrink-0 mt-1 mr-6" />
           <div className="flex-1 min-w-0">
             <div className="flex items-start justify-between gap-2 mb-1">
               <h3
@@ -54,7 +54,7 @@ export default function TrackCard({ track }) {
         <div className="mt-4 flex items-center justify-between">
           <div className="flex items-center gap-4 text-sm" style={{ color: "var(--text-muted)" }}>
             <div className="flex items-center gap-1.5">
-              <BookOpen size={16} style={{ filter: "drop-shadow(0 0 2px currentColor)" }} />
+              <BookOpen size={16} style={{ color: diff.color }} />
               <span
                 className="font-bold"
                 style={{ color: diff.color, fontFamily: "'Courier New', monospace" }}
@@ -62,9 +62,9 @@ export default function TrackCard({ track }) {
                 {track.chapters.length}
               </span>
             </div>
-            <span>·</span>
+            <span className="text-lg leading-none" style={{ color: "var(--text-muted)" }}>·</span>
             <div className="flex items-center gap-1.5">
-              <CheckCircle size={16} style={{ filter: "drop-shadow(0 0 2px currentColor)" }} />
+              <CheckCircle size={16} style={{ color: diff.color }} />
               <span
                 className="font-bold"
                 style={{ color: diff.color, fontFamily: "'Courier New', monospace" }}
@@ -74,7 +74,7 @@ export default function TrackCard({ track }) {
             </div>
           </div>
           <PixelButton onClick={() => navigate(`/tracks/${track.slug}`)} size="md">
-            Continue <ArrowRight size={16} className="inline ml-1" style={{ filter: "drop-shadow(0 0 2px currentColor)" }} />
+            Continue <ArrowRight size={16} className="inline ml-1" />
           </PixelButton>
         </div>
       </div>

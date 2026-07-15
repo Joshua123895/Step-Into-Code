@@ -23,7 +23,7 @@ export default function ChapterPage() {
           Chapter not found
         </h1>
         <button onClick={() => navigate(`/tracks/${trackName}`)} style={{ color: diff.color }}>
-          <ArrowLeft size={14} className="inline mr-1" style={{ filter: "drop-shadow(0 0 2px currentColor)" }} /> Back to chapters
+          <ArrowLeft size={14} className="inline mr-1" /> Back to chapters
         </button>
       </div>
     );
@@ -41,11 +41,11 @@ export default function ChapterPage() {
         <button onClick={() => navigate(`/tracks/${trackName}`)}
           className="text-sm mb-4 flex items-center gap-1 hover:gap-2 transition-all"
           style={{ color: "var(--text-muted)" }}>
-          <ArrowLeft size={14} className="inline mr-1" style={{ filter: "drop-shadow(0 0 2px currentColor)" }} /> {track.name}
+          <ArrowLeft size={14} className="inline mr-1" /> {track.name}
         </button>
 
-        <div className="flex items-center gap-4 mb-4">
-          <Icon src={chapter.chapterIcon} alt={chapter.name} size={64} color={diff.color} className="md:!w-[96px] md:!h-[96px]" />
+        <div className="flex items-center gap-6 mb-4">
+          <Icon src={chapter.chapterIcon} alt={chapter.name} size={64} color={diff.color} className="md:w-24! md:h-24! shrink-0" />
           <div>
             <div className="text-xs font-bold mb-0.5 uppercase tracking-wider" style={{ color: "var(--text-muted)" }}>
               Chapter {chapter.id}
@@ -55,10 +55,6 @@ export default function ChapterPage() {
             </h1>
           </div>
         </div>
-
-        <p className="text-sm mb-4" style={{ color: "var(--text-secondary)" }}>
-          Learn how programs store and remember information through small, satisfying coding puzzles.
-        </p>
 
         <ProgressBar value={progress} color={diff.color} />
 

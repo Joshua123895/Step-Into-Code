@@ -114,15 +114,17 @@ export default function LevelPage() {
   const serverCacheRef = useRef(new Map());
   const prevLevelIdRef = useRef(null);
   const solutionCacheRef = useRef(null);
-  const initialFileSnapshotRef = useRef(null);
+  const [initialFileSnapshot, setInitialFileSnapshot] = useState(null);
 
-  if (prevLevelIdRef.current !== levelId) {
-    prevLevelIdRef.current = levelId;
-    const initial = level?.files?.initial ? { ...level.files.initial } : {};
-    fileStore.current = initial;
-    initialFileSnapshotRef.current = { ...initial };
-    setFileEntries(initial);
-  }
+  useEffect(() => {
+    if (prevLevelIdRef.current !== levelId) {
+      prevLevelIdRef.current = levelId;
+      const initial = level?.files?.initial ? { ...level.files.initial } : {};
+      fileStore.current = initial;
+      setInitialFileSnapshot({ ...initial });
+      setFileEntries(initial);
+    }
+  }, [levelId, level?.files?.initial]);
 
   useEffect(() => {
     if (level?.files) {
@@ -138,7 +140,7 @@ export default function LevelPage() {
         })
         .catch(() => {});
     }
-  }, [level?.id]);
+  }, [level?.id, level?.files, level?.solution, level?.startingCode]);
 
   function syncFileStore() {
     setFileEntries({ ...fileStore.current });
@@ -169,7 +171,6 @@ export default function LevelPage() {
   const [showModal, setShowModal] = useState(false);
   const [showHint, setShowHint] = useState(false);
   const [earnedStars, setEarnedStars] = useState(0);
-  const [hintUsed, setHintUsed] = useState(false);
   const [testing, setTesting] = useState(false);
   const [testFailure, setTestFailure] = useState(null);
   const [resultInfo, setResultInfo] = useState(null);
@@ -198,7 +199,7 @@ export default function LevelPage() {
     const maxLines = level.maxLines ?? lineCount + 1;
     const maxTime = level.maxTime ?? 1;
 
-    let execTime = 0;
+    let execTime;
 
     const hasTests = level.tests && level.tests.length > 0;
 
@@ -385,10 +386,7 @@ export default function LevelPage() {
   };
 
   const handleHintToggle = () => {
-    setShowHint((prev) => {
-      if (!prev) setHintUsed(true);
-      return !prev;
-    });
+    setShowHint((prev) => !prev);
   };
 
   if (!track || !chapter || !level) {
@@ -398,7 +396,7 @@ export default function LevelPage() {
           Level not found
         </h1>
         <button onClick={() => navigate("/tracks")} style={{ color: "#6AAE6F" }}>
-          <ArrowLeft size={14} className="inline mr-1" style={{ filter: "drop-shadow(0 0 2px currentColor)" }} /> Back to tracks
+          <ArrowLeft size={14} className="inline mr-1" /> Back to tracks
         </button>
       </div>
     );
@@ -424,7 +422,6 @@ export default function LevelPage() {
           resultInfo={resultInfo}
           onRetry={() => {
             setShowModal(false);
-            setHintUsed(false);
             setShowHint(false);
           }}
           onContinue={() => {
@@ -504,7 +501,7 @@ export default function LevelPage() {
             className="text-sm mb-6 flex items-center gap-1 hover:gap-2 transition-all"
             style={{ color: "var(--text-muted)" }}
           >
-            <ArrowLeft size={14} className="inline mr-1" style={{ filter: "drop-shadow(0 0 2px currentColor)" }} /> {chapter.name}
+            <ArrowLeft size={14} className="inline mr-1" /> {chapter.name}
           </button>
 
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:items-start">
@@ -695,7 +692,7 @@ export default function LevelPage() {
             </div>
 
             <div className="lg:col-span-6 lg:self-start">
-              <CodeEditorContainer code={code} setCode={setCode} language={track.name.split(" ")[0]} files={level.files} fileEntries={fileEntries} fileStore={fileStore} onFileUpdate={syncFileStore} fileEntriesBefore={fileEntriesBefore} initialFileSnapshot={initialFileSnapshotRef.current} />
+              <CodeEditorContainer code={code} setCode={setCode} language={track.name.split(" ")[0]} files={level.files} fileEntries={fileEntries} fileStore={fileStore} onFileUpdate={syncFileStore} fileEntriesBefore={fileEntriesBefore} initialFileSnapshot={initialFileSnapshot} />
 
               <p className="text-xs mt-4 text-center" style={{ color: "var(--text-muted)" }}>
                 Write your code above, then click Run to test or Submit to check your answer.
@@ -732,7 +729,7 @@ export default function LevelPage() {
                       Current Chapter
                     </div>
                     <div className="flex items-center gap-2">
-                      <Icon src={chapter.chapterIcon} alt={chapter.name} size={28} color={diff.color} className="md:!w-[42px] md:!h-[42px]" />
+                      <Icon src={chapter.chapterIcon} alt={chapter.name} size={28} color={diff.color} className="md:w-10.5! md:h-10.5!" />
                       <span
                         className="text-sm font-bold"
                         style={{ color: "var(--text)", fontFamily: "'Courier New', monospace" }}

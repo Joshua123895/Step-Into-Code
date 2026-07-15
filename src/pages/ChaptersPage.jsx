@@ -22,7 +22,7 @@ export default function ChaptersPage() {
           Track not found
         </h1>
         <button onClick={() => navigate("/tracks")} style={{ color: diff.color }}>
-          <ArrowLeft size={14} className="inline mr-1" style={{ filter: "drop-shadow(0 0 2px currentColor)" }} /> Back to tracks
+          <ArrowLeft size={14} className="inline mr-1" /> Back to tracks
         </button>
       </div>
     );
@@ -41,11 +41,11 @@ export default function ChaptersPage() {
         className="text-sm mb-6 flex items-center gap-1 hover:gap-2 transition-all"
         style={{ color: "var(--text-muted)" }}
       >
-        <ArrowLeft size={14} className="inline mr-1" style={{ filter: "drop-shadow(0 0 2px currentColor)" }} /> All Tracks
+        <ArrowLeft size={14} className="inline mr-1" /> All Tracks
       </button>
 
       <div className="flex items-center gap-4 mb-6">
-        <Icon src={track.trackIcon} alt={track.name} size={56} color={diff.color} className="md:!w-[84px] md:!h-[84px]" />
+        <Icon src={track.trackIcon} alt={track.name} size={56} color={diff.color} className="md:w-21! md:h-21!" />
         <div>
           <h1
             className="text-3xl font-black"
@@ -78,12 +78,12 @@ export default function ChaptersPage() {
           return (
             <div key={chapter.id} style={{ borderBottom: i < track.chapters.length - 1 ? `1px solid ${diff.color}15` : "none" }}>
               <div
-                className="flex items-center gap-3 px-4 py-3 cursor-pointer transition-all"
+                className="flex items-center gap-6 px-4 py-3 cursor-pointer transition-all"
                 style={{ background: isOpen ? `${diff.color}08` : "transparent" }}
                 onClick={() => setExpanded(isOpen ? null : chapter.id)}
               >
-                <Icon src={chapter.chapterIcon} alt={chapter.name} size={40} color={diff.color} className="md:!w-[60px] md:!h-[60px]" />
-                <div className="flex-1 min-w-0">
+                <Icon src={chapter.chapterIcon} alt={chapter.name} size={40} color={diff.color} className="md:w-15! md:h-15! shrink-0" />
+                <div className="flex-1 min-w-0 mb-2">
                   <div className="flex items-center gap-2">
                     <span className="text-sm font-bold" style={{ color: diff.color }}>
                       {i + 1}.
