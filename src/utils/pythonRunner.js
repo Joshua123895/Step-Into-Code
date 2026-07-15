@@ -1,6 +1,6 @@
 import { ensurePyodide } from "./pyodide";
 
-export async function runPythonWithIO(code, inputs = []) {
+export async function runPythonWithIO(code, inputs = [], quiet = false) {
   const pyodide = await ensurePyodide();
 
   let stdout = "";
@@ -8,7 +8,20 @@ export async function runPythonWithIO(code, inputs = []) {
   pyodide.setStdout({ write: (buf) => { stdout += new TextDecoder().decode(buf); return buf.length; }, isatty: true });
   pyodide.setStderr({ write: (buf) => { stdout += new TextDecoder().decode(buf); return buf.length; }, isatty: true });
 
-  const inputWrapper = `
+  const inputWrapper = quiet ? `
+import sys, builtins
+_inputs = ${JSON.stringify(inputs)}
+_input_index = 0
+def _input(prompt=""):
+    global _input_index
+    if _input_index < len(_inputs):
+        line = _inputs[_input_index]
+        _input_index += 1
+    else:
+        line = ""
+    return line
+builtins.input = _input
+` : `
 import sys, builtins
 _orig_input = builtins.input
 _inputs = ${JSON.stringify(inputs)}
