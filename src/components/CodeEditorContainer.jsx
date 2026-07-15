@@ -1,5 +1,5 @@
 import { useRef, useEffect, useState, useCallback, useMemo } from "react";
-import { runPython } from "../utils/pythonRunner";
+import { runPython, runPythonWithIO } from "../utils/pythonRunner";
 import { runPythonReal } from "../utils/pythonRunnerReal";
 import { mergeFileStore } from "../utils/fileManager";
 import { useTheme } from "../context/ThemeContext";
@@ -97,6 +97,7 @@ export default function CodeEditorContainer({ code, setCode, language, files, fi
         if (val !== undefined) snap[name] = val;
       }
       setBeforeSnapshot(snap);
+
       const onOutput = (text) => {
         rawOutputRef.current += text;
         setOutput(rawOutputRef.current);
@@ -107,7 +108,36 @@ export default function CodeEditorContainer({ code, setCode, language, files, fi
         setWaitingInput(true);
       };
 
-      await runPython(userCode, onInput, onOutput);
+      try {
+        await runPython(userCode, onInput, onOutput);
+      } catch {
+        // Streaming API unavailable (Vercel), use batch Pyodide instead
+        if (userCode.includes("input(")) {
+          const inputMatches = [...userCode.matchAll(/input\s*\(([^)]*)\)/g)];
+          const inputs = [];
+
+          for (let i = 0; i < inputMatches.length; i++) {
+            const promptRaw = inputMatches[i][1] || "";
+            const prompt = promptRaw.replace(/^['"`]|['"`]$/g, '');
+
+            onOutput(prompt);
+
+            const value = await new Promise((resolve) => {
+              pendingResolve.current = resolve;
+              setWaitingInput(true);
+            });
+
+            inputs.push(value);
+            onOutput(value + "\n");
+          }
+
+          const result = await runPythonWithIO(userCode, inputs);
+          if (result) onOutput(result);
+        } else {
+          const result = await runPythonWithIO(userCode, []);
+          if (result) onOutput(result);
+        }
+      }
     }
 
     setRunning(false);
