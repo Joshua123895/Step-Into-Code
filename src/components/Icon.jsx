@@ -26,7 +26,7 @@ export default function Icon({ src, alt, size = 40, className = "", color }) {
     const SvgComponent = src;
     return (
       <div className={`shrink-0 ${className}`} style={{ width: size, height: size, color }}>
-        <SvgComponent width={size} height={size} />
+        <SvgComponent width="100%" height="100%" />
       </div>
     );
   }

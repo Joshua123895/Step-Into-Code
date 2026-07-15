@@ -44,7 +44,7 @@ export default function ChapterPage() {
         </button>
 
         <div className="flex items-center gap-4 mb-4">
-          <Icon src={chapter.chapterIcon} alt={chapter.name} size={64} color={diff.color} />
+          <Icon src={chapter.chapterIcon} alt={chapter.name} size={64} color={diff.color} className="md:!w-[96px] md:!h-[96px]" />
           <div>
             <div className="text-xs font-bold mb-0.5 uppercase tracking-wider" style={{ color: "var(--text-muted)" }}>
               Chapter {chapter.id}

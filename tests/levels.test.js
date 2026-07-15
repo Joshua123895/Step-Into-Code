@@ -180,3 +180,35 @@ describe("Python Advance", () => {
     }
   }
 });
+
+describe("Object-Oriented Programming", () => {
+  const levels = loadTracks("python3.yaml");
+
+  for (const { chapter, level } of levels) {
+    const solutionCode = dedent(level.sol);
+
+    if (level.tests && level.tests.length > 0) {
+      describe(chapter, () => {
+        for (const rawTest of level.tests) {
+          const test = normalizeTest(rawTest);
+          const input = test.input !== undefined ? (Array.isArray(test.input) ? test.input : [test.input]) : [];
+          const label = input.length > 0
+            ? `${level.name}${level.id !== undefined ? ` (id:${level.id})` : ""} — input: ${JSON.stringify(input)}`
+            : `${level.name}${level.id !== undefined ? ` (id:${level.id})` : ""}`;
+
+          it(label, () => {
+            const output = runPython(solutionCode, level.files?.initial || {}, input);
+            expect(checkOutput(output, test)).toBe(true);
+          });
+        }
+      });
+    } else if (level.sol.includes("print(")) {
+      it(makeTestName(chapter, level), () => {
+        const output = runPython(solutionCode, level.files?.initial || {});
+        expect(output.trim()).not.toBe("");
+      });
+    } else {
+      it.skip(`${makeTestName(chapter, level)} — no tests, no print in solution`);
+    }
+  }
+});

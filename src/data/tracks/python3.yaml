@@ -2,24 +2,26 @@ name: Object-Oriented Programming
 slug: oop
 icon: oop
 desc: Master OOP in Python from defining your first class to metaclasses and design patterns.
-difficulty: 2
+difficulty: 3
 chapters:
   - name: Classes & Objects
     icon: object
     levels:
       - name: Define a Class
-        obj: 'Define an empty `class Dog:` with `pass` inside.'
+        obj: 'Define an empty `class Dog:` with `pass` inside. Then print `Dog.__name__`.'
         hint: 'Write `class Dog:` on one line, then `pass` indented on the next line.'
         expl: |-
           A class is a blueprint for creating objects. The `class` keyword creates a new type. `pass` is a placeholder that does nothing — it fills the body so Python doesn't complain about an empty class.
         sol: |-
           class Dog:
               pass
+          print(Dog.__name__)
         start: ''
-        tests: []
-        max: 3/1
+        tests:
+          - exp: Dog
+        max: 4/1
       - name: Create an Instance
-        obj: 'Define `class Dog: pass`, then create `dog = Dog()`.'
+        obj: 'Define `class Dog: pass`, create `dog = Dog()`, then print `type(dog).__name__`.'
         hint: 'Write `dog = Dog()` to create an instance by calling the class like a function.'
         expl: |-
           Calling a class `Dog()` creates a new instance (object) of that class. The variable `dog` now holds that instance. You can create as many independent instances as you want.
@@ -27,9 +29,11 @@ chapters:
           class Dog:
               pass
           dog = Dog()
+          print(type(dog).__name__)
         start: ''
-        tests: []
-        max: 4/1
+        tests:
+          - exp: Dog
+        max: 5/1
       - name: The Constructor
         obj: 'Add `def __init__(self):` to `Dog` that prints `"A dog is born!"`.'
         hint: '`def __init__(self): print("A dog is born!")` — `__init__` runs automatically on creation.'
@@ -46,7 +50,7 @@ chapters:
             A dog is born!
         max: 5/1
       - name: Instance Attributes
-        obj: 'Add `def __init__(self, name):` and store `self.name = name`. Create `Dog("Rex")`.'
+        obj: 'Add `def __init__(self, name):`, store `self.name = name`, create `Dog("Rex")`, and print `dog.name`.'
         hint: '`self.name = name` inside `__init__` saves the parameter as an instance attribute.'
         expl: |-
           Parameters passed to `Dog("Rex")` go into `__init__`. Assigning `self.name = name` stores the value on the instance, making it accessible later via `dog.name`. Each instance has its own copy.
@@ -55,9 +59,11 @@ chapters:
               def __init__(self, name):
                   self.name = name
           dog = Dog("Rex")
+          print(dog.name)
         start: ''
-        tests: []
-        max: 5/1
+        tests:
+          - exp: Rex
+        max: 6/1
       - name: Use an Attribute
         obj: 'Create `Dog("Rex")` and `print(dog.name)`.'
         hint: '`dog.name` accesses the attribute stored by `__init__`.'
@@ -149,7 +155,7 @@ chapters:
           - |
             1984 Orwell 328
         max: 7/1
-      - name: 'Test: BankAccount'
+      - name: 'BankAccount'
         obj: 'Define `class BankAccount:` with `__init__(self, owner, balance=0)`, `deposit(self, amount)`, `withdraw(self, amount)`, and `__str__` returning `f"{self.owner}: ${self.balance}"`. Create an account, deposit 100, withdraw 30, print the account.'
         example:
           in: []
@@ -323,7 +329,7 @@ chapters:
           - |
             {'name': 'Alice', 'age': 30}
         max: 6/1
-      - name: 'Test: Temperature'
+      - name: 'Temperature'
         obj: 'Define `class Temperature:` with `__init__(self, celsius)` and `@property` `fahrenheit` that converts (celsius * 9/5 + 32) plus a setter that converts back. Set to 100 Fahrenheit, print celsius. Then create from 0 celsius, print fahrenheit.'
         example:
           in: []
@@ -492,11 +498,10 @@ chapters:
               pass
           class D(B, C):
               pass
-          print(D.__mro__)
+          print(", ".join(c.__name__ for c in D.__mro__))
         start: ''
         tests:
-          - |
-            (<class 'D'>, <class 'B'>, <class 'C'>, <class 'A'>, <class 'object'>)
+          - match: D, B, C, A, object
         max: 7/1
       - name: Mixins
         obj: 'Define mixins `JSONMixin` with `to_json(self)` and `LogMixin` with `log(self)`. Create `class User(JSONMixin, LogMixin):` with `__init__(self, name)`. Call both methods.'
@@ -522,7 +527,7 @@ chapters:
             {"name": "Alice"}
             Log: Alice
         max: 11/1
-      - name: 'Test: Shape Hierarchy'
+      - name: 'Shape Hierarchy'
         obj: 'Define `class Shape:` with `area(self)` raising `NotImplementedError`. `class Circle(Shape):` with `__init__(self, radius)` and `area` returning `pi * r**2`. `class Rectangle(Shape):` with `__init__(self, w, h)` and `area` returning `w * h`. Create both and print their areas.'
         example:
           in: []
@@ -743,7 +748,7 @@ chapters:
             10
             6
         max: 7/1
-      - name: 'Test: Custom Collection'
+      - name: 'Custom Collection'
         obj: 'Define `class RangeCollection:` that works with `len()`, indexing, iteration, and `in` (via `__contains__`). Backed by a list built from `range(start, end)`. Print length, first element, iterate, check membership.'
         example:
           in: []
@@ -767,9 +772,7 @@ chapters:
           rc = RangeCollection(0, 5)
           print(len(rc))
           print(rc[0])
-          for x in rc:
-              print(x, end=" ")
-          print()
+          print(" ".join(str(x) for x in rc))
           print(3 in rc)
         tests:
           - |
@@ -783,7 +786,7 @@ chapters:
     icon: connection
     levels:
       - name: Abstract Base Class
-        obj: 'Define `from abc import ABC, abstractmethod`. Create `class Shape(ABC):` with `@abstractmethod def area(self): pass`. Try to instantiate Shape (it will fail).'
+        obj: 'Define `from abc import ABC, abstractmethod`. Create `class Shape(ABC):` with `@abstractmethod def area(self): pass`. Then print `issubclass(Shape, ABC)`.'
         hint: 'Classes with abstract methods cannot be instantiated. They must be subclassed and all abstract methods implemented.'
         expl: |-
           An abstract class is a class you cannot instantiate directly. It serves as a template. Subclasses must implement all `@abstractmethod` methods or they too become abstract. `ABC` (Abstract Base Class) marks the class as abstract.
@@ -793,9 +796,11 @@ chapters:
               @abstractmethod
               def area(self):
                   pass
+          print(issubclass(Shape, ABC))
         start: ''
-        tests: []
-        max: 5/1
+        tests:
+          - exp: "True"
+        max: 6/1
       - name: Concrete Subclass
         obj: 'Define `class Circle(Shape):` with `__init__(self, r)` and `area` returning `3.14 * r**2`. Create and print its area.'
         hint: 'Implement the abstract method with the exact same signature. Missing it raises TypeError at instantiation time.'
@@ -946,7 +951,7 @@ chapters:
           - |
             Point(x=3, y=4)
         max: 5/1
-      - name: 'Test: Plugin System'
+      - name: 'Plugin System'
         obj: 'Define `class Renderer(ABC):` with `@abstractmethod def render(self, data) -> str: pass`. Create `class JSONRenderer(Renderer):` and `class HTMLRenderer(Renderer):` each implementing `render`. Use a list of renderers and call each.'
         example:
           in: []
@@ -1148,7 +1153,7 @@ chapters:
             False
             True
         max: 10/1
-      - name: 'Test: Mini ORM'
+      - name: 'Mini ORM'
         obj: 'Define a descriptor `class Field:` that stores values. `class Model:` with `def __init_subclass__(cls):` collecting `Field` descriptors. `class User(Model):` with `name = Field()` and `email = Field()`. Create `User(name="Alice")` and print the fields.'
         example:
           in: []
@@ -1405,7 +1410,7 @@ chapters:
             Transforming data
             Saving output
         max: 13/1
-      - name: 'Test: Notification System'
+      - name: 'Notification System'
         obj: 'Build a notification system using multiple patterns. Define `class Notification:` with `send(self, msg)`. `class EmailNotification(Notification):` printing "Email: {msg}". `class SMSNotification(Notification):` printing "SMS: {msg}". `class Notifier:` that holds a list of Notification strategies and a `send_all(self, msg)` method. Use the Strategy pattern. Test with both notification types.'
         example:
           in: []
@@ -1537,14 +1542,14 @@ chapters:
                   print("D")
                   super().m()
           D().m()
-          print(D.__mro__)
+          print(", ".join(c.__name__ for c in D.__mro__))
         tests:
-          - |
-            D
-            B
-            C
-            A
-            (<class 'D'>, <class 'B'>, <class 'C'>, <class 'A'>, <class 'object'>)
+          - match: |
+              D
+              B
+              C
+              A
+              D, B, C, A, object
         max: 13/1
         start: ''
       - name: The Magic Container

@@ -166,9 +166,10 @@ TRACKS.forEach((track) => {
 });
 
 const DIFFICULTY = {
-  1: { label: "Basic", bg: "#6AAE6F20", color: "#6AAE6F" },
-  2: { label: "Advance", bg: "#7AA2F720", color: "#7AA2F7" },
-  3: { label: "Expert", bg: "#FF5F5720", color: "#FF5F57" },
+  1: { label: "Beginner", bg: "#6AAE6F20", color: "#6AAE6F" },
+  2: { label: "Intermediate", bg: "#7AA2F720", color: "#7AA2F7" },
+  3: { label: "Advanced", bg: "#BB9AF720", color: "#BB9AF7" },
+  4: { label: "Expert", bg: "#FF5F5720", color: "#FF5F57" },
 };
 
 export { TRACKS, DIFFICULTY };

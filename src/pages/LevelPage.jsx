@@ -731,7 +731,7 @@ export default function LevelPage() {
                       Current Chapter
                     </div>
                     <div className="flex items-center gap-2">
-                      <Icon src={chapter.chapterIcon} alt={chapter.name} size={28} color={diff.color} />
+                      <Icon src={chapter.chapterIcon} alt={chapter.name} size={28} color={diff.color} className="md:!w-[42px] md:!h-[42px]" />
                       <span
                         className="text-sm font-bold"
                         style={{ color: "var(--text)", fontFamily: "'Courier New', monospace" }}

@@ -1,7 +1,7 @@
 name: Python Fundamentals
 slug: python
 icon: python
-description: Master Python from the ground up — variables, loops, functions, and beyond.
+desc: 'Master Python from the ground up: variables, loops, functions, and more.'
 difficulty: 1
 chapters:
   - name: Input & Output
@@ -53,11 +53,16 @@ chapters:
       - name: User Input
         hint: 'Try: `name = input("What is your name?")`'
         id: 4
-        max: 2/1
-        obj: Use `input()` to ask `"What is your name?"` and store the answer in `name`.
+        max: 3/1
+        obj: Use `input()` to ask `"What is your name?"` and store the answer in `name`. Then print `f"Hello, {name}!"`.
         expl: '`input()` displays a prompt and waits for the user to type something. The result is returned as text.'
-        sol: name = input("What is your name?")
+        sol: |-
+          name = input()
+          print(f"Hello, {name}!")
         start: ''
+        tests:
+          - in: ["World"]
+            exp: Hello, World!
       - name: Echo Machine
         hint: |-
           Try: `text = input()
@@ -1111,22 +1116,31 @@ chapters:
             - Dog
         id: 59
         max: 3/1
-        obj: Define an empty class `Dog` using `class Dog:` and `pass`.
+        obj: Define an empty class `Dog` using `class Dog:` and `pass`. Then print `Dog.__name__`.
         expl: A class is a blueprint for creating objects. `class` defines a new type, while `pass` acts as a placeholder.
         sol: |-
           class Dog:
               pass
+          print(Dog.__name__)
         start: ''
+        tests:
+          - exp: Dog
       - name: Create an Object
         hint: Use `Dog()` to create an object.
         id: 60
-        max: 2/1
-        obj: Create an object named `dog` from `Dog`.
+        max: 4/1
+        obj: 'Define `class Dog: pass`, create `dog = Dog()`, print `type(dog).__name__`.'
         expl: Objects are instances of classes.
-        sol: dog = Dog()
+        sol: |-
+          class Dog:
+              pass
+          dog = Dog()
+          print(type(dog).__name__)
         start: |
           class Dog:
               pass
+        tests:
+          - exp: Dog
       - name: Constructor & Attributes
         hint: Use `self.name = name` inside the constructor.
         sourceChecks:
@@ -1135,14 +1149,18 @@ chapters:
           functions:
             - __init__
         id: 61
-        max: 4/1
-        obj: Define `class Dog:` with `__init__(self, name):` storing `self.name = name`.
+        max: 5/1
+        obj: Define `class Dog:` with `__init__(self, name):` storing `self.name = name`. Create `Dog("Rex")` and print its name.
         expl: '`__init__` runs automatically when an object is created.'
         sol: |-
           class Dog:
               def __init__(self, name):
                   self.name = name
+          dog = Dog("Rex")
+          print(dog.name)
         start: ''
+        tests:
+          - exp: Rex
       - name: Read an Attribute
         hint: Use `dog.name`.
         tests:
@@ -1211,15 +1229,20 @@ chapters:
             Puppy:
               - Dog
         id: 65
-        max: 3/1
-        obj: Define `class Puppy(Dog):` that inherits from `Dog`.
+        max: 5/1
+        obj: Define `class Puppy(Dog):` that inherits from `Dog`. Then print `issubclass(Puppy, Dog)`.
         expl: Inheritance lets one class reuse another class's behavior.
         sol: |-
+          class Dog:
+              pass
           class Puppy(Dog):
               pass
+          print(issubclass(Puppy, Dog))
         start: |
           class Dog:
               pass
+        tests:
+          - exp: "True"
       - name: Override a Method
         hint: Create a new method with the same name.
         tests:
@@ -1288,13 +1311,17 @@ chapters:
           track:
             - test.txt
         id: 68
-        max: 3/1
-        obj: Open `"test.txt"` in write mode using `with open(...) as f:` and write `"Hello"`.
+        max: 5/1
+        obj: Open `"test.txt"` in write mode, write `"Hello"`, then read and print the content.
         expl: The `with` statement automatically closes files. `"w"` mode creates or overwrites a file.
         sol: |-
           with open("test.txt", "w") as f:
               f.write("Hello")
+          with open("test.txt") as f:
+              print(f.read())
         start: ''
+        tests:
+          - exp: Hello
       - name: Read a File
         hint: |-
           Try:`with open("test.txt", "r") as f:
@@ -1318,13 +1345,17 @@ chapters:
           track:
             - log.txt
         id: 70
-        max: 3/1
-        obj: Open `"log.txt"` in append mode and write `"done"`.
+        max: 5/1
+        obj: Open `"log.txt"` in append mode, write `"done"`, then read and print the content.
         expl: '`"a"` appends content to the end of a file instead of overwriting it.'
         sol: |-
           with open("log.txt", "a") as f:
               f.write("done")
+          with open("log.txt") as f:
+              print(f.read())
         start: ''
+        tests:
+          - exp: job here is done
       - name: Read Lines
         hint: |-
           Try:`with open("notes.txt") as f:
@@ -1385,8 +1416,8 @@ chapters:
           track:
             - save.json
         id: 74
-        max: 6/1
-        obj: 'Import `json`, create `{"score": 100}` and save it into `"save.json"` using `json.dump()`.'
+        max: 8/1
+        obj: 'Import `json`, create `{"score": 100}`, save it, then read and print the file.'
         expl: '`json.dump()` writes Python data structures into a JSON file.'
         sol: |-
           import json
@@ -1395,7 +1426,11 @@ chapters:
 
           with open("save.json", "w") as f:
               json.dump(data, f)
+          with open("save.json") as f:
+              print(f.read().strip())
         start: ''
+        tests:
+          - match: '\{"score": 100\}'
       - name: Journal Keeper
         example:
           input: []
@@ -1613,11 +1648,15 @@ chapters:
       - name: Import Multiple Names
         hint: Use a comma between imported names.
         id: 85
-        max: 2/1
-        obj: Import `choice` and `randint` from `random`.
+        max: 3/1
+        obj: Import `choice` and `randint` from `random`. Then print `choice([42])`.
         expl: Several functions can be imported in a single statement.
-        sol: from random import choice, randint
+        sol: |-
+          from random import choice, randint
+          print(choice([42]))
         start: ''
+        tests:
+          - exp: "42"
       - name: Alias Import
         hint: |-
           Try:`import datetime as dt

@@ -44,7 +44,7 @@ export default function ChaptersPage() {
       </button>
 
       <div className="flex items-center gap-4 mb-6">
-        <Icon src={track.trackIcon} alt={track.name} size={56} color={diff.color} />
+        <Icon src={track.trackIcon} alt={track.name} size={56} color={diff.color} className="md:!w-[84px] md:!h-[84px]" />
         <div>
           <h1
             className="text-3xl font-black"
@@ -81,7 +81,7 @@ export default function ChaptersPage() {
                 style={{ background: isOpen ? `${diff.color}08` : "transparent" }}
                 onClick={() => setExpanded(isOpen ? null : chapter.id)}
               >
-                <Icon src={chapter.chapterIcon} alt={chapter.name} size={40} color={diff.color} />
+                <Icon src={chapter.chapterIcon} alt={chapter.name} size={40} color={diff.color} className="md:!w-[60px] md:!h-[60px]" />
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2">
                     <span className="text-sm font-bold" style={{ color: diff.color }}>

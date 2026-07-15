@@ -744,7 +744,7 @@ chapters:
               [1, 2, 3, 4, 3, 2, 1]
           - in: 0 3
             exp: |
-              [0, 1, 2, 3, 2, 1]
+              [0, 1, 2, 3, 2, 1, 0]
         max: 9/1
         start: |-
           def chain(iterables):
@@ -763,6 +763,21 @@ chapters:
             - '3'
           out: |
             [('1', '2', '3'), ('2', '3', '4'), ('3', '4', '5')]
+        sol: |-
+          n = int(input())
+          items = input().split()
+          size = int(input())
+          def windows(items, n):
+              it = iter(items)
+              window = []
+              for _ in range(n):
+                  window.append(next(it))
+              yield tuple(window)
+              for item in it:
+                  window.pop(0)
+                  window.append(item)
+                  yield tuple(window)
+          print(list(windows(items, size)))
   - name: Context Managers
     icon: file
     levels:
