@@ -1,15 +1,18 @@
 import { useNavigate } from "react-router-dom";
 import { useProgress } from "../hooks/useProgress";
 import { DIFFICULTY } from "../data/tracks";
+import { BookOpen, CheckCircle, ArrowRight } from "lucide-react";
 import ProgressBar from "./ProgressBar";
 import PixelButton from "./PixelButton";
 import Icon from "./Icon";
 
 export default function TrackCard({ track }) {
   const navigate = useNavigate();
-  const { getTrackProgress } = useProgress();
+  const { getCompletedCount, getTrackProgress } = useProgress();
 
   const diff = DIFFICULTY[track.difficulty] || DIFFICULTY[1];
+  const totalLevels = track.chapters.reduce((s, ch) => s + ch.levels.length, 0);
+  const completedCount = getCompletedCount(track.slug);
 
   return (
     <div
@@ -25,52 +28,53 @@ export default function TrackCard({ track }) {
         style={{ background: diff.color }}
       />
       <div className="relative">
-        <div className="flex items-start justify-between mb-4">
-          <Icon src={track.trackIcon} alt={track.name} size={56} color={diff.color} />
-          <span
-            className="text-xs font-bold px-3 py-1 rounded-full"
-            style={{ background: diff.bg, color: diff.color }}
-          >
-            {diff.label}
-          </span>
+        <div className="flex gap-4 mb-4">
+          <Icon src={track.trackIcon} alt={track.name} size={56} color={diff.color} className="shrink-0 mt-1" />
+          <div className="flex-1 min-w-0">
+            <div className="flex items-start justify-between gap-2 mb-1">
+              <h3
+                className="text-xl font-bold truncate"
+                style={{ color: "var(--text)", fontFamily: "'Courier New', monospace" }}
+              >
+                {track.name}
+              </h3>
+              <span
+                className="text-xs font-bold px-3 py-1 rounded-full shrink-0"
+                style={{ background: diff.bg, color: diff.color }}
+              >
+                {diff.label}
+              </span>
+            </div>
+            <p className="text-sm truncate" style={{ color: "var(--text-secondary)" }}>
+              {track.description}
+            </p>
+          </div>
         </div>
-        <h3
-          className="text-xl font-bold mb-1"
-          style={{ color: "var(--text)", fontFamily: "'Courier New', monospace" }}
-        >
-          {track.name}
-        </h3>
-        <p className="text-sm mb-4" style={{ color: "var(--text-secondary)" }}>
-          {track.description}
-        </p>
-        <ProgressBar value={getTrackProgress(track.slug, track.chapters.reduce((s, ch) => s + ch.levels.length, 0))} color={diff.color} />
+        <ProgressBar value={getTrackProgress(track.slug, totalLevels)} color={diff.color} />
         <div className="mt-4 flex items-center justify-between">
-          <div className="flex gap-4">
-            <div className="text-center">
-              <div
-                className="text-lg font-bold"
+          <div className="flex items-center gap-4 text-sm" style={{ color: "var(--text-muted)" }}>
+            <div className="flex items-center gap-1.5">
+              <BookOpen size={16} style={{ filter: "drop-shadow(0 0 2px currentColor)" }} />
+              <span
+                className="font-bold"
                 style={{ color: diff.color, fontFamily: "'Courier New', monospace" }}
               >
                 {track.chapters.length}
-              </div>
-              <div className="text-xs" style={{ color: "var(--text-muted)" }}>
-                Chapter{track.chapters.length > 1 ? "s" : ""}
-              </div>
+              </span>
             </div>
-            <div className="text-center">
-              <div
-                className="text-lg font-bold"
+            <span>·</span>
+            <div className="flex items-center gap-1.5">
+              <CheckCircle size={16} style={{ filter: "drop-shadow(0 0 2px currentColor)" }} />
+              <span
+                className="font-bold"
                 style={{ color: diff.color, fontFamily: "'Courier New', monospace" }}
               >
-                {track.chapters.reduce((sum, ch) => sum + ch.levels.length, 0)}
-              </div>
-              <div className="text-xs" style={{ color: "var(--text-muted)" }}>
-                Levels
-              </div>
+                {completedCount}/{totalLevels}
+              </span>
             </div>
           </div>
           <PixelButton onClick={() => navigate(`/tracks/${track.slug}`)} size="md">
-            Continue →
+            Continue <ArrowRight size={16} className="inline ml-1" style={{ filter: "drop-shadow(0 0 2px currentColor)" }} />
           </PixelButton>
         </div>
       </div>

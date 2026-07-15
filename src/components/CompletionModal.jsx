@@ -1,3 +1,4 @@
+import { ArrowRight } from "lucide-react";
 import PixelButton from "./PixelButton";
 import StarIcon from "./StarIcon";
 
@@ -79,7 +80,7 @@ export default function CompletionModal({ level, stars, resultInfo, onContinue, 
             </PixelButton>
           )}
           <PixelButton onClick={onContinue} size="lg">
-            Continue →
+            Continue <ArrowRight size={18} className="inline ml-1" style={{ filter: "drop-shadow(0 0 2px currentColor)" }} />
           </PixelButton>
         </div>
       </div>

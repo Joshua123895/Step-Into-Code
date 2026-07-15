@@ -1,3 +1,4 @@
+import { ArrowLeft } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import TrackCard from "../components/TrackCard";
 import { TRACKS } from "../data/tracks";
@@ -13,7 +14,7 @@ export default function TrackPage() {
           className="text-sm mb-4 flex items-center gap-1 hover:gap-2 transition-all"
           style={{ color: "var(--text-muted)" }}
         >
-          ← Back to Home
+          <ArrowLeft size={14} className="inline mr-1" style={{ filter: "drop-shadow(0 0 2px currentColor)" }} /> Back to Home
         </button>
         <h1
           className="text-3xl font-black mb-1"

@@ -1,3 +1,4 @@
+import { ArrowLeft } from "lucide-react";
 import { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { TRACKS, DIFFICULTY } from "../data/tracks";
@@ -21,7 +22,7 @@ export default function ChaptersPage() {
           Track not found
         </h1>
         <button onClick={() => navigate("/tracks")} style={{ color: diff.color }}>
-          ← Back to tracks
+          <ArrowLeft size={14} className="inline mr-1" style={{ filter: "drop-shadow(0 0 2px currentColor)" }} /> Back to tracks
         </button>
       </div>
     );
@@ -40,7 +41,7 @@ export default function ChaptersPage() {
         className="text-sm mb-6 flex items-center gap-1 hover:gap-2 transition-all"
         style={{ color: "var(--text-muted)" }}
       >
-        ← All Tracks
+        <ArrowLeft size={14} className="inline mr-1" style={{ filter: "drop-shadow(0 0 2px currentColor)" }} /> All Tracks
       </button>
 
       <div className="flex items-center gap-4 mb-6">

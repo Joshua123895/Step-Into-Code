@@ -1,3 +1,4 @@
+import { ArrowLeft } from "lucide-react";
 import { useParams, useNavigate } from "react-router-dom";
 import { TRACKS, DIFFICULTY } from "../data/tracks";
 import { useProgress } from "../hooks/useProgress";
@@ -22,7 +23,7 @@ export default function ChapterPage() {
           Chapter not found
         </h1>
         <button onClick={() => navigate(`/tracks/${trackName}`)} style={{ color: diff.color }}>
-          ← Back to chapters
+          <ArrowLeft size={14} className="inline mr-1" style={{ filter: "drop-shadow(0 0 2px currentColor)" }} /> Back to chapters
         </button>
       </div>
     );
@@ -40,7 +41,7 @@ export default function ChapterPage() {
         <button onClick={() => navigate(`/tracks/${trackName}`)}
           className="text-sm mb-4 flex items-center gap-1 hover:gap-2 transition-all"
           style={{ color: "var(--text-muted)" }}>
-          ← {track.name}
+          <ArrowLeft size={14} className="inline mr-1" style={{ filter: "drop-shadow(0 0 2px currentColor)" }} /> {track.name}
         </button>
 
         <div className="flex items-center gap-4 mb-4">

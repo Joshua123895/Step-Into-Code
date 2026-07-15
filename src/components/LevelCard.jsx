@@ -1,3 +1,4 @@
+import { Play } from "lucide-react";
 import StarIcon from "./StarIcon";
 
 export default function LevelCard({ level, onClick, stars }) {
@@ -80,7 +81,7 @@ export default function LevelCard({ level, onClick, stars }) {
               className="text-xs font-bold px-2 py-0.5 rounded-full"
               style={{ background: "#7AA2F720", color: "#7AA2F7" }}
             >
-              Play →
+              <Play size={12} className="inline mr-0.5" style={{ filter: "drop-shadow(0 0 2px currentColor)" }} /> Play
             </div>
           )}
         </div>

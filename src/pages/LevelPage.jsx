@@ -1,3 +1,4 @@
+import { ArrowLeft } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { TRACKS, DIFFICULTY } from "../data/tracks";
@@ -397,7 +398,7 @@ export default function LevelPage() {
           Level not found
         </h1>
         <button onClick={() => navigate("/tracks")} style={{ color: "#6AAE6F" }}>
-          ← Back to tracks
+          <ArrowLeft size={14} className="inline mr-1" style={{ filter: "drop-shadow(0 0 2px currentColor)" }} /> Back to tracks
         </button>
       </div>
     );
@@ -503,7 +504,7 @@ export default function LevelPage() {
             className="text-sm mb-6 flex items-center gap-1 hover:gap-2 transition-all"
             style={{ color: "var(--text-muted)" }}
           >
-            ← {chapter.name}
+            <ArrowLeft size={14} className="inline mr-1" style={{ filter: "drop-shadow(0 0 2px currentColor)" }} /> {chapter.name}
           </button>
 
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:items-start">
