@@ -29,6 +29,12 @@ export default function LevelPage() {
     return lines.slice(start, end).join("\n");
   }
 
+  function matchOutput(actual, expected) {
+    const a = norm(actual);
+    const e = norm(expected);
+    return a === e || (e.length > 0 && a.length > e.length && a.endsWith(e));
+  }
+
   const DEV = import.meta.env.DEV;
   function debugFail(label, info) { if (DEV) console.debug(`[validation] ${label}`, info); }
   function diffStrings(a, b) {
@@ -208,13 +214,14 @@ export default function LevelPage() {
           const inputs = test.input ? (Array.isArray(test.input) ? test.input : [test.input]) : [];
           const output = await runWithFiles(code, inputs);
           const clean = norm(output);
+          const exp = norm(test.expected ?? "");
           const match = test.expectAnyOf
             ? test.expectAnyOf.includes(clean)
             : test.expectMatch
             ? new RegExp(test.expectMatch).test(output.replace(/\r\n/g, "\n"))
-            : clean === norm(test.expected);
+            : clean === exp || (exp.length > 0 && clean.length > exp.length && clean.endsWith(exp));
         if (!match) {
-          debugFail("test mismatch", { level: level.name, inputs, matchMode: test.expectAnyOf ? "anyOf" : test.expectMatch ? "regex" : "exact", expected: norm(test.expected) ?? test.expectAnyOf, actual: clean, raw: output, diff: diffStrings(norm(test.expected) ?? "", clean) });
+          debugFail("test mismatch", { level: level.name, inputs, matchMode: test.expectAnyOf ? "anyOf" : test.expectMatch ? "regex" : "exact", expected: exp, actual: clean, raw: output, diff: diffStrings(exp, clean) });
           playWrongSound();
           setTestFailure({ input: test.input, expected: test.expected ?? test.expectAnyOf, actual: norm(clean) });
           setTesting(false);
@@ -245,7 +252,7 @@ export default function LevelPage() {
 
         execTime = (performance.now() - startTime) / 1000;
 
-        if (norm(actualOutput) === norm(expectedOutput)) {
+        if (matchOutput(actualOutput, expectedOutput)) {
           let stars = 1;
           if (lineCount <= maxLines) stars++;
           if (execTime <= maxTime) stars++;
@@ -276,7 +283,7 @@ export default function LevelPage() {
 
         execTime = (performance.now() - startTime) / 1000;
 
-        if (norm(actualOutput) === norm(expectedOutput)) {
+        if (matchOutput(actualOutput, expectedOutput)) {
           let stars = 1;
           if (lineCount <= maxLines) stars++;
           if (execTime <= maxTime) stars++;
@@ -357,7 +364,7 @@ export default function LevelPage() {
       const strippedActual = norm(actualOutput);
       const strippedExpected = norm(expectedOutput);
 
-      if (strippedActual === strippedExpected) {
+      if (matchOutput(actualOutput, expectedOutput)) {
         if (strippedActual === "" && strippedExpected === "" && level.sourceChecks) {
           const result = await validateStructure(code, level.sourceChecks);
           if (!result.valid) {

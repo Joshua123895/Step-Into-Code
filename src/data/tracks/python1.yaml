@@ -62,7 +62,9 @@ chapters:
         start: ''
         tests:
           - in: ["World"]
-            exp: Hello, World!
+            exp: |-
+              What is your name?World
+              Hello, World!
       - name: Echo Machine
         hint: |-
           Try: `text = input()

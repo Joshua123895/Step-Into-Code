@@ -4,21 +4,35 @@ export async function runPythonWithIO(code, inputs = []) {
   const pyodide = await ensurePyodide();
 
   let stdout = "";
-  let inputIndex = 0;
 
   pyodide.setStdout({ write: (buf) => { stdout += new TextDecoder().decode(buf); return buf.length; }, isatty: true });
   pyodide.setStderr({ write: (buf) => { stdout += new TextDecoder().decode(buf); return buf.length; }, isatty: true });
-  pyodide.setStdin({
-    stdin: () => {
-      if (inputIndex < inputs.length) {
-        return inputs[inputIndex++];
-      }
-      return "";
-    },
-  });
+
+  const inputWrapper = `
+import sys, builtins
+_orig_input = builtins.input
+_inputs = ${JSON.stringify(inputs)}
+_input_index = 0
+def _input(prompt=""):
+    global _input_index
+    if prompt:
+        sys.stdout.write(prompt)
+        sys.stdout.flush()
+    if _input_index < len(_inputs):
+        line = _inputs[_input_index]
+        _input_index += 1
+    else:
+        line = ""
+    sys.stdout.write(line + "\\n")
+    sys.stdout.flush()
+    return line
+builtins.input = _input
+`;
+
+  const wrappedCode = inputWrapper + "\n" + code;
 
   try {
-    await pyodide.runPythonAsync(code);
+    await pyodide.runPythonAsync(wrappedCode);
   } catch (e) {
     const msg = String(e);
     if (!stdout.includes(msg)) {

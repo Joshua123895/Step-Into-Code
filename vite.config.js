@@ -61,7 +61,23 @@ export default defineConfig({
                 }
               }
 
-              writeFileSync(join(tmpDir, 'main.py'), code, 'utf-8');
+const inputWrapper = `
+import sys, builtins
+_orig_input = builtins.input
+def _input(prompt=""):
+    if prompt:
+        sys.stdout.write(prompt)
+        sys.stdout.flush()
+    sys.stderr.write("__INPUT_REQ__\\n")
+    sys.stderr.flush()
+    line = _orig_input()
+    sys.stdout.write(line + "\\n")
+    sys.stdout.flush()
+    return line
+builtins.input = _input
+`;
+
+              writeFileSync(join(tmpDir, 'main.py'), inputWrapper + '\n' + code, 'utf-8');
 
               const child = spawn(pythonCmd, ['main.py'], {
                 cwd: tmpDir,
@@ -90,9 +106,15 @@ export default defineConfig({
 
               child.stderr.on('data', (data) => {
                 const text = data.toString();
-                stderrBuf += text;
-                for (const client of sseClients) {
-                  client.write(`event: output\ndata: ${JSON.stringify(text)}\n\n`);
+                if (text.includes('__INPUT_REQ__')) {
+                  for (const client of sseClients) {
+                    client.write(`event: input-request\ndata: ${JSON.stringify({ prompt: '' })}\n\n`);
+                  }
+                } else {
+                  stderrBuf += text;
+                  for (const client of sseClients) {
+                    client.write(`event: output\ndata: ${JSON.stringify(text)}\n\n`);
+                  }
                 }
               });
 
@@ -234,7 +256,7 @@ export default defineConfig({
                   }
                 }
 
-                writeFileSync(join(tmpDir, 'main.py'), code, 'utf-8');
+                writeFileSync(join(tmpDir, 'main.py'), inputWrapper + '\n' + code, 'utf-8');
 
                 await new Promise((resolve, reject) => {
                   const child = exec(

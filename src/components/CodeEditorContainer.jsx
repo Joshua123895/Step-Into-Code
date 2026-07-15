@@ -119,8 +119,6 @@ export default function CodeEditorContainer({ code, setCode, language, files, fi
     if (e.key === "Enter" && pendingResolve.current) {
       pendingResolve.current(inputBuffer);
       pendingResolve.current = null;
-      rawOutputRef.current += inputBuffer + "\n";
-      setOutput(rawOutputRef.current);
       setInputBuffer("");
       setWaitingInput(false);
     }

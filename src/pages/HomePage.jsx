@@ -5,26 +5,26 @@ import PixelButton from "../components/PixelButton";
 
 export default function HomePage() {
   const navigate = useNavigate();
-  const { getTrackProgress } = useProgress();
+  const { getCompletedCount } = useProgress();
 
-  const track = TRACKS[0];
-  const totalLevels = track ? track.chapters.reduce((s, ch) => s + ch.levels.length, 0) : 0;
-  const progress = track ? getTrackProgress(track.slug, totalLevels) : 0;
-  const totalChapters = track ? track.chapters.length : 0;
+  const totalChapters = TRACKS.reduce((sum, t) => sum + t.chapters.length, 0);
+  const totalLevels = TRACKS.reduce((sum, t) => sum + t.chapters.reduce((s, ch) => s + ch.levels.length, 0), 0);
+  const doneLevels = TRACKS.reduce((sum, t) => sum + getCompletedCount(t.slug), 0);
+  const progress = totalLevels > 0 ? Math.round((doneLevels / totalLevels) * 100) : 0;
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center px-4 relative z-10">
-      <div className="mb-10 mt-10">
-        <div className="flex items-center gap-12">
+      <div className="mb-8 md:mb-10 mt-10">
+        <div className="flex flex-col md:flex-row items-center gap-6 md:gap-12">
           <img
             src="/icons.svg"
             alt=""
-            className="w-40 h-auto shrink-0"
+            className="w-28 md:w-40 h-auto shrink-0"
             style={{ filter: "drop-shadow(2px 2px 0 #6AAE6F40)" }}
           />
-          <div>
+          <div className="text-center md:text-left">
             <h1
-              className="text-5xl font-black mb-3 leading-tight"
+              className="text-3xl sm:text-4xl md:text-5xl font-black mb-2 leading-tight"
               style={{
                 color: "var(--text)",
                 fontFamily: "'Courier New', monospace",
@@ -36,57 +36,54 @@ export default function HomePage() {
             </h1>
 
             <p
-              className="text-lg max-w-sm"
+              className="text-sm sm:text-base max-w-sm"
               style={{ color: "var(--text-secondary)", lineHeight: 1.6 }}
             >
-              Learn programming one step at a time.
+              {TRACKS.length} tracks &middot; {totalChapters} chapters &middot; {totalLevels} levels
             </p>
           </div>
         </div>
       </div>
 
-      <div className="mb-12">
+      <div className="mb-10 md:mb-12">
         <PixelButton onClick={() => navigate("/tracks")} size="lg" variant="primary">
-          ▶  Begin Adventure
+          ▶  Explore Tracks
         </PixelButton>
       </div>
 
       <div
-        className="grid grid-cols-3 gap-px rounded-2xl overflow-hidden"
+        className="grid grid-cols-3 rounded-xl overflow-hidden"
         style={{
-          background: "var(--border)",
-          border: "2px solid var(--border)",
-          boxShadow: "0 4px 24px rgba(0,0,0,0.06)",
-          maxWidth: 420,
+          border: "1px solid var(--border-strong)",
+          maxWidth: 400,
           width: "100%",
         }}
       >
         {[
-          { label: "Track Progress", value: `${progress}%`, icon: "📈", color: "#6AAE6F" },
-          { label: "Tracks", value: `${TRACKS.length}`, icon: "🗺️", color: "#7AA2F7" },
-          { label: "Chapters", value: `${totalChapters}`, icon: "📖", color: "#E9B44C" },
+          { label: "Progress", value: `${progress}%`, color: "#6AAE6F" },
+          { label: "Tracks", value: `${TRACKS.length}`, color: "#7AA2F7" },
+          { label: "Chapters", value: `${totalChapters}`, color: "#E9B44C" },
         ].map((s) => (
           <div
             key={s.label}
-            className="flex flex-col items-center py-5 px-4"
+            className="flex flex-col items-center py-4 md:py-5 px-2"
             style={{ background: "var(--bg-card)" }}
           >
-            <span className="text-2xl mb-1">{s.icon}</span>
             <span
-              className="text-2xl font-black mb-0.5"
+              className="text-xl md:text-2xl font-black mb-0.5"
               style={{ color: s.color, fontFamily: "'Courier New', monospace" }}
             >
               {s.value}
             </span>
-            <span className="text-xs text-center" style={{ color: "var(--text-muted)" }}>
+            <span className="text-[11px] md:text-xs" style={{ color: "var(--text-muted)" }}>
               {s.label}
             </span>
           </div>
         ))}
       </div>
 
-      <p className="mt-8 text-xs" style={{ color: "var(--text-muted)" }}>
-        No account needed · Free to play
+      <p className="mt-6 text-xs" style={{ color: "var(--text-muted)" }}>
+        No account needed &middot; Free
       </p>
     </div>
   );
