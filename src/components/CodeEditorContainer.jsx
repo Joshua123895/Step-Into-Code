@@ -87,9 +87,6 @@ export default function CodeEditorContainer({ code, setCode, language, files, fi
         onFileUpdateRef.current?.();
       }
       setOutput(result.stdout || "");
-      if (result.error) {
-        setOutput((prev) => prev + "\n" + result.error);
-      }
     } else {
       const snap = {};
       for (const name of files?.track || []) {

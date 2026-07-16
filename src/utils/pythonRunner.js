@@ -48,8 +48,11 @@ builtins.input = _input
     await pyodide.runPythonAsync(wrappedCode);
   } catch (e) {
     const msg = String(e);
-    if (!stdout.includes(msg)) {
-      stdout += "\n" + msg;
+    const cleaned = msg.startsWith("PythonError: Traceback (most recent call last):")
+      ? msg.trim().split("\n").at(-1).trim()
+      : msg;
+    if (!stdout.includes(cleaned)) {
+      stdout += "\n" + cleaned;
     }
   }
 
@@ -91,8 +94,6 @@ export async function runPython(code, onInput, onOutput) {
     });
 
     evtSource.addEventListener("done", (e) => {
-      const { error } = JSON.parse(e.data);
-      if (error && onOutput) onOutput("\n" + error);
       evtSource.close();
       if (!resolved) { resolved = true; resolve(); }
     });

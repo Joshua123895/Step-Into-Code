@@ -7,6 +7,18 @@ import { join } from 'path'
 import { tmpdir } from 'os'
 import { randomBytes } from 'crypto'
 
+const WRAPPER_LINES = 15;
+
+function cleanTraceback(text, tmpDir) {
+  const escaped = tmpDir.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  let result = text.replace(new RegExp(escaped + '[\\\\/]', 'g'), '');
+  result = result.replace(/line \d+/g, (m) => {
+    const n = parseInt(m.slice(5), 10) - WRAPPER_LINES;
+    return 'line ' + (n >= 1 ? n : 1);
+  });
+  return result;
+}
+
 function findPython() {
   for (const cmd of ['python', 'python3']) {
     try {
@@ -105,7 +117,7 @@ builtins.input = _input
               });
 
               child.stderr.on('data', (data) => {
-                const text = data.toString();
+                const text = cleanTraceback(data.toString(), tmpDir);
                 if (text.includes('__INPUT_REQ__')) {
                   for (const client of sseClients) {
                     client.write(`event: input-request\ndata: ${JSON.stringify({ prompt: '' })}\n\n`);
@@ -264,7 +276,7 @@ builtins.input = _input
                     { cwd: tmpDir, timeout: 10000, maxBuffer: 1024 * 1024 },
                     (err, out, errOut) => {
                       stdout = out || '';
-                      stderr = errOut || '';
+                      stderr = cleanTraceback(errOut || '', tmpDir);
                       if (err && !err.killed) {
                         if (stderr) stdout += '\n' + stderr;
                         reject(err);

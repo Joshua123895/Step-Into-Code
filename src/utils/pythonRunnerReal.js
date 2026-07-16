@@ -44,8 +44,11 @@ export async function runPythonReal(code, initialFiles = {}, trackedFiles = [], 
       await pyodide.runPythonAsync(code);
     } catch (e) {
       const msg = String(e);
-      if (!stdout.includes(msg)) {
-        stdout += "\n" + msg;
+      const cleaned = msg.startsWith("PythonError: Traceback (most recent call last):")
+        ? msg.trim().split("\n").at(-1).trim()
+        : msg;
+      if (!stdout.includes(cleaned)) {
+        stdout += "\n" + cleaned;
       }
     }
 
