@@ -1847,7 +1847,7 @@ chapters:
               False
         id: 90
         max: 16/1
-        obj: Read a string, an integer, and a float. Print each value followed by its type using `type()`. Then convert each variable to the other two types using `int()`, `float()`, `str()`, and `bool()`. Print a blank line between each group. Show `True` or `False` for boolean conversions.
+        obj: Read a string, an integer, and a float. Print each value followed by its type using `type()`. Then convert each variable to the other types using `int()`, `float()`, and `bool()`. Print a blank line between each group.
         sol: |-
           a = input()
           b = int(input())

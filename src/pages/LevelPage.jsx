@@ -223,7 +223,7 @@ export default function LevelPage() {
         if (!match) {
           debugFail("test mismatch", { level: level.name, inputs, matchMode: test.expectAnyOf ? "anyOf" : test.expectMatch ? "regex" : "exact", expected: exp, actual: clean, raw: output, diff: diffStrings(exp, clean) });
           playWrongSound();
-          setTestFailure({ input: test.input, expected: test.expected ?? test.expectAnyOf, actual: norm(clean) });
+          setTestFailure({ input: test.input, expected: test.expected ?? test.expectAnyOf, actual: clean });
           setTesting(false);
           return;
         }
@@ -470,33 +470,37 @@ export default function LevelPage() {
             onClick={() => setTestFailure(null)}
           />
           <div
-            className="relative rounded-2xl p-8 text-center max-w-md w-full"
-            style={{ background: "var(--bg)", border: "3px solid #FF5F57", boxShadow: "0 20px 60px rgba(0,0,0,0.3)" }}
+            className="relative rounded-2xl max-w-md w-full flex flex-col"
+            style={{ background: "var(--bg)", border: "3px solid #FF5F57", boxShadow: "0 20px 60px rgba(0,0,0,0.3)", maxHeight: "85vh" }}
           >
-            <h2 className="text-xl font-bold mb-4" style={{ color: "var(--text)", fontFamily: "'Courier New', monospace" }}>
-              Test Failed
-            </h2>
+            <div className="p-8 pb-4 overflow-y-auto">
+              <h2 className="text-xl font-bold mb-4 text-center" style={{ color: "var(--text)", fontFamily: "'Courier New', monospace" }}>
+                Test Failed
+              </h2>
 
-            {testFailure.input !== undefined && testFailure.input !== "" && (
+              {testFailure.input !== undefined && testFailure.input !== "" && (
+                <div className="rounded-xl p-3 mb-3 text-left" style={{ background: "#1e1e2e" }}>
+                  <div className="text-xs font-bold mb-1" style={{ color: "#9CA3AF" }}>INPUT</div>
+                  <pre className="text-xs font-mono m-0" style={{ color: "#CDD6F4", whiteSpace: "pre-wrap" }}>{Array.isArray(testFailure.input) ? testFailure.input.join("\n") : testFailure.input}</pre>
+                </div>
+              )}
+
               <div className="rounded-xl p-3 mb-3 text-left" style={{ background: "#1e1e2e" }}>
-                <div className="text-xs font-bold mb-1" style={{ color: "#9CA3AF" }}>INPUT</div>
-                <pre className="text-xs font-mono m-0" style={{ color: "#CDD6F4", whiteSpace: "pre-wrap" }}>{Array.isArray(testFailure.input) ? testFailure.input.join("\n") : testFailure.input}</pre>
+                <div className="text-xs font-bold mb-1" style={{ color: "#28CA41" }}>EXPECTED</div>
+                <pre className="text-xs font-mono m-0" style={{ color: "#CDD6F4", whiteSpace: "pre-wrap" }}>{testFailure.expected}</pre>
               </div>
-            )}
 
-            <div className="rounded-xl p-3 mb-3 text-left" style={{ background: "#1e1e2e" }}>
-              <div className="text-xs font-bold mb-1" style={{ color: "#28CA41" }}>EXPECTED</div>
-              <pre className="text-xs font-mono m-0" style={{ color: "#CDD6F4", whiteSpace: "pre-wrap" }}>{testFailure.expected}</pre>
+              <div className="rounded-xl p-3 mb-3 text-left" style={{ background: "#1e1e2e" }}>
+                <div className="text-xs font-bold mb-1" style={{ color: "#FF5F57" }}>ACTUAL</div>
+                <pre className="text-xs font-mono m-0" style={{ color: "#CDD6F4", whiteSpace: "pre-wrap" }}>{testFailure.actual || "(no output)"}</pre>
+              </div>
             </div>
 
-            <div className="rounded-xl p-3 mb-5 text-left" style={{ background: "#1e1e2e" }}>
-              <div className="text-xs font-bold mb-1" style={{ color: "#FF5F57" }}>ACTUAL</div>
-              <pre className="text-xs font-mono m-0" style={{ color: "#CDD6F4", whiteSpace: "pre-wrap" }}>{testFailure.actual || "(no output)"}</pre>
+            <div className="px-8 pb-8 pt-2 text-center flex-shrink-0">
+              <PixelButton onClick={() => setTestFailure(null)} size="md" variant="primary">
+                Try Again
+              </PixelButton>
             </div>
-
-            <PixelButton onClick={() => setTestFailure(null)} size="md" variant="primary">
-              Try Again
-            </PixelButton>
           </div>
         </div>
       )}
