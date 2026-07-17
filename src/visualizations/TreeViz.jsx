@@ -5,6 +5,7 @@ function parseTreeOps(code) {
   const treeVars = {};
 
   for (const line of lines) {
+    if (line.trim().startsWith("#")) continue;
     const init = line.match(/(\w+)\s*=\s*(?:TreeNode|Node)\s*\(\s*(\d+)\s*\)/);
     if (init) {
       treeVars[init[1]] = { val: init[2], left: null, right: null };

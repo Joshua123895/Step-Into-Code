@@ -5,6 +5,7 @@ function parseStackOps(code) {
   const stacks = {};
 
   for (const line of lines) {
+    if (line.trim().startsWith("#")) continue;
     const init = line.match(/(\w+)\s*=\s*\[\s*\]/);
     if (init) {
       stacks[init[1]] = [];

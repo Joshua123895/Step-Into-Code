@@ -14,6 +14,7 @@ function parseArrayOps(code) {
   let sliceIdCounter = 0;
 
   for (const line of lines) {
+    if (line.trim().startsWith("#")) continue;
     const init = line.match(/(\w+)\s*=\s*\[([^\]]*)\]/);
     if (init) {
       const vals = init[2].split(",").map((s) => s.trim()).filter(Boolean);

@@ -1,6 +1,7 @@
 import { useState, useCallback } from "react";
 
 const STORAGE_KEY = "step-into-code_progress";
+const CODE_KEY = "step-into-code_savedCode";
 
 function load() {
   try {
@@ -25,6 +26,33 @@ function load() {
 
 function save(data) {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+}
+
+function loadCodes() {
+  try { return JSON.parse(localStorage.getItem(CODE_KEY)) || {}; }
+  catch { return {}; }
+}
+
+function saveCodes(data) {
+  localStorage.setItem(CODE_KEY, JSON.stringify(data));
+}
+
+export function saveCode(trackSlug, levelId, code) {
+  const all = loadCodes();
+  if (!all[trackSlug]) all[trackSlug] = {};
+  all[trackSlug][levelId] = code;
+  saveCodes(all);
+}
+
+export function getSavedCode(trackSlug, levelId) {
+  const all = loadCodes();
+  return all[trackSlug]?.[levelId] || null;
+}
+
+export function clearSavedCode(trackSlug, levelId) {
+  const all = loadCodes();
+  if (all[trackSlug]) delete all[trackSlug][levelId];
+  saveCodes(all);
 }
 
 export function useProgress() {

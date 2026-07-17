@@ -5,6 +5,7 @@ function parseQueueOps(code) {
   const queues = {};
 
   for (const line of lines) {
+    if (line.trim().startsWith("#")) continue;
     const init = line.match(/(\w+)\s*=\s*\[\s*\]/);
     if (init) {
       queues[init[1]] = [];

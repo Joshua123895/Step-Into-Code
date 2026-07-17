@@ -5,6 +5,7 @@ function parseHeapOps(code) {
   let heap = null;
 
   for (const line of lines) {
+    if (line.trim().startsWith("#")) continue;
     const init = line.match(/(\w+)\s*=\s*\[\s*\]/);
     if (init) {
       heap = [];

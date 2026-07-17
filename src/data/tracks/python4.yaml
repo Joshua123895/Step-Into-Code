@@ -2,7 +2,7 @@ name: Data Structures
 slug: data-structures
 icon: data_structure
 desc: 'Master essential data structures: arrays, linked lists, stacks, queues, hash tables, trees, heaps, and graphs.'
-difficulty: 3
+difficulty: 2
 chapters:
   - name: Arrays
     icon: array

@@ -5,6 +5,7 @@ function parseHashOps(code) {
   const hashes = {};
 
   for (const line of lines) {
+    if (line.trim().startsWith("#")) continue;
     const init = line.match(/(\w+)\s*=\s*\{\s*\}/);
     if (init) {
       hashes[init[1]] = [];
