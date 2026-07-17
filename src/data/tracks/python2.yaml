@@ -129,7 +129,6 @@ chapters:
         max: 3/1
       - name: The Shadow Index
         obj: 'Read `n` (int) then a line of `n` integers. Use a single dict comprehension to map each unique value to the list of its indices. Print the dict.'
-        hint: 'Use `{x: [i for i, v in enumerate(nums) if v == x] for x in set(nums)}` — outer loop over unique values, inner comprehension finds all indices where that value appears.'
         example:
           in:
             - '7'
@@ -288,7 +287,6 @@ chapters:
         max: 2/1
       - name: The Judge's Scale
         obj: 'Read `n` (int) then `n` lines of "name score1 score2 ...". Compute each student''s average. Use `sorted()` with a lambda to rank by average descending, then name ascending. Print the list of ranked names.'
-        hint: 'Use `key=lambda s: (-s[1], s[0])` — negative average for descending, then name for ascending.'
         example:
           in:
             - '3'
@@ -496,7 +494,6 @@ chapters:
         max: 15/1
       - name: The Phantom Protocol
         obj: 'Define `def chunk(items: List, size: int) -> List[List]:` that splits a list into chunks of `size`. Read `n`, then `n` items, then `size`. Print chunked list.'
-        hint: 'Use a list comprehension: `[items[i:i + size] for i in range(0, len(items), size)]`'
         example:
           in:
             - '8'
@@ -754,8 +751,6 @@ chapters:
       - name: The Labyrinth of Yields
         obj: |-
           Write `def windows(items, n):` that yields each sliding window of size `n` as a tuple. Read `n`, then `items = input().split()`, then `size = int(input())`. `print(list(windows(items, size)))`.
-        hint: |-
-          Use `it = iter(items)`. Build first window with `for _ in range(n): window.append(next(it))` then `yield tuple(window)`. Then `for item in it: window.pop(0); window.append(item); yield tuple(window)`.
         example:
           in:
             - '5'
@@ -1421,7 +1416,6 @@ chapters:
         max: 8/1
       - name: Dataclass Puzzle
         obj: 'Read `name = input()`. Read `parts = [int(x) for x in input().split()]`. First element is `count`, remaining are `grades`. Define `@dataclass class Student:` with `name: str`, `grades: list[int] = field(default_factory=list)`, `average: float = 0.0`, `status: str = ""`. In `__post_init__`: compute `self.average = sum(grades)/len(grades)` and `self.status = "Passed" if average >= 60 else "Failed"`. Create `s = Student(name=name, grades=grades)`, `print(s)`.'
-        hint: '`average = sum(grades)/len(grades)`. `status = "Passed" if average >= 60 else "Failed"`. In `__post_init__`, use `self.average = ...`.'
         example:
           in:
             - Jack
@@ -1688,62 +1682,6 @@ chapters:
               5 tests passed
         max: 18/1
         start: ''
-      - name: The Gauntlet of Shadows
-        obj: 'Read `nums = list(map(int, input().split()))`. `def digit_sum(n): return sum(int(d) for d in str(n))`. `sorted_nums = sorted(nums, key=lambda n: digit_sum(n))`. `odds = [x for x in sorted_nums if x % 2 == 1]`. `result = list(map(lambda x: bin(x)[2:], odds))`. `print(result)`.'
-        example:
-          in:
-            - 5 12 7 3 18
-          out: |
-            ['11', '101', '111']
-        sol: |-
-          def digit_sum(n):
-              return sum(int(d) for d in str(n))
-          nums = list(map(int, input().split()))
-          sorted_nums = sorted(nums, key=lambda n: digit_sum(n))
-          odds = [x for x in sorted_nums if x % 2 == 1]
-          result = list(map(lambda x: bin(x)[2:], odds))
-          print(result)
-        tests:
-          - in: 5 12 7 3 18
-            exp: |
-              ['11', '101', '111']
-          - in: 10 3 22 7 11
-            exp: |
-              ['1011', '11', '111']
-        max: 12/1
-        start: nums = list(map(int, input().split()))
-      - name: The Beyond Horizon
-        obj: '`from typing import Callable, Dict, List`. Define `def group_by(items: List, key: Callable) -> Dict:` that iterates items, computes `k = key(item)`, appends to `result[k]` list. Read `nums = list(map(int, input().split()))`. `print(group_by(nums, lambda x: x % 2))`.'
-        example:
-          in:
-            - 1 2 3 4 5 6
-          out: |
-            {0: [2, 4, 6], 1: [1, 3, 5]}
-        sol: |-
-          from typing import Callable, Dict, List
-          def group_by(items: List, key: Callable) -> Dict:
-              result = {}
-              for item in items:
-                  k = key(item)
-                  if k not in result:
-                      result[k] = []
-                  result[k].append(item)
-              return result
-          nums = list(map(int, input().split()))
-          result = group_by(nums, lambda x: x % 2)
-          print(result)
-        tests:
-          - in: 1 2 3 4 5 6
-            exp: |
-              {1: [1, 3, 5], 0: [2, 4, 6]}
-          - in: 10 15 20 25
-            exp: |
-              {0: [10, 20], 1: [15, 25]}
-        max: 14/1
-        start: |-
-          from typing import Callable, Dict, List
-
-          nums = list(map(int, input().split()))
       - name: The Grand Beyond
         obj: 'Read `n = int(input())`. Read `n` lines of `var, _, val = input().split()` storing `vars[var] = int(val)`. Read `expr = input().split()`. Define `ops = {"+": lambda a,b: a+b, "-": lambda a,b: a-b, "*": lambda a,b: a*b, "/": lambda a,b: a//b}`. Use a stack: push integers/variable values, pop two for ops. Print `stack[0]`.'
         example:

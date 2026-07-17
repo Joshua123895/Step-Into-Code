@@ -1698,43 +1698,6 @@ chapters:
             True
         max: 10/1
         start: ''
-      - name: The Design Master
-        obj: 'Implement `class EventSystem:` with `on(self, event, handler)` to register and `emit(self, event, data)` to notify all handlers. Define `class Button:` that emits "click" when `click()` is called. Use the Observer pattern.'
-        example:
-          in: []
-          out: |
-            Button was clicked!
-            Alert: click event
-        sol: |-
-          class EventSystem:
-              def __init__(self):
-                  self.handlers = {}
-              def on(self, event, handler):
-                  if event not in self.handlers:
-                      self.handlers[event] = []
-                  self.handlers[event].append(handler)
-              def emit(self, event, data):
-                  for handler in self.handlers.get(event, []):
-                      handler(data)
-          class Button:
-              def __init__(self):
-                  self.events = EventSystem()
-              def click(self):
-                  self.events.emit("click", "Button was clicked!")
-          def handle_click(msg):
-              print(msg)
-          def alert_click(msg):
-              print(f"Alert: click event")
-          btn = Button()
-          btn.events.on("click", handle_click)
-          btn.events.on("click", alert_click)
-          btn.click()
-        tests:
-          - |
-            Button was clicked!
-            Alert: click event
-        max: 18/1
-        start: ''
       - name: The Ultimate Challenge
         obj: 'Define `class EntityMeta(type):` that auto-registers all subclasses in `EntityMeta.registry`. Define `class Entity(metaclass=EntityMeta):` with `@abstractmethod def attack(self) -> int:`. `class Player(Entity):` and `class Monster(Entity):`. Create instances and show all registered subclasses have at least one instance.'
         example:

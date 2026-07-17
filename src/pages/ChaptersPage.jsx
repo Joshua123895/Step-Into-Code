@@ -95,7 +95,7 @@ export default function ChaptersPage() {
                       {chapter.name}
                     </span>
                   </div>
-                  <div className="flex items-center gap-2 mt-1">
+                  <div className="flex items-center gap-4 mt-1">
                     <div className="flex-1 h-1.5 rounded-full" style={{ background: `${diff.color}15` }}>
                       <div
                         className="h-full rounded-full transition-all duration-500"

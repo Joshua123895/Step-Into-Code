@@ -1,0 +1,1550 @@
+name: Data Structures
+slug: data-structures
+icon: data_structure
+desc: 'Master essential data structures: arrays, linked lists, stacks, queues, hash tables, trees, heaps, and graphs.'
+difficulty: 3
+chapters:
+  - name: Arrays
+    icon: array
+    levels:
+      - name: Create and Print
+        obj: 'Create a list `nums = [10, 20, 30, 40, 50]` and print it.'
+        hint: 'Lists use square brackets: `[item1, item2, ...]`'
+        expl: 'An array in Python is called a list. It stores multiple values in a single variable, accessible by index.'
+        sol: |-
+          nums = [10, 20, 30, 40, 50]
+          print(nums)
+        start: ''
+        max: 2/1
+        tests:
+          - |
+            [10, 20, 30, 40, 50]
+      - name: Access by Index
+        obj: 'Create `nums = [10, 20, 30, 40, 50]` and print `nums[0]`, `nums[2]`, and `nums[-1]` each on a new line.'
+        hint: 'Indexing starts at 0. Negative indices count from the end: `-1` is the last element.'
+        expl: 'Square brackets `[]` access elements by position. `nums[0]` gets the first item (10), `nums[-1]` gets the last (50).'
+        sol: |-
+          nums = [10, 20, 30, 40, 50]
+          print(nums[0])
+          print(nums[2])
+          print(nums[-1])
+        start: ''
+        max: 5/1
+        tests:
+          - |
+            10
+            30
+            50
+      - name: Modify Elements
+        obj: 'Create `nums = [10, 20, 30, 40, 50]`, change `nums[1]` to `25` and `nums[3]` to `45`, then print the list.'
+        hint: 'Assign to an index: `nums[1] = 25`'
+        expl: 'Lists are mutable — you can change elements by assigning a new value to a specific index.'
+        sol: |-
+          nums = [10, 20, 30, 40, 50]
+          nums[1] = 25
+          nums[3] = 45
+          print(nums)
+        start: ''
+        max: 5/1
+        tests:
+          - |
+            [10, 25, 30, 45, 50]
+      - name: Append and Extend
+        obj: 'Create an empty list `nums = []`, append `1`, `2`, `3` using `append()`, extend with `[4, 5]`, then print the list.'
+        hint: '`list.append(item)` adds one item. `list.extend(iterable)` adds multiple items.'
+        expl: '`append()` adds a single element to the end. `extend()` adds all elements from another iterable.'
+        sol: |-
+          nums = []
+          nums.append(1)
+          nums.append(2)
+          nums.append(3)
+          nums.extend([4, 5])
+          print(nums)
+        start: ''
+        max: 7/1
+        tests:
+          - |
+            [1, 2, 3, 4, 5]
+      - name: Remove Elements
+        obj: 'Create `nums = [1, 2, 3, 4, 5]`, remove `3` using `remove()`, pop the last element, then print the list.'
+        hint: '`list.remove(value)` removes by value. `list.pop()` removes and returns the last element.'
+        expl: '`remove()` deletes the first matching value. `pop()` removes the last element (or a specific index given as argument).'
+        sol: |-
+          nums = [1, 2, 3, 4, 5]
+          nums.remove(3)
+          nums.pop()
+          print(nums)
+        start: ''
+        max: 5/1
+        tests:
+          - |
+            [1, 2, 4]
+      - name: Slice and Dice
+        obj: 'Create `nums = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]` and print `nums[2:6]`, `nums[:4]`, `nums[5:]`, and `nums[::2]` each on a new line.'
+        hint: 'Slice syntax: `list[start:stop:step]`'
+        expl: 'Slicing creates a new sublist. `nums[2:6]` gives indices 2 through 5. `nums[::2]` takes every other element.'
+        sol: |-
+          nums = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+          print(nums[2:6])
+          print(nums[:4])
+          print(nums[5:])
+          print(nums[::2])
+        start: ''
+        max: 6/1
+        tests:
+          - |
+            [2, 3, 4, 5]
+            [0, 1, 2, 3]
+            [5, 6, 7, 8, 9]
+            [0, 2, 4, 6, 8]
+      - name: Array Mastery
+        obj: 'Read 5 integers, store them in a list, then print the list reversed and sorted in ascending order, each on a separate line.'
+        example:
+          in:
+            - 5
+            - 3
+            - 1
+            - 4
+            - 2
+          out: |
+            [2, 4, 1, 3, 5]
+            [1, 2, 3, 4, 5]
+        sol: |-
+          nums = [int(input()) for _ in range(5)]
+          print(nums[::-1])
+          print(sorted(nums))
+        start: ''
+        max: 4/1
+        tests:
+          - in:
+              - 5
+              - 3
+              - 1
+              - 4
+              - 2
+            exp: |
+              [2, 4, 1, 3, 5]
+              [1, 2, 3, 4, 5]
+          - in:
+              - 9
+              - 7
+              - 8
+              - 6
+              - 0
+            exp: |
+              [0, 6, 8, 7, 9]
+              [0, 6, 7, 8, 9]
+  - name: Linked Lists
+    icon: linked_list
+    levels:
+      - name: Node Class
+        obj: 'Define a `class Node:` with `__init__(self, value)` storing `self.value = value` and `self.next = None`. Create `Node(10)` and print its value.'
+        hint: 'A node has two parts: `value` stores data, `next` points to the next node (initially `None`).'
+        expl: 'A linked list is made of nodes chained together. Each node holds a value and a reference to the next node. The last node points to `None`.'
+        sol: |-
+          class Node:
+              def __init__(self, value):
+                  self.value = value
+                  self.next = None
+          node = Node(10)
+          print(node.value)
+        start: ''
+        max: 7/1
+        tests:
+          - |
+            10
+      - name: Chain Nodes
+        obj: 'Create three nodes with values `1`, `2`, `3`. Link them: first -> second -> third. Print the value of the third node by traversing from the first.'
+        hint: '`node1.next = node2` links them. Traverse with `current = current.next`.'
+        expl: 'Nodes are linked by assigning the `next` pointer. To reach later nodes, follow the chain from the head.'
+        sol: |-
+          class Node:
+              def __init__(self, value):
+                  self.value = value
+                  self.next = None
+          n1 = Node(1); n2 = Node(2); n3 = Node(3)
+          n1.next = n2; n2.next = n3
+          current = n1
+          while current.next:
+              current = current.next
+          print(current.value)
+        start: "class Node:\n    def __init__(self, value):\n        self.value = value\n        self.next = None\n"
+        max: 10/1
+        tests:
+          - |
+            3
+      - name: Insert at Head
+        obj: 'Implement `def insert_head(head, value):` that creates a new node and makes it the head. Start with `head = Node(1)`, insert `0` at the head, then print all values from head.'
+        hint: 'Set new node''s `next` to the old head, then return the new node: `new_node.next = head; return new_node`'
+        expl: 'Inserting at the head is O(1): create a new node, point it to the current head, and return it as the new head.'
+        sol: |-
+          class Node:
+              def __init__(self, value):
+                  self.value = value
+                  self.next = None
+          def insert_head(head, value):
+              new_node = Node(value)
+              new_node.next = head
+              return new_node
+          head = Node(1)
+          head = insert_head(head, 0)
+          current = head
+          while current:
+              print(current.value)
+              current = current.next
+        start: "class Node:\n    def __init__(self, value):\n        self.value = value\n        self.next = None\n"
+        max: 12/1
+        tests:
+          - |
+            0
+            1
+      - name: Insert at Tail
+        obj: 'Implement `def insert_tail(head, value):` that appends a new node at the end. Create `Node(1)`, insert `2` and `3` at the tail, then print all values.'
+        hint: 'Traverse to the last node (where `next is None`), then set `current.next = Node(value)`.'
+        expl: 'Inserting at the tail is O(n) since you must traverse the entire list to find the end.'
+        sol: |-
+          class Node:
+              def __init__(self, value):
+                  self.value = value
+                  self.next = None
+          def insert_tail(head, value):
+              current = head
+              while current.next:
+                  current = current.next
+              current.next = Node(value)
+              return head
+          head = Node(1)
+          insert_tail(head, 2)
+          insert_tail(head, 3)
+          current = head
+          while current:
+              print(current.value)
+              current = current.next
+        start: "class Node:\n    def __init__(self, value):\n        self.value = value\n        self.next = None\n"
+        max: 15/1
+        tests:
+          - |
+            1
+            2
+            3
+      - name: Delete a Node
+        obj: 'Implement `def delete_node(head, value):` that removes the first node with the given value. Create list `1, 2, 3`, delete `2`, then print all values.'
+        hint: 'Track the previous node. When `current.value == value`, set `prev.next = current.next`.'
+        expl: 'Deletion requires finding the node and updating the previous node''s `next` to skip it. Special care is needed if the head is deleted.'
+        sol: |-
+          class Node:
+              def __init__(self, value):
+                  self.value = value
+                  self.next = None
+          def delete_node(head, value):
+              if head.value == value:
+                  return head.next
+              current = head
+              while current.next and current.next.value != value:
+                  current = current.next
+              if current.next:
+                  current.next = current.next.next
+              return head
+          head = Node(1); head.next = Node(2); head.next.next = Node(3)
+          head = delete_node(head, 2)
+          current = head
+          while current:
+              print(current.value)
+              current = current.next
+        start: "class Node:\n    def __init__(self, value):\n        self.value = value\n        self.next = None\n"
+        max: 18/1
+        tests:
+          - |
+            1
+            3
+      - name: Search the List
+        obj: 'Implement `def search(head, value):` that returns `True` if the value exists in the list. Create list `5, 12, 8, 3`, search for `8` and `99`, print the results.'
+        hint: 'Traverse the list with a `while` loop. Return `True` when `current.value == value`. Return `False` after the loop.'
+        expl: 'Searching a linked list is O(n) — you may need to check every node to find the value.'
+        sol: |-
+          class Node:
+              def __init__(self, value):
+                  self.value = value
+                  self.next = None
+          def search(head, value):
+              current = head
+              while current:
+                  if current.value == value:
+                      return True
+                  current = current.next
+              return False
+          head = Node(5); head.next = Node(12); head.next.next = Node(8); head.next.next.next = Node(3)
+          print(search(head, 8))
+          print(search(head, 99))
+        start: "class Node:\n    def __init__(self, value):\n        self.value = value\n        self.next = None\n"
+        max: 15/1
+        tests:
+          - |
+            True
+            False
+      - name: Linked List Builder
+        obj: 'Read integers until `-1` is entered, building a linked list by inserting each at the tail. Then print all values space-separated on one line.'
+        example:
+          in:
+            - 5
+            - 3
+            - 8
+            - -1
+          out: |
+            5 3 8
+        sol: |-
+          class Node:
+              def __init__(self, value):
+                  self.value = value
+                  self.next = None
+          def insert_tail(head, value):
+              if not head:
+                  return Node(value)
+              current = head
+              while current.next:
+                  current = current.next
+              current.next = Node(value)
+              return head
+          head = None
+          while True:
+              v = int(input())
+              if v == -1:
+                  break
+              head = insert_tail(head, v)
+          current = head
+          while current:
+              end = " " if current.next else ""
+              print(current.value, end=end)
+              current = current.next
+        start: "class Node:\n    def __init__(self, value):\n        self.value = value\n        self.next = None\n"
+        max: 20/1
+        tests:
+          - in:
+              - 5
+              - 3
+              - 8
+              - -1
+            exp: |
+              5 3 8
+          - in:
+              - 42
+              - -1
+            exp: |
+              42
+  - name: Stacks
+    icon: stack
+    levels:
+      - name: Stack as List
+        obj: 'Use a Python list as a stack. Push `10`, `20`, `30` using `append()`, then pop three times using `pop()`, printing each popped value.'
+        hint: '`list.append(item)` pushes. `list.pop()` pops. These give O(1) amortized time.'
+        expl: 'A stack is a LIFO (Last In, First Out) structure. Python lists work naturally as stacks since `append` and `pop` operate on the end.'
+        sol: |-
+          stack = []
+          stack.append(10)
+          stack.append(20)
+          stack.append(30)
+          print(stack.pop())
+          print(stack.pop())
+          print(stack.pop())
+        start: ''
+        max: 7/1
+        tests:
+          - |
+            30
+            20
+            10
+      - name: Stack Class
+        obj: 'Implement a `class Stack:` with `push(self, item)`, `pop(self)`, and `is_empty(self)` methods backed by a list. Push `1`, `2`, `3`, then pop and print until empty.'
+        hint: 'Store items in `self.items = []`. `pop` should only work if not empty.'
+        expl: 'Wrapping a list in a Stack class enforces the LIFO contract and lets you add methods like `peek()` and `is_empty()`.'
+        sol: |-
+          class Stack:
+              def __init__(self):
+                  self.items = []
+              def push(self, item):
+                  self.items.append(item)
+              def pop(self):
+                  return self.items.pop()
+              def is_empty(self):
+                  return len(self.items) == 0
+          s = Stack()
+          s.push(1); s.push(2); s.push(3)
+          while not s.is_empty():
+              print(s.pop())
+        start: ''
+        max: 15/1
+        tests:
+          - |
+            3
+            2
+            1
+      - name: Peek and Size
+        obj: 'Add `peek(self)` (returns top without removing) and `size(self)` methods to your Stack. Push `5`, `10`, `15`, peek, print size, then pop and print all.'
+        hint: '`peek` returns `self.items[-1]`. `size` returns `len(self.items)`.'
+        expl: '`peek()` lets you see the top element without removing it. `size()` is useful for checking how many items remain.'
+        sol: |-
+          class Stack:
+              def __init__(self):
+                  self.items = []
+              def push(self, item):
+                  self.items.append(item)
+              def pop(self):
+                  return self.items.pop()
+              def peek(self):
+                  return self.items[-1]
+              def size(self):
+                  return len(self.items)
+              def is_empty(self):
+                  return len(self.items) == 0
+          s = Stack()
+          s.push(5); s.push(10); s.push(15)
+          print(s.peek())
+          print(s.size())
+          while not s.is_empty():
+              print(s.pop())
+        start: ''
+        max: 20/1
+        tests:
+          - |
+            15
+            3
+            15
+            10
+            5
+      - name: Balanced Parentheses
+        obj: 'Write `def is_balanced(s):` that uses a stack to check if parentheses `()` are balanced. Test with `"(()())"` and `"(()"`, printing the results.'
+        hint: 'Push `(` when seen. Pop when `)` is seen. Return `False` if pop from empty stack. Return `True` if stack is empty at the end.'
+        expl: 'Stacks naturally solve matching problems. Opening brackets go on the stack, closing ones pop them. If the stack is empty at the end, it''s balanced.'
+        sol: |-
+          def is_balanced(s):
+              stack = []
+              for ch in s:
+                  if ch == "(":
+                      stack.append(ch)
+                  elif ch == ")":
+                      if not stack:
+                          return False
+                      stack.pop()
+              return len(stack) == 0
+          print(is_balanced("(()())"))
+          print(is_balanced("(()"))
+        start: ''
+        max: 12/1
+        tests:
+          - |
+            True
+            False
+      - name: Stack Calculator
+        obj: 'Read a space-separated expression in Reverse Polish Notation (e.g., `"3 4 + 2 *"`). Use a stack: push numbers, pop two for operators, push result. Print the final stack value.'
+        example:
+          in:
+            - 3 4 + 2 *
+          out: |
+            14
+        sol: |-
+          expr = input().split()
+          stack = []
+          for token in expr:
+              if token in "+-*/":
+                  b = stack.pop()
+                  a = stack.pop()
+                  if token == "+": stack.append(a + b)
+                  elif token == "-": stack.append(a - b)
+                  elif token == "*": stack.append(a * b)
+                  elif token == "/": stack.append(a // b)
+              else:
+                  stack.append(int(token))
+          print(stack[0])
+        start: ''
+        max: 14/1
+        tests:
+          - in: 3 4 + 2 *
+            exp: |
+              14
+          - in: 5 1 2 + 4 * + 3 -
+            exp: |
+              14
+  - name: Queues
+    icon: queue
+    levels:
+      - name: Queue as List
+        obj: 'Use a list as a queue. Enqueue `"a"`, `"b"`, `"c"` using `append()`, then dequeue using `pop(0)`, printing each value.'
+        hint: '`list.pop(0)` removes and returns the first element. It works but is O(n).'
+        expl: 'A queue is FIFO (First In, First Out). Items are added at the end and removed from the front. Python lists can implement this simply but inefficiently.'
+        sol: |-
+          q = []
+          q.append("a")
+          q.append("b")
+          q.append("c")
+          print(q.pop(0))
+          print(q.pop(0))
+          print(q.pop(0))
+        start: ''
+        max: 7/1
+        tests:
+          - |
+            a
+            b
+            c
+      - name: Queue Class
+        obj: 'Implement a `class Queue:` with `enqueue(self, item)`, `dequeue(self)`, and `is_empty(self)`. Enqueue `10`, `20`, `30`, then dequeue and print all.'
+        hint: 'Use `self.items = []`. `enqueue` appends, `dequeue` pops index 0.'
+        expl: 'A Queue class encapsulates the FIFO behavior. While `pop(0)` is O(n), it''s fine for learning the concept.'
+        sol: |-
+          class Queue:
+              def __init__(self):
+                  self.items = []
+              def enqueue(self, item):
+                  self.items.append(item)
+              def dequeue(self):
+                  return self.items.pop(0)
+              def is_empty(self):
+                  return len(self.items) == 0
+          q = Queue()
+          q.enqueue(10); q.enqueue(20); q.enqueue(30)
+          while not q.is_empty():
+              print(q.dequeue())
+        start: ''
+        max: 15/1
+        tests:
+          - |
+            10
+            20
+            30
+      - name: Collections Deque
+        obj: 'Use `from collections import deque`. Create a deque, append `1`, `2`, `3` to the right, and `0` to the left. Print by popleft until empty.'
+        hint: '`deque.append(item)` adds right. `deque.appendleft(item)` adds left. `deque.popleft()` removes from left efficiently.'
+        expl: '`collections.deque` is an optimized double-ended queue. It provides O(1) operations on both ends, unlike a list''s O(n) `pop(0)`.'
+        sol: |-
+          from collections import deque
+          dq = deque()
+          dq.append(1); dq.append(2); dq.append(3)
+          dq.appendleft(0)
+          while dq:
+              print(dq.popleft())
+        start: ''
+        max: 10/1
+        tests:
+          - |
+            0
+            1
+            2
+            3
+      - name: Priority Queue
+        obj: 'Use `import heapq`. Create a list, push `5`, `3`, `8` using `heapq.heappush()`, then pop and print all using `heapq.heappop()`.'
+        hint: '`heapq.heappush(heap, item)` pushes. `heapq.heappop(heap)` pops the smallest item.'
+        expl: 'A priority queue always returns the smallest element first. Python''s `heapq` implements a min-heap, useful for scheduling and graph algorithms.'
+        sol: |-
+          import heapq
+          pq = []
+          heapq.heappush(pq, 5)
+          heapq.heappush(pq, 3)
+          heapq.heappush(pq, 8)
+          while pq:
+              print(heapq.heappop(pq))
+        start: ''
+        max: 9/1
+        tests:
+          - |
+            3
+            5
+            8
+      - name: Task Queue
+        obj: 'Read tasks (one per line) until `"done"` is entered. Enqueue each task and process them in FIFO order: print `"Processing: {task}"` for each.'
+        example:
+          in:
+            - task1
+            - task2
+            - done
+          out: |
+            Processing: task1
+            Processing: task2
+        sol: |-
+          from collections import deque
+          q = deque()
+          while True:
+              task = input()
+              if task == "done":
+                  break
+              q.append(task)
+          while q:
+              print(f"Processing: {q.popleft()}")
+        start: ''
+        max: 12/1
+        tests:
+          - in:
+              - task1
+              - task2
+              - done
+            exp: |
+              Processing: task1
+              Processing: task2
+          - in:
+              - A
+              - B
+              - C
+              - done
+            exp: |
+              Processing: A
+              Processing: B
+              Processing: C
+  - name: Hash Tables
+    icon: hash
+    levels:
+      - name: Dictionary Basics
+        obj: 'Create a dict `ages = {"Alice": 25, "Bob": 30}`. Print `ages["Alice"]`, add `"Charlie": 35`, then print the entire dict.'
+        hint: 'Dict literals use `{key: value}`. Access values with `dict[key]`. Assign with `dict[key] = value`.'
+        expl: 'A hash table (Python dict) maps keys to values for O(1) average lookup. Keys must be hashable (immutable).'
+        sol: |-
+          ages = {"Alice": 25, "Bob": 30}
+          print(ages["Alice"])
+          ages["Charlie"] = 35
+          print(ages)
+        start: ''
+        max: 5/1
+        tests:
+          - |
+            25
+            {'Alice': 25, 'Bob': 30, 'Charlie': 35}
+      - name: Dictionary Methods
+        obj: 'Create `scores = {"math": 90, "science": 85, "english": 88}`. Print keys, values, and items each on a separate line using dict methods.'
+        hint: 'Use `dict.keys()`, `dict.values()`, and `dict.items()`. Wrap in `list()` to print them.'
+        expl: '`keys()`, `values()`, and `items()` return views that dynamically reflect dict changes. They are useful for iteration and inspection.'
+        sol: |-
+          scores = {"math": 90, "science": 85, "english": 88}
+          print(list(scores.keys()))
+          print(list(scores.values()))
+          print(list(scores.items()))
+        start: ''
+        max: 5/1
+        tests:
+          - |
+            ['math', 'science', 'english']
+            [90, 85, 88]
+            [('math', 90), ('science', 85), ('english', 88)]
+      - name: Hash Table Class
+        obj: 'Implement a simple `class HashTable:` with a list of buckets (each a list for chaining). Define `__init__(self, size=10)`, `_hash(self, key)`, `insert(self, key, value)`, and `get(self, key)`. Insert `"name": "Alice"`, then print the value.'
+        hint: '`_hash` returns `hash(key) % self.size`. `insert` appends `(key, value)` to the bucket. `get` searches the bucket.'
+        expl: 'A hash table uses a hash function to distribute keys across buckets. Collisions are handled by chaining — storing multiple items in the same bucket.'
+        sol: |-
+          class HashTable:
+              def __init__(self, size=10):
+                  self.size = size
+                  self.buckets = [[] for _ in range(size)]
+              def _hash(self, key):
+                  return hash(key) % self.size
+              def insert(self, key, value):
+                  bucket = self.buckets[self._hash(key)]
+                  bucket.append((key, value))
+              def get(self, key):
+                  bucket = self.buckets[self._hash(key)]
+                  for k, v in bucket:
+                      if k == key:
+                          return v
+                  return None
+          ht = HashTable()
+          ht.insert("name", "Alice")
+          print(ht.get("name"))
+        start: ''
+        max: 20/1
+        tests:
+          - |
+            Alice
+      - name: Collision Handling
+        obj: 'Extend your HashTable so `insert` updates existing keys instead of duplicating. Insert `"a": 1`, then `"a": 2` (update), then `"b": 3`, and print both values.'
+        hint: 'In `insert`, search the bucket first. If the key exists, update its value. Otherwise append.'
+        expl: 'When a key already exists in the bucket, we should update its value rather than adding a duplicate. This ensures each key maps to exactly one value.'
+        sol: |-
+          class HashTable:
+              def __init__(self, size=10):
+                  self.size = size
+                  self.buckets = [[] for _ in range(size)]
+              def _hash(self, key):
+                  return hash(key) % self.size
+              def insert(self, key, value):
+                  bucket = self.buckets[self._hash(key)]
+                  for i, (k, v) in enumerate(bucket):
+                      if k == key:
+                          bucket[i] = (key, value)
+                          return
+                  bucket.append((key, value))
+              def get(self, key):
+                  bucket = self.buckets[self._hash(key)]
+                  for k, v in bucket:
+                      if k == key:
+                          return v
+                  return None
+          ht = HashTable()
+          ht.insert("a", 1); ht.insert("a", 2); ht.insert("b", 3)
+          print(ht.get("a"))
+          print(ht.get("b"))
+        start: ''
+        max: 22/1
+        tests:
+          - |
+            2
+            3
+      - name: Word Frequency
+        obj: 'Read a line of text, split into words, and count the frequency of each word using a dict. Print the dict sorted by word.'
+        example:
+          in:
+            - apple banana apple cherry banana apple
+          out: |
+            {'apple': 3, 'banana': 2, 'cherry': 1}
+        sol: |-
+          text = input().split()
+          freq = {}
+          for word in text:
+              freq[word] = freq.get(word, 0) + 1
+          print(dict(sorted(freq.items())))
+        start: ''
+        max: 6/1
+        tests:
+          - in: apple banana apple cherry banana apple
+            exp: |
+              {'apple': 3, 'banana': 2, 'cherry': 1}
+          - in: cat dog cat
+            exp: |
+              {'cat': 2, 'dog': 1}
+  - name: Trees
+    icon: tree
+    levels:
+      - name: TreeNode Class
+        obj: 'Define a `class TreeNode:` with `__init__(self, value)` storing value, left, and right (all `None`). Create a root with value `1` and print its value.'
+        hint: 'A tree node has a value and references to left and right children, both initially `None`.'
+        expl: 'Trees are hierarchical structures. Each node has at most two children (left and right) in a binary tree. The top node is called the root.'
+        sol: |-
+          class TreeNode:
+              def __init__(self, value):
+                  self.value = value
+                  self.left = None
+                  self.right = None
+          root = TreeNode(1)
+          print(root.value)
+        start: ''
+        max: 8/1
+        tests:
+          - |
+            1
+      - name: Build a Tree
+        obj: 'Create a tree: root `1` with left child `2` and right child `3`. Then print `root.left.value` and `root.right.value`.'
+        hint: 'Assign children: `root.left = TreeNode(2)` and `root.right = TreeNode(3)`.'
+        expl: 'Trees are built by assigning child nodes. The root is the entry point, and you traverse by following left/right references.'
+        sol: |-
+          class TreeNode:
+              def __init__(self, value):
+                  self.value = value
+                  self.left = None
+                  self.right = None
+          root = TreeNode(1)
+          root.left = TreeNode(2)
+          root.right = TreeNode(3)
+          print(root.left.value)
+          print(root.right.value)
+        start: "class TreeNode:\n    def __init__(self, value):\n        self.value = value\n        self.left = None\n        self.right = None\n"
+        max: 10/1
+        tests:
+          - |
+            2
+            3
+      - name: In-order Traversal
+        obj: 'Implement `def inorder(node):` that prints values in Left-Root-Right order. Build the tree `2` (left=`1`, right=`3`) and call inorder on the root.'
+        hint: 'Recursively visit left, print value, then visit right: `inorder(node.left); print(node.value); inorder(node.right)`.'
+        expl: 'In-order traversal visits left subtree, then the node, then right subtree. On a BST, this produces values in ascending order.'
+        sol: |-
+          class TreeNode:
+              def __init__(self, value):
+                  self.value = value
+                  self.left = None
+                  self.right = None
+          def inorder(node):
+              if node:
+                  inorder(node.left)
+                  print(node.value)
+                  inorder(node.right)
+          root = TreeNode(2)
+          root.left = TreeNode(1)
+          root.right = TreeNode(3)
+          inorder(root)
+        start: "class TreeNode:\n    def __init__(self, value):\n        self.value = value\n        self.left = None\n        self.right = None\n"
+        max: 15/1
+        tests:
+          - |
+            1
+            2
+            3
+      - name: Pre and Post Order
+        obj: 'Implement `preorder(node)` (Root-Left-Right) and `postorder(node)` (Left-Right-Root). Build tree `1` with left `2`, right `3`, call both, printing each traversal result separated by a blank line.'
+        hint: 'Preorder: print, then left, then right. Postorder: left, then right, then print.'
+        expl: 'Pre-order visits the root first (useful for copying trees). Post-order visits children first (useful for deleting trees).'
+        sol: |-
+          class TreeNode:
+              def __init__(self, value):
+                  self.value = value
+                  self.left = None
+                  self.right = None
+          def preorder(node):
+              if node:
+                  print(node.value)
+                  preorder(node.left)
+                  preorder(node.right)
+          def postorder(node):
+              if node:
+                  postorder(node.left)
+                  postorder(node.right)
+                  print(node.value)
+          root = TreeNode(1)
+          root.left = TreeNode(2)
+          root.right = TreeNode(3)
+          preorder(root)
+          print()
+          postorder(root)
+        start: "class TreeNode:\n    def __init__(self, value):\n        self.value = value\n        self.left = None\n        self.right = None\n"
+        max: 20/1
+        tests:
+          - |
+            1
+            2
+            3
+
+            2
+            3
+            1
+      - name: Tree Height
+        obj: 'Implement `def height(node):` returning the height of the tree. Build a tree: root `1` with left `2` (who has right `4`), and right `3`. Print the height.'
+        hint: 'Height is `1 + max(height(left), height(right))`. Base case: empty node has height `0` (or `-1` depending on convention). Use `-1` for null.'
+        expl: 'Tree height is the number of edges on the longest path from root to leaf. It is computed recursively by taking the max of child heights.'
+        sol: |-
+          class TreeNode:
+              def __init__(self, value):
+                  self.value = value
+                  self.left = None
+                  self.right = None
+          def height(node):
+              if not node:
+                  return -1
+              return 1 + max(height(node.left), height(node.right))
+          root = TreeNode(1)
+          root.left = TreeNode(2)
+          root.right = TreeNode(3)
+          root.left.right = TreeNode(4)
+          print(height(root))
+        start: "class TreeNode:\n    def __init__(self, value):\n        self.value = value\n        self.left = None\n        self.right = None\n"
+        max: 16/1
+        tests:
+          - |
+            2
+      - name: BST Insert
+        obj: 'Implement `def insert_bst(root, value):` that inserts into a Binary Search Tree. Insert `5`, `3`, `7`, `2`, `8` into an empty BST, then print in-order traversal.'
+        hint: 'If value < node.value, insert left; else insert right. Base case: if not root, return TreeNode(value).'
+        expl: 'A BST maintains the property: all left descendants are smaller, all right descendants are larger. This enables O(log n) average search.'
+        sol: |-
+          class TreeNode:
+              def __init__(self, value):
+                  self.value = value
+                  self.left = None
+                  self.right = None
+          def insert_bst(root, value):
+              if not root:
+                  return TreeNode(value)
+              if value < root.value:
+                  root.left = insert_bst(root.left, value)
+              else:
+                  root.right = insert_bst(root.right, value)
+              return root
+          def inorder(node):
+              if node:
+                  inorder(node.left)
+                  print(node.value)
+                  inorder(node.right)
+          root = None
+          for v in [5, 3, 7, 2, 8]:
+              root = insert_bst(root, v)
+          inorder(root)
+        start: "class TreeNode:\n    def __init__(self, value):\n        self.value = value\n        self.left = None\n        self.right = None\n"
+        max: 20/1
+        tests:
+          - |
+            2
+            3
+            5
+            7
+            8
+      - name: Tree Traversal Master
+        obj: 'Read a list of integers, insert them into a BST, then print in-order, pre-order, and post-order traversals, each separated by a blank line.'
+        example:
+          in:
+            - 4 2 6 1 3 5 7
+          out: |
+            1
+            2
+            3
+            4
+            5
+            6
+            7
+
+            4
+            2
+            1
+            3
+            6
+            5
+            7
+
+            1
+            3
+            2
+            5
+            7
+            6
+            4
+        sol: |-
+          class TreeNode:
+              def __init__(self, value):
+                  self.value = value
+                  self.left = None
+                  self.right = None
+          def insert_bst(root, value):
+              if not root:
+                  return TreeNode(value)
+              if value < root.value:
+                  root.left = insert_bst(root.left, value)
+              else:
+                  root.right = insert_bst(root.right, value)
+              return root
+          def inorder(node):
+              if node:
+                  inorder(node.left)
+                  print(node.value)
+                  inorder(node.right)
+          def preorder(node):
+              if node:
+                  print(node.value)
+                  preorder(node.left)
+                  preorder(node.right)
+          def postorder(node):
+              if node:
+                  postorder(node.left)
+                  postorder(node.right)
+                  print(node.value)
+          nums = list(map(int, input().split()))
+          root = None
+          for v in nums:
+              root = insert_bst(root, v)
+          inorder(root)
+          print()
+          preorder(root)
+          print()
+          postorder(root)
+        start: "class TreeNode:\n    def __init__(self, value):\n        self.value = value\n        self.left = None\n        self.right = None\n"
+        max: 28/1
+        tests:
+          - in: 4 2 6 1 3 5 7
+            exp: |
+              1
+              2
+              3
+              4
+              5
+              6
+              7
+
+              4
+              2
+              1
+              3
+              6
+              5
+              7
+
+              1
+              3
+              2
+              5
+              7
+              6
+              4
+          - in: 3 1 2
+            exp: |
+              1
+              2
+              3
+
+              3
+              1
+              2
+
+              2
+              1
+              3
+  - name: Heaps
+    icon: heap
+    levels:
+      - name: Min Heap Basics
+        obj: 'Import `heapq`. Create a list `heap = []`. Push `8`, `3`, `5`, `1` using `heapq.heappush()`, then print the heap list (it will be partially ordered).'
+        hint: '`heapq.heappush(heap, item)` adds an item while maintaining the heap property.'
+        expl: 'A min-heap is a binary tree where the smallest element is always at the root. Python''s `heapq` module provides efficient heap operations.'
+        sol: |-
+          import heapq
+          heap = []
+          heapq.heappush(heap, 8)
+          heapq.heappush(heap, 3)
+          heapq.heappush(heap, 5)
+          heapq.heappush(heap, 1)
+          print(heap)
+        start: ''
+        max: 7/1
+        tests:
+          - match: ^\[1,\s*\d+,\s*\d+,\s*\d+\]\n$
+      - name: Push and Pop
+        obj: 'Create a heap from `[7, 2, 9, 4]` using `heapq.heapify()`. Then pop and print all elements using `heapq.heappop()`.'
+        hint: '`heapq.heapify(list)` converts a list into a heap in-place in O(n). `heapq.heappop(heap)` removes and returns the smallest element.'
+        expl: '`heapify()` turns any list into a valid heap. `heappop()` always returns the smallest element, maintaining the heap property.'
+        sol: |-
+          import heapq
+          heap = [7, 2, 9, 4]
+          heapq.heapify(heap)
+          while heap:
+              print(heapq.heappop(heap))
+        start: ''
+        max: 7/1
+        tests:
+          - |
+            2
+            4
+            7
+            9
+      - name: Heap Sort
+        obj: 'Implement `def heap_sort(items):` that returns a sorted list using heapq. Test with `[3, 1, 4, 1, 5, 9, 2, 6]` and print the result.'
+        hint: 'Heapify the list, then repeatedly pop the smallest element into a result list.'
+        expl: 'Heap sort works by building a heap (O(n)) and extracting elements one by one (O(n log n)). It is an in-place, comparison-based sort.'
+        sol: |-
+          import heapq
+          def heap_sort(items):
+              heapq.heapify(items)
+              return [heapq.heappop(items) for _ in range(len(items))]
+          result = heap_sort([3, 1, 4, 1, 5, 9, 2, 6])
+          print(result)
+        start: ''
+        max: 9/1
+        tests:
+          - |
+            [1, 1, 2, 3, 4, 5, 6, 9]
+      - name: Max Heap
+        obj: 'Simulate a max-heap by pushing negative values. Push `-5`, `-2`, `-8`, `-1` (representing `5`, `2`, `8`, `1`), then pop and print the negated values (largest first).'
+        hint: 'Push `-value` instead of `value`. Pop and negate: `-heapq.heappop(heap)`.'
+        expl: '`heapq` only supports min-heaps. To simulate a max-heap, store negative values: pushing `-x` makes the largest `x` the smallest negative, so it pops first.'
+        sol: |-
+          import heapq
+          heap = []
+          for v in [5, 2, 8, 1]:
+              heapq.heappush(heap, -v)
+          while heap:
+              print(-heapq.heappop(heap))
+        start: ''
+        max: 8/1
+        tests:
+          - |
+            8
+            5
+            2
+            1
+      - name: Kth Largest
+        obj: 'Read a list of integers and `k`. Find and print the kth largest element using a heap. Use a min-heap of size k.'
+        example:
+          in:
+            - 3 2 1 5 6 4
+            - 2
+          out: |
+            5
+        sol: |-
+          import heapq
+          nums = list(map(int, input().split()))
+          k = int(input())
+          heap = nums[:k]
+          heapq.heapify(heap)
+          for x in nums[k:]:
+              if x > heap[0]:
+                  heapq.heappop(heap)
+                  heapq.heappush(heap, x)
+          print(heap[0])
+        start: ''
+        max: 12/1
+        tests:
+          - in:
+              - 3 2 1 5 6 4
+              - 2
+            exp: |
+              5
+          - in:
+              - 7 10 4 3 20 15
+              - 3
+            exp: |
+              10
+  - name: Graphs
+    icon: nodes
+    levels:
+      - name: Adjacency List
+        obj: 'Represent a graph as an adjacency list dict. Create `graph = {"A": ["B", "C"], "B": ["C"], "C": []}` and print it.'
+        hint: 'Each key is a vertex, each value is a list of neighboring vertices.'
+        expl: 'An adjacency list stores a graph as a mapping from each vertex to its neighbors. It is memory-efficient for sparse graphs.'
+        sol: |-
+          graph = {
+              "A": ["B", "C"],
+              "B": ["C"],
+              "C": []
+          }
+          print(graph)
+        start: ''
+        max: 6/1
+        tests:
+          - |
+            {'A': ['B', 'C'], 'B': ['C'], 'C': []}
+      - name: Add Edges
+        obj: 'Define `def add_edge(graph, u, v):` and `def add_vertex(graph, v):`. Start with an empty dict, add vertices `"A"`, `"B"`, `"C"`, add edges `A-B` and `A-C`, then print the graph.'
+        hint: '`add_vertex` sets `graph[v] = []`. `add_edge` appends `v` to `graph[u]` and `u` to `graph[v]` (undirected).'
+        expl: 'Building a graph programmatically lets you add vertices and edges dynamically. For undirected graphs, each edge is added to both adjacency lists.'
+        sol: |-
+          def add_vertex(graph, v):
+              if v not in graph:
+                  graph[v] = []
+          def add_edge(graph, u, v):
+              graph[u].append(v)
+              graph[v].append(u)
+          graph = {}
+          add_vertex(graph, "A")
+          add_vertex(graph, "B")
+          add_vertex(graph, "C")
+          add_edge(graph, "A", "B")
+          add_edge(graph, "A", "C")
+          print(graph)
+        start: ''
+        max: 14/1
+        tests:
+          - match: ^\{'A':\s*\[[^\]]*\],\s*'B':\s*\[[^\]]*\],\s*'C':\s*\[[^\]]*\]\}\n$
+      - name: BFS Traversal
+        obj: 'Implement `def bfs(graph, start):` that prints nodes in breadth-first order. Use the graph `{0: [1,2], 1: [0,3,4], 2: [0], 3: [1], 4: [1]}` starting from `0`.'
+        hint: 'Use a `deque` from collections as a queue. Mark visited nodes to avoid revisiting.'
+        expl: 'BFS explores nodes level by level, visiting all neighbors before going deeper. It uses a queue and is ideal for finding shortest paths in unweighted graphs.'
+        sol: |-
+          from collections import deque
+          def bfs(graph, start):
+              visited = set()
+              q = deque([start])
+              visited.add(start)
+              while q:
+                  node = q.popleft()
+                  print(node)
+                  for neighbor in graph[node]:
+                      if neighbor not in visited:
+                          visited.add(neighbor)
+                          q.append(neighbor)
+          graph = {0: [1,2], 1: [0,3,4], 2: [0], 3: [1], 4: [1]}
+          bfs(graph, 0)
+        start: ''
+        max: 16/1
+        tests:
+          - |
+            0
+            1
+            2
+            3
+            4
+      - name: DFS Traversal
+        obj: 'Implement `def dfs(graph, start, visited=None):` that prints nodes in depth-first order (recursive). Use the graph `{0: [1,2], 1: [0,3,4], 2: [0], 3: [1], 4: [1]}` starting from `0`.'
+        hint: 'Base case: if `visited` is `None`, set `visited = set()`. Mark visited, print, then recurse on unvisited neighbors.'
+        expl: 'DFS explores as far as possible along each branch before backtracking. It uses a stack (implicitly via recursion) and is useful for topological sorting and cycle detection.'
+        sol: |-
+          def dfs(graph, start, visited=None):
+              if visited is None:
+                  visited = set()
+              visited.add(start)
+              print(start)
+              for neighbor in graph[start]:
+                  if neighbor not in visited:
+                      dfs(graph, neighbor, visited)
+          graph = {0: [1,2], 1: [0,3,4], 2: [0], 3: [1], 4: [1]}
+          dfs(graph, 0)
+        start: ''
+        max: 12/1
+        tests:
+          - |
+            0
+            1
+            3
+            4
+            2
+      - name: Path Finder
+        obj: 'Implement `def has_path(graph, start, end):` that returns `True` if a path exists between two nodes. Read start and end nodes, print the result. Use the graph: `{0: [1], 1: [2], 2: [3], 3: [], 4: [5], 5: []}`.'
+        example:
+          in:
+            - 0
+            - 3
+          out: |
+            True
+        sol: |-
+          def has_path(graph, start, end, visited=None):
+              if visited is None:
+                  visited = set()
+              if start == end:
+                  return True
+              visited.add(start)
+              for neighbor in graph[start]:
+                  if neighbor not in visited:
+                      if has_path(graph, neighbor, end, visited):
+                          return True
+              return False
+          graph = {0: [1], 1: [2], 2: [3], 3: [], 4: [5], 5: []}
+          start = int(input())
+          end = int(input())
+          print(has_path(graph, start, end))
+        start: ''
+        max: 16/1
+        tests:
+          - in:
+              - 0
+              - 3
+            exp: |
+              True
+          - in:
+              - 0
+              - 5
+            exp: |
+              False
+  - name: Challenges
+    icon: challenge
+    levels:
+      - name: Array Challenge
+        obj: 'Read `n` then `n` integers. Rotate the array left by 1 position (first element moves to end). Print the result.'
+        example:
+          in:
+            - 5
+            - 1 2 3 4 5
+          out: |
+            [2, 3, 4, 5, 1]
+        sol: |-
+          n = int(input())
+          arr = list(map(int, input().split()))
+          print(arr[1:] + arr[:1])
+        max: 4/1
+        tests:
+          - in:
+              - 5
+              - 1 2 3 4 5
+            exp: |
+              [2, 3, 4, 5, 1]
+          - in:
+              - 3
+              - 10 20 30
+            exp: |
+              [20, 30, 10]
+      - name: Linked List Challenge
+        obj: 'Implement `def reverse(head):` that reverses a linked list in-place. Create list `1 -> 2 -> 3 -> 4`, reverse it, and print the values.'
+        example:
+          in: []
+          out: |
+            4
+            3
+            2
+            1
+        sol: |-
+          class Node:
+              def __init__(self, value):
+                  self.value = value
+                  self.next = None
+          def reverse(head):
+              prev = None
+              current = head
+              while current:
+                  next_node = current.next
+                  current.next = prev
+                  prev = current
+                  current = next_node
+              return prev
+          head = Node(1); head.next = Node(2); head.next.next = Node(3); head.next.next.next = Node(4)
+          head = reverse(head)
+          while head:
+              print(head.value)
+              head = head.next
+        max: 22/1
+        tests:
+          - |
+            4
+            3
+            2
+            1
+      - name: Stack Challenge
+        obj: 'Read a string and check if parentheses `()`, brackets `[]`, and braces `{}` are balanced. Print `"Balanced"` or `"Not balanced"`.'
+        example:
+          in:
+            - "({[]})"
+          out: |
+            Balanced
+        sol: |-
+          def is_balanced(s):
+              pairs = {")": "(", "]": "[", "}": "{"}
+              stack = []
+              for ch in s:
+                  if ch in "([{":
+                      stack.append(ch)
+                  elif ch in ")]}":
+                      if not stack or stack.pop() != pairs[ch]:
+                          return False
+              return len(stack) == 0
+          s = input()
+          print("Balanced" if is_balanced(s) else "Not balanced")
+        max: 15/1
+        tests:
+          - in: "({[]})"
+            exp: |
+              Balanced
+          - in: "({[})"
+            exp: |
+              Not balanced
+      - name: Queue Challenge
+        obj: 'Use `deque` to implement a circular buffer of size `n`. Read `n` and numbers until `-1`, maintaining the last `n` numbers. Print the buffer from front to back.'
+        example:
+          in:
+            - 3
+            - 1
+            - 2
+            - 3
+            - 4
+            - -1
+          out: |
+            [2, 3, 4]
+        sol: |-
+          from collections import deque
+          n = int(input())
+          buf = deque(maxlen=n)
+          while True:
+              v = int(input())
+              if v == -1:
+                  break
+              buf.append(v)
+          print(list(buf))
+        max: 12/1
+        tests:
+          - in:
+              - 3
+              - 1
+              - 2
+              - 3
+              - 4
+              - -1
+            exp: |
+              [2, 3, 4]
+          - in:
+              - 2
+              - 10
+              - 20
+              - 30
+              - -1
+            exp: |
+              [20, 30]
+      - name: Hash Table Challenge
+        obj: 'Read a line of text. Find and print the first non-repeating character, or `"None"` if all repeat.'
+        example:
+          in:
+            - swiss
+          out: |
+            w
+        sol: |-
+          text = input()
+          freq = {}
+          for ch in text:
+              freq[ch] = freq.get(ch, 0) + 1
+          for ch in text:
+              if freq[ch] == 1:
+                  print(ch)
+                  break
+          else:
+              print("None")
+        max: 10/1
+        tests:
+          - in: swiss
+            exp: |
+              w
+          - in: aabbcc
+            exp: |
+              None
+      - name: Tree Challenge
+        obj: 'Implement `def is_bst(node, min_val, max_val):` that validates if a tree is a BST. Build tree: `2` (left=`1`, right=`3`) and check it, then build `1` (left=`2`, right=`3`) and check it.'
+        example:
+          in: []
+          out: |
+            True
+            False
+        sol: |-
+          class TreeNode:
+              def __init__(self, value):
+                  self.value = value
+                  self.left = None
+                  self.right = None
+          def is_bst(node, min_val=float("-inf"), max_val=float("inf")):
+              if not node:
+                  return True
+              if not (min_val < node.value < max_val):
+                  return False
+              return is_bst(node.left, min_val, node.value) and is_bst(node.right, node.value, max_val)
+          t1 = TreeNode(2); t1.left = TreeNode(1); t1.right = TreeNode(3)
+          t2 = TreeNode(1); t2.left = TreeNode(2); t2.right = TreeNode(3)
+          print(is_bst(t1))
+          print(is_bst(t2))
+        max: 20/1
+        tests:
+          - |
+            True
+            False
+      - name: Heap Challenge
+        obj: 'Read `n` numbers and find the median after each new number using two heaps (a max-heap for the lower half and a min-heap for the upper half). Print each median.'
+        example:
+          in:
+            - 5
+            - 2
+            - 1
+            - 3
+            - 7
+            - 6
+          out: |
+            2
+            1
+            2
+            2
+            3
+        sol: |-
+          import heapq
+          n = int(input())
+          lower = []
+          upper = []
+          for _ in range(n):
+              x = int(input())
+              if not lower or x <= -lower[0]:
+                  heapq.heappush(lower, -x)
+              else:
+                  heapq.heappush(upper, x)
+              if len(lower) > len(upper) + 1:
+                  heapq.heappush(upper, -heapq.heappop(lower))
+              elif len(upper) > len(lower):
+                  heapq.heappush(lower, -heapq.heappop(upper))
+              print(-lower[0])
+        max: 20/1
+        tests:
+          - in:
+              - 5
+              - 2
+              - 1
+              - 3
+              - 7
+              - 6
+            exp: |
+              2
+              1
+              2
+              2
+              3
+      - name: Graph Challenge
+        obj: 'Read the number of vertices `v` and edges `e`, then `e` pairs representing edges of an undirected graph. Perform DFS from vertex `0` and print the number of reachable vertices (including start).'
+        example:
+          in:
+            - 6
+            - 4
+            - 0 1
+            - 1 2
+            - 3 4
+            - 4 5
+          out: |
+            3
+        sol: |-
+          v = int(input())
+          e = int(input())
+          graph = {i: [] for i in range(v)}
+          for _ in range(e):
+              a, b = map(int, input().split())
+              graph[a].append(b)
+              graph[b].append(a)
+          visited = set()
+          stack = [0]
+          while stack:
+              node = stack.pop()
+              if node not in visited:
+                  visited.add(node)
+                  for neighbor in graph[node]:
+                      if neighbor not in visited:
+                          stack.append(neighbor)
+          print(len(visited))
+        max: 20/1
+        tests:
+          - in:
+              - 6
+              - 4
+              - 0 1
+              - 1 2
+              - 3 4
+              - 4 5
+            exp: |
+              3
+          - in:
+              - 4
+              - 3
+              - 0 1
+              - 1 2
+              - 2 3
+            exp: |
+              4
+      - name: The Ultimate Structure
+        obj: 'Read edges of an undirected graph, detect if it contains a cycle using DFS. Print `"Cycle found"` or `"No cycle"`.'
+        example:
+          in:
+            - 4
+            - 4
+            - 0 1
+            - 1 2
+            - 2 0
+            - 2 3
+          out: |
+            Cycle found
+        sol: |-
+          v = int(input())
+          e = int(input())
+          graph = {i: [] for i in range(v)}
+          for _ in range(e):
+              a, b = map(int, input().split())
+              graph[a].append(b)
+              graph[b].append(a)
+          visited = set()
+          def dfs(node, parent):
+              visited.add(node)
+              for neighbor in graph[node]:
+                  if neighbor not in visited:
+                      if dfs(neighbor, node):
+                          return True
+                  elif neighbor != parent:
+                      return True
+              return False
+          has_cycle = False
+          for i in range(v):
+              if i not in visited:
+                  if dfs(i, -1):
+                      has_cycle = True
+                      break
+          print("Cycle found" if has_cycle else "No cycle")
+        max: 25/1
+        tests:
+          - in:
+              - 4
+              - 4
+              - 0 1
+              - 1 2
+              - 2 0
+              - 2 3
+            exp: |
+              Cycle found
+          - in:
+              - 3
+              - 2
+              - 0 1
+              - 1 2
+            exp: |
+              No cycle

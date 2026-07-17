@@ -18,6 +18,15 @@ import magicComponent from "../assets/icons/magic.svg?react";
 import connectionComponent from "../assets/icons/connection.svg?react";
 import objectAdvanceComponent from "../assets/icons/object_advance.svg?react";
 import nodesComponent from "../assets/icons/nodes.svg?react";
+import dataStructureComponent from "../assets/icons/data_structure.svg?react";
+import arrayComponent from "../assets/icons/array.svg?react";
+import linkedListComponent from "../assets/icons/linked_list.svg?react";
+import stackComponent from "../assets/icons/stack.svg?react";
+import queueComponent from "../assets/icons/queue.svg?react";
+import hashComponent from "../assets/icons/hash.svg?react";
+import treeComponent from "../assets/icons/tree.svg?react";
+import heapComponent from "../assets/icons/heap.svg?react";
+import graphComponent from "../assets/icons/graph.svg?react";
 import { load } from "js-yaml";
 
 const trackModules = import.meta.glob("./tracks/*.yaml", { query: "?raw", import: "default", eager: true });
@@ -43,6 +52,15 @@ const ICON_COMPONENT_MAP = {
   connection: connectionComponent,
   object_advance: objectAdvanceComponent,
   nodes: nodesComponent,
+  data_structure: dataStructureComponent,
+  array: arrayComponent,
+  linked_list: linkedListComponent,
+  stack: stackComponent,
+  queue: queueComponent,
+  hash: hashComponent,
+  tree: treeComponent,
+  heap: heapComponent,
+  graph: graphComponent,
 };
 
 function parseRichText(str) {
