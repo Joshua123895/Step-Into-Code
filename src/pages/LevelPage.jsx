@@ -1,8 +1,8 @@
 import { ArrowLeft } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { createElement, useEffect, useRef, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { TRACKS, DIFFICULTY } from "../data/tracks";
-import { useProgress } from "../hooks/useProgress";
+import { useProgress, saveCode, getSavedCode, clearSavedCode } from "../hooks/useProgress";
 import { runPythonWithIO } from "../utils/pythonRunner";
 import { runPythonReal } from "../utils/pythonRunnerReal";
 import { mergeFileStore } from "../utils/fileManager";
@@ -124,17 +124,6 @@ export default function LevelPage() {
   const [initialFileSnapshot, setInitialFileSnapshot] = useState(null);
 
   useEffect(() => {
-    if (prevLevelIdRef.current !== levelId) {
-      prevLevelIdRef.current = levelId;
-      setCode(level?.startingCode ?? "");
-      const initial = level?.files?.initial ? { ...level.files.initial } : {};
-      fileStore.current = initial;
-      setInitialFileSnapshot({ ...initial });
-      setFileEntries(initial);
-    }
-  }, [levelId, level?.files?.initial]);
-
-  useEffect(() => {
     if (level?.files) {
       const initialFiles = level.files.initial || {};
       const trackedFiles = level.files.track || [];
@@ -148,7 +137,7 @@ export default function LevelPage() {
         })
         .catch(() => {});
     }
-  }, [level?.id, level?.files, level?.solution, level?.startingCode]);
+  }, [level]);
 
   function syncFileStore() {
     setFileEntries({ ...fileStore.current });
@@ -182,6 +171,28 @@ export default function LevelPage() {
   const [testing, setTesting] = useState(false);
   const [testFailure, setTestFailure] = useState(null);
   const [resultInfo, setResultInfo] = useState(null);
+
+  useEffect(() => {
+    if (prevLevelIdRef.current !== levelId) {
+      prevLevelIdRef.current = levelId;
+      const defaultCode = level?.startingCode ?? "";
+      const stars = getStars(trackName, level.id);
+      const saved = getSavedCode(trackName, level.id);
+      setCode(saved && stars !== 3 ? saved : defaultCode);
+      const initial = level?.files?.initial ? { ...level.files.initial } : {};
+      fileStore.current = initial;
+      setInitialFileSnapshot({ ...initial });
+      setFileEntries(initial);
+    }
+  }, [levelId, level?.files?.initial, getStars, trackName, level?.id, level?.startingCode]);
+
+  useEffect(() => {
+    if (trackName == null || level == null) return;
+    const timer = setTimeout(() => {
+      saveCode(trackName, level.id, code);
+    }, 500);
+    return () => clearTimeout(timer);
+  }, [code, level, trackName]);
 
   const handleRun = async () => {
     if (!level) return;
@@ -238,6 +249,7 @@ export default function LevelPage() {
       if (execTime <= maxTime) stars++;
       playCompleteSound(stars);
       completeLevel(trackName, level.id, stars);
+      if (stars < 3) saveCode(trackName, level.id, code); else clearSavedCode(trackName, level.id);
       setEarnedStars(stars);
       setResultInfo({ lineCount, maxLines, execTime, maxTime });
       setShowModal(true);
@@ -498,7 +510,7 @@ export default function LevelPage() {
               </div>
             </div>
 
-            <div className="px-8 pb-8 pt-2 text-center flex-shrink-0">
+            <div className="px-8 pb-8 pt-2 text-center shrink-0">
               <PixelButton onClick={() => setTestFailure(null)} size="md" variant="primary">
                 Try Again
               </PixelButton>
@@ -714,8 +726,7 @@ export default function LevelPage() {
 
             <div className="lg:col-span-3 lg:self-start">
               {(() => {
-                const VizComponent = level.viz ? getVisualization(level.viz) : null;
-                if (VizComponent) {
+                if (level?.viz) {
                   return (
                     <div className="flex flex-col gap-4 lg:max-h-[calc(100vh-10rem)] lg:overflow-y-auto">
                       <div
@@ -743,7 +754,7 @@ export default function LevelPage() {
                         >
                           Visualization
                         </div>
-                        <VizComponent code={code} level={level} />
+                        {createElement(getVisualization(level.viz), { code, level })}
                       </div>
                     </div>
                   );
