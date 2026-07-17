@@ -36,7 +36,7 @@ def _input(prompt=""):
         _input_index += 1
     else:
         line = ""
-    sys.stdout.write(line + "\\n")
+    sys.stdout.write(str(line) + "\\n")
     sys.stdout.flush()
     return line
 builtins.input = _input

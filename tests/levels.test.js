@@ -181,8 +181,8 @@ describe("Python Advance", () => {
   }
 });
 
-describe("Data Structures", () => {
-  const levels = loadTracks("python4.yaml");
+describe("Object-Oriented Programming", () => {
+  const levels = loadTracks("python3.yaml");
 
   for (const { chapter, level } of levels) {
     const solutionCode = dedent(level.sol);
@@ -213,11 +213,11 @@ describe("Data Structures", () => {
   }
 });
 
-describe("Object-Oriented Programming", () => {
-  const levels = loadTracks("python3.yaml");
+describe("Data Structures", () => {
+  const levels = loadTracks("python4.yaml");
 
   for (const { chapter, level } of levels) {
-    const solutionCode = dedent(level.sol);
+    const solutionCode = level.start ? dedent(level.start + "\n" + level.sol) : dedent(level.sol);
 
     if (level.tests && level.tests.length > 0) {
       describe(chapter, () => {

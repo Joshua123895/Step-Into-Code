@@ -8,64 +8,65 @@ chapters:
     icon: array
     levels:
       - name: Create and Print
-        obj: 'Create a list `nums = [10, 20, 30, 40, 50]` and print it.'
+        viz: array
+        obj: 'Fill the array, or list `nums` of 10, 20, ..., 50, then print the list'
         hint: 'Lists use square brackets: `[item1, item2, ...]`'
         expl: 'An array in Python is called a list. It stores multiple values in a single variable, accessible by index.'
         sol: |-
-          nums = [10, 20, 30, 40, 50]
           print(nums)
-        start: ''
+        start: 'nums = [10, 20, 30, 40, 50]'
         max: 2/1
         tests:
           - |
             [10, 20, 30, 40, 50]
       - name: Access by Index
-        obj: 'Create `nums = [10, 20, 30, 40, 50]` and print `nums[0]`, `nums[2]`, and `nums[-1]` each on a new line.'
+        viz: array
+        obj: 'Print `nums[0]`, `nums[2]`, and `nums[-1]` each on a new line.'
         hint: 'Indexing starts at 0. Negative indices count from the end: `-1` is the last element.'
         expl: 'Square brackets `[]` access elements by position. `nums[0]` gets the first item (10), `nums[-1]` gets the last (50).'
         sol: |-
-          nums = [10, 20, 30, 40, 50]
           print(nums[0])
           print(nums[2])
           print(nums[-1])
-        start: ''
-        max: 5/1
+        start: 'nums = [10, 20, 30, 40, 50]'
+        max: 4/1
         tests:
           - |
             10
             30
             50
       - name: Modify Elements
-        obj: 'Create `nums = [10, 20, 30, 40, 50]`, change `nums[1]` to `25` and `nums[3]` to `45`, then print the list.'
+        viz: array
+        obj: 'Change `nums[1]` to `25` and `nums[3]` to `45`, then print the list.'
         hint: 'Assign to an index: `nums[1] = 25`'
-        expl: 'Lists are mutable — you can change elements by assigning a new value to a specific index.'
+        expl: 'Lists are mutable �?you can change elements by assigning a new value to a specific index.'
         sol: |-
-          nums = [10, 20, 30, 40, 50]
           nums[1] = 25
           nums[3] = 45
           print(nums)
-        start: ''
-        max: 5/1
+        start: 'nums = [10, 20, 30, 40, 50]'
+        max: 4/1
         tests:
           - |
             [10, 25, 30, 45, 50]
       - name: Append and Extend
-        obj: 'Create an empty list `nums = []`, append `1`, `2`, `3` using `append()`, extend with `[4, 5]`, then print the list.'
+        viz: array
+        obj: 'Append `1`, `2`, `3` using `append()`, extend with `[4, 5]`, then print the list.'
         hint: '`list.append(item)` adds one item. `list.extend(iterable)` adds multiple items.'
         expl: '`append()` adds a single element to the end. `extend()` adds all elements from another iterable.'
         sol: |-
-          nums = []
           nums.append(1)
           nums.append(2)
           nums.append(3)
           nums.extend([4, 5])
           print(nums)
-        start: ''
-        max: 7/1
+        start: 'nums = []'
+        max: 6/1
         tests:
           - |
             [1, 2, 3, 4, 5]
       - name: Remove Elements
+        viz: array
         obj: 'Create `nums = [1, 2, 3, 4, 5]`, remove `3` using `remove()`, pop the last element, then print the list.'
         hint: '`list.remove(value)` removes by value. `list.pop()` removes and returns the last element.'
         expl: '`remove()` deletes the first matching value. `pop()` removes the last element (or a specific index given as argument).'
@@ -80,6 +81,7 @@ chapters:
           - |
             [1, 2, 4]
       - name: Slice and Dice
+        viz: array
         obj: 'Create `nums = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]` and print `nums[2:6]`, `nums[:4]`, `nums[5:]`, and `nums[::2]` each on a new line.'
         hint: 'Slice syntax: `list[start:stop:step]`'
         expl: 'Slicing creates a new sublist. `nums[2:6]` gives indices 2 through 5. `nums[::2]` takes every other element.'
@@ -138,6 +140,7 @@ chapters:
     icon: linked_list
     levels:
       - name: Node Class
+        viz: linked_list
         obj: 'Define a `class Node:` with `__init__(self, value)` storing `self.value = value` and `self.next = None`. Create `Node(10)` and print its value.'
         hint: 'A node has two parts: `value` stores data, `next` points to the next node (initially `None`).'
         expl: 'A linked list is made of nodes chained together. Each node holds a value and a reference to the next node. The last node points to `None`.'
@@ -154,6 +157,7 @@ chapters:
           - |
             10
       - name: Chain Nodes
+        viz: linked_list
         obj: 'Create three nodes with values `1`, `2`, `3`. Link them: first -> second -> third. Print the value of the third node by traversing from the first.'
         hint: '`node1.next = node2` links them. Traverse with `current = current.next`.'
         expl: 'Nodes are linked by assigning the `next` pointer. To reach later nodes, follow the chain from the head.'
@@ -174,6 +178,7 @@ chapters:
           - |
             3
       - name: Insert at Head
+        viz: linked_list
         obj: 'Implement `def insert_head(head, value):` that creates a new node and makes it the head. Start with `head = Node(1)`, insert `0` at the head, then print all values from head.'
         hint: 'Set new node''s `next` to the old head, then return the new node: `new_node.next = head; return new_node`'
         expl: 'Inserting at the head is O(1): create a new node, point it to the current head, and return it as the new head.'
@@ -199,6 +204,7 @@ chapters:
             0
             1
       - name: Insert at Tail
+        viz: linked_list
         obj: 'Implement `def insert_tail(head, value):` that appends a new node at the end. Create `Node(1)`, insert `2` and `3` at the tail, then print all values.'
         hint: 'Traverse to the last node (where `next is None`), then set `current.next = Node(value)`.'
         expl: 'Inserting at the tail is O(n) since you must traverse the entire list to find the end.'
@@ -228,6 +234,7 @@ chapters:
             2
             3
       - name: Delete a Node
+        viz: linked_list
         obj: 'Implement `def delete_node(head, value):` that removes the first node with the given value. Create list `1, 2, 3`, delete `2`, then print all values.'
         hint: 'Track the previous node. When `current.value == value`, set `prev.next = current.next`.'
         expl: 'Deletion requires finding the node and updating the previous node''s `next` to skip it. Special care is needed if the head is deleted.'
@@ -258,9 +265,10 @@ chapters:
             1
             3
       - name: Search the List
+        viz: linked_list
         obj: 'Implement `def search(head, value):` that returns `True` if the value exists in the list. Create list `5, 12, 8, 3`, search for `8` and `99`, print the results.'
         hint: 'Traverse the list with a `while` loop. Return `True` when `current.value == value`. Return `False` after the loop.'
-        expl: 'Searching a linked list is O(n) — you may need to check every node to find the value.'
+        expl: 'Searching a linked list is O(n) �?you may need to check every node to find the value.'
         sol: |-
           class Node:
               def __init__(self, value):
@@ -335,6 +343,7 @@ chapters:
     icon: stack
     levels:
       - name: Stack as List
+        viz: stack
         obj: 'Use a Python list as a stack. Push `10`, `20`, `30` using `append()`, then pop three times using `pop()`, printing each popped value.'
         hint: '`list.append(item)` pushes. `list.pop()` pops. These give O(1) amortized time.'
         expl: 'A stack is a LIFO (Last In, First Out) structure. Python lists work naturally as stacks since `append` and `pop` operate on the end.'
@@ -354,6 +363,7 @@ chapters:
             20
             10
       - name: Stack Class
+        viz: stack
         obj: 'Implement a `class Stack:` with `push(self, item)`, `pop(self)`, and `is_empty(self)` methods backed by a list. Push `1`, `2`, `3`, then pop and print until empty.'
         hint: 'Store items in `self.items = []`. `pop` should only work if not empty.'
         expl: 'Wrapping a list in a Stack class enforces the LIFO contract and lets you add methods like `peek()` and `is_empty()`.'
@@ -379,6 +389,7 @@ chapters:
             2
             1
       - name: Peek and Size
+        viz: stack
         obj: 'Add `peek(self)` (returns top without removing) and `size(self)` methods to your Stack. Push `5`, `10`, `15`, peek, print size, then pop and print all.'
         hint: '`peek` returns `self.items[-1]`. `size` returns `len(self.items)`.'
         expl: '`peek()` lets you see the top element without removing it. `size()` is useful for checking how many items remain.'
@@ -412,6 +423,7 @@ chapters:
             10
             5
       - name: Balanced Parentheses
+        viz: stack
         obj: 'Write `def is_balanced(s):` that uses a stack to check if parentheses `()` are balanced. Test with `"(()())"` and `"(()"`, printing the results.'
         hint: 'Push `(` when seen. Pop when `)` is seen. Return `False` if pop from empty stack. Return `True` if stack is empty at the end.'
         expl: 'Stacks naturally solve matching problems. Opening brackets go on the stack, closing ones pop them. If the stack is empty at the end, it''s balanced.'
@@ -468,6 +480,7 @@ chapters:
     icon: queue
     levels:
       - name: Queue as List
+        viz: queue
         obj: 'Use a list as a queue. Enqueue `"a"`, `"b"`, `"c"` using `append()`, then dequeue using `pop(0)`, printing each value.'
         hint: '`list.pop(0)` removes and returns the first element. It works but is O(n).'
         expl: 'A queue is FIFO (First In, First Out). Items are added at the end and removed from the front. Python lists can implement this simply but inefficiently.'
@@ -487,6 +500,7 @@ chapters:
             b
             c
       - name: Queue Class
+        viz: queue
         obj: 'Implement a `class Queue:` with `enqueue(self, item)`, `dequeue(self)`, and `is_empty(self)`. Enqueue `10`, `20`, `30`, then dequeue and print all.'
         hint: 'Use `self.items = []`. `enqueue` appends, `dequeue` pops index 0.'
         expl: 'A Queue class encapsulates the FIFO behavior. While `pop(0)` is O(n), it''s fine for learning the concept.'
@@ -512,6 +526,7 @@ chapters:
             20
             30
       - name: Collections Deque
+        viz: queue
         obj: 'Use `from collections import deque`. Create a deque, append `1`, `2`, `3` to the right, and `0` to the left. Print by popleft until empty.'
         hint: '`deque.append(item)` adds right. `deque.appendleft(item)` adds left. `deque.popleft()` removes from left efficiently.'
         expl: '`collections.deque` is an optimized double-ended queue. It provides O(1) operations on both ends, unlike a list''s O(n) `pop(0)`.'
@@ -531,6 +546,7 @@ chapters:
             2
             3
       - name: Priority Queue
+        viz: queue
         obj: 'Use `import heapq`. Create a list, push `5`, `3`, `8` using `heapq.heappush()`, then pop and print all using `heapq.heappop()`.'
         hint: '`heapq.heappush(heap, item)` pushes. `heapq.heappop(heap)` pops the smallest item.'
         expl: 'A priority queue always returns the smallest element first. Python''s `heapq` implements a min-heap, useful for scheduling and graph algorithms.'
@@ -592,6 +608,7 @@ chapters:
     icon: hash
     levels:
       - name: Dictionary Basics
+        viz: hash_table
         obj: 'Create a dict `ages = {"Alice": 25, "Bob": 30}`. Print `ages["Alice"]`, add `"Charlie": 35`, then print the entire dict.'
         hint: 'Dict literals use `{key: value}`. Access values with `dict[key]`. Assign with `dict[key] = value`.'
         expl: 'A hash table (Python dict) maps keys to values for O(1) average lookup. Keys must be hashable (immutable).'
@@ -607,6 +624,7 @@ chapters:
             25
             {'Alice': 25, 'Bob': 30, 'Charlie': 35}
       - name: Dictionary Methods
+        viz: hash_table
         obj: 'Create `scores = {"math": 90, "science": 85, "english": 88}`. Print keys, values, and items each on a separate line using dict methods.'
         hint: 'Use `dict.keys()`, `dict.values()`, and `dict.items()`. Wrap in `list()` to print them.'
         expl: '`keys()`, `values()`, and `items()` return views that dynamically reflect dict changes. They are useful for iteration and inspection.'
@@ -623,9 +641,10 @@ chapters:
             [90, 85, 88]
             [('math', 90), ('science', 85), ('english', 88)]
       - name: Hash Table Class
+        viz: hash_table
         obj: 'Implement a simple `class HashTable:` with a list of buckets (each a list for chaining). Define `__init__(self, size=10)`, `_hash(self, key)`, `insert(self, key, value)`, and `get(self, key)`. Insert `"name": "Alice"`, then print the value.'
         hint: '`_hash` returns `hash(key) % self.size`. `insert` appends `(key, value)` to the bucket. `get` searches the bucket.'
-        expl: 'A hash table uses a hash function to distribute keys across buckets. Collisions are handled by chaining — storing multiple items in the same bucket.'
+        expl: 'A hash table uses a hash function to distribute keys across buckets. Collisions are handled by chaining �?storing multiple items in the same bucket.'
         sol: |-
           class HashTable:
               def __init__(self, size=10):
@@ -651,6 +670,7 @@ chapters:
           - |
             Alice
       - name: Collision Handling
+        viz: hash_table
         obj: 'Extend your HashTable so `insert` updates existing keys instead of duplicating. Insert `"a": 1`, then `"a": 2` (update), then `"b": 3`, and print both values.'
         hint: 'In `insert`, search the bucket first. If the key exists, update its value. Otherwise append.'
         expl: 'When a key already exists in the bucket, we should update its value rather than adding a duplicate. This ensures each key maps to exactly one value.'
@@ -710,6 +730,7 @@ chapters:
     icon: tree
     levels:
       - name: TreeNode Class
+        viz: tree
         obj: 'Define a `class TreeNode:` with `__init__(self, value)` storing value, left, and right (all `None`). Create a root with value `1` and print its value.'
         hint: 'A tree node has a value and references to left and right children, both initially `None`.'
         expl: 'Trees are hierarchical structures. Each node has at most two children (left and right) in a binary tree. The top node is called the root.'
@@ -727,6 +748,7 @@ chapters:
           - |
             1
       - name: Build a Tree
+        viz: tree
         obj: 'Create a tree: root `1` with left child `2` and right child `3`. Then print `root.left.value` and `root.right.value`.'
         hint: 'Assign children: `root.left = TreeNode(2)` and `root.right = TreeNode(3)`.'
         expl: 'Trees are built by assigning child nodes. The root is the entry point, and you traverse by following left/right references.'
@@ -748,6 +770,7 @@ chapters:
             2
             3
       - name: In-order Traversal
+        viz: tree
         obj: 'Implement `def inorder(node):` that prints values in Left-Root-Right order. Build the tree `2` (left=`1`, right=`3`) and call inorder on the root.'
         hint: 'Recursively visit left, print value, then visit right: `inorder(node.left); print(node.value); inorder(node.right)`.'
         expl: 'In-order traversal visits left subtree, then the node, then right subtree. On a BST, this produces values in ascending order.'
@@ -774,6 +797,7 @@ chapters:
             2
             3
       - name: Pre and Post Order
+        viz: tree
         obj: 'Implement `preorder(node)` (Root-Left-Right) and `postorder(node)` (Left-Right-Root). Build tree `1` with left `2`, right `3`, call both, printing each traversal result separated by a blank line.'
         hint: 'Preorder: print, then left, then right. Postorder: left, then right, then print.'
         expl: 'Pre-order visits the root first (useful for copying trees). Post-order visits children first (useful for deleting trees).'
@@ -811,6 +835,7 @@ chapters:
             3
             1
       - name: Tree Height
+        viz: tree
         obj: 'Implement `def height(node):` returning the height of the tree. Build a tree: root `1` with left `2` (who has right `4`), and right `3`. Print the height.'
         hint: 'Height is `1 + max(height(left), height(right))`. Base case: empty node has height `0` (or `-1` depending on convention). Use `-1` for null.'
         expl: 'Tree height is the number of edges on the longest path from root to leaf. It is computed recursively by taking the max of child heights.'
@@ -835,6 +860,7 @@ chapters:
           - |
             2
       - name: BST Insert
+        viz: tree
         obj: 'Implement `def insert_bst(root, value):` that inserts into a Binary Search Tree. Insert `5`, `3`, `7`, `2`, `8` into an empty BST, then print in-order traversal.'
         hint: 'If value < node.value, insert left; else insert right. Base case: if not root, return TreeNode(value).'
         expl: 'A BST maintains the property: all left descendants are smaller, all right descendants are larger. This enables O(log n) average search.'
@@ -982,6 +1008,7 @@ chapters:
     icon: heap
     levels:
       - name: Min Heap Basics
+        viz: heap
         obj: 'Import `heapq`. Create a list `heap = []`. Push `8`, `3`, `5`, `1` using `heapq.heappush()`, then print the heap list (it will be partially ordered).'
         hint: '`heapq.heappush(heap, item)` adds an item while maintaining the heap property.'
         expl: 'A min-heap is a binary tree where the smallest element is always at the root. Python''s `heapq` module provides efficient heap operations.'
@@ -998,6 +1025,7 @@ chapters:
         tests:
           - match: ^\[1,\s*\d+,\s*\d+,\s*\d+\]\n$
       - name: Push and Pop
+        viz: heap
         obj: 'Create a heap from `[7, 2, 9, 4]` using `heapq.heapify()`. Then pop and print all elements using `heapq.heappop()`.'
         hint: '`heapq.heapify(list)` converts a list into a heap in-place in O(n). `heapq.heappop(heap)` removes and returns the smallest element.'
         expl: '`heapify()` turns any list into a valid heap. `heappop()` always returns the smallest element, maintaining the heap property.'
@@ -1016,6 +1044,7 @@ chapters:
             7
             9
       - name: Heap Sort
+        viz: heap
         obj: 'Implement `def heap_sort(items):` that returns a sorted list using heapq. Test with `[3, 1, 4, 1, 5, 9, 2, 6]` and print the result.'
         hint: 'Heapify the list, then repeatedly pop the smallest element into a result list.'
         expl: 'Heap sort works by building a heap (O(n)) and extracting elements one by one (O(n log n)). It is an in-place, comparison-based sort.'
@@ -1032,6 +1061,7 @@ chapters:
           - |
             [1, 1, 2, 3, 4, 5, 6, 9]
       - name: Max Heap
+        viz: heap
         obj: 'Simulate a max-heap by pushing negative values. Push `-5`, `-2`, `-8`, `-1` (representing `5`, `2`, `8`, `1`), then pop and print the negated values (largest first).'
         hint: 'Push `-value` instead of `value`. Pop and negate: `-heapq.heappop(heap)`.'
         expl: '`heapq` only supports min-heaps. To simulate a max-heap, store negative values: pushing `-x` makes the largest `x` the smallest negative, so it pops first.'
@@ -1086,6 +1116,7 @@ chapters:
     icon: nodes
     levels:
       - name: Adjacency List
+        viz: graph
         obj: 'Represent a graph as an adjacency list dict. Create `graph = {"A": ["B", "C"], "B": ["C"], "C": []}` and print it.'
         hint: 'Each key is a vertex, each value is a list of neighboring vertices.'
         expl: 'An adjacency list stores a graph as a mapping from each vertex to its neighbors. It is memory-efficient for sparse graphs.'
@@ -1102,6 +1133,7 @@ chapters:
           - |
             {'A': ['B', 'C'], 'B': ['C'], 'C': []}
       - name: Add Edges
+        viz: graph
         obj: 'Define `def add_edge(graph, u, v):` and `def add_vertex(graph, v):`. Start with an empty dict, add vertices `"A"`, `"B"`, `"C"`, add edges `A-B` and `A-C`, then print the graph.'
         hint: '`add_vertex` sets `graph[v] = []`. `add_edge` appends `v` to `graph[u]` and `u` to `graph[v]` (undirected).'
         expl: 'Building a graph programmatically lets you add vertices and edges dynamically. For undirected graphs, each edge is added to both adjacency lists.'
@@ -1124,6 +1156,7 @@ chapters:
         tests:
           - match: ^\{'A':\s*\[[^\]]*\],\s*'B':\s*\[[^\]]*\],\s*'C':\s*\[[^\]]*\]\}\n$
       - name: BFS Traversal
+        viz: graph
         obj: 'Implement `def bfs(graph, start):` that prints nodes in breadth-first order. Use the graph `{0: [1,2], 1: [0,3,4], 2: [0], 3: [1], 4: [1]}` starting from `0`.'
         hint: 'Use a `deque` from collections as a queue. Mark visited nodes to avoid revisiting.'
         expl: 'BFS explores nodes level by level, visiting all neighbors before going deeper. It uses a queue and is ideal for finding shortest paths in unweighted graphs.'
@@ -1152,6 +1185,7 @@ chapters:
             3
             4
       - name: DFS Traversal
+        viz: graph
         obj: 'Implement `def dfs(graph, start, visited=None):` that prints nodes in depth-first order (recursive). Use the graph `{0: [1,2], 1: [0,3,4], 2: [0], 3: [1], 4: [1]}` starting from `0`.'
         hint: 'Base case: if `visited` is `None`, set `visited = set()`. Mark visited, print, then recurse on unvisited neighbors.'
         expl: 'DFS explores as far as possible along each branch before backtracking. It uses a stack (implicitly via recursion) and is useful for topological sorting and cycle detection.'

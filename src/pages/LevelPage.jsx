@@ -9,6 +9,7 @@ import { mergeFileStore } from "../utils/fileManager";
 import { validateStructure } from "../utils/structureValidator";
 import { ensurePyodide } from "../utils/pyodide";
 import CompletionModal from "../components/CompletionModal";
+import { getVisualization } from "../visualizations";
 import CodeEditorContainer from "../components/CodeEditorContainer";
 import ProgressBar from "../components/ProgressBar";
 import PixelButton from "../components/PixelButton";
@@ -125,6 +126,7 @@ export default function LevelPage() {
   useEffect(() => {
     if (prevLevelIdRef.current !== levelId) {
       prevLevelIdRef.current = levelId;
+      setCode(level?.startingCode ?? "");
       const initial = level?.files?.initial ? { ...level.files.initial } : {};
       fileStore.current = initial;
       setInitialFileSnapshot({ ...initial });
@@ -711,70 +713,106 @@ export default function LevelPage() {
             </div>
 
             <div className="lg:col-span-3 lg:self-start">
-              <div
-                className="lg:max-h-[calc(100vh-10rem)] lg:overflow-y-auto space-y-4"
-              >
-                <div
-                  className="rounded-2xl p-5"
-                  style={{ background: "var(--bg-card)", border: "2px solid var(--border)" }}
-                >
-                  <div
-                    className="text-xs font-bold uppercase tracking-wider mb-3"
-                    style={{ color: "var(--text-muted)" }}
-                  >
-                    Chapter Progress
-                  </div>
-                  <ProgressBar value={progress} showLabel={false} />
-                  <p className="text-xs mt-2" style={{ color: "var(--text-muted)" }}>
-                    {completedCount} of {chapter.levels.length} levels complete
-                  </p>
-
-                  <div
-                    className="mt-4 pt-4"
-                    style={{ borderTop: "1px solid var(--border)" }}
-                  >
-                    <div
-                      className="text-xs font-bold uppercase tracking-wider mb-1"
-                      style={{ color: "var(--text-muted)" }}
-                    >
-                      Current Chapter
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <Icon src={chapter.chapterIcon} alt={chapter.name} size={28} color={diff.color} className="md:w-10.5! md:h-10.5!" />
-                      <span
-                        className="text-sm font-bold"
-                        style={{ color: "var(--text)", fontFamily: "'Courier New', monospace" }}
+              {(() => {
+                const VizComponent = level.viz ? getVisualization(level.viz) : null;
+                if (VizComponent) {
+                  return (
+                    <div className="flex flex-col gap-4 lg:max-h-[calc(100vh-10rem)] lg:overflow-y-auto">
+                      <div
+                        className="rounded-2xl p-3 shrink-0"
+                        style={{ background: "var(--bg-card)", border: "2px solid var(--border)" }}
                       >
-                        {chapter.name}
-                      </span>
+                        <div
+                          className="text-[10px] font-bold uppercase tracking-wider mb-2"
+                          style={{ color: "var(--text-muted)" }}
+                        >
+                          Progress
+                        </div>
+                        <ProgressBar value={progress} showLabel={false} />
+                        <p className="text-[10px] mt-1" style={{ color: "var(--text-muted)" }}>
+                          {completedCount}/{chapter.levels.length} · {totalStars} ★
+                        </p>
+                      </div>
+                      <div
+                        className="rounded-2xl p-4 flex-1"
+                        style={{ background: "var(--bg-card)", border: "2px solid var(--border)" }}
+                      >
+                        <div
+                          className="text-[10px] font-bold uppercase tracking-wider mb-3"
+                          style={{ color: "var(--text-muted)" }}
+                        >
+                          Visualization
+                        </div>
+                        <VizComponent code={code} level={level} />
+                      </div>
+                    </div>
+                  );
+                }
+                return (
+                  <div className="lg:max-h-[calc(100vh-10rem)] lg:overflow-y-auto space-y-4">
+                    <div
+                      className="rounded-2xl p-5"
+                      style={{ background: "var(--bg-card)", border: "2px solid var(--border)" }}
+                    >
+                      <div
+                        className="text-xs font-bold uppercase tracking-wider mb-3"
+                        style={{ color: "var(--text-muted)" }}
+                      >
+                        Chapter Progress
+                      </div>
+                      <ProgressBar value={progress} showLabel={false} />
+                      <p className="text-xs mt-2" style={{ color: "var(--text-muted)" }}>
+                        {completedCount} of {chapter.levels.length} levels complete
+                      </p>
+
+                      <div
+                        className="mt-4 pt-4"
+                        style={{ borderTop: "1px solid var(--border)" }}
+                      >
+                        <div
+                          className="text-xs font-bold uppercase tracking-wider mb-1"
+                          style={{ color: "var(--text-muted)" }}
+                        >
+                          Current Chapter
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <Icon src={chapter.chapterIcon} alt={chapter.name} size={28} color={diff.color} className="md:w-10.5! md:h-10.5!" />
+                          <span
+                            className="text-sm font-bold"
+                            style={{ color: "var(--text)", fontFamily: "'Courier New', monospace" }}
+                          >
+                            {chapter.name}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div
+                      className="rounded-2xl p-5"
+                      style={{ background: "var(--bg-card)", border: "2px solid var(--border)" }}
+                    >
+                      <div
+                        className="text-xs font-bold uppercase tracking-wider mb-3"
+                        style={{ color: "var(--text-muted)" }}
+                      >
+                        Total Stars
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <span
+                          className="text-2xl font-black"
+                          style={{ color: "#E9B44C", fontFamily: "'Courier New', monospace" }}
+                        >
+                          {totalStars}
+                        </span>
+                        <StarIcon filled className="text-lg" />
+                      </div>
+                      <p className="text-xs mt-1" style={{ color: "var(--text-muted)" }}>
+                        across {completedCount} completed levels
+                      </p>
                     </div>
                   </div>
-                </div>
-
-                <div
-                  className="rounded-2xl p-5"
-                  style={{ background: "var(--bg-card)", border: "2px solid var(--border)" }}
-                >
-                  <div
-                    className="text-xs font-bold uppercase tracking-wider mb-3"
-                    style={{ color: "var(--text-muted)" }}
-                  >
-                    Total Stars
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <span
-                      className="text-2xl font-black"
-                      style={{ color: "#E9B44C", fontFamily: "'Courier New', monospace" }}
-                    >
-                      {totalStars}
-                    </span>
-                    <StarIcon filled className="text-lg" />
-                  </div>
-                  <p className="text-xs mt-1" style={{ color: "var(--text-muted)" }}>
-                    across {completedCount} completed levels
-                  </p>
-                </div>
-              </div>
+                );
+              })()}
             </div>
           </div>
         </div>
