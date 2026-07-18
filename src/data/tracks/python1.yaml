@@ -1148,8 +1148,9 @@ chapters:
         sourceChecks:
           classes:
             - Dog
-          functions:
-            - __init__
+          methods:
+            Dog:
+              - __init__
         id: 61
         max: 5/1
         obj: Define `class Dog:` with `__init__(self, name):` storing `self.name = name`. Create `Dog("Rex")` and print its name.

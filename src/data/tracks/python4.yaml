@@ -227,7 +227,7 @@ chapters:
               print(current.value)
               current = current.next
         start: "class Node:\n    def __init__(self, value):\n        self.value = value\n        self.next = None\n"
-        max: 16/1
+        max: 15/1
         tests:
           - |
             1

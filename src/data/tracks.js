@@ -103,8 +103,13 @@ function parseChecks(checks) {
   const c = {};
   if (checks.cls) c.classes = checks.cls;
   if (checks.fn) c.functions = checks.fn;
+  if (checks.mth) c.methods = checks.mth;
   if (checks.inh) c.inheritance = checks.inh;
   if (checks.not) c.not = checks.not;
+  if (checks.classes) c.classes = checks.classes;
+  if (checks.functions) c.functions = checks.functions;
+  if (checks.methods) c.methods = checks.methods;
+  if (checks.inheritance) c.inheritance = checks.inheritance;
   return c;
 }
 

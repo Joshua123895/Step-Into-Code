@@ -242,6 +242,25 @@ export default function LevelPage() {
         }
       }
 
+      if (level.sourceChecks) {
+        const structResult = await validateStructure(code, level.sourceChecks);
+        if (!structResult.valid) {
+          debugFail("source check failed", {
+            level: level.name,
+            sourceChecks: level.sourceChecks,
+            error: structResult.error,
+          });
+          playWrongSound();
+          setTestFailure({
+            input: "",
+            expected: "Required code structure",
+            actual: structResult.error,
+          });
+          setTesting(false);
+          return;
+        }
+      }
+
       execTime = (performance.now() - startTime) / 1000;
       setTesting(false);
       let stars = 1;
@@ -379,7 +398,7 @@ export default function LevelPage() {
       const strippedExpected = norm(expectedOutput);
 
       if (matchOutput(actualOutput, expectedOutput)) {
-        if (strippedActual === "" && strippedExpected === "" && level.sourceChecks) {
+        if (level.sourceChecks) {
           const result = await validateStructure(code, level.sourceChecks);
           if (!result.valid) {
             debugFail("source check failed", { level: level.name, sourceChecks: level.sourceChecks, error: result.error });

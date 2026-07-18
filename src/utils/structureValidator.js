@@ -37,12 +37,27 @@ for node in ast.walk(tree):
 for node in tree.body:
     if isinstance(node, ast.FunctionDef):
         functions.append(node.name)
+        used_names = set()
+for node in ast.walk(tree):
+    if isinstance(node, ast.Name):
+        used_names.add(node.id)
+    elif isinstance(node, ast.Attribute):
+        used_names.add(node.attr)
+    elif isinstance(node, ast.Import):
+        for a in node.names:
+            used_names.add(a.name.split(".")[0])
+    elif isinstance(node, ast.ImportFrom):
+        if node.module:
+            used_names.add(node.module.split(".")[0])
+        for a in node.names:
+            used_names.add(a.name)
 
 json.dumps({
     "classes": classes,
     "functions": functions,
     "classMethods": class_methods,
-    "inheritance": inheritance
+    "inheritance": inheritance,
+    "usedNames": sorted(used_names)
 })
 `);
 
@@ -59,6 +74,15 @@ json.dumps({
     if (sourceChecks.functions) {
       for (const required of sourceChecks.functions) {
         if (!result.functions.includes(required)) {
+          const owner = Object.keys(result.classMethods).find((c) =>
+            result.classMethods[c].includes(required)
+          );
+          if (owner) {
+            return {
+              valid: false,
+              error: `"${required}" is a method of class "${owner}", not a top-level function. This level's checks should use methods, not functions.`,
+            };
+          }
           return { valid: false, error: `Function "${required}" not found in your code.` };
         }
       }
@@ -83,7 +107,14 @@ json.dumps({
         }
       }
     }
-
+    if (sourceChecks.not) {
+      const banned = Array.isArray(sourceChecks.not) ? sourceChecks.not : [sourceChecks.not];
+      for (const name of banned) {
+        if ((result.usedNames || []).includes(name)) {
+          return { valid: false, error: `This level does not allow using "${name}".` };
+        }
+      }
+    }
     return { valid: true };
   } catch (e) {
     return { valid: false, error: `Could not parse your code: ${e.message}` };
