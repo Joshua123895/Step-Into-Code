@@ -95,3 +95,13 @@ html, body, #root {
   scrollbar-color: #c4c4c4 transparent;
 }
 
+@keyframes viz-in {
+  from { transform: scale(0); opacity: 0; }
+  to   { transform: scale(1); opacity: 1; }
+}
+
+@keyframes viz-out {
+  from { transform: scale(1); opacity: 1; }
+  to   { transform: scale(0); opacity: 0; }
+}
+

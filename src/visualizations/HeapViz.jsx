@@ -1,43 +1,57 @@
-import { useMemo } from "react";
+import { useState, useCallback, useEffect, useRef } from "react";
+import usePlayback from "./usePlayback";
+import VizControls from "./VizControls";
+import AnimatedItem from "./AnimatedItem";
 
-function parseHeapOps(code) {
+function parseHeapStates(code) {
   const lines = code.split("\n");
   let heap = null;
+  let itemId = 0;
+  const states = [];
+
+  const snapshot = () => states.push(heap === null ? null : [...heap]);
+
+  snapshot();
 
   for (const line of lines) {
     if (line.trim().startsWith("#")) continue;
     const init = line.match(/(\w+)\s*=\s*\[\s*\]/);
     if (init) {
       heap = [];
+      snapshot();
       continue;
     }
 
     const init2 = line.match(/(\w+)\s*=\s*\[([^\]]+)\]\s*$/);
     if (init2 && !init2[0].includes("heapq.") && !init2[0].includes(".append")) {
       const vals = init2[2].split(",").map((s) => s.trim()).filter(Boolean);
-      heap = vals.map((v) => ({ value: v }));
+      heap = vals.map((v) => ({ value: v, _id: itemId++ }));
+      snapshot();
       continue;
     }
 
     const push = line.match(/heapq\.heappush\s*\(\s*(\w+)\s*,\s*(.+?)\s*\)/);
     if (push && heap !== null) {
-      heap = [...heap, { value: push[2] }];
+      heap = [...heap, { value: push[2], _id: itemId++ }];
+      snapshot();
       continue;
     }
 
     const pop = line.match(/heapq\.heappop\s*\(\s*(\w+)\s*\)/);
     if (pop && heap !== null && heap.length > 0) {
       heap = heap.slice(1);
+      snapshot();
       continue;
     }
 
     const heapify = line.match(/heapq\.heapify\s*\(\s*(\w+)\s*\)/);
     if (heapify && heap !== null) {
       heap = [...heap].sort((a, b) => Number(a.value) - Number(b.value));
+      snapshot();
     }
   }
 
-  return heap;
+  return states;
 }
 
 function HeapTree({ items, x, y, level, index, totalWidth }) {
@@ -64,16 +78,14 @@ function HeapTree({ items, x, y, level, index, totalWidth }) {
           <HeapTree items={items} x={rightX} y={childY} level={level + 1} index={rightIdx} totalWidth={totalWidth} />
         </>
       )}
-      <circle cx={x} cy={y} r={r} fill="#BB9AF715" stroke="#BB9AF7" strokeWidth={2} />
+      <circle cx={x} cy={y} r={r} fill="#BB9AF715" stroke="#BB9AF7" strokeWidth={2} style={{ animation: "viz-in 0.25s ease-out both" }} />
       <text x={x} y={y + 1} textAnchor="middle" dominantBaseline="middle" fill="var(--text)" fontSize={11} fontFamily="monospace" fontWeight="bold">{items[index].value}</text>
     </g>
   );
 }
 
-export default function HeapViz({ code }) {
-  const items = useMemo(() => parseHeapOps(code), [code]);
-
-  if (items === null) {
+function VizBody({ items, ghostItems = [] }) {
+  if (items === null && ghostItems.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center h-full min-h-[200px] text-center p-4" style={{ color: "var(--text-muted)" }}>
         <div className="text-4xl mb-3 opacity-30">⊟</div>
@@ -82,35 +94,139 @@ export default function HeapViz({ code }) {
     );
   }
 
-  const depth = Math.ceil(Math.log2(items.length + 1));
+  const allItems = items || [];
+  const displayItems = [...allItems, ...ghostItems];
+  const depth = Math.ceil(Math.log2(displayItems.length + 1));
   const svgWidth = Math.max(180, Math.pow(2, depth) * 30);
   const svgHeight = depth * 45 + 30;
 
   return (
     <div className="flex flex-col items-center gap-3">
       <div className="flex flex-wrap justify-center gap-1">
-        {items.map((item, i) => (
-          <div
-            key={i}
-            className="w-8 h-8 rounded-lg flex items-center justify-center font-mono text-xs font-bold"
-            style={{
-              background: "var(--bg)",
-              border: "2px solid #BB9AF7",
-              color: "var(--text)",
-            }}
-          >
-            {item.value}
-          </div>
+        {allItems.map((item) => (
+          <AnimatedItem key={item._id}>
+            <div
+              className="w-8 h-8 rounded-lg flex items-center justify-center font-mono text-xs font-bold"
+              style={{
+                background: "var(--bg)",
+                border: "2px solid #BB9AF7",
+                color: "var(--text)",
+              }}
+            >
+              {item.value}
+            </div>
+          </AnimatedItem>
+        ))}
+        {ghostItems.map((item) => (
+          <AnimatedItem key={`ghost-${item._id}`} leaving>
+            <div
+              className="w-8 h-8 rounded-lg flex items-center justify-center font-mono text-xs font-bold"
+              style={{
+                background: "var(--bg)",
+                border: "2px solid #BB9AF7",
+                color: "var(--text-muted)",
+                opacity: 0.5,
+              }}
+            >
+              {item.value}
+            </div>
+          </AnimatedItem>
         ))}
       </div>
-      {items.length > 1 && (
+      {displayItems.length > 1 && (
         <svg width={svgWidth} height={svgHeight} viewBox={`0 0 ${svgWidth} ${svgHeight}`} style={{ maxWidth: "100%" }}>
-          <HeapTree items={items} x={svgWidth / 2} y={20} level={0} index={0} totalWidth={svgWidth} />
+          <HeapTree items={displayItems} x={svgWidth / 2} y={20} level={0} index={0} totalWidth={svgWidth} />
         </svg>
       )}
       <div className="text-[10px]" style={{ color: "var(--text-muted)" }}>
-        {items.length} element{items.length !== 1 ? "s" : ""}
+        {allItems.length} element{allItems.length !== 1 ? "s" : ""}
       </div>
+    </div>
+  );
+}
+
+export default function HeapViz({ code }) {
+  const playback = usePlayback();
+  const [parsed, setParsed] = useState(null);
+  const [ghostItems, setGhostItems] = useState([]);
+  const prevRef = useRef(null);
+  const ghostTimerRef = useRef(null);
+
+  const ensureParsed = useCallback(() => {
+    if (parsed && parsed.code === code) return parsed.states;
+    const s = parseHeapStates(code);
+    setParsed({ code, states: s });
+    playback.configure(s.length);
+    return s;
+  }, [code, parsed, playback]);
+
+  useEffect(() => {
+    if (!parsed || playback.step < 0) return;
+    const cur = parsed.states[Math.min(playback.step, parsed.states.length - 1)] || [];
+    const prev = prevRef.current;
+    prevRef.current = cur;
+    if (!prev) return;
+    if (ghostTimerRef.current) clearTimeout(ghostTimerRef.current);
+    const curIds = new Set(cur.map((i) => i._id));
+    const removed = prev.filter((i) => !curIds.has(i._id));
+    if (removed.length > 0) {
+      setGhostItems(removed);
+      ghostTimerRef.current = setTimeout(() => { setGhostItems([]); ghostTimerRef.current = null; }, 300);
+    } else {
+      setGhostItems([]);
+    }
+  }, [parsed, playback.step]);
+
+  const handleToggle = useCallback(() => {
+    if (playback.playing) {
+      playback.pause();
+    } else {
+      ensureParsed();
+      playback.play();
+    }
+  }, [playback, ensureParsed]);
+
+  const handleStep = useCallback(() => {
+    ensureParsed();
+    playback.stepForward();
+  }, [playback, ensureParsed]);
+
+  const handleReset = useCallback(() => {
+    playback.reset();
+    setParsed(null);
+    setGhostItems([]);
+    prevRef.current = null;
+  }, [playback]);
+
+  if (!parsed) {
+    return (
+      <div className="flex items-center justify-center h-full min-h-[200px]">
+        <button
+          onClick={handleToggle}
+          className="text-xs px-4 py-2 rounded font-bold hover:brightness-110 active:brightness-90 active:scale-[0.98]"
+          style={{
+            background: "#6AAE6F",
+            color: "#fff",
+          }}
+        >
+          ▶ Run
+        </button>
+      </div>
+    );
+  }
+
+  const idx = Math.max(0, Math.min(playback.step, parsed.states.length - 1));
+  return (
+    <div className="flex flex-col">
+      <VizControls
+        onToggle={handleToggle}
+        onStep={handleStep}
+        onPrev={playback.stepBackward}
+        playing={playback.playing}
+        step={playback.step}
+        total={playback.total}
+      />
+      <VizBody items={parsed.states[idx]} ghostItems={ghostItems} />
     </div>
   );
 }

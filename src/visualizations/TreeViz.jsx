@@ -1,47 +1,57 @@
-import { useMemo } from "react";
+import { useState, useCallback, useEffect, useRef } from "react";
+import usePlayback from "./usePlayback";
+import VizControls from "./VizControls";
 
-function parseTreeOps(code) {
+function parseTreeStates(code) {
   const lines = code.split("\n");
   const treeVars = {};
+  const states = [];
+
+  const computeState = () => {
+    const children = new Set();
+    for (const name of Object.keys(treeVars)) {
+      if (treeVars[name].left) children.add(treeVars[name].left);
+      if (treeVars[name].right) children.add(treeVars[name].right);
+    }
+    let rootName = null;
+    for (const name of Object.keys(treeVars)) {
+      if (!children.has(name)) { rootName = name; break; }
+    }
+
+    const buildTreeNodes = (rootName) => {
+      const node = treeVars[rootName];
+      if (!node) return null;
+      return {
+        name: rootName,
+        val: node.val,
+        left: node.left ? buildTreeNodes(node.left) : null,
+        right: node.right ? buildTreeNodes(node.right) : null,
+      };
+    };
+
+    const tree = rootName ? buildTreeNodes(rootName) : null;
+    return { treeVars: { ...treeVars }, tree, rootName };
+  };
+
+  states.push(computeState());
 
   for (const line of lines) {
     if (line.trim().startsWith("#")) continue;
     const init = line.match(/(\w+)\s*=\s*(?:TreeNode|Node)\s*\(\s*(\d+)\s*\)/);
     if (init) {
       treeVars[init[1]] = { val: init[2], left: null, right: null };
+      states.push(computeState());
       continue;
     }
 
     const link = line.match(/(\w+)\.(left|right)\s*=\s*(\w+)/);
     if (link && treeVars[link[1]] && treeVars[link[3]]) {
       treeVars[link[1]][link[2]] = link[3];
+      states.push(computeState());
     }
   }
 
-  return treeVars;
-}
-
-function buildTreeNodes(treeVars, rootName) {
-  const node = treeVars[rootName];
-  if (!node) return null;
-  return {
-    name: rootName,
-    val: node.val,
-    left: node.left ? buildTreeNodes(treeVars, node.left) : null,
-    right: node.right ? buildTreeNodes(treeVars, node.right) : null,
-  };
-}
-
-function findRoot(treeVars) {
-  const children = new Set();
-  for (const name of Object.keys(treeVars)) {
-    if (treeVars[name].left) children.add(treeVars[name].left);
-    if (treeVars[name].right) children.add(treeVars[name].right);
-  }
-  for (const name of Object.keys(treeVars)) {
-    if (!children.has(name)) return name;
-  }
-  return null;
+  return states;
 }
 
 function TreeNodeBox({ node, x, y, level, totalWidth }) {
@@ -66,19 +76,17 @@ function TreeNodeBox({ node, x, y, level, totalWidth }) {
           <TreeNodeBox node={node.right} x={rightX} y={childY} level={level + 1} totalWidth={totalWidth} />
         </>
       )}
-      <circle cx={x} cy={y} r={r} fill="#7AA2F715" stroke="#7AA2F7" strokeWidth={2} />
+      <circle cx={x} cy={y} r={r} fill="#7AA2F715" stroke="#7AA2F7" strokeWidth={2} style={{ animation: "viz-in 0.25s ease-out both" }} />
       <text x={x} y={y + 1} textAnchor="middle" dominantBaseline="middle" fill="var(--text)" fontSize={12} fontFamily="monospace" fontWeight="bold">{node.val}</text>
     </g>
   );
 }
 
-export default function TreeViz({ code }) {
-  const treeVars = useMemo(() => parseTreeOps(code), [code]);
+function VizBody({ state, ghostVars = {} }) {
+  const { treeVars, tree, rootName } = state;
   const names = Object.keys(treeVars);
-  const rootName = useMemo(() => findRoot(treeVars), [treeVars]);
-  const tree = rootName ? buildTreeNodes(treeVars, rootName) : null;
 
-  if (names.length === 0) {
+  if (names.length === 0 && Object.keys(ghostVars).length === 0) {
     return (
       <div className="flex flex-col items-center justify-center h-full min-h-[200px] text-center p-4" style={{ color: "var(--text-muted)" }}>
         <div className="text-4xl mb-3 opacity-30">⬡</div>
@@ -87,30 +95,138 @@ export default function TreeViz({ code }) {
     );
   }
 
-  if (!tree) {
-    return (
-      <div className="flex flex-col items-center justify-center h-full min-h-[200px] text-center p-4" style={{ color: "var(--text-muted)" }}>
-        <p className="text-xs">Link nodes to build the tree</p>
-      </div>
-    );
-  }
-
-  const depth = (function maxDepth(n) {
+  const maxDepth = (n) => {
     if (!n) return 0;
     return 1 + Math.max(maxDepth(n.left), maxDepth(n.right));
-  })(tree);
-
+  };
+  const depth = tree ? maxDepth(tree) : 0;
   const svgWidth = Math.max(200, Math.pow(2, depth) * 40);
   const svgHeight = depth * 50 + 40;
 
   return (
     <div className="flex flex-col items-center">
-      <div className="text-xs font-bold mb-2" style={{ color: "var(--text-muted)", fontFamily: "'Courier New', monospace" }}>
-        {rootName}
+      {tree && (
+        <>
+          <div className="text-xs font-bold mb-2" style={{ color: "var(--text-muted)", fontFamily: "'Courier New', monospace" }}>
+            {rootName}
+          </div>
+          <svg width={svgWidth} height={svgHeight} viewBox={`0 0 ${svgWidth} ${svgHeight}`} style={{ maxWidth: "100%" }}>
+            <TreeNodeBox node={tree} x={svgWidth / 2} y={25} level={0} totalWidth={svgWidth} />
+          </svg>
+        </>
+      )}
+      {Object.keys(ghostVars).length > 0 && (
+        <div className="flex flex-wrap gap-2 mt-2 justify-center">
+          {Object.values(ghostVars).map((node) => (
+            <div
+              key={node.var}
+              className="rounded-lg px-3 py-1.5 text-center font-mono text-xs font-bold"
+              style={{
+                animation: "viz-out 0.2s ease-in both",
+                background: "var(--bg)",
+                border: "2px solid var(--border)",
+                color: "var(--text-muted)",
+                opacity: 0.5,
+              }}
+            >
+              <div>{node.val}</div>
+              <div className="text-[9px] font-normal" style={{ color: "var(--text-muted)" }}>{node.var}</div>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+export default function TreeViz({ code }) {
+  const playback = usePlayback();
+  const [parsed, setParsed] = useState(null);
+  const [ghostVars, setGhostVars] = useState({});
+  const prevRef = useRef(null);
+  const ghostTimerRef = useRef(null);
+
+  const ensureParsed = useCallback(() => {
+    if (parsed && parsed.code === code) return parsed.states;
+    const s = parseTreeStates(code);
+    setParsed({ code, states: s });
+    playback.configure(s.length);
+    return s;
+  }, [code, parsed, playback]);
+
+  useEffect(() => {
+    if (!parsed || playback.step < 0) return;
+    const cur = parsed.states[Math.min(playback.step, parsed.states.length - 1)];
+    const prev = prevRef.current;
+    prevRef.current = cur;
+    if (!prev) return;
+    if (ghostTimerRef.current) clearTimeout(ghostTimerRef.current);
+
+    const prevVars = Object.keys(prev.treeVars || {});
+    const curVars = new Set(Object.keys(cur.treeVars || {}));
+    const removed = {};
+    for (const v of prevVars) {
+      if (!curVars.has(v)) removed[v] = prev.treeVars[v];
+    }
+
+    if (Object.keys(removed).length > 0) {
+      setGhostVars(removed);
+      ghostTimerRef.current = setTimeout(() => { setGhostVars({}); ghostTimerRef.current = null; }, 300);
+    } else {
+      setGhostVars({});
+    }
+  }, [parsed, playback.step]);
+
+  const handleToggle = useCallback(() => {
+    if (playback.playing) {
+      playback.pause();
+    } else {
+      ensureParsed();
+      playback.play();
+    }
+  }, [playback, ensureParsed]);
+
+  const handleStep = useCallback(() => {
+    ensureParsed();
+    playback.stepForward();
+  }, [playback, ensureParsed]);
+
+  const handleReset = useCallback(() => {
+    playback.reset();
+    setParsed(null);
+    setGhostVars({});
+    prevRef.current = null;
+  }, [playback]);
+
+  if (!parsed) {
+    return (
+      <div className="flex items-center justify-center h-full min-h-[200px]">
+        <button
+          onClick={handleToggle}
+          className="text-xs px-4 py-2 rounded font-bold hover:brightness-110 active:brightness-90 active:scale-[0.98]"
+          style={{
+            background: "#6AAE6F",
+            color: "#fff",
+          }}
+        >
+          ▶ Run
+        </button>
       </div>
-      <svg width={svgWidth} height={svgHeight} viewBox={`0 0 ${svgWidth} ${svgHeight}`} style={{ maxWidth: "100%" }}>
-        <TreeNodeBox node={tree} x={svgWidth / 2} y={25} level={0} totalWidth={svgWidth} />
-      </svg>
+    );
+  }
+
+  const idx = Math.max(0, Math.min(playback.step, parsed.states.length - 1));
+  return (
+    <div className="flex flex-col">
+      <VizControls
+        onToggle={handleToggle}
+        onStep={handleStep}
+        onPrev={playback.stepBackward}
+        playing={playback.playing}
+        step={playback.step}
+        total={playback.total}
+      />
+      <VizBody state={parsed.states[idx]} ghostVars={ghostVars} />
     </div>
   );
 }

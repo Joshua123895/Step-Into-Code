@@ -89,6 +89,21 @@ def _input(prompt=""):
 builtins.input = _input
 `;
 
+const quietInputWrapper = `
+import sys, builtins
+_inputs = []
+_input_index = 0
+def _input(prompt=""):
+    global _input_index
+    if _input_index < len(_inputs):
+        line = _inputs[_input_index]
+        _input_index += 1
+    else:
+        line = ""
+    return line
+builtins.input = _input
+`;
+
               writeFileSync(join(tmpDir, 'main.py'), inputWrapper + '\n' + code, 'utf-8');
 
               const child = spawn(pythonCmd, ['main.py'], {
@@ -268,7 +283,12 @@ builtins.input = _input
                   }
                 }
 
-                writeFileSync(join(tmpDir, 'main.py'), inputWrapper + '\n' + code, 'utf-8');
+                const useQuiet = inputs && inputs.length > 0;
+                const wrapper = useQuiet
+                  ? quietInputWrapper.replace('_inputs = []', `_inputs = ${JSON.stringify(inputs)}`)
+                  : inputWrapper;
+
+                writeFileSync(join(tmpDir, 'main.py'), wrapper + '\n' + code, 'utf-8');
 
                 await new Promise((resolve, reject) => {
                   const child = exec(
@@ -286,7 +306,7 @@ builtins.input = _input
                     }
                   );
 
-                  if (inputs && inputs.length > 0) {
+                  if (!useQuiet && inputs && inputs.length > 0) {
                     child.stdin.write(inputs.join('\n'));
                     child.stdin.end();
                   }

@@ -3,7 +3,7 @@ import { createElement, useEffect, useRef, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { TRACKS, DIFFICULTY } from "../data/tracks";
 import { useProgress, saveCode, getSavedCode, clearSavedCode } from "../hooks/useProgress";
-import { runPythonWithIO } from "../utils/pythonRunner";
+
 import { runPythonReal } from "../utils/pythonRunnerReal";
 import { mergeFileStore } from "../utils/fileManager";
 import { validateStructure } from "../utils/structureValidator";
@@ -152,15 +152,15 @@ export default function LevelPage() {
       }
       return result.stdout || "";
     }
-    return runPythonWithIO(rawCode, inputs);
+    const result = await runPythonReal(rawCode, {}, [], inputs || []);
+    return result.stdout || "";
   }
 
   async function runCodeFrom(rawCode, initialFiles, inputs) {
     if (level?.files) {
       return await cachedRunPythonReal(rawCode, initialFiles, level.files.track || [], inputs || []);
     }
-    const stdout = await runPythonWithIO(rawCode, inputs);
-    return { stdout, files: {} };
+    return await runPythonReal(rawCode, initialFiles || {}, [], inputs || []);
   }
 
 

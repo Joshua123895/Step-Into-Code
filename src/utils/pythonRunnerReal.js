@@ -17,18 +17,9 @@ export async function runPythonReal(code, initialFiles = {}, trackedFiles = [], 
     const pyodide = await ensurePyodide();
 
     let stdout = "";
-    let inputIndex = 0;
 
     pyodide.setStdout({ write: (buf) => { stdout += new TextDecoder().decode(buf); return buf.length; }, isatty: true });
     pyodide.setStderr({ write: (buf) => { stdout += new TextDecoder().decode(buf); return buf.length; }, isatty: true });
-    pyodide.setStdin({
-      stdin: () => {
-        if (inputIndex < inputs.length) {
-          return inputs[inputIndex++];
-        }
-        return "";
-      },
-    });
 
     for (const [name, content] of Object.entries(initialFiles || {})) {
       const parts = name.split("/");
@@ -40,8 +31,27 @@ export async function runPythonReal(code, initialFiles = {}, trackedFiles = [], 
       pyodide.FS.writeFile("/" + name, content);
     }
 
+    const inputShim = inputs.length > 0
+      ? `import sys, builtins
+sys.stdout.reconfigure(write_through=True)
+_inputs = ${JSON.stringify(inputs)}
+_input_index = 0
+def _input(prompt=""):
+    global _input_index
+    if _input_index < len(_inputs):
+        line = _inputs[_input_index]
+        _input_index += 1
+    else:
+        line = ""
+    return line
+builtins.input = _input
+`
+      : `import sys
+sys.stdout.reconfigure(write_through=True)
+`;
+
     try {
-      await pyodide.runPythonAsync(code);
+      await pyodide.runPythonAsync(inputShim + code);
     } catch (e) {
       const msg = String(e);
       const cleaned = msg.startsWith("PythonError: Traceback (most recent call last):")

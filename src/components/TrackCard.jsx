@@ -27,6 +27,26 @@ export default function TrackCard({ track }) {
         className="absolute top-0 right-0 w-48 h-48 rounded-full opacity-5 -translate-y-1/2 translate-x-1/2"
         style={{ background: diff.color }}
       />
+      {completedCount === 0 && (
+        <div className="absolute top-0 right-0 overflow-hidden pointer-events-none" style={{ width: 90, height: 90, zIndex: 5 }}>
+          <div
+            className="absolute text-[11px] font-bold text-center whitespace-nowrap"
+            style={{
+              width: 130,
+              padding: "4px 0",
+              background: "#E9B44C",
+              color: "#1e1e1e",
+              transform: "rotate(45deg)",
+              top: 16,
+              right: -28,
+              letterSpacing: "0.5px",
+              boxShadow: "0 2px 6px rgba(0,0,0,0.15)",
+            }}
+          >
+            NEW
+          </div>
+        </div>
+      )}
       <div className="relative">
         <div className="flex mb-4">
           <Icon src={track.trackIcon} alt={track.name} size={56} color={diff.color} className="shrink-0 mt-1 mr-6" />

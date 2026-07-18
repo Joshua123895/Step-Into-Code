@@ -10,6 +10,7 @@ export async function runPythonWithIO(code, inputs = [], quiet = false) {
 
   const inputWrapper = quiet ? `
 import sys, builtins
+sys.stdout.reconfigure(write_through=True)
 _inputs = ${JSON.stringify(inputs)}
 _input_index = 0
 def _input(prompt=""):
@@ -23,6 +24,7 @@ def _input(prompt=""):
 builtins.input = _input
 ` : `
 import sys, builtins
+sys.stdout.reconfigure(write_through=True)
 _orig_input = builtins.input
 _inputs = ${JSON.stringify(inputs)}
 _input_index = 0
