@@ -2,6 +2,7 @@ import { useState, useCallback, useEffect, useRef } from "react";
 import usePlayback from "./usePlayback";
 import VizControls from "./VizControls";
 import AnimatedItem from "./AnimatedItem";
+import { splitStatements } from "./parseUtils";
 
 const COLORS = ["#FF5F57", "#E9B44C", "#28CA41", "#7AA2F7", "#BB9AF7", "#FF75A0", "#86E1F9", "#A6E3A1"];
 
@@ -11,8 +12,9 @@ function parseExtendArgs(str) {
   return [];
 }
 
-function parseArrayStates(code) {
-  const lines = code.split("\n");
+// eslint-disable-next-line react-refresh/only-export-components -- exported for unit tests
+export function parseArrayStates(code) {
+  const lines = splitStatements(code);
   const arrays = {};
   let sliceIdCounter = 0;
   let itemId = 0;

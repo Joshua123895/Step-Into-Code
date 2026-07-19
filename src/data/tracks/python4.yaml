@@ -413,7 +413,18 @@ chapters:
           print(s.size())
           while not s.is_empty():
               print(s.pop())
-        start: ''
+        start: |-
+          class Stack:
+              def __init__(self):
+                  self.items = []
+              def push(self, item):
+                  self.items.append(item)
+              def pop(self):
+                  return self.items.pop()
+              def is_empty(self):
+                  return len(self.items) == 0
+
+          s = Stack()
         max: 20/1
         tests:
           - |
@@ -546,7 +557,7 @@ chapters:
             2
             3
       - name: Priority Queue
-        viz: queue
+        viz: heap
         obj: 'Use `import heapq`. Create a list, push `5`, `3`, `8` using `heapq.heappush()`, then pop and print all using `heapq.heappop()`.'
         hint: '`heapq.heappush(heap, item)` pushes. `heapq.heappop(heap)` pops the smallest item.'
         expl: 'A priority queue always returns the smallest element first. Python''s `heapq` implements a min-heap, useful for scheduling and graph algorithms.'
@@ -641,7 +652,6 @@ chapters:
             [90, 85, 88]
             [('math', 90), ('science', 85), ('english', 88)]
       - name: Hash Table Class
-        viz: hash_table
         obj: 'Implement a simple `class HashTable:` with a list of buckets (each a list for chaining). Define `__init__(self, size=10)`, `_hash(self, key)`, `insert(self, key, value)`, and `get(self, key)`. Insert `"name": "Alice"`, then print the value.'
         hint: '`_hash` returns `hash(key) % self.size`. `insert` appends `(key, value)` to the bucket. `get` searches the bucket.'
         expl: 'A hash table uses a hash function to distribute keys across buckets. Collisions are handled by chaining �?storing multiple items in the same bucket.'
@@ -670,7 +680,6 @@ chapters:
           - |
             Alice
       - name: Collision Handling
-        viz: hash_table
         obj: 'Extend your HashTable so `insert` updates existing keys instead of duplicating. Insert `"a": 1`, then `"a": 2` (update), then `"b": 3`, and print both values.'
         hint: 'In `insert`, search the bucket first. If the key exists, update its value. Otherwise append.'
         expl: 'When a key already exists in the bucket, we should update its value rather than adding a duplicate. This ensures each key maps to exactly one value.'
@@ -860,7 +869,6 @@ chapters:
           - |
             2
       - name: BST Insert
-        viz: tree
         obj: 'Implement `def insert_bst(root, value):` that inserts into a Binary Search Tree. Insert `5`, `3`, `7`, `2`, `8` into an empty BST, then print in-order traversal.'
         hint: 'If value < node.value, insert left; else insert right. Base case: if not root, return TreeNode(value).'
         expl: 'A BST maintains the property: all left descendants are smaller, all right descendants are larger. This enables O(log n) average search.'

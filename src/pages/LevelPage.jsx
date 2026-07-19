@@ -4,9 +4,10 @@ import { useParams, useNavigate } from "react-router-dom";
 import { TRACKS, DIFFICULTY } from "../data/tracks";
 import { useProgress, saveCode, getSavedCode, clearSavedCode } from "../hooks/useProgress";
 
-import { runPythonReal } from "../utils/pythonRunnerReal";
+import { runPythonReal, runPythonRealBatch } from "../utils/pythonRunnerReal";
 import { mergeFileStore } from "../utils/fileManager";
 import { validateStructure } from "../utils/structureValidator";
+import { norm, matchOutput, checkOutput } from "../utils/outputMatcher";
 import { ensurePyodide } from "../utils/pyodide";
 import CompletionModal from "../components/CompletionModal";
 import { getVisualization } from "../visualizations";
@@ -21,20 +22,6 @@ import wrongSound from "../assets/sounds/wrong.mp3";
 
 export default function LevelPage() {
   const { trackName, chapterId, levelId } = useParams();
-
-  function norm(s) {
-    const lines = (s || "").replace(/\r\n/g, "\n").split("\n");
-    let start = 0, end = lines.length;
-    while (start < end && lines[start] === "") start++;
-    while (end > start && lines[end - 1] === "") end--;
-    return lines.slice(start, end).join("\n");
-  }
-
-  function matchOutput(actual, expected) {
-    const a = norm(actual);
-    const e = norm(expected);
-    return a === e || (e.length > 0 && a.length > e.length && a.endsWith(e));
-  }
 
   const DEV = import.meta.env.DEV;
   function debugFail(label, info) { if (DEV) console.debug(`[validation] ${label}`, info); }
@@ -124,6 +111,7 @@ export default function LevelPage() {
   const [initialFileSnapshot, setInitialFileSnapshot] = useState(null);
 
   useEffect(() => {
+    solutionCacheRef.current = null;
     if (level?.files) {
       const initialFiles = level.files.initial || {};
       const trackedFiles = level.files.track || [];
@@ -144,15 +132,24 @@ export default function LevelPage() {
   }
 
   async function runWithFiles(rawCode, inputs) {
+    let result;
     if (level?.files) {
-      const result = await cachedRunPythonReal(rawCode, fileStore.current, level.files.track || [], inputs || []);
+      result = await cachedRunPythonReal(rawCode, fileStore.current, level.files.track || [], inputs || []);
       if (result.files && Object.keys(result.files).length > 0) {
         fileStore.current = mergeFileStore(fileStore.current, null, result.files);
         syncFileStore();
       }
-      return result.stdout || "";
+    } else {
+      result = await runPythonReal(rawCode, {}, [], inputs || []);
     }
-    const result = await runPythonReal(rawCode, {}, [], inputs || []);
+    if (DEV) {
+      console.debug("[runner] source=%s codeLen=%d stdoutLen=%d error=%s",
+        result.source, rawCode.length, (result.stdout || "").length, result.error ?? "none");
+    }
+    if (!result.stdout && result.error) {
+      // Surface runner failures instead of a blank "actual" in the failure UI.
+      return `[runner error] ${result.error}`;
+    }
     return result.stdout || "";
   }
 
@@ -194,12 +191,28 @@ export default function LevelPage() {
     return () => clearTimeout(timer);
   }, [code, level, trackName]);
 
+  const runInFlightRef = useRef(false);
+
   const handleRun = async () => {
-    if (!level) return;
+    // Ref guard, not just `testing` state: two rapid clicks can both land
+    // before React re-renders, so both would see testing === false.
+    if (!level || runInFlightRef.current) return;
+    runInFlightRef.current = true;
+    try {
+      await runChecks();
+    } finally {
+      runInFlightRef.current = false;
+    }
+  };
+
+  const runChecks = async () => {
     setTestFailure(null);
     setTesting(true);
 
-    await ensurePyodide().then((p) => p.runPythonAsync("print(1)"));
+    // NOTE: an eager `await ensurePyodide()` warm-up used to run here, forcing
+    // every submit to download/initialize the ~20MB Pyodide wasm runtime even
+    // when execution happens on the dev server. The Pyodide fallback path in
+    // pythonRunnerReal.js loads it lazily if it is ever actually needed.
 
     const tracked = level?.files?.track || [];
     const snapshot = {};
@@ -223,16 +236,27 @@ export default function LevelPage() {
     const hasTests = level.tests && level.tests.length > 0;
 
       if (hasTests) {
-        for (const test of level.tests) {
-          const inputs = test.input ? (Array.isArray(test.input) ? test.input : [test.input]) : [];
-          const output = await runWithFiles(code, inputs);
+        const inputSets = level.tests.map((t) =>
+          t.input ? (Array.isArray(t.input) ? t.input : [t.input]) : []
+        );
+
+        // One Python process for all tests. Falls back to one-process-per-test
+        // if batch mode is unavailable (production/Pyodide path).
+        let batch = null;
+        if (!level?.files) {
+          batch = await runPythonRealBatch(code, {}, [], inputSets);
+        }
+        if (DEV) {
+          console.debug(`[submit] level="${level.name}" tests=${inputSets.length} mode=${batch ? "batch(1 process)" : "per-test"} elapsedMs=${Math.round(performance.now() - startTime)}`);
+        }
+
+        for (let ti = 0; ti < level.tests.length; ti++) {
+          const test = level.tests[ti];
+          const inputs = inputSets[ti];
+          const output = batch ? batch.stdouts[ti] : await runWithFiles(code, inputs);
           const clean = norm(output);
           const exp = norm(test.expected ?? "");
-          const match = test.expectAnyOf
-            ? test.expectAnyOf.includes(clean)
-            : test.expectMatch
-            ? new RegExp(test.expectMatch).test(output.replace(/\r\n/g, "\n"))
-            : clean === exp || (exp.length > 0 && clean.length > exp.length && clean.endsWith(exp));
+          const match = checkOutput(output, test);
         if (!match) {
           debugFail("test mismatch", { level: level.name, inputs, matchMode: test.expectAnyOf ? "anyOf" : test.expectMatch ? "regex" : "exact", expected: exp, actual: clean, raw: output, diff: diffStrings(exp, clean) });
           playWrongSound();
@@ -261,7 +285,16 @@ export default function LevelPage() {
         }
       }
 
-      execTime = (performance.now() - startTime) / 1000;
+      // Speed star: when the batch runner reports per-test timings, grade the
+      // student's CODE (slowest single test, measured inside Python) instead of
+      // wall-clock — which included process spawn, HTTP, and antivirus overhead
+      // and therefore graded the student's hardware.
+      execTime = batch?.timings?.length
+        ? Math.max(...batch.timings)
+        : (performance.now() - startTime) / 1000;
+      if (DEV && batch?.timings) {
+        console.debug(`[submit] pure exec times (s): ${batch.timings.map((t) => t.toFixed(3)).join(", ")} | scored=${execTime.toFixed(3)} maxTime=${maxTime}`);
+      }
       setTesting(false);
       let stars = 1;
       if (lineCount <= maxLines) stars++;
@@ -717,8 +750,8 @@ export default function LevelPage() {
                 </div>
 
                 <div className="flex flex-col gap-2 pt-3" style={{ borderTop: "1px solid var(--border)" }}>
-                  <PixelButton onClick={handleRun} size="md" variant="primary">
-                    Submit Code
+                  <PixelButton onClick={handleRun} size="md" variant="primary" disabled={testing}>
+                    {testing ? "Running..." : "Submit Code"}
                   </PixelButton>
 
                   {level.hint && level.hint.length > 0 && (

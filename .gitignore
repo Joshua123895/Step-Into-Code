@@ -25,6 +25,4 @@ dist-ssr
 
 # One-off dev scripts
 scripts/
-
-# Level structure notes (personal reference)
-LEVEL_STRUCTURE.md
+notes/

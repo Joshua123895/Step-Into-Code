@@ -2,10 +2,24 @@ import { useState, useCallback, useEffect, useRef } from "react";
 import usePlayback from "./usePlayback";
 import VizControls from "./VizControls";
 import AnimatedItem from "./AnimatedItem";
+import { splitStatements } from "./parseUtils";
 
-function parseHashStates(code) {
-  const lines = code.split("\n");
-  const hashes = {};
+// Strips the transient `accessed`/`added`/`updated` badges from every dict
+// so each new read/write only highlights the key touched *this* step,
+// instead of every key ever touched staying lit for the rest of the
+// animation.
+function clearFlags(hashes) {
+  const cleared = {};
+  for (const name of Object.keys(hashes)) {
+    cleared[name] = hashes[name].map((pair) => ({ key: pair.key, val: pair.val }));
+  }
+  return cleared;
+}
+
+// eslint-disable-next-line react-refresh/only-export-components -- exported for unit tests
+export function parseHashStates(code) {
+  const lines = splitStatements(code);
+  let hashes = {};
   const states = [];
 
   const snapshot = () => states.push(JSON.parse(JSON.stringify(hashes)));
@@ -16,6 +30,7 @@ function parseHashStates(code) {
     if (line.trim().startsWith("#")) continue;
     const init = line.match(/(\w+)\s*=\s*\{\s*\}/);
     if (init) {
+      hashes = clearFlags(hashes);
       hashes[init[1]] = [];
       snapshot();
       continue;
@@ -24,12 +39,13 @@ function parseHashStates(code) {
     const initFull = line.match(/(\w+)\s*=\s*\{(.+?)\}/);
     if (initFull && !initFull[0].includes("(")) {
       const pairs = [];
-      const pairRe = /'([^']*)'\s*:\s*([^,}]+)/g;
+      const pairRe = /["']([^"']*)["']\s*:\s*([^,}]+)/g;
       let m;
       while ((m = pairRe.exec(initFull[2])) !== null) {
         pairs.push({ key: m[1], val: m[2].trim() });
       }
       if (pairs.length > 0) {
+        hashes = clearFlags(hashes);
         hashes[initFull[1]] = pairs;
       }
       snapshot();
@@ -40,12 +56,13 @@ function parseHashStates(code) {
     if (assign && hashes[assign[1]]) {
       const key = assign[2].replace(/^['"]|['"]$/g, "");
       const val = assign[3].trim();
+      hashes = clearFlags(hashes);
       const copy = [...hashes[assign[1]]];
       const existing = copy.findIndex((p) => p.key === key);
       if (existing >= 0) {
         copy[existing] = { key, val, updated: true };
       } else {
-        copy.push({ key, val, updated: true });
+        copy.push({ key, val, added: true });
       }
       hashes[assign[1]] = copy;
       snapshot();
@@ -55,11 +72,11 @@ function parseHashStates(code) {
     const access = line.match(/(\w+)\[('?[^\]]+?'?)\]/);
     if (access && hashes[access[1]]) {
       const key = access[2].replace(/^['"]|['"]$/g, "");
-      const copy = hashes[access[1]].map((p) => ({
+      hashes = clearFlags(hashes);
+      hashes[access[1]] = hashes[access[1]].map((p) => ({
         ...p,
-        accessed: p.key === key ? true : p.accessed,
+        accessed: p.key === key,
       }));
-      hashes[access[1]] = copy;
       snapshot();
     }
   }
@@ -95,24 +112,28 @@ function VizBody({ hashes, ghosts = {} }) {
               {items.length === 0 && ghostItems.length === 0 && (
                 <div className="text-xs text-center py-3 rounded-lg" style={{ background: "var(--bg)", border: "2px dashed var(--border-strong)", color: "var(--text-muted)" }}>empty</div>
               )}
-              {items.map((pair) => (
-                <AnimatedItem key={pair.key}>
-                  <div
-                    className="flex items-center gap-2 px-3 py-1.5 rounded-lg font-mono text-xs"
-                    style={{
-                      background: pair.accessed ? "#7AA2F715" : pair.updated ? "#E9B44C15" : "var(--bg)",
-                      border: "1.5px solid " + (pair.accessed ? "#7AA2F7" : pair.updated ? "#E9B44C" : "var(--border)"),
-                      color: "var(--text)",
-                    }}
-                  >
-                    <span style={{ color: "#BB9AF7" }}>{pair.key}</span>
-                    <span style={{ color: "var(--text-muted)" }}>→</span>
-                    <span style={{ color: "#28CA41" }}>{pair.val}</span>
-                    {pair.accessed && <span className="text-[9px]" style={{ color: "#7AA2F7" }}>read</span>}
-                    {pair.updated && <span className="text-[9px]" style={{ color: "#E9B44C" }}>updated</span>}
-                  </div>
-                </AnimatedItem>
-              ))}
+              {items.map((pair) => {
+                const highlight = pair.accessed ? "#7AA2F7" : pair.added ? "#28CA41" : pair.updated ? "#E9B44C" : null;
+                return (
+                  <AnimatedItem key={pair.key}>
+                    <div
+                      className="flex items-center gap-2 px-3 py-1.5 rounded-lg font-mono text-xs"
+                      style={{
+                        background: highlight ? highlight + "15" : "var(--bg)",
+                        border: "1.5px solid " + (highlight || "var(--border)"),
+                        color: "var(--text)",
+                      }}
+                    >
+                      <span style={{ color: "#BB9AF7" }}>{pair.key}</span>
+                      <span style={{ color: "var(--text-muted)" }}>→</span>
+                      <span style={{ color: "#28CA41" }}>{pair.val}</span>
+                      {pair.accessed && <span className="text-[9px]" style={{ color: "#7AA2F7" }}>read</span>}
+                      {pair.added && <span className="text-[9px]" style={{ color: "#28CA41" }}>added</span>}
+                      {pair.updated && <span className="text-[9px]" style={{ color: "#E9B44C" }}>updated</span>}
+                    </div>
+                  </AnimatedItem>
+                );
+              })}
               {ghostItems.map((pair) => (
                 <AnimatedItem key={`ghost-${pair.key}`} leaving>
                   <div

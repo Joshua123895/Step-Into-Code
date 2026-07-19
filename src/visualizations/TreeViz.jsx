@@ -1,11 +1,14 @@
 import { useState, useCallback, useEffect, useRef } from "react";
 import usePlayback from "./usePlayback";
 import VizControls from "./VizControls";
+import { splitStatements } from "./parseUtils";
 
-function parseTreeStates(code) {
-  const lines = code.split("\n");
+// eslint-disable-next-line react-refresh/only-export-components -- exported for unit tests
+export function parseTreeStates(code) {
+  const lines = splitStatements(code);
   const treeVars = {};
   const states = [];
+  let anonId = 0;
 
   const computeState = () => {
     const children = new Set();
@@ -36,15 +39,39 @@ function parseTreeStates(code) {
   states.push(computeState());
 
   for (const line of lines) {
-    if (line.trim().startsWith("#")) continue;
-    const init = line.match(/(\w+)\s*=\s*(?:TreeNode|Node)\s*\(\s*(\d+)\s*\)/);
+    const t = line.trim();
+    if (t.startsWith("#")) continue;
+
+    // Matches both a bare `root = TreeNode(1)` and a dotted assignment like
+    // `root.left = TreeNode(2)` or `root.left.right = TreeNode(4)` — the
+    // dotted path is resolved and linked as a child instead of being
+    // (mis)parsed as a brand new top-level variable named "left"/"right".
+    const init = t.match(/^([\w.]+)\s*=\s*(?:TreeNode|Node)\s*\(\s*(\d+)\s*\)$/);
     if (init) {
-      treeVars[init[1]] = { val: init[2], left: null, right: null };
-      states.push(computeState());
+      const path = init[1].split(".");
+      const val = init[2];
+      if (path.length === 1) {
+        treeVars[path[0]] = { val, left: null, right: null };
+        states.push(computeState());
+      } else {
+        const attr = path[path.length - 1];
+        if (attr === "left" || attr === "right") {
+          let curName = path[0];
+          for (let k = 1; k < path.length - 1 && curName; k++) {
+            curName = treeVars[curName] ? treeVars[curName][path[k]] : null;
+          }
+          if (curName && treeVars[curName]) {
+            const newVar = `_${path.join("_")}_${++anonId}`;
+            treeVars[newVar] = { val, left: null, right: null };
+            treeVars[curName][attr] = newVar;
+            states.push(computeState());
+          }
+        }
+      }
       continue;
     }
 
-    const link = line.match(/(\w+)\.(left|right)\s*=\s*(\w+)/);
+    const link = t.match(/^(\w+)\.(left|right)\s*=\s*(\w+)$/);
     if (link && treeVars[link[1]] && treeVars[link[3]]) {
       treeVars[link[1]][link[2]] = link[3];
       states.push(computeState());

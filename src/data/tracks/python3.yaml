@@ -501,7 +501,7 @@ chapters:
           print(", ".join(c.__name__ for c in D.__mro__))
         start: ''
         tests:
-          - match: D, B, C, A, object
+          - match: '^D, B, C, A, object\n?$'
         max: 7/1
       - name: Mixins
         obj: 'Define mixins `JSONMixin` with `to_json(self)` and `LogMixin` with `log(self)`. Create `class User(JSONMixin, LogMixin):` with `__init__(self, name)`. Call both methods.'
@@ -1544,12 +1544,7 @@ chapters:
           D().m()
           print(", ".join(c.__name__ for c in D.__mro__))
         tests:
-          - match: |
-              D
-              B
-              C
-              A
-              D, B, C, A, object
+          - match: '^D\nB\nC\nA\nD, B, C, A, object\n?$'
         max: 13/1
         start: ''
       - name: The Magic Container

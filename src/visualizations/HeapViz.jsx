@@ -2,24 +2,103 @@ import { useState, useCallback, useEffect, useRef } from "react";
 import usePlayback from "./usePlayback";
 import VizControls from "./VizControls";
 import AnimatedItem from "./AnimatedItem";
+import { splitStatements } from "./parseUtils";
 
-function parseHeapStates(code) {
-  const lines = code.split("\n");
+const cmp = (a, b) => Number(a.value) - Number(b.value);
+
+function siftUp(arr, start) {
+  const a = [...arr];
+  let idx = start;
+  while (idx > 0) {
+    const parent = (idx - 1) >> 1;
+    if (cmp(a[parent], a[idx]) > 0) {
+      [a[parent], a[idx]] = [a[idx], a[parent]];
+      idx = parent;
+    } else break;
+  }
+  return a;
+}
+
+function siftDown(arr, start) {
+  const a = [...arr];
+  const n = a.length;
+  let idx = start;
+  while (true) {
+    let smallest = idx;
+    const l = 2 * idx + 1, r = 2 * idx + 2;
+    if (l < n && cmp(a[l], a[smallest]) < 0) smallest = l;
+    if (r < n && cmp(a[r], a[smallest]) < 0) smallest = r;
+    if (smallest === idx) break;
+    [a[smallest], a[idx]] = [a[idx], a[smallest]];
+    idx = smallest;
+  }
+  return a;
+}
+
+function heapifyArr(arr) {
+  let a = [...arr];
+  for (let i = Math.floor(a.length / 2) - 1; i >= 0; i--) a = siftDown(a, i);
+  return a;
+}
+
+// Real heapq semantics: new item goes to the end, then sifts up — this is
+// what makes the visualized array match what `print(heap)` actually shows,
+// instead of just displaying insertion order.
+function heapPush(arr, value, itemId) {
+  const a = [...arr, { value: String(value), _id: itemId }];
+  return siftUp(a, a.length - 1);
+}
+
+// Real extract-min: move the last element to the root, then sift down —
+// not just "drop the front", which would silently desync from real heapq
+// as soon as a push interleaves with pops.
+function heapPop(arr) {
+  if (arr.length <= 1) return [];
+  const a = [...arr];
+  a[0] = a[a.length - 1];
+  a.pop();
+  return siftDown(a, 0);
+}
+
+// eslint-disable-next-line react-refresh/only-export-components -- exported for unit tests
+export function parseHeapStates(code) {
+  const lines = splitStatements(code);
   let heap = null;
   let itemId = 0;
   const states = [];
+  const functions = {};
 
   const snapshot = () => states.push(heap === null ? null : [...heap]);
+  const getIndent = (s) => s.length - s.trimStart().length;
 
-  snapshot();
+  function applySubs(text, subs) {
+    if (!subs) return text;
+    let r = text;
+    for (const [k, v] of Object.entries(subs)) {
+      r = r.replace(new RegExp(`\\b${k}\\b`, "g"), v);
+    }
+    return r;
+  }
 
-  for (const line of lines) {
-    if (line.trim().startsWith("#")) continue;
+  function collectBlock(allLines, startIdx, blockIndent) {
+    const block = [];
+    let j = startIdx;
+    while (j < allLines.length && getIndent(allLines[j]) >= blockIndent) {
+      block.push(allLines[j]);
+      j++;
+    }
+    return { lines: block, nextIdx: j };
+  }
+
+  const execLine = (rawLine) => {
+    const line = rawLine;
+    if (line.trim().startsWith("#") || line.trim().startsWith("class ") || /\bself\./.test(line)) return;
+
     const init = line.match(/(\w+)\s*=\s*\[\s*\]/);
     if (init) {
       heap = [];
       snapshot();
-      continue;
+      return;
     }
 
     const init2 = line.match(/(\w+)\s*=\s*\[([^\]]+)\]\s*$/);
@@ -27,30 +106,124 @@ function parseHeapStates(code) {
       const vals = init2[2].split(",").map((s) => s.trim()).filter(Boolean);
       heap = vals.map((v) => ({ value: v, _id: itemId++ }));
       snapshot();
-      continue;
+      return;
     }
 
-    const push = line.match(/heapq\.heappush\s*\(\s*(\w+)\s*,\s*(.+?)\s*\)/);
+    const push = line.match(/heapq\.heappush\s*\(\s*\w+\s*,\s*(.+?)\s*\)/);
     if (push && heap !== null) {
-      heap = [...heap, { value: push[2], _id: itemId++ }];
+      heap = heapPush(heap, push[1], itemId++);
       snapshot();
-      continue;
+      return;
     }
 
-    const pop = line.match(/heapq\.heappop\s*\(\s*(\w+)\s*\)/);
+    const listCompPop = line.match(/\[\s*heapq\.heappop\s*\(\s*\w+\s*\)\s*for\s+\w+\s+in\s+range\s*\(\s*len\s*\(\s*\w+\s*\)\s*\)\s*\]/);
+    if (listCompPop && heap !== null) {
+      const count = heap.length;
+      for (let k = 0; k < count; k++) {
+        heap = heapPop(heap);
+        snapshot();
+      }
+      return;
+    }
+
+    const pop = line.match(/heapq\.heappop\s*\(\s*\w+\s*\)/);
     if (pop && heap !== null && heap.length > 0) {
-      heap = heap.slice(1);
+      heap = heapPop(heap);
       snapshot();
-      continue;
+      return;
     }
 
-    const heapify = line.match(/heapq\.heapify\s*\(\s*(\w+)\s*\)/);
+    const heapify = line.match(/heapq\.heapify\s*\(\s*\w+\s*\)/);
     if (heapify && heap !== null) {
-      heap = [...heap].sort((a, b) => Number(a.value) - Number(b.value));
+      heap = heapifyArr(heap);
       snapshot();
     }
+  };
+
+  function processBlock(blockLines, subs) {
+    let returned = false;
+    let idx = 0;
+    while (idx < blockLines.length && !returned) {
+      const line = blockLines[idx];
+      const indent = getIndent(line);
+      const t = line.trim();
+      const pt = applySubs(t, subs);
+
+      if (pt.startsWith("#") || pt.startsWith("class ") || pt.startsWith("import ") || pt.startsWith("from ") || /\bself\./.test(pt)) { idx++; continue; }
+
+      const defMatch = pt.match(/def\s+(\w+)\s*\(([^)]*)\)\s*:/);
+      if (defMatch) {
+        const fName = defMatch[1];
+        const fParams = defMatch[2].split(",").map((s) => s.trim()).filter(Boolean);
+        const fBodyIndent = indent + 1;
+        const { lines: fBody, nextIdx: fNext } = collectBlock(blockLines, idx + 1, fBodyIndent);
+        functions[fName] = { params: fParams, bodyLines: fBody };
+        idx = fNext;
+        continue;
+      }
+
+      if (pt.startsWith("return ")) {
+        const retList = pt.match(/^return\s+(\[.*\])$/);
+        if (retList) execLine(retList[1]);
+        returned = true;
+        idx++;
+        continue;
+      }
+
+      const whileMatch = pt.match(/while\s+(\w+)\s*:/);
+      if (whileMatch) {
+        const bodyIndent = indent + 1;
+        const { lines: bodyLines, nextIdx: bNext } = collectBlock(blockLines, idx + 1, bodyIndent);
+        idx = bNext;
+        let maxIter = 100;
+        while (heap !== null && heap.length > 0 && maxIter > 0) {
+          maxIter--;
+          processBlock(bodyLines, subs);
+        }
+        continue;
+      }
+
+      const rMatch = pt.match(/for\s+(\w+)\s+in\s+range\s*\(\s*(\d+)\s*\)\s*:/);
+      const lMatch = pt.match(/for\s+(\w+)\s+in\s+\[([^\]]*)\]\s*:/);
+      if (rMatch) {
+        const vName = rMatch[1], count = Number(rMatch[2]);
+        const bodyIndent = indent + 1;
+        const { lines: bodyLines, nextIdx: bNext } = collectBlock(blockLines, idx + 1, bodyIndent);
+        idx = bNext;
+        for (let iter = 0; iter < count; iter++) {
+          processBlock(bodyLines, { ...subs, [vName]: String(iter) });
+        }
+        continue;
+      }
+      if (lMatch) {
+        const vName = lMatch[1];
+        const values = lMatch[2].split(",").map((s) => s.trim()).filter(Boolean);
+        const bodyIndent = indent + 1;
+        const { lines: bodyLines, nextIdx: bNext } = collectBlock(blockLines, idx + 1, bodyIndent);
+        idx = bNext;
+        for (const val of values) {
+          processBlock(bodyLines, { ...subs, [vName]: val });
+        }
+        continue;
+      }
+
+      const call = pt.match(/(\w+)\s*\(\s*\[([^\]]*)\]\s*\)/);
+      if (call && functions[call[1]]) {
+        const f = functions[call[1]];
+        execLine(`__heaplit__ = [${call[2]}]`);
+        processBlock(f.bodyLines, subs);
+        idx++;
+        continue;
+      }
+
+      execLine(applySubs(line, subs));
+      idx++;
+    }
+    return returned;
   }
 
+  snapshot();
+  processBlock(lines, null);
   return states;
 }
 

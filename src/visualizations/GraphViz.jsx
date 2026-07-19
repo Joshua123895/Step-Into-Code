@@ -1,11 +1,13 @@
 import { useState, useCallback, useEffect, useRef } from "react";
 import usePlayback from "./usePlayback";
 import VizControls from "./VizControls";
+import { splitStatements } from "./parseUtils";
 
 const COLORS = ["#FF5F57", "#E9B44C", "#28CA41", "#7AA2F7", "#BB9AF7", "#FF75A0", "#86E1F9", "#A6E3A1"];
 
-function parseGraphStates(code) {
-  const lines = code.split("\n");
+// eslint-disable-next-line react-refresh/only-export-components -- exported for unit tests
+export function parseGraphStates(code) {
+  const lines = splitStatements(code);
   let graphName = null;
   const vertices = new Set();
   const edges = [];
@@ -15,14 +17,62 @@ function parseGraphStates(code) {
     states.push({ vertices: [...vertices], edges: [...edges], graphName });
   };
 
+  // Reads an adjacency-list dict literal's body (e.g. `0: [1,2], 1: [...]`
+  // or `"A": ["B","C"], ...`) and registers each key as a vertex and each
+  // entry in its list as a directed edge.
+  const addAdjList = (varName, body) => {
+    graphName = varName;
+    const entryRe = /["']?(\w+)["']?\s*:\s*\[([^\]]*)\]/g;
+    let m;
+    while ((m = entryRe.exec(body)) !== null) {
+      const key = m[1];
+      vertices.add(key);
+      const neighbors = m[2]
+        .split(",")
+        .map((s) => s.trim().replace(/^["']|["']$/g, ""))
+        .filter(Boolean);
+      for (const n of neighbors) {
+        vertices.add(n);
+        edges.push({ from: key, to: n });
+      }
+    }
+  };
+
   snapshot();
 
-  for (const line of lines) {
-    if (line.trim().startsWith("#")) continue;
-    const init = line.match(/(\w+)\s*=\s*\{\s*\}/);
-    if (init) {
-      graphName = init[1];
+  let i = 0;
+  while (i < lines.length) {
+    const line = lines[i];
+    if (line.trim().startsWith("#")) { i++; continue; }
+
+    const emptyInit = line.match(/(\w+)\s*=\s*\{\s*\}/);
+    if (emptyInit) {
+      graphName = emptyInit[1];
       snapshot();
+      i++;
+      continue;
+    }
+
+    const dictStart = line.match(/(\w+)\s*=\s*\{/);
+    if (dictStart) {
+      // Collect lines until the braces balance, so a dict literal spanning
+      // multiple lines (common for adjacency lists) is read as one unit.
+      let depth = 0;
+      let started = false;
+      let body = "";
+      let j = i;
+      for (; j < lines.length; j++) {
+        for (const ch of lines[j]) {
+          if (ch === "{") { depth++; started = true; }
+          else if (ch === "}") depth--;
+        }
+        body += lines[j] + "\n";
+        if (started && depth === 0) break;
+      }
+      const inner = body.slice(body.indexOf("{") + 1, body.lastIndexOf("}"));
+      addAdjList(dictStart[1], inner);
+      snapshot();
+      i = j + 1;
       continue;
     }
 
@@ -30,6 +80,7 @@ function parseGraphStates(code) {
     if (addV) {
       vertices.add(addV[2]);
       snapshot();
+      i++;
       continue;
     }
 
@@ -39,6 +90,7 @@ function parseGraphStates(code) {
       vertices.add(addE[2]);
       vertices.add(addE[3]);
       snapshot();
+      i++;
       continue;
     }
 
@@ -46,6 +98,7 @@ function parseGraphStates(code) {
     if (dictAdd && graphName) {
       vertices.add(dictAdd[2]);
       snapshot();
+      i++;
       continue;
     }
 
@@ -56,6 +109,7 @@ function parseGraphStates(code) {
       vertices.add(dictAppend[3]);
       snapshot();
     }
+    i++;
   }
 
   return states;

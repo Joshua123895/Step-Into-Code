@@ -1,7 +1,7 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import svgr from 'vite-plugin-svgr'
-import { exec, spawn } from 'child_process'
+import { exec, execSync, spawn } from 'child_process'
 import { mkdtempSync, writeFileSync, readFileSync, rmSync, existsSync } from 'fs'
 import { join } from 'path'
 import { tmpdir } from 'os'
@@ -20,16 +20,107 @@ function cleanTraceback(text, tmpDir) {
 }
 
 function findPython() {
-  for (const cmd of ['python', 'python3']) {
+  // execSync (not exec): async exec never throws synchronously, so the old
+  // version always returned 'python' even when that command was broken.
+  for (const cmd of ['python3', 'python', 'py']) {
     try {
-      exec(`${cmd} --version`, { timeout: 2000 });
+      execSync(`${cmd} --version`, { timeout: 2000, stdio: 'ignore' });
       return cmd;
-    } catch { /* skip */ }
+    } catch { /* try next */ }
   }
   return null;
 }
 
 const runningProcesses = new Map();
+
+// Python input wrappers, declared at MODULE scope on purpose: they are used by
+// both /api/run-python-stream and /api/run-python. They previously lived inside
+// the stream handler's closure, so /api/run-python threw
+// "ReferenceError: quietInputWrapper is not defined" on every request — which
+// the error path returned as a clean { stdout: "" } success.
+const inputWrapper = `
+import sys, builtins
+_orig_input = builtins.input
+def _input(prompt=""):
+    if prompt:
+        sys.stdout.write(prompt)
+        sys.stdout.flush()
+    sys.stderr.write("__INPUT_REQ__\\n")
+    sys.stderr.flush()
+    line = _orig_input()
+    sys.stdout.write(line + "\\n")
+    sys.stdout.flush()
+    return line
+builtins.input = _input
+`;
+
+const quietInputWrapper = `
+import sys, builtins
+_inputs = []
+_input_index = 0
+def _input(prompt=""):
+    global _input_index
+    if _input_index < len(_inputs):
+        line = _inputs[_input_index]
+        _input_index += 1
+    else:
+        line = ""
+    return line
+builtins.input = _input
+`;
+
+// Batch driver: runs the user's code once per input-set inside a SINGLE Python
+// process, instead of spawning one process per test. Each test gets a fresh
+// module namespace and a fresh mocked input() (quiet semantics, same as
+// quietInputWrapper). Code is compiled with filename "main.py" and no wrapper
+// prefix, so traceback line numbers are already correct.
+const batchDriver = `
+import json, sys, io, os, builtins, traceback, time
+
+with open("__batch__.json") as f:
+    payload = json.load(f)
+
+code = payload["code"]
+batches = payload["batches"]
+initial_files = payload.get("files") or {}
+
+def write_initial_files():
+    for name, content in initial_files.items():
+        d = os.path.dirname(name)
+        if d:
+            os.makedirs(d, exist_ok=True)
+        with open(name, "w") as fh:
+            fh.write(str(content))
+
+results = []
+timings = []
+for inputs in batches:
+    write_initial_files()
+    it = iter([str(x) for x in inputs])
+    builtins.input = lambda prompt="": next(it, "")
+    buf = io.StringIO()
+    real_stdout = sys.stdout
+    sys.stdout = buf
+    t0 = time.perf_counter()
+    try:
+        exec(compile(code, "main.py", "exec"), {"__name__": "__main__"})
+        err = ""
+    except SystemExit:
+        err = ""
+    except BaseException:
+        err = traceback.format_exc()
+    finally:
+        elapsed = time.perf_counter() - t0
+        sys.stdout = real_stdout
+    out = buf.getvalue()
+    if err:
+        last = err.strip().split("\\n")[-1]
+        out += ("" if (not out or out.endswith("\\n")) else "\\n") + last + "\\n"
+    results.append(out)
+    timings.append(elapsed)
+
+sys.stdout.write("__BATCH_RESULTS__" + json.dumps({"stdouts": results, "timings": timings}))
+`;
 
 export default defineConfig({
   plugins: [
@@ -72,37 +163,6 @@ export default defineConfig({
                   writeFileSync(join(tmpDir, name), content, 'utf-8');
                 }
               }
-
-const inputWrapper = `
-import sys, builtins
-_orig_input = builtins.input
-def _input(prompt=""):
-    if prompt:
-        sys.stdout.write(prompt)
-        sys.stdout.flush()
-    sys.stderr.write("__INPUT_REQ__\\n")
-    sys.stderr.flush()
-    line = _orig_input()
-    sys.stdout.write(line + "\\n")
-    sys.stdout.flush()
-    return line
-builtins.input = _input
-`;
-
-const quietInputWrapper = `
-import sys, builtins
-_inputs = []
-_input_index = 0
-def _input(prompt=""):
-    global _input_index
-    if _input_index < len(_inputs):
-        line = _inputs[_input_index]
-        _input_index += 1
-    else:
-        line = ""
-    return line
-builtins.input = _input
-`;
 
               writeFileSync(join(tmpDir, 'main.py'), inputWrapper + '\n' + code, 'utf-8');
 
@@ -259,12 +319,61 @@ builtins.input = _input
           req.on('data', chunk => body += chunk);
           req.on('end', async () => {
             try {
-              const { code, initialFiles, trackedFiles, inputs } = JSON.parse(body);
+              const { code, initialFiles, trackedFiles, inputs, batchInputs } = JSON.parse(body);
 
               if (!pythonCmd) {
                 res.statusCode = 500;
                 res.setHeader('Content-Type', 'application/json');
                 res.end(JSON.stringify({ error: 'Python not found.' }));
+                return;
+              }
+
+              // Batch mode: run every test's input-set in ONE Python process
+              // instead of one process per test (process spawn dominates cost,
+              // especially on Windows).
+              if (Array.isArray(batchInputs)) {
+                const batchDir = mkdtempSync(join(tmpdir(), 'step-into-code-batch-'));
+                try {
+                  writeFileSync(join(batchDir, '__batch__.json'),
+                    JSON.stringify({ code, batches: batchInputs, files: initialFiles || {} }), 'utf-8');
+                  writeFileSync(join(batchDir, 'run_batch.py'), batchDriver, 'utf-8');
+
+                  const raw = await new Promise((resolve, reject) => {
+                    exec(`${pythonCmd} run_batch.py`,
+                      { cwd: batchDir, timeout: 10000, maxBuffer: 4 * 1024 * 1024 },
+                      (err, out, errOut) => {
+                        if (err && err.killed) {
+                          reject(new Error('Execution timed out (10 second limit). Check for infinite loops or a blocking input().'));
+                        } else if (err) {
+                          reject(new Error(cleanTraceback(errOut || '', batchDir) || String(err.message || err)));
+                        } else {
+                          resolve(out || '');
+                        }
+                      });
+                  });
+
+                  const marker = raw.lastIndexOf('__BATCH_RESULTS__');
+                  if (marker === -1) throw new Error('Batch driver produced no results.');
+                  const parsed = JSON.parse(raw.slice(marker + '__BATCH_RESULTS__'.length));
+                  const stdouts = parsed.stdouts;
+                  const timings = parsed.timings;
+
+                  const files = {};
+                  if (trackedFiles) {
+                    for (const name of trackedFiles) {
+                      const filePath = join(batchDir, name);
+                      if (existsSync(filePath)) files[name] = readFileSync(filePath, 'utf-8');
+                    }
+                  }
+
+                  res.setHeader('Content-Type', 'application/json');
+                  res.end(JSON.stringify({ stdouts, timings, files }));
+                } catch (e) {
+                  res.setHeader('Content-Type', 'application/json');
+                  res.end(JSON.stringify({ error: e.message }));
+                } finally {
+                  try { rmSync(batchDir, { recursive: true, force: true }); } catch { /* cleanup */ }
+                }
                 return;
               }
 
@@ -297,8 +406,16 @@ builtins.input = _input
                     (err, out, errOut) => {
                       stdout = out || '';
                       stderr = cleanTraceback(errOut || '', tmpDir);
-                      if (err && !err.killed) {
-                        if (stderr) stdout += '\n' + stderr;
+                      if (err && err.killed) {
+                        // Old code resolved here, returning {stdout: ""} as a
+                        // clean success — the user saw a wrong-answer with no
+                        // output and no explanation.
+                        stderr = stderr || 'Execution timed out (10 second limit). Check for infinite loops or a blocking input().';
+                        stdout += '\n' + stderr;
+                        reject(err);
+                      } else if (err) {
+                        if (!stderr) stderr = String(err.message || err);
+                        stdout += '\n' + stderr;
                         reject(err);
                       } else {
                         resolve();

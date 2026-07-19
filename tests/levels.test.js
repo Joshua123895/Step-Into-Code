@@ -5,6 +5,7 @@ import { execSync } from "child_process";
 import { mkdtempSync, writeFileSync as writeTmp, readFileSync as readTmp, rmSync, existsSync } from "fs";
 import { tmpdir } from "os";
 import { load as loadYaml } from "js-yaml";
+import { checkOutput } from "../src/utils/outputMatcher.js";
 
 function dedent(str) {
   if (!str) return "";
@@ -76,29 +77,6 @@ function normalizeTest(t) {
   if (t.any !== undefined) out.expectAnyOf = t.any;
   if (t.match !== undefined) out.expectMatch = t.match;
   return out;
-}
-
-function norm(s) {
-  const lines = (s || "").replace(/\r\n/g, "\n").split("\n");
-  while (lines.length && lines[0] === "") lines.shift();
-  while (lines.length && lines[lines.length - 1] === "") lines.pop();
-  return lines.join("\n");
-}
-
-function checkOutput(actual, test) {
-  const clean = norm(actual);
-
-  if (test.expectAnyOf) {
-    return test.expectAnyOf.some((e) => clean === norm(e));
-  }
-  if (test.expectMatch) {
-    const raw = (actual || "").replace(/\r\n/g, "\n");
-    return new RegExp(test.expectMatch, "s").test(raw);
-  }
-  if (test.expected !== undefined) {
-    return clean === norm(test.expected);
-  }
-  return true;
 }
 
 function loadTracks(file) {

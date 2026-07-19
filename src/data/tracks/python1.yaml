@@ -63,7 +63,6 @@ chapters:
         tests:
           - in: ["World"]
             exp: |-
-              What is your name?World
               Hello, World!
       - name: Echo Machine
         hint: |-
@@ -1433,7 +1432,7 @@ chapters:
               print(f.read().strip())
         start: ''
         tests:
-          - match: '\{"score": 100\}'
+          - match: '^\{"score": 100\}\n?$'
       - name: Journal Keeper
         example:
           input: []

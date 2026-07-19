@@ -2,9 +2,11 @@ import { useState, useCallback, useEffect, useRef } from "react";
 import usePlayback from "./usePlayback";
 import VizControls from "./VizControls";
 import AnimatedItem from "./AnimatedItem";
+import { splitStatements } from "./parseUtils";
 
-function parseLinkedListStates(code) {
-  const lines = code.split("\n");
+// eslint-disable-next-line react-refresh/only-export-components -- exported for unit tests
+export function parseLinkedListStates(code) {
+  const lines = splitStatements(code);
   const nodes = {};
   const chain = [];
   const pointers = [];
