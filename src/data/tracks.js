@@ -27,6 +27,12 @@ import hashComponent from "../assets/icons/hash.svg?react";
 import treeComponent from "../assets/icons/tree.svg?react";
 import heapComponent from "../assets/icons/heap.svg?react";
 import graphComponent from "../assets/icons/graph.svg?react";
+import algorithmComponent from "../assets/icons/algorithm.svg?react";
+import searchingComponent from "../assets/icons/searching.svg?react";
+import sortingComponent from "../assets/icons/sorting.svg?react";
+import dynamicComponent from "../assets/icons/dynamic.svg?react";
+import greedyComponent from "../assets/icons/greedy.svg?react";
+import backtrackComponent from "../assets/icons/backtrack.svg?react";
 import { load } from "js-yaml";
 
 const trackModules = import.meta.glob("./tracks/*.yaml", { query: "?raw", import: "default", eager: true });
@@ -61,6 +67,12 @@ const ICON_COMPONENT_MAP = {
   tree: treeComponent,
   heap: heapComponent,
   graph: graphComponent,
+  algorithm: algorithmComponent,
+  searching: searchingComponent,
+  sorting: sortingComponent,
+  dynamic: dynamicComponent,
+  greedy: greedyComponent,
+  backtrack: backtrackComponent,
 };
 
 function parseRichText(str) {
