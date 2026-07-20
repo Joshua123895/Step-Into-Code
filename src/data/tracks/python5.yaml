@@ -5,7 +5,7 @@ desc: 'Master algorithmic thinking: complexity analysis, searching, sorting, cor
 difficulty: 3
 chapters:
   - name: Foundations
-    icon: algorithm
+    icon: graph
     levels:
       - name: Big O Analysis
         obj: 'Implement `def linear_sum(arr):` (a single loop over `arr`) and `def count_pairs(arr):` (a loop nested inside another). Test both with `[1, 2, 3, 4]`, printing each result immediately followed by its time complexity as a string: `"O(n)"` or `"O(n^2)"`.'
@@ -72,7 +72,7 @@ chapters:
         tests:
           - |
             9
-      - name: Fast Power
+      - name: LeetCode 50 · Pow(x, n)
         obj: 'Implement `def my_pow(x, n):` computing x^n in O(log n) using fast exponentiation (divide and conquer): if `n` is even, `x^n = (x^(n // 2))^2`; if odd, multiply by one extra `x`. Handle negative `n` by inverting (`1 / my_pow(x, -n)`). Read `x` (float) and `n` (int), print the result rounded to 2 decimal places.'
         example:
           in:
@@ -152,7 +152,7 @@ chapters:
           - |
             3
             -1
-      - name: Search in Rotated Array
+      - name: LeetCode 33 · Search in Rotated Sorted Array
         obj: 'Implement `def search_rotated(nums, target):` that finds `target` in a rotated sorted array (no duplicates) in O(log n) using a modified binary search: at each step, figure out which half is normally sorted, then check if the target falls in that half''s range. Read the array and target, print the found index or `-1`.'
         example:
           in:
@@ -340,7 +340,7 @@ chapters:
         tests:
           - |
             [5, 6, 7, 11, 12, 13]
-      - name: Sort Colors
+      - name: LeetCode 75 · Sort Colors
         obj: 'Implement `def sort_colors(nums):` that sorts an array containing only `0`, `1`, `2` in a single O(n) pass using the Dutch National Flag algorithm (three pointers: `low`, `mid`, `high`), sorting in place. Read the array, sort it, then print it.'
         example:
           in:
@@ -440,7 +440,7 @@ chapters:
         tests:
           - |
             9
-      - name: Longest Unique Substring
+      - name: LeetCode 3 · Longest Substring Without Repeating Characters
         obj: 'Implement `def length_of_longest_substring(s):` returning the length of the longest substring without repeating characters, using a sliding window with a set tracking the characters currently in the window. Read a string and print the result.'
         example:
           in:
@@ -508,7 +508,7 @@ chapters:
         tests:
           - |
             [0, 1]
-      - name: Group Anagrams
+      - name: LeetCode 49 · Group Anagrams
         obj: 'Implement `def group_anagrams(strs):` that groups strings that are anagrams of each other, using a hash map keyed by each word''s sorted letters. Read space-separated words, group them, then print the groups: sort each group''s words, and sort the groups by their first word, so the output is deterministic.'
         example:
           in:
@@ -625,7 +625,7 @@ chapters:
             3
             4
             5
-      - name: Validate BST
+      - name: LeetCode 98 · Validate Binary Search Tree
         obj: 'Implement `def is_valid_bst(node, low=float("-inf"), high=float("inf")):` that validates a BST by tracking a valid `(low, high)` range for each node as you recurse — a node''s value must fall inside that range, and each child gets a narrower range. Build tree A: `5` (left `3`, right `8`) — valid. Build tree B: `5` (left `6`, right `8`) — invalid, since `6` can''t be on the left of `5`. Print both results.'
         example:
           in: []
@@ -764,7 +764,7 @@ chapters:
         tests:
           - |
             4
-      - name: Course Schedule
+      - name: LeetCode 207 · Course Schedule
         obj: 'Implement `def can_finish(num_courses, prerequisites):` returning `True` if all courses can be finished given `[course, prereq]` pairs, by detecting a cycle in the prerequisite graph with DFS (tracking each node as unvisited / in-progress / done). Read the number of courses, the number of prerequisite pairs, then that many `course prereq` pairs, and print the result.'
         example:
           in:
@@ -855,7 +855,7 @@ chapters:
         tests:
           - |
             832040
-      - name: Coin Change
+      - name: LeetCode 322 · Coin Change
         obj: 'Implement `def coin_change(coins, amount):` returning the FEWEST coins needed to make `amount` using unlimited coins from `coins`, or `-1` if impossible, using bottom-up DP where `dp[i]` is the minimum coins for amount `i`. Read the coins and the amount, print the result.'
         example:
           in:
@@ -950,7 +950,7 @@ chapters:
           - |
             True
             False
-      - name: Gas Station
+      - name: LeetCode 134 · Gas Station
         obj: 'Implement `def can_complete_circuit(gas, cost):` returning the starting gas station index (0-indexed) from which you can travel a circular route once without running out of fuel, or `-1` if impossible — using the greedy insight that if total gas >= total cost a solution must exist, and any point where the tank goes negative resets your candidate start to the next station. Read `gas` and `cost` arrays, print the result.'
         example:
           in:
@@ -1060,7 +1060,7 @@ chapters:
         tests:
           - |
             [[2, 2, 3], [7]]
-      - name: N-Queens
+      - name: LeetCode 52 · N-Queens II
         obj: 'Implement `def total_n_queens(n):` returning the number of ways to place `n` queens on an `n x n` board so none attack each other, using backtracking: try each column in the current row, checking column and diagonal conflicts against previously placed queens, backtracking on conflict. Read `n` and print the count.'
         example:
           in:
@@ -1103,7 +1103,7 @@ chapters:
   - name: Challenges
     icon: challenge
     levels:
-      - name: Trapping Rain Water
+      - name: LeetCode 42 · Trapping Rain Water
         obj: 'Given elevation heights, implement `def trap(height):` computing total trapped rainwater using two pointers that track the max height seen so far from each side. Read the heights, print the result.'
         example:
           in:
@@ -1139,7 +1139,7 @@ chapters:
           - in: 4 2 0 3 2 5
             exp: |
               9
-      - name: Merge Intervals
+      - name: LeetCode 56 · Merge Intervals
         obj: 'Implement `def merge_intervals(intervals):` that merges all overlapping intervals after sorting by start time. Read the number of intervals, then that many `start end` pairs, and print the merged result.'
         example:
           in:
@@ -1179,7 +1179,7 @@ chapters:
               - 4 5
             exp: |
               [[1, 5]]
-      - name: Longest Common Subsequence
+      - name: LeetCode 1143 · Longest Common Subsequence
         obj: 'Implement `def longest_common_subsequence(text1, text2):` using a 2D DP table where `dp[i][j]` is the LCS length of `text1[:i]` and `text2[:j]`. Read two strings, print the LCS length.'
         example:
           in:
@@ -1213,7 +1213,7 @@ chapters:
               - def
             exp: |
               0
-      - name: Number of Islands
+      - name: LeetCode 200 · Number of Islands
         obj: 'Implement `def num_islands(grid):` counting the number of islands (4-directionally connected groups of `"1"`s) in a 2D grid of `"1"`/`"0"` strings, using DFS to flood-fill and sink each island once found. Read rows, columns, then the grid, and print the count.'
         example:
           in:
@@ -1267,7 +1267,7 @@ chapters:
               - '00011'
             exp: |
               3
-      - name: Word Search
+      - name: LeetCode 79 · Word Search
         obj: 'Implement `def exist(board, word):` returning `True` if `word` can be built from adjacent cells (4-directionally, no cell reused) in a 2D letter grid, using backtracking with a temporary "visited" marker. Read rows, columns, the grid, and the word; print the result.'
         example:
           in:
@@ -1323,7 +1323,7 @@ chapters:
               - ABCB
             exp: |
               False
-      - name: The Ultimate Algorithm
+      - name: LeetCode 146 · LRU Cache
         obj: 'Implement `class LRUCache:` with `__init__(self, capacity)`, `get(self, key)`, and `put(self, key, value)`, achieving O(1) time for both using a hash map plus a doubly linked list to track recency, evicting the least-recently-used entry when over capacity. Run `put(1,1)`, `put(2,2)`, `get(1)`, `put(3,3)` (evicts key 2), `get(2)`, `put(4,4)` (evicts key 1), `get(1)`, `get(3)`, `get(4)`, printing each `get` result.'
         example:
           in: []
