@@ -16,6 +16,7 @@ classes = []
 functions = []
 class_methods = {}
 inheritance = {}
+used_names = set()
 
 for node in ast.walk(tree):
     if isinstance(node, ast.ClassDef):
@@ -37,7 +38,6 @@ for node in ast.walk(tree):
 for node in tree.body:
     if isinstance(node, ast.FunctionDef):
         functions.append(node.name)
-        used_names = set()
 for node in ast.walk(tree):
     if isinstance(node, ast.Name):
         used_names.add(node.id)
