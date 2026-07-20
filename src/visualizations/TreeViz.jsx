@@ -36,11 +36,53 @@ export function parseTreeStates(code) {
     return { treeVars: { ...treeVars }, tree, rootName };
   };
 
-  states.push(computeState());
+  const getIndent = (s) => s.length - s.trimStart().length;
 
-  for (const line of lines) {
-    const t = line.trim();
-    if (t.startsWith("#")) continue;
+  function applySubs(text, subs) {
+    if (!subs) return text;
+    let r = text;
+    for (const [k, v] of Object.entries(subs)) {
+      r = r.replace(new RegExp(`\\b${k}\\b`, "g"), v);
+    }
+    return r;
+  }
+
+  function collectBlock(allLines, startIdx, blockIndent) {
+    const block = [];
+    let j = startIdx;
+    while (j < allLines.length && getIndent(allLines[j]) >= blockIndent) {
+      block.push(allLines[j]);
+      j++;
+    }
+    return { lines: block, nextIdx: j };
+  }
+
+  // Standard BST insert, simulated directly rather than interpreted from
+  // the student's actual `insert_bst` body — the same "trust the
+  // recognized call shape" approach LinkedListViz already uses for
+  // insert_head/insert_tail/delete_node/search, since real recursive
+  // evaluation with return-value threading is out of reach for this
+  // line-based parser.
+  function bstInsert(rootName, value) {
+    if (!treeVars[rootName]) {
+      treeVars[rootName] = { val: String(value), left: null, right: null };
+      return;
+    }
+    let curName = rootName;
+    while (true) {
+      const node = treeVars[curName];
+      const childKey = Number(value) < Number(node.val) ? "left" : "right";
+      if (node[childKey]) { curName = node[childKey]; continue; }
+      const newVar = `_bst_${value}_${++anonId}`;
+      treeVars[newVar] = { val: String(value), left: null, right: null };
+      node[childKey] = newVar;
+      return;
+    }
+  }
+
+  function execLine(rawLine) {
+    const t = rawLine.trim();
+    if (t.startsWith("#") || t.startsWith("class ") || t.startsWith("def ") || /\bself\./.test(t)) return;
 
     // Matches both a bare `root = TreeNode(1)` and a dotted assignment like
     // `root.left = TreeNode(2)` or `root.left.right = TreeNode(4)` — the
@@ -68,14 +110,46 @@ export function parseTreeStates(code) {
           }
         }
       }
-      continue;
+      return;
     }
 
     const link = t.match(/^(\w+)\.(left|right)\s*=\s*(\w+)$/);
     if (link && treeVars[link[1]] && treeVars[link[3]]) {
       treeVars[link[1]][link[2]] = link[3];
       states.push(computeState());
+      return;
     }
+
+    const bstCall = t.match(/^(\w+)\s*=\s*insert_bst\s*\(\s*\w+\s*,\s*(.+?)\s*\)$/);
+    if (bstCall) {
+      bstInsert(bstCall[1], bstCall[2]);
+      states.push(computeState());
+    }
+  }
+
+  states.push(computeState());
+
+  let i = 0;
+  while (i < lines.length) {
+    const line = lines[i];
+    const indent = getIndent(line);
+    const t = line.trim();
+
+    const lMatch = t.match(/^for\s+(\w+)\s+in\s+\[([^\]]*)\]\s*:$/);
+    if (lMatch) {
+      const vName = lMatch[1];
+      const values = lMatch[2].split(",").map((s) => s.trim()).filter(Boolean);
+      const bodyIndent = indent + 1;
+      const { lines: bodyLines, nextIdx } = collectBlock(lines, i + 1, bodyIndent);
+      for (const val of values) {
+        for (const bl of bodyLines) execLine(applySubs(bl, { [vName]: val }));
+      }
+      i = nextIdx;
+      continue;
+    }
+
+    execLine(line);
+    i++;
   }
 
   return states;

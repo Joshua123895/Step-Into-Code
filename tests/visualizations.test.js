@@ -85,6 +85,20 @@ describe("data-structures track visualizations", () => {
     expect(final.tree.left.right.val).toBe("4");
   });
 
+  it("BST Insert: the recognized insert_bst() call shape builds the correct BST", () => {
+    const level = levels.find((l) => l.level.name === "BST Insert").level;
+    const states = parseTreeStates((level.start || "") + "\n" + level.sol);
+    const final = states[states.length - 1];
+    // Inserting 5, 3, 7, 2, 8 into an empty BST: 5 at root, 3/7 as its
+    // children, 2 left of 3, 8 right of 7 — matches the level's expected
+    // in-order output of 2, 3, 5, 7, 8.
+    expect(final.tree.val).toBe("5");
+    expect(final.tree.left.val).toBe("3");
+    expect(final.tree.left.left.val).toBe("2");
+    expect(final.tree.right.val).toBe("7");
+    expect(final.tree.right.right.val).toBe("8");
+  });
+
   it("Collections Deque: appendleft places the item at the front, not the rear", () => {
     const level = levels.find((l) => l.level.name === "Collections Deque").level;
     const states = parseQueueStates((level.start || "") + "\n" + level.sol);
@@ -158,5 +172,47 @@ describe("data-structures track visualizations", () => {
 
     const accessStep = states.find((s) => s.ages?.some((p) => p.accessed));
     expect(accessStep, "expected some state to show Alice's read highlight").toBeTruthy();
+  });
+
+  it("Dictionary Basics: a multi-line dict literal (one key per line) still populates the viz", () => {
+    const code = [
+      'ages = {',
+      '    "Alice": 25,',
+      '    "Bob": 30,',
+      '}',
+      'print(ages["Alice"])',
+      'ages["Charlie"] = 35',
+      'print(ages)',
+    ].join("\n");
+    const states = parseHashStates(code);
+    expect(states.length, "the multi-line dict never registered a single state change").toBeGreaterThan(1);
+    const final = states[states.length - 1];
+    expect(final.ages.map((p) => [p.key, p.val])).toEqual([
+      ["Alice", "25"],
+      ["Bob", "30"],
+      ["Charlie", "35"],
+    ]);
+  });
+
+  it("Hash Table Class: insert/get on a bucket-based class round-trips through the bucket grid", () => {
+    const level = levels.find((l) => l.level.name === "Hash Table Class").level;
+    const states = parseHashStates((level.start || "") + "\n" + level.sol);
+    const final = states[states.length - 1];
+    const allEntries = final.ht.buckets.flat();
+    expect(allEntries).toHaveLength(1);
+    expect(allEntries[0].key).toBe("name");
+  });
+
+  it("Collision Handling: re-inserting the same key updates its bucket entry instead of duplicating it", () => {
+    const level = levels.find((l) => l.level.name === "Collision Handling").level;
+    const states = parseHashStates((level.start || "") + "\n" + level.sol);
+    const final = states[states.length - 1];
+    const allEntries = final.ht.buckets.flat();
+    // Exactly one "a" entry (not two, from the two inserts) and one "b" entry.
+    expect(allEntries).toHaveLength(2);
+    const a = allEntries.find((p) => p.key === "a");
+    const b = allEntries.find((p) => p.key === "b");
+    expect(a.val).toBe("2");
+    expect(b.val).toBe("3");
   });
 });

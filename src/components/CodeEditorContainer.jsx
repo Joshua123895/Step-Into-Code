@@ -108,31 +108,24 @@ export default function CodeEditorContainer({ code, setCode, language, files, fi
       try {
         await runPython(userCode, onInput, onOutput);
       } catch {
-        // Streaming API unavailable (Vercel), use batch Pyodide instead
-        if (userCode.includes("input(")) {
-          const inputMatches = [...userCode.matchAll(/input\s*\(([^)]*)\)/g)];
-          const inputs = [];
+        // Streaming API unavailable (Vercel), use batch Pyodide instead.
+        // The number of input() calls can't be known statically (e.g. a loop
+        // calling input() N times), so rerun from scratch each time the
+        // script asks for more input than we've collected so far, replacing
+        // (not appending to) the displayed output since each rerun recomputes
+        // the full transcript up to that point.
+        let inputs = [];
+        while (true) {
+          const { stdout, needsInput } = await runPythonWithIO(userCode, inputs);
+          rawOutputRef.current = stdout;
+          setOutput(stdout);
+          if (!needsInput) break;
 
-          for (let i = 0; i < inputMatches.length; i++) {
-            const promptRaw = inputMatches[i][1] || "";
-            const prompt = promptRaw.replace(/^['"`]|['"`]$/g, '');
-
-            onOutput(prompt);
-
-            const value = await new Promise((resolve) => {
-              pendingResolve.current = resolve;
-              setWaitingInput(true);
-            });
-
-            inputs.push(value);
-            onOutput(value + "\n");
-          }
-
-          const result = await runPythonWithIO(userCode, inputs, true);
-          if (result) onOutput(result);
-        } else {
-          const result = await runPythonWithIO(userCode, []);
-          if (result) onOutput(result);
+          const value = await new Promise((resolve) => {
+            pendingResolve.current = resolve;
+            setWaitingInput(true);
+          });
+          inputs.push(value);
         }
       }
     }
