@@ -49,15 +49,21 @@ function heapPush(arr, value, itemId) {
   return siftUp(a, a.length - 1);
 }
 
-// Real extract-min: move the last element to the root, then sift down —
-// not just "drop the front", which would silently desync from real heapq
-// as soon as a push interleaves with pops.
-function heapPop(arr) {
-  if (arr.length <= 1) return [];
+// Real extract-min: swap the root with the last element (both still present,
+// so the swap itself is a visible frame), then drop that displaced root value
+// and sift the new root down — not just "drop the front", which would
+// silently desync from real heapq as soon as a push interleaves with pops.
+// Returning the swapped array separately (instead of only the final result)
+// lets the caller snapshot the swap before the displaced item disappears,
+// so the animation actually shows what heappop does instead of jumping
+// straight to the end result.
+function heapPopSteps(arr) {
+  if (arr.length <= 1) return { swapped: null, popped: [] };
   const a = [...arr];
-  a[0] = a[a.length - 1];
-  a.pop();
-  return siftDown(a, 0);
+  const last = a.length - 1;
+  [a[0], a[last]] = [a[last], a[0]];
+  const popped = siftDown(a.slice(0, last), 0);
+  return { swapped: a, popped };
 }
 
 // eslint-disable-next-line react-refresh/only-export-components -- exported for unit tests
@@ -120,7 +126,9 @@ export function parseHeapStates(code) {
     if (listCompPop && heap !== null) {
       const count = heap.length;
       for (let k = 0; k < count; k++) {
-        heap = heapPop(heap);
+        const { swapped, popped } = heapPopSteps(heap);
+        if (swapped) { heap = swapped; snapshot(); }
+        heap = popped;
         snapshot();
       }
       return;
@@ -128,7 +136,9 @@ export function parseHeapStates(code) {
 
     const pop = line.match(/heapq\.heappop\s*\(\s*\w+\s*\)/);
     if (pop && heap !== null && heap.length > 0) {
-      heap = heapPop(heap);
+      const { swapped, popped } = heapPopSteps(heap);
+      if (swapped) { heap = swapped; snapshot(); }
+      heap = popped;
       snapshot();
       return;
     }

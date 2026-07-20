@@ -2183,7 +2183,7 @@ chapters:
               35
         id: 95
         max: 16/1
-        obj: 'Define `def add(a, b)` returning sum, `def multiply(a, b)` returning product, and `def apply(func, x, y)` that calls the passed function. Define `def chain(x, y, z)` that returns `multiply(add(x, y), z)`. Read three ints and print: `apply(add, a, b)`, `apply(multiply, b, c)`, and `chain(a, b, c)`. Use `return` values, `default parameters` (make `multiply`''s second param default to 2), and `function composition`.'
+        obj: 'Define `def add(a, b)` returning sum, `def multiply(a, b)` returning product, and `def apply(func, x, y)` that calls the passed function. Define `def chain(x, y, z)` that returns `multiply(add(x, y), z)`. Read three ints and print: `apply(add, a, b)`, `apply(multiply, b, c)`, and `chain(a, b, c)`.'
         sol: |-
           def add(a, b):
               return a + b

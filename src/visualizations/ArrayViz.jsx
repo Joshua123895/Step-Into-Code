@@ -96,7 +96,12 @@ export function parseArrayStates(code) {
       if (!isSlice && /^-?\d+$/.test(inner)) {
         const norm = Number(inner) < 0 ? len + Number(inner) : Number(inner);
         if (norm >= 0 && norm < len) {
-          arr.items = arr.items.map((item, i) => ({ ...item, sel: i === norm ? "idx" : item.sel }));
+          // Reset every item's sel (not just set the matched one) — these are
+          // throwaway reads like `print(nums[0])`, not stored sub-arrays, so
+          // each new access should show only its own target, not accumulate
+          // stale highlighting from a previous unrelated access/slice.
+          arr.items = arr.items.map((item, i) => ({ ...item, sel: i === norm ? "idx" : undefined }));
+          arr.slices = [];
         }
       } else if (isSlice) {
         const parts = inner.split(":");
@@ -111,8 +116,13 @@ export function parseArrayStates(code) {
         else { for (let k = pStart; k > pStop; k += step) idxs.push(k); }
 
         const sid = "s" + (sliceIdCounter++);
-        arr.items = arr.items.map((item, i) => ({ ...item, sel: idxs.includes(i) ? sid : item.sel }));
-        arr.slices.push({ ids: idxs, label: inner, id: sid });
+        // Same reasoning as above: replace (not accumulate) so the legend
+        // always matches what's actually highlighted. Without this, printing
+        // nums[2:6] then nums[:4] would silently overwrite the first slice's
+        // color on indices 2-3 while its legend entry stuck around claiming
+        // "4 items" are highlighted when none of them still show that color.
+        arr.items = arr.items.map((item, i) => ({ ...item, sel: idxs.includes(i) ? sid : undefined }));
+        arr.slices = [{ ids: idxs, label: inner, id: sid }];
       }
       snapshot();
     }
