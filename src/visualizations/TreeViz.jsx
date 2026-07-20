@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect, useRef } from "react";
+import { useState, useCallback, useEffect } from "react";
 import usePlayback from "./usePlayback";
 import VizControls from "./VizControls";
 import { splitStatements } from "./parseUtils";
@@ -257,7 +257,7 @@ function VizBody({ state, ghostVars = {} }) {
 
   if (names.length === 0 && Object.keys(ghostVars).length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center h-full min-h-[200px] text-center p-4" style={{ color: "var(--text-muted)" }}>
+      <div className="flex flex-col items-center justify-center h-full min-h-50 text-center p-4" style={{ color: "var(--text-muted)" }}>
         <div className="text-4xl mb-3 opacity-30">⬡</div>
         <p className="text-xs">Create tree nodes to see them<br /><code className="text-xs" style={{ color: "var(--text-secondary)" }}>root = Node(5)</code></p>
       </div>
@@ -315,8 +315,7 @@ export default function TreeViz({ code }) {
   const playback = usePlayback();
   const [parsed, setParsed] = useState(null);
   const [ghostVars, setGhostVars] = useState({});
-  const prevRef = useRef(null);
-  const ghostTimerRef = useRef(null);
+  const [prevState, setPrevState] = useState(null);
 
   const ensureParsed = useCallback(() => {
     if (parsed && parsed.code === code) return parsed.states;
@@ -326,28 +325,35 @@ export default function TreeViz({ code }) {
     return s;
   }, [code, parsed, playback]);
 
-  useEffect(() => {
-    if (!parsed || playback.step < 0) return;
-    const cur = parsed.states[Math.min(playback.step, parsed.states.length - 1)];
-    const prev = prevRef.current;
-    prevRef.current = cur;
-    if (!prev) return;
-    if (ghostTimerRef.current) clearTimeout(ghostTimerRef.current);
+  const currentState = parsed
+    ? parsed.states[Math.max(0, Math.min(playback.step, parsed.states.length - 1))]
+    : null;
 
-    const prevVars = Object.keys(prev.treeVars || {});
-    const curVars = new Set(Object.keys(cur.treeVars || {}));
-    const removed = {};
-    for (const v of prevVars) {
-      if (!curVars.has(v)) removed[v] = prev.treeVars[v];
-    }
-
-    if (Object.keys(removed).length > 0) {
+  // Derive which vars just disappeared by comparing against the previously
+  // rendered state, right here during render rather than in a useEffect —
+  // React's documented pattern for adjusting state when a derived value
+  // changes (tracked with useState, not a ref: refs can't be read during
+  // render). The 300ms auto-clear below is the only genuine side effect
+  // (a timer), so that's the only piece left in an effect.
+  if (parsed && currentState !== prevState) {
+    const oldState = prevState;
+    setPrevState(currentState);
+    if (oldState) {
+      const prevVars = Object.keys(oldState.treeVars || {});
+      const curVars = new Set(Object.keys(currentState.treeVars || {}));
+      const removed = {};
+      for (const v of prevVars) {
+        if (!curVars.has(v)) removed[v] = oldState.treeVars[v];
+      }
       setGhostVars(removed);
-      ghostTimerRef.current = setTimeout(() => { setGhostVars({}); ghostTimerRef.current = null; }, 300);
-    } else {
-      setGhostVars({});
     }
-  }, [parsed, playback.step]);
+  }
+
+  useEffect(() => {
+    if (Object.keys(ghostVars).length === 0) return;
+    const timer = setTimeout(() => setGhostVars({}), 300);
+    return () => clearTimeout(timer);
+  }, [ghostVars]);
 
   const handleToggle = useCallback(() => {
     if (playback.playing) {
@@ -363,16 +369,9 @@ export default function TreeViz({ code }) {
     playback.stepForward();
   }, [playback, ensureParsed]);
 
-  const handleReset = useCallback(() => {
-    playback.reset();
-    setParsed(null);
-    setGhostVars({});
-    prevRef.current = null;
-  }, [playback]);
-
   if (!parsed) {
     return (
-      <div className="flex items-center justify-center h-full min-h-[200px]">
+      <div className="flex items-center justify-center h-full min-h-50">
         <button
           onClick={handleToggle}
           className="text-xs px-4 py-2 rounded font-bold hover:brightness-110 active:brightness-90 active:scale-[0.98]"
@@ -387,7 +386,6 @@ export default function TreeViz({ code }) {
     );
   }
 
-  const idx = Math.max(0, Math.min(playback.step, parsed.states.length - 1));
   return (
     <div className="flex flex-col">
       <VizControls
@@ -398,7 +396,7 @@ export default function TreeViz({ code }) {
         step={playback.step}
         total={playback.total}
       />
-      <VizBody state={parsed.states[idx]} ghostVars={ghostVars} />
+      <VizBody state={currentState} ghostVars={ghostVars} />
     </div>
   );
 }
