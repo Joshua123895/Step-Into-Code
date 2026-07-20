@@ -16,7 +16,7 @@ export default function TrackCard({ track }) {
 
   return (
     <div
-      className="rounded-2xl p-6 relative overflow-hidden"
+      className="rounded-2xl p-4 md:p-6 relative overflow-hidden"
       style={{
         background: "var(--bg-card)",
         border: `2px solid ${diff.color}`,
@@ -49,7 +49,7 @@ export default function TrackCard({ track }) {
       )}
       <div className="relative">
         <div className="flex mb-4">
-          <Icon src={track.trackIcon} alt={track.name} size={56} color={diff.color} className="shrink-0 mt-1 mr-6" />
+          <Icon src={track.trackIcon} alt={track.name} size={56} color={diff.color} className="shrink-0 mt-1 mr-4 md:mr-6" />
           <div className="flex-1 min-w-0">
             <div className="flex items-start justify-between gap-2 mb-1">
               <h3
@@ -65,7 +65,7 @@ export default function TrackCard({ track }) {
                 {diff.label}
               </span>
             </div>
-            <p className="text-sm truncate" style={{ color: "var(--text-secondary)" }}>
+            <p className="text-sm line-clamp-2" style={{ color: "var(--text-secondary)" }}>
               {track.description}
             </p>
           </div>

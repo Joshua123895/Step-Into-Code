@@ -571,7 +571,7 @@ export default function LevelPage() {
         </div>
       )}
 
-      <div key={levelId} className="lg:h-screen lg:overflow-hidden pt-24 pb-8 px-4 relative z-10">
+      <div key={levelId} className="lg:h-screen lg:overflow-hidden pt-24 pb-24 lg:pb-8 px-4 relative z-10">
         <div className="max-w-6xl mx-auto">
           <button
             onClick={() => navigate(`/tracks/${trackName}`)}
@@ -749,7 +749,8 @@ export default function LevelPage() {
 
                 </div>
 
-                <div className="flex flex-col gap-2 pt-3" style={{ borderTop: "1px solid var(--border)" }}>
+                {/* Desktop action buttons — on mobile these move to the sticky bottom bar */}
+                <div className="hidden lg:flex flex-col gap-2 pt-3" style={{ borderTop: "1px solid var(--border)" }}>
                   <PixelButton onClick={handleRun} size="md" variant="primary" disabled={testing}>
                     {testing ? "Running..." : "Submit Code"}
                   </PixelButton>
@@ -786,13 +787,13 @@ export default function LevelPage() {
                         style={{ background: "var(--bg-card)", border: "2px solid var(--border)" }}
                       >
                         <div
-                          className="text-[10px] font-bold uppercase tracking-wider mb-2"
+                          className="text-xs lg:text-[10px] font-bold uppercase tracking-wider mb-2"
                           style={{ color: "var(--text-muted)" }}
                         >
                           Progress
                         </div>
                         <ProgressBar value={progress} showLabel={false} />
-                        <p className="text-[10px] mt-1" style={{ color: "var(--text-muted)" }}>
+                        <p className="text-xs lg:text-[10px] mt-1" style={{ color: "var(--text-muted)" }}>
                           {completedCount}/{chapter.levels.length} · {totalStars} ★
                         </p>
                       </div>
@@ -801,7 +802,7 @@ export default function LevelPage() {
                         style={{ background: "var(--bg-card)", border: "2px solid var(--border)" }}
                       >
                         <div
-                          className="text-[10px] font-bold uppercase tracking-wider mb-3"
+                          className="text-xs lg:text-[10px] font-bold uppercase tracking-wider mb-3"
                           style={{ color: "var(--text-muted)" }}
                         >
                           Visualization
@@ -878,6 +879,26 @@ export default function LevelPage() {
               })()}
             </div>
           </div>
+        </div>
+
+        {/* Mobile sticky action bar — thumb-reachable Hint + Submit (Run lives in the editor header) */}
+        <div
+          className="lg:hidden fixed bottom-0 left-0 right-0 z-40 flex gap-2 px-4 pt-3"
+          style={{
+            background: "color-mix(in srgb, var(--bg-card) 92%, transparent)",
+            backdropFilter: "blur(8px)",
+            borderTop: "1.5px solid var(--border-strong)",
+            paddingBottom: "calc(0.75rem + env(safe-area-inset-bottom))",
+          }}
+        >
+          {level.hint && level.hint.length > 0 && (
+            <PixelButton onClick={handleHintToggle} size="md" variant="accent" className="flex-[0_0_38%]">
+              {showHint ? "Hide" : "💡 Hint"}
+            </PixelButton>
+          )}
+          <PixelButton onClick={handleRun} size="md" variant="primary" disabled={testing} className="flex-1">
+            {testing ? "Running..." : "Submit Code"}
+          </PixelButton>
         </div>
       </div>
     </>

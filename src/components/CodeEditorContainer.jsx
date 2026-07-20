@@ -156,8 +156,8 @@ export default function CodeEditorContainer({ code, setCode, language, files, fi
       style={{
         border: `2px solid ${c.outerBorder}`,
         boxShadow: "0 8px 32px rgba(0,0,0,0.15)",
-        minHeight: "40vh",
-        maxHeight: "calc(100vh - 10rem)",
+        minHeight: "40dvh",
+        maxHeight: "calc(100dvh - 10rem)",
       }}
     >
       <div

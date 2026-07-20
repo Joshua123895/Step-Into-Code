@@ -324,9 +324,9 @@ function VizBody({ queues, ghosts = {} }) {
             <div className="text-xs font-bold mb-2 text-center" style={{ color: "var(--text-muted)", fontFamily: "'Courier New', monospace" }}>
               {name}
             </div>
-            <div className="flex items-center justify-center gap-0">
-              <div className="text-xs mr-1" style={{ color: "#28CA41" }}>front</div>
-              <div className="flex" style={{ direction: "ltr" }}>
+            <div className="flex items-center justify-center gap-0 max-w-full overflow-x-auto">
+              <div className="text-xs mr-1 shrink-0" style={{ color: "#28CA41" }}>front</div>
+              <div className="flex shrink-0" style={{ direction: "ltr" }}>
                 {merged.length === 0 && (
                   <div className="text-xs px-4 py-3 rounded-lg" style={{ background: "var(--bg)", border: "2px dashed var(--border-strong)", color: "var(--text-muted)" }}>empty</div>
                 )}
@@ -368,7 +368,7 @@ function VizBody({ queues, ghosts = {} }) {
                   );
                 })}
               </div>
-              <div className="text-xs ml-1" style={{ color: "#FF5F57" }}>rear</div>
+              <div className="text-xs ml-1 shrink-0" style={{ color: "#FF5F57" }}>rear</div>
             </div>
             <div className="text-[10px] text-center mt-1" style={{ color: "var(--text-muted)" }}>
               {items.length} item{items.length !== 1 ? "s" : ""}

@@ -1,4 +1,4 @@
-export default function PixelButton({ children, onClick, variant = "primary", size = "md", disabled = false }) {
+export default function PixelButton({ children, onClick, variant = "primary", size = "md", disabled = false, className = "" }) {
   const variants = {
     primary: {
       bg: "#6AAE6F",
@@ -42,6 +42,7 @@ export default function PixelButton({ children, onClick, variant = "primary", si
         ${sizes[size]} font-bold rounded-lg transition-all duration-100
         active:translate-y-0.5 select-none
         ${disabled ? "opacity-40 cursor-not-allowed" : "cursor-pointer hover:brightness-110 active:shadow-none"}
+        ${className}
       `}
       style={{
         background: disabled ? "var(--text-disabled)" : v.bg,

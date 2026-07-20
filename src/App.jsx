@@ -58,7 +58,7 @@ export default function App() {
 
       <div
         className="relative"
-        style={{ background: "var(--bg)", minHeight: "100vh" }}
+        style={{ background: "var(--bg)", minHeight: "100dvh" }}
       >
         <PixelParticles />
         <Navbar />

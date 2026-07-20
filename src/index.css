@@ -66,6 +66,21 @@ html, body, #root {
   width: 100%;
 }
 
+/* Guard against any stray wide child causing page-level horizontal scroll on mobile */
+html, body {
+  overflow-x: hidden;
+}
+
+/* Respect reduced-motion: neutralize the universal transition + decorative keyframes */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
 /* --- Scrollbar styling for all browsers --- */
 
 ::-webkit-scrollbar {

@@ -60,6 +60,7 @@ export default function FilePanel({ files, fileEntries, fileEntriesBefore, befor
             doc: content,
             extensions: [
               basicSetup,
+              EditorView.lineWrapping,
               ...(isPy ? [python()] : []),
               fileViewerThemeCompartment.of([selectTheme(isDark), dynamicTheme]),
               baseEditorTheme,
@@ -100,7 +101,7 @@ export default function FilePanel({ files, fileEntries, fileEntriesBefore, befor
       >
         <button
           onClick={() => onTabChange("main.py")}
-          className="text-xs px-4 py-2 font-mono border-r"
+          className="text-xs px-4 py-2.5 font-mono border-r whitespace-nowrap"
           style={{
             background: activeTab === "main.py" ? c.tabActiveBg : "transparent",
             color: activeTab === "main.py" ? c.tabActiveText : c.tabInactiveText,
@@ -118,7 +119,7 @@ export default function FilePanel({ files, fileEntries, fileEntriesBefore, befor
             <button
               key={name}
               onClick={() => onTabChange(name)}
-              className="text-xs px-4 py-2 font-mono border-r"
+              className="text-xs px-4 py-2.5 font-mono border-r whitespace-nowrap"
               style={{
                 background: activeTab === name ? c.tabActiveBg : "transparent",
                 color: activeTab === name ? c.tabActiveText : c.tabInactiveText,

@@ -16,7 +16,7 @@ export default function Navbar() {
   ];
 
   const linkClass = (path) =>
-    `block w-full text-left px-4 py-2 text-sm font-medium rounded-lg transition-colors duration-500 hover:brightness-110 ${
+    `block w-full text-left px-4 py-3 text-sm font-medium rounded-lg transition-colors duration-500 hover:brightness-110 ${
       isActive(path) ? "bg-[#6AAE6F20] text-[#6AAE6F]" : ""
     }`;
 
@@ -96,11 +96,8 @@ export default function Navbar() {
 
         {/* Mobile hamburger */}
           <button
-            onClick={() => {
-              console.log("hamburger clicked, current:", menuOpen);
-              setMenuOpen((prev) => !prev);
-            }}
-            className="md:hidden relative w-8 h-8 flex items-center justify-center"
+            onClick={() => setMenuOpen((prev) => !prev)}
+            className="md:hidden relative w-11 h-11 flex items-center justify-center"
             style={{ color: "var(--nav-text)" }}
             aria-label={menuOpen ? "Close menu" : "Open menu"}
           >
@@ -128,6 +125,18 @@ export default function Navbar() {
           />
         </button>
       </nav>
+
+      {/* Backdrop scrim — dims the page and closes the menu on outside tap */}
+      <div
+        className="md:hidden fixed inset-0 z-30 transition-opacity duration-300"
+        style={{
+          background: "var(--overlay)",
+          opacity: menuOpen ? 1 : 0,
+          pointerEvents: menuOpen ? "auto" : "none",
+        }}
+        onClick={closeMenu}
+        aria-hidden="true"
+      />
 
       {/* Mobile aside — hidden off-screen right, slides left when open */}
       <aside
@@ -159,7 +168,7 @@ export default function Navbar() {
               toggle();
               closeMenu();
             }}
-            className="block w-full text-left px-4 py-2 text-sm font-medium rounded-lg transition-colors duration-500 hover:brightness-110"
+            className="block w-full text-left px-4 py-3 text-sm font-medium rounded-lg transition-colors duration-500 hover:brightness-110"
             style={{
               color: "var(--nav-text)",
               border: "1.5px solid var(--border)",

@@ -78,7 +78,7 @@ export default function ChaptersPage() {
           return (
             <div key={chapter.id} style={{ borderBottom: i < track.chapters.length - 1 ? `1px solid ${diff.color}15` : "none" }}>
               <div
-                className="flex items-center gap-6 px-4 py-3 cursor-pointer transition-all"
+                className="flex items-center gap-3 md:gap-6 px-4 py-3 cursor-pointer transition-all"
                 style={{ background: isOpen ? `${diff.color}08` : "transparent" }}
                 onClick={() => setExpanded(isOpen ? null : chapter.id)}
               >
@@ -126,7 +126,7 @@ export default function ChaptersPage() {
                     return (
                       <div
                         key={level.id}
-                        className="flex items-center gap-3 px-3 py-2 rounded-lg transition-all"
+                        className="flex items-center gap-3 px-3 py-3 rounded-lg transition-all"
                         style={{
                           opacity: isLocked ? 0.5 : 1,
                           cursor: isLocked ? "default" : "pointer",
@@ -164,7 +164,7 @@ export default function ChaptersPage() {
                         {stars > 0 && (
                           <div className="flex gap-0.5 shrink-0">
                             {[1, 2, 3].map((s) => (
-                              <span key={s} style={{ fontSize: 10, color: s <= stars ? "#E9B44C" : "var(--text-disabled)" }}>
+                              <span key={s} style={{ fontSize: 12, color: s <= stars ? "#E9B44C" : "var(--text-disabled)" }}>
                                 ★
                               </span>
                             ))}
