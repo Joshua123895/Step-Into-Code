@@ -155,30 +155,98 @@ export function parseTreeStates(code) {
   return states;
 }
 
-function TreeNodeBox({ node, x, y, level, totalWidth }) {
+// Each subtree is laid out independently (leaves at x=0, a lone child offset
+// half a slot so left/right stays visually distinguishable instead of a
+// dead-vertical line, two children centered over their midpoint), then two
+// sibling subtrees are merged by shifting the right one just far enough that
+// its leftmost node clears the left subtree's rightmost node by NODE_SPACING.
+// Tracking each subtree's [minX, maxX] footprint (not just its root's x) is
+// what makes this safe: two single-child branches that are mirror images of
+// each other (e.g. inserting [5, 3, 7, 2, 8] into a BST, where 3's only child
+// is on its left and 7's only child is on its right) would otherwise land
+// their parent nodes on the exact same x and render on top of each other —
+// offsetting by a fixed half-slot alone doesn't see that collision coming.
+const NODE_SPACING = 46;
+const ROW_HEIGHT = 50;
+
+function shiftSubtree(node, dx) {
+  if (!node) return;
+  node.x += dx;
+  shiftSubtree(node.left, dx);
+  shiftSubtree(node.right, dx);
+}
+
+function layoutTree(root) {
+  let maxDepth = 0;
+
+  function visit(node, depth) {
+    if (!node) return null;
+    maxDepth = Math.max(maxDepth, depth);
+    const left = visit(node.left, depth + 1);
+    const right = visit(node.right, depth + 1);
+    const y = depth * ROW_HEIGHT + 25;
+
+    if (left && right) {
+      const gap = NODE_SPACING - (right.minX - left.maxX);
+      if (gap > 0) {
+        shiftSubtree(right.node, gap);
+        right.minX += gap;
+        right.maxX += gap;
+      }
+      const x = (left.node.x + right.node.x) / 2;
+      return { node: { val: node.val, x, y, left: left.node, right: right.node }, minX: left.minX, maxX: right.maxX };
+    }
+    if (left) {
+      const x = left.node.x + NODE_SPACING / 2;
+      return { node: { val: node.val, x, y, left: left.node, right: null }, minX: left.minX, maxX: Math.max(left.maxX, x) };
+    }
+    if (right) {
+      const x = right.node.x - NODE_SPACING / 2;
+      return { node: { val: node.val, x, y, left: null, right: right.node }, minX: Math.min(right.minX, x), maxX: right.maxX };
+    }
+    return { node: { val: node.val, x: 0, y, left: null, right: null }, minX: 0, maxX: 0 };
+  }
+
+  const result = visit(root, 0);
+  const positioned = result ? result.node : null;
+  const rootX = positioned ? positioned.x : 0;
+  // The tree can lean further to one side of the root than the other (e.g. a
+  // deep left subtree with a lone right leaf). Sizing the viewBox symmetrically
+  // around the root's own x — rather than around the overall footprint — keeps
+  // the root lined up with the "root" name label above it, which is centered
+  // independently via flexbox.
+  const halfSpan = result
+    ? Math.max(rootX - result.minX, result.maxX - rootX, NODE_SPACING / 2)
+    : NODE_SPACING / 2;
+
+  return {
+    positioned,
+    rootX,
+    halfSpan,
+    height: maxDepth * ROW_HEIGHT + 50,
+  };
+}
+
+function TreeNodeBox({ node }) {
   if (!node) return null;
   const r = 18;
-  const xOff = totalWidth / Math.pow(2, level + 1);
-  const leftX = x - xOff;
-  const rightX = x + xOff;
-  const childY = y + 50;
 
   return (
     <g>
       {node.left && (
         <>
-          <line x1={x} y1={y + r} x2={leftX} y2={childY - r} stroke="var(--border-strong)" strokeWidth={1.5} />
-          <TreeNodeBox node={node.left} x={leftX} y={childY} level={level + 1} totalWidth={totalWidth} />
+          <line x1={node.x} y1={node.y + r} x2={node.left.x} y2={node.left.y - r} stroke="var(--border-strong)" strokeWidth={1.5} />
+          <TreeNodeBox node={node.left} />
         </>
       )}
       {node.right && (
         <>
-          <line x1={x} y1={y + r} x2={rightX} y2={childY - r} stroke="var(--border-strong)" strokeWidth={1.5} />
-          <TreeNodeBox node={node.right} x={rightX} y={childY} level={level + 1} totalWidth={totalWidth} />
+          <line x1={node.x} y1={node.y + r} x2={node.right.x} y2={node.right.y - r} stroke="var(--border-strong)" strokeWidth={1.5} />
+          <TreeNodeBox node={node.right} />
         </>
       )}
-      <circle cx={x} cy={y} r={r} fill="#7AA2F715" stroke="#7AA2F7" strokeWidth={2} style={{ animation: "viz-in 0.25s ease-out both" }} />
-      <text x={x} y={y + 1} textAnchor="middle" dominantBaseline="middle" fill="var(--text)" fontSize={12} fontFamily="monospace" fontWeight="bold">{node.val}</text>
+      <circle cx={node.x} cy={node.y} r={r} fill="#7AA2F715" stroke="#7AA2F7" strokeWidth={2} style={{ animation: "viz-in 0.25s ease-out both" }} />
+      <text x={node.x} y={node.y + 1} textAnchor="middle" dominantBaseline="middle" fill="var(--text)" fontSize={12} fontFamily="monospace" fontWeight="bold">{node.val}</text>
     </g>
   );
 }
@@ -196,13 +264,12 @@ function VizBody({ state, ghostVars = {} }) {
     );
   }
 
-  const maxDepth = (n) => {
-    if (!n) return 0;
-    return 1 + Math.max(maxDepth(n.left), maxDepth(n.right));
-  };
-  const depth = tree ? maxDepth(tree) : 0;
-  const svgWidth = Math.max(200, Math.pow(2, depth) * 40);
-  const svgHeight = depth * 50 + 40;
+  const { positioned, rootX, halfSpan, height: svgHeight } = tree ? layoutTree(tree) : { positioned: null, rootX: 0, halfSpan: NODE_SPACING / 2, height: 40 };
+  // Extra margin so the outermost circles' radius + stroke don't get clipped
+  // by the viewBox edges.
+  const pad = 22;
+  const viewMinX = rootX - halfSpan - pad;
+  const viewWidth = (halfSpan + pad) * 2;
 
   return (
     <div className="flex flex-col items-center">
@@ -211,8 +278,12 @@ function VizBody({ state, ghostVars = {} }) {
           <div className="text-xs font-bold mb-2" style={{ color: "var(--text-muted)", fontFamily: "'Courier New', monospace" }}>
             {rootName}
           </div>
-          <svg width={svgWidth} height={svgHeight} viewBox={`0 0 ${svgWidth} ${svgHeight}`} style={{ maxWidth: "100%" }}>
-            <TreeNodeBox node={tree} x={svgWidth / 2} y={25} level={0} totalWidth={svgWidth} />
+          <svg
+            viewBox={`${viewMinX} 0 ${viewWidth} ${svgHeight}`}
+            preserveAspectRatio="xMidYMid meet"
+            style={{ width: "100%", height: "auto", maxWidth: viewWidth, display: "block" }}
+          >
+            <TreeNodeBox node={positioned} />
           </svg>
         </>
       )}
