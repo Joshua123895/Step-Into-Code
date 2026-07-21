@@ -1,4 +1,4 @@
-import { ensurePyodide } from "./pyodide";
+import { runInPyodideWorker, TIMEOUT_MESSAGE } from "./pyodideWorkerClient";
 
 // Run one code submission against MANY input-sets in a single server process.
 // Returns { stdouts: string[], files } or null if batch mode is unavailable
@@ -47,61 +47,14 @@ export async function runPythonReal(code, initialFiles = {}, trackedFiles = [], 
     if (import.meta.env.DEV) {
       console.warn("[runner] /api/run-python unavailable, falling back to in-browser Pyodide:", fallbackReason);
     }
-    const pyodide = await ensurePyodide();
-
-    let stdout = "";
-
-    pyodide.setStdout({ write: (buf) => { stdout += new TextDecoder().decode(buf); return buf.length; }, isatty: true });
-    pyodide.setStderr({ write: (buf) => { stdout += new TextDecoder().decode(buf); return buf.length; }, isatty: true });
-
-    for (const [name, content] of Object.entries(initialFiles || {})) {
-      const parts = name.split("/");
-      let path = "";
-      for (let i = 0; i < parts.length - 1; i++) {
-        path += "/" + parts[i];
-        try { pyodide.FS.mkdir(path); } catch { /* exists */ }
-      }
-      pyodide.FS.writeFile("/" + name, content);
-    }
-
-    const inputShim = inputs.length > 0
-      ? `import sys, builtins
-sys.stdout.reconfigure(write_through=True)
-_inputs = ${JSON.stringify(inputs)}
-_input_index = 0
-def _input(prompt=""):
-    global _input_index
-    if _input_index < len(_inputs):
-        line = _inputs[_input_index]
-        _input_index += 1
-    else:
-        line = ""
-    return line
-builtins.input = _input
-`
-      : `import sys
-sys.stdout.reconfigure(write_through=True)
-`;
-
     try {
-      await pyodide.runPythonAsync(inputShim + code);
-    } catch (e) {
-      const msg = String(e);
-      const cleaned = msg.startsWith("PythonError: Traceback (most recent call last):")
-        ? msg.trim().split("\n").at(-1).trim()
-        : msg;
-      if (!stdout.includes(cleaned)) {
-        stdout += "\n" + cleaned;
+      const { stdout, files } = await runInPyodideWorker(code, { initialFiles, trackedFiles, inputs });
+      return { stdout, files, source: "pyodide-fallback" };
+    } catch (workerErr) {
+      if (workerErr.message === "TIMEOUT") {
+        return { stdout: TIMEOUT_MESSAGE, files: {}, source: "pyodide-fallback", error: "timeout" };
       }
+      return { stdout: `[runner error] ${workerErr.message}`, files: {}, source: "pyodide-fallback", error: String(workerErr) };
     }
-
-    const files = {};
-    for (const name of trackedFiles || []) {
-      try {
-        files[name] = pyodide.FS.readFile("/" + name, { encoding: "utf8" });
-      } catch { /* file doesn't exist */ }
-    }
-
-    return { stdout, files, source: "pyodide-fallback" };
   }
 }

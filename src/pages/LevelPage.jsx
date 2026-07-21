@@ -111,6 +111,15 @@ export default function LevelPage() {
   const [initialFileSnapshot, setInitialFileSnapshot] = useState(null);
 
   useEffect(() => {
+    // Production has no /api/run-python server, so every run/submit falls back
+    // to in-browser Pyodide. Loading its ~20MB WASM runtime is a multi-second
+    // one-time cost — without this warm-up it lands inside the first submit's
+    // timed execution and can fail the speed star through no fault of the
+    // student's code. Dev-server users never need Pyodide, so skip it there.
+    if (import.meta.env.PROD) ensurePyodide();
+  }, []);
+
+  useEffect(() => {
     solutionCacheRef.current = null;
     if (level?.files) {
       const initialFiles = level.files.initial || {};
@@ -465,13 +474,20 @@ export default function LevelPage() {
 
   if (!track || !chapter || !level) {
     return (
-      <div className="min-h-screen pt-24 pb-16 px-4 max-w-4xl mx-auto relative z-10">
-        <h1 className="text-2xl font-bold" style={{ color: "var(--text)" }}>
+      <div className="min-h-screen pt-24 pb-16 px-4 flex flex-col items-center justify-center text-center relative z-10">
+        <div className="text-6xl mb-4 opacity-60">🧭</div>
+        <h1
+          className="text-2xl font-black mb-2"
+          style={{ color: "var(--text)", fontFamily: "'Courier New', monospace" }}
+        >
           Level not found
         </h1>
-        <button onClick={() => navigate("/tracks")} style={{ color: "#6AAE6F" }}>
+        <p className="text-sm mb-8 max-w-sm" style={{ color: "var(--text-secondary)" }}>
+          This quest doesn't exist or may have moved. Let's get you back on the path.
+        </p>
+        <PixelButton onClick={() => navigate("/tracks")}>
           <ArrowLeft size={14} className="inline mr-1" /> Back to tracks
-        </button>
+        </PixelButton>
       </div>
     );
   }
