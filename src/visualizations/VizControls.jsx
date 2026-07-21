@@ -8,7 +8,7 @@ export default function VizControls({ onToggle, onStep, onPrev, playing, step, t
         style={{ width: 40, height: 40, borderRadius: 10, background: "var(--bg)", border: "1.5px solid var(--border-strong)", color: "var(--text-muted)" }}
         title="Previous step"
       >
-        <span style={{ fontSize: 26, lineHeight: 1, transform: "translate(-0px, -2.5px)" }}>‹</span>
+        <span style={{ fontSize: 32, lineHeight: 1, transform: "translate(-1px, -5px)" }}>‹</span>
       </button>
       <button
         onClick={onToggle}
@@ -28,7 +28,7 @@ export default function VizControls({ onToggle, onStep, onPrev, playing, step, t
         style={{ width: 40, height: 40, borderRadius: 10, background: "var(--bg)", border: "1.5px solid var(--border-strong)", color: "var(--text-muted)" }}
         title="Step forward"
       >
-        <span style={{ fontSize: 26, lineHeight: 1, transform: "translate(0px, -2.5px)" }}>›</span>
+        <span style={{ fontSize: 32, lineHeight: 1, transform: "translate(1px, -5px)" }}>›</span>
       </button>
       <span className="text-xs font-mono min-w-10 text-center" style={{ color: "var(--text-muted)" }}>
         {total > 0 ? `${Math.max(0, step + 1)}/${total}` : ""}

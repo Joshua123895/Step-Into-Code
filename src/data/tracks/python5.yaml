@@ -109,6 +109,7 @@ chapters:
     icon: searching
     levels:
       - name: Linear Search
+        viz: pointers
         obj: 'Implement `def linear_search(arr, target):` that returns the index of `target` in `arr`, or `-1` if not found, checking each element in order. Test with `[4, 2, 7, 1, 9]` searching for `7` and `5`, printing both results.'
         hint: 'Loop through the array with `enumerate` to get both index and value. Return the index the moment you find a match.'
         expl: 'Linear search checks every element one by one — O(n) in the worst case. It works on any list, sorted or not, but binary search (next lesson) is faster when the list is sorted.'
@@ -128,6 +129,7 @@ chapters:
             2
             -1
       - name: Binary Search
+        viz: pointers
         obj: 'Implement `def binary_search(arr, target):` on a SORTED array using the iterative low/high/mid approach. Test with `[1, 3, 5, 7, 9, 11]` searching for `7` and `4`, printing both results.'
         hint: 'Compare the middle element to the target. If the target is larger, search the right half (`low = mid + 1`); if smaller, search the left half (`high = mid - 1`).'
         expl: 'Binary search halves the search space each step, giving O(log n) time — much faster than linear search, but it requires the array to already be sorted.'
@@ -197,6 +199,7 @@ chapters:
     icon: sorting
     levels:
       - name: Bubble Sort
+        viz: sort
         obj: 'Implement `def bubble_sort(arr):` that sorts `arr` in place with repeated adjacent swaps: each pass bubbles the largest unsorted element to the end. Test with `[5, 2, 9, 1, 5, 6]` and print the sorted list.'
         hint: 'Compare each adjacent pair; swap if out of order. After each full pass, the largest remaining element "bubbles" to its correct spot at the end, so each pass can be one element shorter.'
         expl: 'Bubble sort repeatedly swaps adjacent out-of-order elements. It''s O(n^2), but a good first sort to build intuition for in-place comparisons and swaps.'
@@ -216,6 +219,7 @@ chapters:
           - |
             [1, 2, 5, 5, 6, 9]
       - name: Selection Sort
+        viz: sort
         obj: 'Implement `def selection_sort(arr):` that sorts in place: for each position, find the minimum of the remaining unsorted elements and swap it into place. Test with `[64, 25, 12, 22, 11]` and print the sorted list.'
         hint: 'Track the index of the smallest value found so far in the unsorted portion, then swap it into the current position once the inner loop finishes.'
         expl: 'Selection sort finds the minimum of the remaining unsorted elements each pass and places it at the front. Also O(n^2), but it makes at most n swaps total.'
@@ -237,6 +241,7 @@ chapters:
           - |
             [11, 12, 22, 25, 64]
       - name: Insertion Sort
+        viz: sort
         obj: 'Implement `def insertion_sort(arr):` that builds a sorted portion at the front by taking each next element and shifting it backward into its correct position. Test with `[12, 11, 13, 5, 6]` and print the sorted list.'
         hint: 'Save the current element as `key`, then shift every larger element in the sorted portion one step right, and drop `key` into the gap left behind.'
         expl: 'Insertion sort grows a sorted region one element at a time, like sorting playing cards in your hand. It''s O(n^2) worst case but very fast on nearly-sorted data.'
@@ -258,6 +263,7 @@ chapters:
           - |
             [5, 6, 11, 12, 13]
       - name: Merge Sort
+        viz: sort
         obj: 'Implement `def merge_sort(arr):` using divide and conquer: split the list in half, recursively sort each half, then merge the two sorted halves. Test with `[38, 27, 43, 3, 9, 82, 10]` and print the sorted list.'
         hint: 'Split into two halves, call `merge_sort` on each recursively, then merge: repeatedly take the smaller front element from each sorted half.'
         expl: 'Merge sort splits the array, recursively sorts each half, and merges them back together in order. It runs in guaranteed O(n log n) time, unlike the O(n^2) sorts above.'
@@ -288,6 +294,7 @@ chapters:
           - |
             [3, 9, 10, 27, 38, 43, 82]
       - name: Quick Sort
+        viz: sort
         obj: 'Implement `def quick_sort(arr):` using divide and conquer: pick a pivot, partition elements into less-than and greater-than-or-equal groups, and recursively sort each. Test with `[10, 7, 8, 9, 1, 5]` and print the sorted list.'
         hint: 'Pick a pivot (e.g. the middle element), then split into three lists: smaller than pivot, equal to pivot, larger than pivot. Recursively sort the outer two and concatenate all three.'
         expl: 'Quick sort partitions around a pivot so everything smaller ends up left of it and everything larger ends up right, then recurses on each side. Average case is O(n log n), though a bad pivot choice can degrade to O(n^2).'
@@ -308,6 +315,7 @@ chapters:
           - |
             [1, 5, 7, 8, 9, 10]
       - name: Heap Sort
+        viz: sort
         obj: 'Implement `def heapify(arr, n, i):` that fixes one max-heap violation at index `i` (comparing against its two children and sifting down), and `def heap_sort(arr):` that builds a max-heap from the bottom up, then repeatedly swaps the root (largest) to the end and re-heapifies the shrinking heap. Test with `[12, 11, 13, 5, 6, 7]` and print the sorted list.'
         hint: 'Build the heap bottom-up over `range(n // 2 - 1, -1, -1)`. To extract in order, swap `arr[0]` with `arr[i]` for `i` from the end down to `1`, re-heapifying the shrinking prefix each time.'
         expl: 'Heap sort builds a max-heap so the largest element is always at the root, then repeatedly extracts it to the end of the array and restores the heap property on what remains. O(n log n) guaranteed, and it sorts in place.'
@@ -399,6 +407,7 @@ chapters:
           - |
             18
       - name: Two Pointers
+        viz: pointers
         obj: 'Implement `def pair_sum_sorted(arr, target):` that finds a pair of numbers in a SORTED array summing to `target`, using two pointers starting at both ends and moving inward. Return the pair as a tuple, or `None` if not found. Test with `[1, 3, 4, 6, 8, 10]` looking for a pair summing to `10`.'
         hint: 'Start with pointers at both ends. If the sum is too small, move the left pointer right (increase the sum); if too large, move the right pointer left (decrease the sum).'
         expl: 'Two pointers exploit sorted order to scan from both ends inward, solving pair-sum problems in O(n) instead of the O(n^2) of checking every pair.'
@@ -422,6 +431,7 @@ chapters:
           - |
             (4, 6)
       - name: Sliding Window
+        viz: pointers
         obj: 'Implement `def max_sum_subarray(arr, k):` that finds the maximum sum of any contiguous subarray of size `k`, using a sliding window (add the new element, remove the oldest) in O(n) total. Test with `[2, 1, 5, 1, 3, 2]` and `k = 3`, printing the result.'
         hint: 'Compute the sum of the first `k` elements once. Then slide one step at a time: add the incoming element, subtract the outgoing one — no need to re-sum the whole window.'
         expl: 'A sliding window keeps a running computation over a fixed-size range, updating incrementally as it moves — turning what looks like an O(n*k) problem into O(n).'
@@ -473,6 +483,7 @@ chapters:
     icon: hash
     levels:
       - name: Frequency Counter
+        viz: hash_map
         obj: 'Implement `def char_frequency(s):` returning a dict mapping each character in `s` to how many times it appears. Test with `"banana"` and print the result sorted by key.'
         hint: 'Use `freq.get(ch, 0) + 1` to either start a new count at 1 or increment the existing one, in a single line per character.'
         expl: 'A frequency counter uses a hash map to count occurrences in a single O(n) pass — the foundation for anagram checks, majority element problems, and more.'
@@ -490,6 +501,7 @@ chapters:
           - |
             {'a': 3, 'b': 1, 'n': 2}
       - name: Hash Map Lookup
+        viz: hash_map
         obj: 'Implement `def two_sum(nums, target):` returning the indices of two numbers in `nums` that add up to `target`, using a single pass with a hash map from value to index (not the O(n^2) brute-force pair check). Test with `[2, 7, 11, 15]` and `target = 9`, printing the result.'
         hint: 'For each number, check if its complement (`target - num`) has already been seen. If so, you''ve found your pair — return immediately, no nested loop needed.'
         expl: 'Storing seen values in a hash map turns two-sum from O(n^2) (checking every pair) into O(n) (a hash map lookup is O(1) on average).'
@@ -538,6 +550,7 @@ chapters:
     icon: tree
     levels:
       - name: Tree Traversal
+        viz: tree_traversal
         obj: 'Define a `class TreeNode:` with `value`, `left`, and `right`. Implement `def inorder(node, result):` that appends values in Left-Root-Right order into `result`. Build the tree: root `2`, left `1`, right `3`. Call inorder and print the result list.'
         hint: 'Recurse left, then record the current node''s value, then recurse right. Passing `result` through every call lets all the recursive branches share the same growing list.'
         expl: 'In-order traversal (Left-Root-Right) is one of the three standard ways to visit every node of a binary tree; on a BST it produces values in sorted order.'
@@ -563,6 +576,7 @@ chapters:
           - |
             [1, 2, 3]
       - name: DFS
+        viz: tree_traversal
         obj: 'Implement `def dfs(node, depth=0):` that prints each node''s value prefixed by `depth * "  "` (indentation showing depth), visiting the root, then its left subtree fully, then its right subtree fully. Build tree: root `1`, left `2` (with left `4`), right `3`. Call `dfs(root)`.'
         hint: 'DFS goes as deep as possible down one branch before backtracking. Print the current node first, then recurse fully into `left` before moving on to `right`.'
         expl: 'Depth-first search explores one branch to its end before backtracking — implemented here recursively, where the call stack acts as the "stack" in DFS.'
@@ -591,6 +605,7 @@ chapters:
                 4
               3
       - name: BFS
+        viz: tree_traversal
         obj: 'Implement `def bfs(root):` that prints node values level by level using a queue (`collections.deque`). Build tree: root `1`, left `2`, right `3`, `2`''s left `4`, `2`''s right `5`. Call `bfs(root)`.'
         hint: 'Use a queue: pop from the front, print it, then push its children onto the back. This visits nodes level by level, unlike DFS which dives deep first.'
         expl: 'Breadth-first search visits all nodes at the current depth before moving to the next depth, using a queue (FIFO) instead of DFS''s implicit stack.'
@@ -661,6 +676,7 @@ chapters:
     icon: nodes
     levels:
       - name: Graph Traversal
+        viz: graph_algo
         obj: 'Implement `def graph_dfs(graph, start, visited=None):` that traverses a graph (adjacency list dict) using DFS, tracking a `visited` set to avoid infinite loops on cycles (unlike tree DFS, graphs can have cycles). Print each visited node. Use `graph = {0: [1, 2], 1: [0, 3], 2: [0], 3: [1]}` starting from `0`.'
         hint: 'The key difference from tree DFS: graphs can have cycles (like `0 -> 1 -> 0`), so you must track `visited` and skip any neighbor already seen.'
         expl: 'Graph traversal is just like tree traversal, but graphs can contain cycles, so a `visited` set is required to guarantee termination.'
@@ -684,6 +700,7 @@ chapters:
             3
             2
       - name: Topological Sort
+        viz: graph_algo
         obj: 'Implement `def topological_sort(graph):` using DFS-based ordering: fully visit all of a node''s dependencies before pushing the node itself onto a stack, then reverse the stack at the end. Use `graph = {"a": ["b"], "b": ["c"], "c": [], "d": ["c"]}` (an edge `u: [v]` means `u` must come before `v`) and print the order.'
         hint: 'Do a DFS from each unvisited node; only after all of a node''s neighbors have been fully explored, push the node onto a stack. The final answer is that stack reversed.'
         expl: 'Topological sort orders nodes so every edge points from earlier to later in the result — only possible on a DAG (no cycles). It''s essential for scheduling tasks with dependencies.'
@@ -709,6 +726,7 @@ chapters:
           - |
             ['d', 'a', 'b', 'c']
       - name: Shortest Path
+        viz: graph_algo
         obj: 'Implement `def dijkstra(graph, start):` finding shortest distances from `start` to every node in a weighted graph (adjacency dict of `node: [(neighbor, weight), ...]`), using a min-heap (`heapq`) to always expand the closest unvisited node next. Use `graph = {"a": [("b", 4), ("c", 1)], "b": [("d", 1)], "c": [("b", 2), ("d", 5)], "d": []}` starting from `"a"`, and print the distances dict sorted by key.'
         hint: 'Always expand the unvisited node with the smallest known distance — that''s what popping from the min-heap gives you for free. Relax each neighbor: if going through the current node is shorter, update its distance and push it.'
         expl: 'Dijkstra''s algorithm finds shortest paths in a weighted graph by always greedily expanding the closest known node next, using a min-heap to efficiently find that node each step.'
@@ -737,6 +755,7 @@ chapters:
           - |
             {'a': 0, 'b': 3, 'c': 1, 'd': 4}
       - name: Minimum Spanning Tree
+        viz: graph_algo
         obj: 'Implement `def prims_mst(graph, start):` building a minimum spanning tree with Prim''s algorithm: grow a tree from `start`, always adding the cheapest edge that connects a new node, using a min-heap of candidate edges. Use `graph = {"a": [("b", 1), ("c", 4)], "b": [("a", 1), ("c", 2), ("d", 5)], "c": [("a", 4), ("b", 2), ("d", 1)], "d": [("b", 5), ("c", 1)]}` starting from `"a"`, and print the total weight of the MST.'
         hint: 'Keep a min-heap of edges leading out of the tree so far. Always take the cheapest one that reaches a node not yet in the tree; add its weight to the total and push its new outgoing edges.'
         expl: 'A minimum spanning tree connects all nodes with the least total edge weight and no cycles. Prim''s algorithm grows one tree greedily, always adding the cheapest edge to an unvisited node.'
@@ -817,6 +836,7 @@ chapters:
     icon: dynamic
     levels:
       - name: Memoization
+        viz: dp
         obj: 'Implement `def fib_memo(n, memo=None):` computing the nth Fibonacci number using top-down memoization (cache previously computed results in a dict to avoid recomputation). Test with `n = 30` and print the result.'
         hint: 'Before computing `fib_memo(n)`, check if it''s already in `memo`. If so, return the cached value instantly instead of recursing again.'
         expl: 'Memoization caches the results of expensive recursive calls, turning an exponential-time naive recursion (like plain Fibonacci) into linear time by never solving the same subproblem twice.'
@@ -837,6 +857,7 @@ chapters:
           - |
             832040
       - name: Tabulation
+        viz: dp
         obj: 'Implement `def fib_tab(n):` computing the nth Fibonacci number bottom-up using a table (list) built iteratively from the base cases up, with no recursion. Test with `n = 30` and print the result.'
         hint: 'Build the answer from the bottom up: start from the known base cases `table[0]` and `table[1]`, then fill each next slot using the two before it.'
         expl: 'Tabulation solves the same subproblems as memoization but iteratively, filling a table from the smallest inputs upward — no recursion or call stack needed.'
@@ -891,6 +912,7 @@ chapters:
     icon: greedy
     levels:
       - name: Activity Selection
+        viz: greedy
         obj: 'Implement `def activity_selection(activities):` (a list of `(start, end)` tuples) that greedily selects the maximum number of non-overlapping activities: sort by end time, then keep an activity whenever its start is at or after the end of the last one kept. Test with `[(1, 4), (3, 5), (0, 6), (5, 7), (3, 9), (5, 9), (6, 10), (8, 11), (8, 12), (2, 14), (12, 16)]` and print the count selected.'
         hint: 'Sort activities by end time first. Greedily keep an activity whenever its start time is at or after the end time of the last one you kept — that always leaves the most room for future activities.'
         expl: 'Activity selection is a classic greedy problem: always picking the activity that finishes soonest (among the remaining valid options) is provably optimal for maximizing the count of non-overlapping activities.'
@@ -912,6 +934,7 @@ chapters:
           - |
             4
       - name: Greedy Coin Change
+        viz: greedy
         obj: 'Implement `def greedy_coin_change(coins, amount):` that greedily uses the largest coin denomination possible at each step (`coins` given sorted descending, for a "canonical" system like US currency where greedy is optimal). Test with `coins = [25, 10, 5, 1]` and `amount = 63`, printing the list of coins used.'
         hint: 'For each coin from largest to smallest, take as many of that coin as still fit, then move to the next smaller one.'
         expl: 'Greedy coin change always takes the biggest coin that fits. This gives the optimal (fewest-coin) answer for "canonical" coin systems like US currency — but it can fail on other coin systems, which is exactly why Dynamic Programming''s Coin Change solves it more robustly.'
@@ -931,6 +954,7 @@ chapters:
           - |
             [25, 25, 10, 1, 1, 1]
       - name: Jump Game
+        viz: greedy
         obj: 'Implement `def can_jump(nums):` where `nums[i]` is the max jump length from position `i` — return `True` if you can reach the last index starting from index 0, using a greedy "farthest reachable" tracker (no need to try every path). Test with `[2, 3, 1, 1, 4]` and `[3, 2, 1, 0, 4]`, printing both results.'
         hint: 'Track the farthest index reachable so far. If you ever reach a position beyond what''s currently reachable, you''re stuck. Otherwise keep extending the farthest reach as you go.'
         expl: 'Instead of trying every combination of jumps, greedily tracking one number — the farthest index reachable — is enough to answer reachability in O(n).'
@@ -990,6 +1014,7 @@ chapters:
     icon: backtrack
     levels:
       - name: Subsets
+        viz: backtrack
         obj: 'Implement `def subsets(nums):` that generates all possible subsets (the power set) of `nums` using backtracking: at each element, branch into "exclude it" and "include it". Test with `[1, 2, 3]` and print the result.'
         hint: 'At each index, first explore the branch that skips the element, then the branch that includes it. Remember to `pop()` after trying "include" so the next branch starts clean.'
         expl: 'Backtracking explores a decision tree by trying a choice, recursing, then undoing ("backtracking") that choice to try the next one — here, "include" vs "exclude" for each element.'
@@ -1013,6 +1038,7 @@ chapters:
           - |
             [[], [3], [2], [2, 3], [1], [1, 3], [1, 2], [1, 2, 3]]
       - name: Permutations
+        viz: backtrack
         obj: 'Implement `def permutations(nums):` that generates all permutations of `nums` using backtracking: build each permutation by choosing an unused element at each step, and un-choosing it (backtrack) after exploring. Test with `[1, 2, 3]` and print the result.'
         hint: 'At each step, try every element not yet used: append it, recurse on the rest, then pop it back off before trying the next choice.'
         expl: 'Generating permutations is the textbook backtracking example: build a partial solution, recurse, then undo the last choice to explore the next possibility — visiting every ordering exactly once.'
@@ -1036,6 +1062,7 @@ chapters:
           - |
             [[1, 2, 3], [1, 3, 2], [2, 1, 3], [2, 3, 1], [3, 1, 2], [3, 2, 1]]
       - name: Combination Sum
+        viz: backtrack
         obj: 'Implement `def combination_sum(candidates, target):` finding all unique combinations (candidates can repeat) that sum to `target`, using backtracking with a start index to avoid duplicate combinations. Test with `candidates = [2, 3, 6, 7]` and `target = 7`, printing the result.'
         hint: 'Pass `i` (not `i + 1`) as the next start index when recursing — that''s what allows reusing the same candidate. Passing a `start` index at all is what prevents generating `[2, 3, 2]` and `[3, 2, 2]` as separate "duplicate" combinations.'
         expl: 'Backtracking with a start index explores combinations (not permutations) by only ever moving forward through the candidates, and prunes ("backtracks") as soon as the running sum overshoots the target.'
@@ -1397,3 +1424,395 @@ chapters:
             -1
             3
             4
+      - name: LeetCode 53 · Maximum Subarray
+        obj: 'Implement `def max_subarray(nums):` returning the largest sum of any contiguous non-empty subarray, using Kadane''s algorithm in O(n). Read the array and print the result.'
+        example:
+          in:
+            - -2 1 -3 4 -1 2 1 -5 4
+          out: |
+            6
+        sol: |-
+          def max_subarray(nums):
+              best = cur = nums[0]
+              for x in nums[1:]:
+                  cur = max(x, cur + x)
+                  best = max(best, cur)
+              return best
+          nums = list(map(int, input().split()))
+          print(max_subarray(nums))
+        max: 10/1
+        tests:
+          - in: -2 1 -3 4 -1 2 1 -5 4
+            exp: |
+              6
+          - in: 5 4 -1 7 8
+            exp: |
+              23
+          - in: -1
+            exp: |
+              -1
+      - name: LeetCode 152 · Maximum Product Subarray
+        obj: 'Implement `def max_product(nums):` returning the largest product of any contiguous non-empty subarray. Track both the running max and running min, since a negative times a negative can become the new max. Read the array, print the result.'
+        example:
+          in:
+            - 2 3 -2 4
+          out: |
+            6
+        sol: |-
+          def max_product(nums):
+              best = cur_max = cur_min = nums[0]
+              for x in nums[1:]:
+                  cands = (x, cur_max * x, cur_min * x)
+                  cur_max = max(cands)
+                  cur_min = min(cands)
+                  best = max(best, cur_max)
+              return best
+          nums = list(map(int, input().split()))
+          print(max_product(nums))
+        max: 12/1
+        tests:
+          - in: 2 3 -2 4
+            exp: |
+              6
+          - in: -2 0 -1
+            exp: |
+              0
+      - name: LeetCode 300 · Longest Increasing Subsequence
+        obj: 'Implement `def lis(nums):` returning the length of the longest strictly increasing subsequence in O(n log n) by binary-searching a tails array (patience sorting). Read the array, print the length.'
+        example:
+          in:
+            - 10 9 2 5 3 7 101 18
+          out: |
+            4
+        sol: |-
+          import bisect
+          def lis(nums):
+              tails = []
+              for x in nums:
+                  i = bisect.bisect_left(tails, x)
+                  if i == len(tails):
+                      tails.append(x)
+                  else:
+                      tails[i] = x
+              return len(tails)
+          nums = list(map(int, input().split()))
+          print(lis(nums))
+        max: 14/1
+        tests:
+          - in: 10 9 2 5 3 7 101 18
+            exp: |
+              4
+          - in: 0 1 0 3 2 3
+            exp: |
+              4
+      - name: LeetCode 128 · Longest Consecutive Sequence
+        obj: 'Implement `def longest_consecutive(nums):` returning the length of the longest run of consecutive integers (in any order) in O(n) using a set. Read the array, print the length.'
+        example:
+          in:
+            - 100 4 200 1 3 2
+          out: |
+            4
+        sol: |-
+          def longest_consecutive(nums):
+              s = set(nums)
+              best = 0
+              for x in s:
+                  if x - 1 not in s:
+                      length = 1
+                      while x + length in s:
+                          length += 1
+                      best = max(best, length)
+              return best
+          nums = list(map(int, input().split()))
+          print(longest_consecutive(nums))
+        max: 14/1
+        tests:
+          - in: 100 4 200 1 3 2
+            exp: |
+              4
+          - in: 0 3 7 2 5 8 4 6 0 1
+            exp: |
+              9
+      - name: LeetCode 198 · House Robber
+        obj: 'Implement `def rob(nums):` returning the maximum total you can rob from houses in a line without robbing two adjacent houses (classic 1D DP). Read the array, print the result.'
+        example:
+          in:
+            - 2 7 9 3 1
+          out: |
+            12
+        sol: |-
+          def rob(nums):
+              prev = curr = 0
+              for x in nums:
+                  prev, curr = curr, max(curr, prev + x)
+              return curr
+          nums = list(map(int, input().split()))
+          print(rob(nums))
+        max: 9/1
+        tests:
+          - in: 1 2 3 1
+            exp: |
+              4
+          - in: 2 7 9 3 1
+            exp: |
+              12
+      - name: LeetCode 139 · Word Break
+        obj: 'Implement `def word_break(s, words):` returning whether `s` can be segmented into a space-separated sequence of dictionary words, using DP. Read the string on the first line and the space-separated dictionary on the second; print True or False.'
+        example:
+          in:
+            - leetcode
+            - leet code
+          out: |
+            True
+        sol: |-
+          def word_break(s, words):
+              wordset = set(words)
+              dp = [False] * (len(s) + 1)
+              dp[0] = True
+              for i in range(1, len(s) + 1):
+                  for j in range(i):
+                      if dp[j] and s[j:i] in wordset:
+                          dp[i] = True
+                          break
+              return dp[len(s)]
+          s = input()
+          words = input().split()
+          print(word_break(s, words))
+        max: 15/1
+        tests:
+          - in:
+              - leetcode
+              - leet code
+            exp: |
+              True
+          - in:
+              - catsandog
+              - cats dog sand and cat
+            exp: |
+              False
+      - name: LeetCode 72 · Edit Distance
+        obj: 'Implement `def edit_distance(a, b):` returning the minimum number of insert, delete, or replace operations to turn `a` into `b` (Levenshtein distance) using 2D DP. Read the two words on separate lines, print the distance.'
+        example:
+          in:
+            - horse
+            - ros
+          out: |
+            3
+        sol: |-
+          def edit_distance(a, b):
+              m, n = len(a), len(b)
+              dp = [[0] * (n + 1) for _ in range(m + 1)]
+              for i in range(m + 1):
+                  dp[i][0] = i
+              for j in range(n + 1):
+                  dp[0][j] = j
+              for i in range(1, m + 1):
+                  for j in range(1, n + 1):
+                      if a[i - 1] == b[j - 1]:
+                          dp[i][j] = dp[i - 1][j - 1]
+                      else:
+                          dp[i][j] = 1 + min(dp[i - 1][j], dp[i][j - 1], dp[i - 1][j - 1])
+              return dp[m][n]
+          a = input()
+          b = input()
+          print(edit_distance(a, b))
+        max: 18/1
+        tests:
+          - in:
+              - horse
+              - ros
+            exp: |
+              3
+          - in:
+              - intention
+              - execution
+            exp: |
+              5
+      - name: LeetCode 416 · Partition Equal Subset Sum
+        obj: 'Implement `def can_partition(nums):` returning whether the array can be split into two subsets with equal sum (a subset-sum DP). Read the array, print True or False.'
+        example:
+          in:
+            - 1 5 11 5
+          out: |
+            True
+        sol: |-
+          def can_partition(nums):
+              total = sum(nums)
+              if total % 2 != 0:
+                  return False
+              target = total // 2
+              dp = [False] * (target + 1)
+              dp[0] = True
+              for x in nums:
+                  for s in range(target, x - 1, -1):
+                      if dp[s - x]:
+                          dp[s] = True
+              return dp[target]
+          nums = list(map(int, input().split()))
+          print(can_partition(nums))
+        max: 16/1
+        tests:
+          - in: 1 5 11 5
+            exp: |
+              True
+          - in: 1 2 3 5
+            exp: |
+              False
+      - name: LeetCode 875 · Koko Eating Bananas
+        obj: 'Implement `def min_speed(piles, h):` returning the minimum integer eating speed so Koko finishes all banana piles within `h` hours, using binary search on the answer. Read the piles on the first line and `h` on the second, print the speed.'
+        example:
+          in:
+            - 3 6 7 11
+            - 8
+          out: |
+            4
+        sol: |-
+          import math
+          def min_speed(piles, h):
+              lo, hi = 1, max(piles)
+              while lo < hi:
+                  mid = (lo + hi) // 2
+                  hours = sum(math.ceil(p / mid) for p in piles)
+                  if hours <= h:
+                      hi = mid
+                  else:
+                      lo = mid + 1
+              return lo
+          piles = list(map(int, input().split()))
+          h = int(input())
+          print(min_speed(piles, h))
+        max: 16/1
+        tests:
+          - in:
+              - 3 6 7 11
+              - 8
+            exp: |
+              4
+          - in:
+              - 30 11 23 4 20
+              - 6
+            exp: |
+              23
+      - name: LeetCode 239 · Sliding Window Maximum
+        obj: 'Implement `def max_sliding_window(nums, k):` returning the maximum of each size-`k` window as it slides across the array, in O(n) using a monotonic deque of indices. Read the array on the first line and `k` on the second, print the list of maxima.'
+        example:
+          in:
+            - 1 3 -1 -3 5 3 6 7
+            - 3
+          out: |
+            [3, 3, 5, 5, 6, 7]
+        sol: |-
+          from collections import deque
+          def max_sliding_window(nums, k):
+              dq = deque()
+              result = []
+              for i, x in enumerate(nums):
+                  while dq and nums[dq[-1]] <= x:
+                      dq.pop()
+                  dq.append(i)
+                  if dq[0] <= i - k:
+                      dq.popleft()
+                  if i >= k - 1:
+                      result.append(nums[dq[0]])
+              return result
+          nums = list(map(int, input().split()))
+          k = int(input())
+          print(max_sliding_window(nums, k))
+        max: 18/1
+        tests:
+          - in:
+              - 1 3 -1 -3 5 3 6 7
+              - 3
+            exp: |
+              [3, 3, 5, 5, 6, 7]
+          - in:
+              - 9 11
+              - 2
+            exp: |
+              [11]
+      - name: LeetCode 84 · Largest Rectangle in Histogram
+        obj: 'Implement `def largest_rectangle(heights):` returning the area of the largest rectangle that fits under a histogram, in O(n) using a monotonic stack. Read the bar heights, print the area.'
+        example:
+          in:
+            - 2 1 5 6 2 3
+          out: |
+            10
+        sol: |-
+          def largest_rectangle(heights):
+              stack = []
+              best = 0
+              for i, h in enumerate(heights + [0]):
+                  while stack and heights[stack[-1]] >= h:
+                      height = heights[stack.pop()]
+                      width = i if not stack else i - stack[-1] - 1
+                      best = max(best, height * width)
+                  stack.append(i)
+              return best
+          heights = list(map(int, input().split()))
+          print(largest_rectangle(heights))
+        max: 14/1
+        tests:
+          - in: 2 1 5 6 2 3
+            exp: |
+              10
+          - in: 2 4
+            exp: |
+              4
+      - name: LeetCode 4 · Median of Two Sorted Arrays
+        obj: 'Implement `def find_median(a, b):` returning the median of two sorted arrays as a float. Read the first array on line one and the second on line two, print the median.'
+        example:
+          in:
+            - 1 2
+            - 3 4
+          out: |
+            2.5
+        sol: |-
+          def find_median(a, b):
+              merged = sorted(a + b)
+              n = len(merged)
+              if n % 2 == 1:
+                  return float(merged[n // 2])
+              return (merged[n // 2 - 1] + merged[n // 2]) / 2
+          a = list(map(int, input().split()))
+          b = list(map(int, input().split()))
+          print(find_median(a, b))
+        max: 12/1
+        tests:
+          - in:
+              - 1 3
+              - 2
+            exp: |
+              2.0
+          - in:
+              - 1 2
+              - 3 4
+            exp: |
+              2.5
+      - name: LeetCode 45 · Jump Game II
+        obj: 'Implement `def jump(nums):` returning the minimum number of jumps to reach the last index, where `nums[i]` is the maximum jump length from index `i`, using a greedy level-by-level scan. Read the array, print the minimum jumps.'
+        example:
+          in:
+            - 2 3 1 1 4
+          out: |
+            2
+        sol: |-
+          def jump(nums):
+              jumps = 0
+              cur_end = 0
+              farthest = 0
+              for i in range(len(nums) - 1):
+                  farthest = max(farthest, i + nums[i])
+                  if i == cur_end:
+                      jumps += 1
+                      cur_end = farthest
+              return jumps
+          nums = list(map(int, input().split()))
+          print(jump(nums))
+        max: 14/1
+        tests:
+          - in: 2 3 1 1 4
+            exp: |
+              2
+          - in: 2 3 0 1 4
+            exp: |
+              2

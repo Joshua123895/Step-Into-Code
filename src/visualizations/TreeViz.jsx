@@ -176,7 +176,8 @@ function shiftSubtree(node, dx) {
   shiftSubtree(node.right, dx);
 }
 
-function layoutTree(root) {
+// eslint-disable-next-line react-refresh/only-export-components -- shared with TraversalViz
+export function layoutTree(root) {
   let maxDepth = 0;
 
   function visit(node, depth) {
@@ -185,7 +186,9 @@ function layoutTree(root) {
     const left = visit(node.left, depth + 1);
     const right = visit(node.right, depth + 1);
     const y = depth * ROW_HEIGHT + 25;
-
+    // `name` is carried through so callers (e.g. traversal highlighting) can
+    // map a laid-out node back to its source identity; the tree renderer
+    // itself only reads val/x/y/left/right and ignores it.
     if (left && right) {
       const gap = NODE_SPACING - (right.minX - left.maxX);
       if (gap > 0) {
@@ -194,17 +197,17 @@ function layoutTree(root) {
         right.maxX += gap;
       }
       const x = (left.node.x + right.node.x) / 2;
-      return { node: { val: node.val, x, y, left: left.node, right: right.node }, minX: left.minX, maxX: right.maxX };
+      return { node: { name: node.name, val: node.val, x, y, left: left.node, right: right.node }, minX: left.minX, maxX: right.maxX };
     }
     if (left) {
       const x = left.node.x + NODE_SPACING / 2;
-      return { node: { val: node.val, x, y, left: left.node, right: null }, minX: left.minX, maxX: Math.max(left.maxX, x) };
+      return { node: { name: node.name, val: node.val, x, y, left: left.node, right: null }, minX: left.minX, maxX: Math.max(left.maxX, x) };
     }
     if (right) {
       const x = right.node.x - NODE_SPACING / 2;
-      return { node: { val: node.val, x, y, left: null, right: right.node }, minX: Math.min(right.minX, x), maxX: right.maxX };
+      return { node: { name: node.name, val: node.val, x, y, left: null, right: right.node }, minX: Math.min(right.minX, x), maxX: right.maxX };
     }
-    return { node: { val: node.val, x: 0, y, left: null, right: null }, minX: 0, maxX: 0 };
+    return { node: { name: node.name, val: node.val, x: 0, y, left: null, right: null }, minX: 0, maxX: 0 };
   }
 
   const result = visit(root, 0);

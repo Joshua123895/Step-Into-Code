@@ -6,6 +6,14 @@ import HashViz from "./HashViz";
 import TreeViz from "./TreeViz";
 import HeapViz from "./HeapViz";
 import GraphViz from "./GraphViz";
+import SortViz from "./SortViz";
+import PointerViz from "./PointerViz";
+import TraversalViz from "./TraversalViz";
+import HashMapViz from "./HashMapViz";
+import GraphAlgoViz from "./GraphAlgoViz";
+import DPViz from "./DPViz";
+import BacktrackViz from "./BacktrackViz";
+import GreedyViz from "./GreedyViz";
 
 export const VISUALIZATIONS = {
   stack: StackViz,
@@ -16,6 +24,14 @@ export const VISUALIZATIONS = {
   tree: TreeViz,
   heap: HeapViz,
   graph: GraphViz,
+  sort: SortViz,
+  pointers: PointerViz,
+  tree_traversal: TraversalViz,
+  hash_map: HashMapViz,
+  graph_algo: GraphAlgoViz,
+  dp: DPViz,
+  backtrack: BacktrackViz,
+  greedy: GreedyViz,
 };
 
 export function getVisualization(name) {

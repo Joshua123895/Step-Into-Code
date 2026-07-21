@@ -69,13 +69,57 @@ export function makeDynamicEditorTheme(c) {
   });
 }
 
+const INDENT = "    ";
+
+// Pure helper (no DOM) so the Tab / Shift-Tab behaviour can be unit-tested by
+// applying the returned edit to an EditorState. Returns an update spec, or
+// null when there's nothing to do (e.g. Shift-Tab on an already-flush line).
+export function computeTabEdit(state, shiftKey) {
+  const { from, to } = state.selection.main;
+  const doc = state.doc;
+  const startLine = doc.lineAt(from);
+  const rawEndLine = doc.lineAt(to);
+  // Whether the selection crosses a line boundary decides block vs. inline —
+  // and it's decided *before* trimming the trailing line, so a selection that
+  // happens to end at a line start is still a block operation, not a
+  // replace-the-selection insert.
+  const spansLines = rawEndLine.number > startLine.number;
+  let endLineNum = rawEndLine.number;
+  // A selection ending exactly at a line's start doesn't really include that
+  // line (matches VS Code's block indent/dedent).
+  if (spansLines && to === rawEndLine.from) endLineNum -= 1;
+
+  if (shiftKey) {
+    // Dedent: strip up to one indent unit (4 spaces or a tab) from each line.
+    const changes = [];
+    for (let ln = startLine.number; ln <= endLineNum; ln++) {
+      const line = doc.line(ln);
+      const m = line.text.match(/^(\t| {1,4})/);
+      if (m) changes.push({ from: line.from, to: line.from + m[0].length });
+    }
+    return changes.length ? { changes } : null;
+  }
+
+  if (spansLines) {
+    // Indent every line the selection touches (insert at each line start).
+    const changes = [];
+    for (let ln = startLine.number; ln <= endLineNum; ln++) {
+      changes.push({ from: doc.line(ln).from, insert: INDENT });
+    }
+    return { changes };
+  }
+
+  // Single line (caret or inline selection): insert spaces at the cursor.
+  return { changes: { from, to, insert: INDENT }, selection: { anchor: from + INDENT.length } };
+}
+
 export const tabHandler = EditorView.domEventHandlers({
   keydown: (event, view) => {
-    if (event.key === "Tab" && !event.shiftKey && !event.altKey && !event.ctrlKey && !event.metaKey) {
-      event.preventDefault();
-      const { from, to } = view.state.selection.main;
-      view.dispatch({ changes: { from, to, insert: "    " }, selection: { anchor: from + 4 } });
-    }
+    if (event.key !== "Tab" || event.altKey || event.ctrlKey || event.metaKey) return false;
+    event.preventDefault();
+    const edit = computeTabEdit(view.state, event.shiftKey);
+    if (edit) view.dispatch(edit);
+    return true;
   },
 });
 

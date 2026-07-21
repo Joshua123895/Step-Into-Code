@@ -205,6 +205,29 @@ export default defineConfig({
                 }
               });
 
+              // A short, non-interactive script (print once and exit) can finish
+              // before the frontend's SSE connection is even open: the client
+              // has to await the POST above, parse the JSON, and only *then*
+              // create the EventSource — a full extra round trip the child
+              // process doesn't have to wait for. If `close` deletes the entry
+              // immediately, that late connection 404s, EventSource fires
+              // onerror, and runPython() resolves silently with no output at
+              // all (see /api/run-python-events below for the read side of
+              // this fix). So: keep the finished result around for a grace
+              // period instead of deleting it right away.
+              const finish = (result) => {
+                const entry = runningProcesses.get(streamId);
+                for (const client of sseClients) {
+                  client.write(`event: done\ndata: ${JSON.stringify(result)}\n\n`);
+                  client.end();
+                }
+                entry.completed = true;
+                entry.result = result;
+                sseClients.clear();
+                setTimeout(() => runningProcesses.delete(streamId), 30000);
+                try { rmSync(tmpDir, { recursive: true, force: true }); } catch { /* cleanup */ }
+              };
+
               child.on('close', (exitCode) => {
                 const files = {};
                 for (const name of (runningProcesses.get(streamId)?.trackedFiles || [])) {
@@ -215,23 +238,11 @@ export default defineConfig({
                     }
                   } catch { /* skip */ }
                 }
-
-                for (const client of sseClients) {
-                  client.write(`event: done\ndata: ${JSON.stringify({ exitCode, files, stdout: stdoutBuf, error: stderrBuf })}\n\n`);
-                  client.end();
-                }
-
-                runningProcesses.delete(streamId);
-                try { rmSync(tmpDir, { recursive: true, force: true }); } catch { /* cleanup */ }
+                finish({ exitCode, files, stdout: stdoutBuf, error: stderrBuf });
               });
 
               child.on('error', (err) => {
-                for (const client of sseClients) {
-                  client.write(`event: done\ndata: ${JSON.stringify({ exitCode: 1, files: {}, stdout: '', error: err.message })}\n\n`);
-                  client.end();
-                }
-                runningProcesses.delete(streamId);
-                try { rmSync(tmpDir, { recursive: true, force: true }); } catch { /* cleanup */ }
+                finish({ exitCode: 1, files: {}, stdout: stdoutBuf, error: err.message });
               });
 
               if (inputs && inputs.length > 0) {
@@ -265,6 +276,21 @@ export default defineConfig({
           res.setHeader('Connection', 'keep-alive');
           res.setHeader('Access-Control-Allow-Origin', '*');
           res.flushHeaders();
+
+          // The process may have already finished by the time this connects
+          // (see the `finish` grace-period comment above) — replay its
+          // buffered output and the done event immediately instead of the
+          // client waiting forever for events that already happened.
+          if (proc.completed) {
+            res.write('event: connected\ndata: {}\n\n');
+            const replay = (proc.result.stdout || '') + (proc.result.error || '');
+            if (replay) {
+              res.write(`event: output\ndata: ${JSON.stringify(replay)}\n\n`);
+            }
+            res.write(`event: done\ndata: ${JSON.stringify(proc.result)}\n\n`);
+            res.end();
+            return;
+          }
 
           res.write('event: connected\ndata: {}\n\n');
           proc.sseClients.add(res);
