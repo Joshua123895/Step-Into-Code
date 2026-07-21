@@ -170,18 +170,19 @@ export default function LevelPage() {
   const [resultInfo, setResultInfo] = useState(null);
 
   useEffect(() => {
+    if (!level) return;
     if (prevLevelIdRef.current !== levelId) {
       prevLevelIdRef.current = levelId;
-      const defaultCode = level?.startingCode ?? "";
+      const defaultCode = level.startingCode ?? "";
       const stars = getStars(trackName, level.id);
       const saved = getSavedCode(trackName, level.id);
       setCode(saved && stars !== 3 ? saved : defaultCode);
-      const initial = level?.files?.initial ? { ...level.files.initial } : {};
+      const initial = level.files?.initial ? { ...level.files.initial } : {};
       fileStore.current = initial;
       setInitialFileSnapshot({ ...initial });
       setFileEntries(initial);
     }
-  }, [levelId, level?.files?.initial, getStars, trackName, level?.id, level?.startingCode]);
+  }, [levelId, level, getStars, trackName]);
 
   useEffect(() => {
     if (trackName == null || level == null) return;
