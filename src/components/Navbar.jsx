@@ -1,12 +1,19 @@
 import { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useTheme } from "../context/ThemeContext";
+import { useAuth } from "../context/AuthContext";
+import AuthModal from "./AuthModal";
 
 export default function Navbar() {
   const navigate = useNavigate();
   const location = useLocation();
   const { dark, toggle } = useTheme();
+  const { user, signOut } = useAuth();
   const [menuOpen, setMenuOpen] = useState(false);
+  const [authOpen, setAuthOpen] = useState(false);
+
+  // Show the part before "@" as a compact display name.
+  const displayName = user?.email ? user.email.split("@")[0] : "";
 
   const isActive = (path) => location.pathname.startsWith(path);
 
@@ -92,6 +99,47 @@ export default function Navbar() {
           >
             {dark ? "☀️" : "🌙"}
           </button>
+
+          {user ? (
+            <div className="flex items-center gap-1 ml-2">
+              <span
+                className="px-3 py-2 text-sm rounded-lg max-w-[10rem] truncate"
+                style={{
+                  color: "#6AAE6F",
+                  background: "#6AAE6F20",
+                  border: "1.5px solid var(--border)",
+                  fontFamily: "'Courier New', monospace",
+                }}
+                title={user.email}
+              >
+                {displayName}
+              </span>
+              <button
+                onClick={() => signOut()}
+                className="px-3 py-2 text-sm rounded-lg transition-colors duration-500 hover:brightness-110"
+                style={{
+                  color: "var(--text-muted)",
+                  border: "1.5px solid var(--border)",
+                  fontFamily: "'Courier New', monospace",
+                }}
+              >
+                Log out
+              </button>
+            </div>
+          ) : (
+            <button
+              onClick={() => setAuthOpen(true)}
+              className="ml-2 px-4 py-2 text-sm font-bold rounded-lg transition-all hover:brightness-110 active:translate-y-0.5"
+              style={{
+                background: "#6AAE6F",
+                color: "#fff",
+                fontFamily: "'Courier New', monospace",
+                letterSpacing: "0.03em",
+              }}
+            >
+              Sign In
+            </button>
+          )}
         </div>
 
         {/* Mobile hamburger */}
@@ -178,8 +226,58 @@ export default function Navbar() {
           >
             {dark ? "☀️ Light Mode" : "🌙 Dark Mode"}
           </button>
+
+          {user ? (
+            <>
+              <div
+                className="px-4 py-3 text-sm rounded-lg truncate"
+                style={{
+                  color: "#6AAE6F",
+                  background: "#6AAE6F20",
+                  border: "1.5px solid var(--border)",
+                  fontFamily: "'Courier New', monospace",
+                }}
+                title={user.email}
+              >
+                {displayName}
+              </div>
+              <button
+                onClick={() => {
+                  signOut();
+                  closeMenu();
+                }}
+                className="block w-full text-left px-4 py-3 text-sm font-medium rounded-lg transition-colors duration-500 hover:brightness-110"
+                style={{
+                  color: "var(--text-muted)",
+                  border: "1.5px solid var(--border)",
+                  fontFamily: "'Courier New', monospace",
+                  letterSpacing: "0.03em",
+                }}
+              >
+                Log out
+              </button>
+            </>
+          ) : (
+            <button
+              onClick={() => {
+                setAuthOpen(true);
+                closeMenu();
+              }}
+              className="block w-full text-left px-4 py-3 text-sm font-bold rounded-lg transition-all hover:brightness-110"
+              style={{
+                background: "#6AAE6F",
+                color: "#fff",
+                fontFamily: "'Courier New', monospace",
+                letterSpacing: "0.03em",
+              }}
+            >
+              Sign In
+            </button>
+          )}
         </div>
       </aside>
+
+      <AuthModal open={authOpen} onClose={() => setAuthOpen(false)} />
     </>
   );
 }
