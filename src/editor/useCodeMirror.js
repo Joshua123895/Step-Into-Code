@@ -79,7 +79,7 @@ export function computeTabEdit(state, shiftKey) {
   const doc = state.doc;
   const startLine = doc.lineAt(from);
   const rawEndLine = doc.lineAt(to);
-  // Whether the selection crosses a line boundary decides block vs. inline —
+  // Whether the selection crosses a line boundary decides block vs. inline,
   // and it's decided *before* trimming the trailing line, so a selection that
   // happens to end at a line start is still a block operation, not a
   // replace-the-selection insert.

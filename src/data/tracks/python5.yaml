@@ -9,7 +9,7 @@ chapters:
     levels:
       - name: Big O Analysis
         obj: 'Implement `def linear_sum(arr):` (a single loop over `arr`) and `def count_pairs(arr):` (a loop nested inside another). Test both with `[1, 2, 3, 4]`, printing each result immediately followed by its time complexity as a string: `"O(n)"` or `"O(n^2)"`.'
-        hint: 'A single loop over n items is O(n). A loop nested inside another loop, each running n times, is O(n^2) — nested loops multiply their costs.'
+        hint: 'A single loop over n items is O(n). A loop nested inside another loop, each running n times, is O(n^2): nested loops multiply their costs.'
         expl: 'Big O describes how runtime grows with input size. `linear_sum` touches each element once, so it''s O(n). `count_pairs` has a loop inside a loop, each of length n, so it''s O(n^2). Recognizing these shapes is the first step to reasoning about efficiency.'
         sol: |-
           def linear_sum(arr):
@@ -112,7 +112,7 @@ chapters:
         viz: pointers
         obj: 'Implement `def linear_search(arr, target):` that returns the index of `target` in `arr`, or `-1` if not found, checking each element in order. Test with `[4, 2, 7, 1, 9]` searching for `7` and `5`, printing both results.'
         hint: 'Loop through the array with `enumerate` to get both index and value. Return the index the moment you find a match.'
-        expl: 'Linear search checks every element one by one — O(n) in the worst case. It works on any list, sorted or not, but binary search (next lesson) is faster when the list is sorted.'
+        expl: 'Linear search checks every element one by one: O(n) in the worst case. It works on any list, sorted or not, but binary search (next lesson) is faster when the list is sorted.'
         sol: |-
           def linear_search(arr, target):
               for i, val in enumerate(arr):
@@ -132,7 +132,7 @@ chapters:
         viz: pointers
         obj: 'Implement `def binary_search(arr, target):` on a SORTED array using the iterative low/high/mid approach. Test with `[1, 3, 5, 7, 9, 11]` searching for `7` and `4`, printing both results.'
         hint: 'Compare the middle element to the target. If the target is larger, search the right half (`low = mid + 1`); if smaller, search the left half (`high = mid - 1`).'
-        expl: 'Binary search halves the search space each step, giving O(log n) time — much faster than linear search, but it requires the array to already be sorted.'
+        expl: 'Binary search halves the search space each step, giving O(log n) time, much faster than linear search, but it requires the array to already be sorted.'
         sol: |-
           def binary_search(arr, target):
               low, high = 0, len(arr) - 1
@@ -385,7 +385,7 @@ chapters:
       - name: Prefix Sum
         obj: 'Implement `def build_prefix_sum(arr):` returning a prefix sum array where `prefix[i]` is the sum of `arr[0..i]` inclusive, and `def range_sum(prefix, l, r):` returning the sum of `arr[l..r]` inclusive in O(1) using the prefix array. Test with `arr = [2, 4, 6, 8, 10]`, build the prefix sum, then print `range_sum(prefix, 1, 3)`.'
         hint: '`prefix[i]` stores the running total up to index `i`. For a range `[l, r]`, subtract everything before `l`: `prefix[r] - prefix[l - 1]` (or just `prefix[r]` when `l` is 0).'
-        expl: 'A prefix sum array precomputes running totals so any range sum query can be answered in O(1) instead of re-summing the range every time — a big win when there are many queries.'
+        expl: 'A prefix sum array precomputes running totals so any range sum query can be answered in O(1) instead of re-summing the range every time, a big win when there are many queries.'
         sol: |-
           def build_prefix_sum(arr):
               prefix = [arr[0]]
@@ -433,8 +433,8 @@ chapters:
       - name: Sliding Window
         viz: pointers
         obj: 'Implement `def max_sum_subarray(arr, k):` that finds the maximum sum of any contiguous subarray of size `k`, using a sliding window (add the new element, remove the oldest) in O(n) total. Test with `[2, 1, 5, 1, 3, 2]` and `k = 3`, printing the result.'
-        hint: 'Compute the sum of the first `k` elements once. Then slide one step at a time: add the incoming element, subtract the outgoing one — no need to re-sum the whole window.'
-        expl: 'A sliding window keeps a running computation over a fixed-size range, updating incrementally as it moves — turning what looks like an O(n*k) problem into O(n).'
+        hint: 'Compute the sum of the first `k` elements once. Then slide one step at a time: add the incoming element, subtract the outgoing one: no need to re-sum the whole window.'
+        expl: 'A sliding window keeps a running computation over a fixed-size range, updating incrementally as it moves, turning what looks like an O(n*k) problem into O(n).'
         sol: |-
           def max_sum_subarray(arr, k):
               window_sum = sum(arr[:k])
@@ -486,7 +486,7 @@ chapters:
         viz: hash_map
         obj: 'Implement `def char_frequency(s):` returning a dict mapping each character in `s` to how many times it appears. Test with `"banana"` and print the result sorted by key.'
         hint: 'Use `freq.get(ch, 0) + 1` to either start a new count at 1 or increment the existing one, in a single line per character.'
-        expl: 'A frequency counter uses a hash map to count occurrences in a single O(n) pass — the foundation for anagram checks, majority element problems, and more.'
+        expl: 'A frequency counter uses a hash map to count occurrences in a single O(n) pass, the foundation for anagram checks, majority element problems, and more.'
         sol: |-
           def char_frequency(s):
               freq = {}
@@ -503,7 +503,7 @@ chapters:
       - name: Hash Map Lookup
         viz: hash_map
         obj: 'Implement `def two_sum(nums, target):` returning the indices of two numbers in `nums` that add up to `target`, using a single pass with a hash map from value to index (not the O(n^2) brute-force pair check). Test with `[2, 7, 11, 15]` and `target = 9`, printing the result.'
-        hint: 'For each number, check if its complement (`target - num`) has already been seen. If so, you''ve found your pair — return immediately, no nested loop needed.'
+        hint: 'For each number, check if its complement (`target - num`) has already been seen. If so, you''ve found your pair: return immediately, no nested loop needed.'
         expl: 'Storing seen values in a hash map turns two-sum from O(n^2) (checking every pair) into O(n) (a hash map lookup is O(1) on average).'
         sol: |-
           def two_sum(nums, target):
@@ -579,7 +579,7 @@ chapters:
         viz: tree_traversal
         obj: 'Implement `def dfs(node, depth=0):` that prints each node''s value prefixed by `depth * "  "` (indentation showing depth), visiting the root, then its left subtree fully, then its right subtree fully. Build tree: root `1`, left `2` (with left `4`), right `3`. Call `dfs(root)`.'
         hint: 'DFS goes as deep as possible down one branch before backtracking. Print the current node first, then recurse fully into `left` before moving on to `right`.'
-        expl: 'Depth-first search explores one branch to its end before backtracking — implemented here recursively, where the call stack acts as the "stack" in DFS.'
+        expl: 'Depth-first search explores one branch to its end before backtracking, implemented here recursively, where the call stack acts as the "stack" in DFS.'
         sol: |-
           class TreeNode:
               def __init__(self, value):
@@ -641,7 +641,7 @@ chapters:
             4
             5
       - name: LeetCode 98 · Validate Binary Search Tree
-        obj: 'Implement `def is_valid_bst(node, low=float("-inf"), high=float("inf")):` that validates a BST by tracking a valid `(low, high)` range for each node as you recurse — a node''s value must fall inside that range, and each child gets a narrower range. Build tree A: `5` (left `3`, right `8`) — valid. Build tree B: `5` (left `6`, right `8`) — invalid, since `6` can''t be on the left of `5`. Print both results.'
+        obj: 'Implement `def is_valid_bst(node, low=float("-inf"), high=float("inf")):` that validates a BST by tracking a valid `(low, high)` range for each node as you recurse: a node''s value must fall inside that range, and each child gets a narrower range. Build tree A: `5` (left `3`, right `8`) is valid. Build tree B: `5` (left `6`, right `8`) is invalid, since `6` can''t be on the left of `5`. Print both results.'
         example:
           in: []
           out: |
@@ -703,7 +703,7 @@ chapters:
         viz: graph_algo
         obj: 'Implement `def topological_sort(graph):` using DFS-based ordering: fully visit all of a node''s dependencies before pushing the node itself onto a stack, then reverse the stack at the end. Use `graph = {"a": ["b"], "b": ["c"], "c": [], "d": ["c"]}` (an edge `u: [v]` means `u` must come before `v`) and print the order.'
         hint: 'Do a DFS from each unvisited node; only after all of a node''s neighbors have been fully explored, push the node onto a stack. The final answer is that stack reversed.'
-        expl: 'Topological sort orders nodes so every edge points from earlier to later in the result — only possible on a DAG (no cycles). It''s essential for scheduling tasks with dependencies.'
+        expl: 'Topological sort orders nodes so every edge points from earlier to later in the result, which is only possible on a DAG (no cycles). It''s essential for scheduling tasks with dependencies.'
         sol: |-
           def topological_sort(graph):
               visited = set()
@@ -728,7 +728,7 @@ chapters:
       - name: Shortest Path
         viz: graph_algo
         obj: 'Implement `def dijkstra(graph, start):` finding shortest distances from `start` to every node in a weighted graph (adjacency dict of `node: [(neighbor, weight), ...]`), using a min-heap (`heapq`) to always expand the closest unvisited node next. Use `graph = {"a": [("b", 4), ("c", 1)], "b": [("d", 1)], "c": [("b", 2), ("d", 5)], "d": []}` starting from `"a"`, and print the distances dict sorted by key.'
-        hint: 'Always expand the unvisited node with the smallest known distance — that''s what popping from the min-heap gives you for free. Relax each neighbor: if going through the current node is shorter, update its distance and push it.'
+        hint: 'Always expand the unvisited node with the smallest known distance: that''s what popping from the min-heap gives you for free. Relax each neighbor: if going through the current node is shorter, update its distance and push it.'
         expl: 'Dijkstra''s algorithm finds shortest paths in a weighted graph by always greedily expanding the closest known node next, using a min-heap to efficiently find that node each step.'
         sol: |-
           import heapq
@@ -860,7 +860,7 @@ chapters:
         viz: dp
         obj: 'Implement `def fib_tab(n):` computing the nth Fibonacci number bottom-up using a table (list) built iteratively from the base cases up, with no recursion. Test with `n = 30` and print the result.'
         hint: 'Build the answer from the bottom up: start from the known base cases `table[0]` and `table[1]`, then fill each next slot using the two before it.'
-        expl: 'Tabulation solves the same subproblems as memoization but iteratively, filling a table from the smallest inputs upward — no recursion or call stack needed.'
+        expl: 'Tabulation solves the same subproblems as memoization but iteratively, filling a table from the smallest inputs upward: no recursion or call stack needed.'
         sol: |-
           def fib_tab(n):
               if n <= 1:
@@ -914,7 +914,7 @@ chapters:
       - name: Activity Selection
         viz: greedy
         obj: 'Implement `def activity_selection(activities):` (a list of `(start, end)` tuples) that greedily selects the maximum number of non-overlapping activities: sort by end time, then keep an activity whenever its start is at or after the end of the last one kept. Test with `[(1, 4), (3, 5), (0, 6), (5, 7), (3, 9), (5, 9), (6, 10), (8, 11), (8, 12), (2, 14), (12, 16)]` and print the count selected.'
-        hint: 'Sort activities by end time first. Greedily keep an activity whenever its start time is at or after the end time of the last one you kept — that always leaves the most room for future activities.'
+        hint: 'Sort activities by end time first. Greedily keep an activity whenever its start time is at or after the end time of the last one you kept: that always leaves the most room for future activities.'
         expl: 'Activity selection is a classic greedy problem: always picking the activity that finishes soonest (among the remaining valid options) is provably optimal for maximizing the count of non-overlapping activities.'
         sol: |-
           def activity_selection(activities):
@@ -937,7 +937,7 @@ chapters:
         viz: greedy
         obj: 'Implement `def greedy_coin_change(coins, amount):` that greedily uses the largest coin denomination possible at each step (`coins` given sorted descending, for a "canonical" system like US currency where greedy is optimal). Test with `coins = [25, 10, 5, 1]` and `amount = 63`, printing the list of coins used.'
         hint: 'For each coin from largest to smallest, take as many of that coin as still fit, then move to the next smaller one.'
-        expl: 'Greedy coin change always takes the biggest coin that fits. This gives the optimal (fewest-coin) answer for "canonical" coin systems like US currency — but it can fail on other coin systems, which is exactly why Dynamic Programming''s Coin Change solves it more robustly.'
+        expl: 'Greedy coin change always takes the biggest coin that fits. This gives the optimal (fewest-coin) answer for "canonical" coin systems like US currency, but it can fail on other coin systems, which is exactly why Dynamic Programming''s Coin Change solves it more robustly.'
         sol: |-
           def greedy_coin_change(coins, amount):
               result = []
@@ -955,9 +955,9 @@ chapters:
             [25, 25, 10, 1, 1, 1]
       - name: Jump Game
         viz: greedy
-        obj: 'Implement `def can_jump(nums):` where `nums[i]` is the max jump length from position `i` — return `True` if you can reach the last index starting from index 0, using a greedy "farthest reachable" tracker (no need to try every path). Test with `[2, 3, 1, 1, 4]` and `[3, 2, 1, 0, 4]`, printing both results.'
+        obj: 'Implement `def can_jump(nums):` where `nums[i]` is the max jump length from position `i`. Return `True` if you can reach the last index starting from index 0, using a greedy "farthest reachable" tracker (no need to try every path). Test with `[2, 3, 1, 1, 4]` and `[3, 2, 1, 0, 4]`, printing both results.'
         hint: 'Track the farthest index reachable so far. If you ever reach a position beyond what''s currently reachable, you''re stuck. Otherwise keep extending the farthest reach as you go.'
-        expl: 'Instead of trying every combination of jumps, greedily tracking one number — the farthest index reachable — is enough to answer reachability in O(n).'
+        expl: 'Instead of trying every combination of jumps, greedily tracking one number, the farthest index reachable, is enough to answer reachability in O(n).'
         sol: |-
           def can_jump(nums):
               farthest = 0
@@ -975,7 +975,7 @@ chapters:
             True
             False
       - name: LeetCode 134 · Gas Station
-        obj: 'Implement `def can_complete_circuit(gas, cost):` returning the starting gas station index (0-indexed) from which you can travel a circular route once without running out of fuel, or `-1` if impossible — using the greedy insight that if total gas >= total cost a solution must exist, and any point where the tank goes negative resets your candidate start to the next station. Read `gas` and `cost` arrays, print the result.'
+        obj: 'Implement `def can_complete_circuit(gas, cost):` returning the starting gas station index (0-indexed) from which you can travel a circular route once without running out of fuel, or `-1` if impossible, using the greedy insight that if total gas >= total cost a solution must exist, and any point where the tank goes negative resets your candidate start to the next station. Read `gas` and `cost` arrays, print the result.'
         example:
           in:
             - 1 2 3 4 5
@@ -1017,7 +1017,7 @@ chapters:
         viz: backtrack
         obj: 'Implement `def subsets(nums):` that generates all possible subsets (the power set) of `nums` using backtracking: at each element, branch into "exclude it" and "include it". Test with `[1, 2, 3]` and print the result.'
         hint: 'At each index, first explore the branch that skips the element, then the branch that includes it. Remember to `pop()` after trying "include" so the next branch starts clean.'
-        expl: 'Backtracking explores a decision tree by trying a choice, recursing, then undoing ("backtracking") that choice to try the next one — here, "include" vs "exclude" for each element.'
+        expl: 'Backtracking explores a decision tree by trying a choice, recursing, then undoing ("backtracking") that choice to try the next one. Here, "include" vs "exclude" for each element.'
         sol: |-
           def subsets(nums):
               result = []
@@ -1041,7 +1041,7 @@ chapters:
         viz: backtrack
         obj: 'Implement `def permutations(nums):` that generates all permutations of `nums` using backtracking: build each permutation by choosing an unused element at each step, and un-choosing it (backtrack) after exploring. Test with `[1, 2, 3]` and print the result.'
         hint: 'At each step, try every element not yet used: append it, recurse on the rest, then pop it back off before trying the next choice.'
-        expl: 'Generating permutations is the textbook backtracking example: build a partial solution, recurse, then undo the last choice to explore the next possibility — visiting every ordering exactly once.'
+        expl: 'Generating permutations is the textbook backtracking example: build a partial solution, recurse, then undo the last choice to explore the next possibility, visiting every ordering exactly once.'
         sol: |-
           def permutations(nums):
               result = []
@@ -1064,7 +1064,7 @@ chapters:
       - name: Combination Sum
         viz: backtrack
         obj: 'Implement `def combination_sum(candidates, target):` finding all unique combinations (candidates can repeat) that sum to `target`, using backtracking with a start index to avoid duplicate combinations. Test with `candidates = [2, 3, 6, 7]` and `target = 7`, printing the result.'
-        hint: 'Pass `i` (not `i + 1`) as the next start index when recursing — that''s what allows reusing the same candidate. Passing a `start` index at all is what prevents generating `[2, 3, 2]` and `[3, 2, 2]` as separate "duplicate" combinations.'
+        hint: 'Pass `i` (not `i + 1`) as the next start index when recursing: that''s what allows reusing the same candidate. Passing a `start` index at all is what prevents generating `[2, 3, 2]` and `[3, 2, 2]` as separate "duplicate" combinations.'
         expl: 'Backtracking with a start index explores combinations (not permutations) by only ever moving forward through the candidates, and prunes ("backtracks") as soon as the running sum overshoots the target.'
         sol: |-
           def combination_sum(candidates, target):

@@ -37,7 +37,7 @@ chapters:
         obj: 'Write `evens = [x for x in range(10) if x % 2 == 0]` then `print(evens)`.'
         hint: 'Add `if x % 2 == 0` after `for x in range(10)` to keep only even numbers.'
         expl: |-
-          An `if` at the end of a comprehension acts as a filter — only items that make the condition `True` are included. `x % 2 == 0` is True for even numbers. So `range(10)` only gives us `[0, 2, 4, 6, 8]`.
+          An `if` at the end of a comprehension acts as a filter: only items that make the condition `True` are included. `x % 2 == 0` is True for even numbers. So `range(10)` only gives us `[0, 2, 4, 6, 8]`.
         sol: |-
           evens = [x for x in range(10) if x % 2 == 0]
           print(evens)
@@ -48,7 +48,7 @@ chapters:
         start: ''
       - name: Nested Loops in Comprehension
         obj: 'Write `pairs = [(x, y) for x in range(3) for y in range(2)]` then `print(pairs)`.'
-        hint: 'Use two `for` clauses: `for x in range(3) for y in range(2)` — the right loop changes fastest.'
+        hint: 'Use two `for` clauses: `for x in range(3) for y in range(2)`, the right loop changes fastest.'
         expl: |-
           Multiple `for` clauses work like nested loops: for each `x`, we go through all `y` values. `x=0` gives `(0,0),(0,1)`, then `x=1` gives `(1,0),(1,1)`, then `x=2` gives `(2,0),(2,1)`.
         sol: |-
@@ -101,7 +101,7 @@ chapters:
         max: 3/1
       - name: Flatten a Matrix
         obj: 'Given `matrix = [[1, 2], [3, 4], [5, 6]]`, flatten it into one list using a nested comprehension. Store in `flat` and `print(flat)`.'
-        hint: 'Use `[val for row in matrix for val in row]` — outer loop over rows, inner over elements.'
+        hint: 'Use `[val for row in matrix for val in row]`, outer loop over rows, inner over elements.'
         expl: |-
           To flatten a 2D list, first loop over each `row` in `matrix`, then loop over each `val` in that `row`. `[val for row in matrix for val in row]` unwraps `[[1,2],[3,4],[5,6]]` into `[1,2,3,4,5,6]`.
         start: matrix = [[1, 2], [3, 4], [5, 6]]
@@ -117,7 +117,7 @@ chapters:
         obj: 'Given `text = "Hello, World!"`, collect only uppercase letters using a comprehension. Print the list.'
         hint: 'Use `ch.isupper()` as the filter: `[ch for ch in text if ch.isupper()]`'
         expl: |-
-          Strings are iterables in Python — looping over them gives each character. `ch.isupper()` returns True for uppercase letters, False otherwise. From `"Hello, World!"` only `'H'` and `'W'` pass the filter.
+          Strings are iterables in Python; looping over them gives each character. `ch.isupper()` returns True for uppercase letters, False otherwise. From `"Hello, World!"` only `'H'` and `'W'` pass the filter.
         start: text = "Hello, World!"
         sol: |-
           text = "Hello, World!"
@@ -217,7 +217,7 @@ chapters:
         obj: 'Create `multiply = lambda a, b: a * b`, then `print(multiply(7, 8))`.'
         hint: 'Type `multiply = lambda a, b: a * b` then `print(multiply(7, 8))`.'
         expl: |-
-          Lambdas can take multiple arguments — just separate them with commas. `lambda a, b: a * b` takes two numbers and returns their product. `multiply(7, 8)` returns `56`.
+          Lambdas can take multiple arguments, just separate them with commas. `lambda a, b: a * b` takes two numbers and returns their product. `multiply(7, 8)` returns `56`.
         sol: |-
           multiply = lambda a, b: a * b
           print(multiply(7, 8))
@@ -230,7 +230,7 @@ chapters:
         obj: 'Create `ops = {"add": lambda a, b: a + b, "mul": lambda a, b: a * b}`, then `print(ops["add"](3, 4))` and `print(ops["mul"](3, 4))`.'
         hint: 'Store lambdas as dict values: `ops = {"add": lambda a, b: a + b, "mul": lambda a, b: a * b}`. Call them with `ops["add"](3, 4)`.'
         expl: |-
-          Lambdas are just values — you can put them in dictionaries! `ops["add"]` gives back the `lambda a, b: a + b` function, then `(3, 4)` calls it with those arguments. `add: 3+4=7`, `mul: 3*4=12`.
+          Lambdas are just values, you can put them in dictionaries! `ops["add"]` gives back the `lambda a, b: a + b` function, then `(3, 4)` calls it with those arguments. `add: 3+4=7`, `mul: 3*4=12`.
         sol: |-
           ops = {"add": lambda a, b: a + b, "mul": lambda a, b: a * b}
           print(ops["add"](3, 4))
@@ -273,7 +273,7 @@ chapters:
         start: ''
       - name: Sorting by Second Element
         obj: 'Given `data = [(2, 3), (1, 2), (3, 1)]`, sort tuples by their second element using `sorted()` with a lambda key. Print result.'
-        hint: '`result = sorted(data, key=lambda t: t[1])` — `t[1]` gets the second element of each tuple.'
+        hint: '`result = sorted(data, key=lambda t: t[1])`, `t[1]` gets the second element of each tuple.'
         expl: |-
           `sorted(data, key=lambda t: t[1])` sorts the list of tuples by the SECOND element (index 1) of each tuple. `(3,1)` has second element `1`, `(1,2)` has `2`, `(2,3)` has `3` → sorted: `[(3,1), (1,2), (2,3)]`.
         start: data = [(2, 3), (1, 2), (3, 1)]
@@ -324,7 +324,7 @@ chapters:
         obj: 'Define `def add(x: int, y: int) -> int:` that returns `x + y`, then `print(add(3, 5))`.'
         hint: 'Add `: int` after each parameter and `-> int` after `):`'
         expl: |-
-          Type hints tell readers (and tools) what type each argument should be. `x: int` means "x should be an int". `-> int` means "this function returns an int". They don't change how Python runs — they just document your code.
+          Type hints tell readers (and tools) what type each argument should be. `x: int` means "x should be an int". `-> int` means "this function returns an int". They don't change how Python runs; they just document your code.
         sol: |-
           def add(x: int, y: int) -> int:
               return x + y
@@ -408,7 +408,7 @@ chapters:
         obj: 'Import `Callable`. Define `def apply(func: Callable[[int], int], val: int) -> int:` that calls `func(val)`. Call with `lambda x: x * 10` and `7`, print result.'
         hint: '`Callable[[int], int]` means "a function that takes an int and returns an int".'
         expl: |-
-          `Callable[[param_types], return_type]` describes a function's signature. `Callable[[int], int]` means "a function that accepts one int and returns one int". `lambda x: x * 10` matches this — it takes `7` and returns `70`.
+          `Callable[[param_types], return_type]` describes a function's signature. `Callable[[int], int]` means "a function that accepts one int and returns one int". `lambda x: x * 10` matches this: it takes `7` and returns `70`.
         sol: |-
           from typing import Callable
           def apply(func: Callable[[int], int], val: int) -> int:
@@ -457,9 +457,9 @@ chapters:
         max: 5/1
       - name: Protocol Types
         obj: 'Define `class Sized(Protocol):` with `def size(self) -> int: ...`. Then `def display(obj: Sized, n: int):` creates `Box(n)` and prints its size. Read `n` (int) as input.'
-        hint: 'Protocol methods use `...` (or `pass`) as the body — no implementation needed. Any class with a `size()` method satisfies `Sized`.'
+        hint: 'Protocol methods use `...` (or `pass`) as the body, no implementation needed. Any class with a `size()` method satisfies `Sized`.'
         expl: |-
-          A `Protocol` defines an interface — a set of methods a class must have. `class Sized(Protocol):` says "anything with a `size() -> int` method is a `Sized`". `Box` has `size()` so it satisfies the protocol even without explicitly inheriting from `Sized`. This is structural typing (duck typing at compile-time).
+          A `Protocol` defines an interface: a set of methods a class must have. `class Sized(Protocol):` says "anything with a `size() -> int` method is a `Sized`". `Box` has `size()` so it satisfies the protocol even without explicitly inheriting from `Sized`. This is structural typing (duck typing at compile-time).
         sol: |-
           from typing import Protocol
           class Sized(Protocol):
@@ -581,7 +581,7 @@ chapters:
         max: 9/1
       - name: Generator Function
         obj: 'Define `def count_to(n):` that `yield`s numbers `1` to `n`. Loop `for x in count_to(4): print(x)`.'
-        hint: 'Use `yield i` inside `for i in range(1, n + 1)` — NOT `return`.'
+        hint: 'Use `yield i` inside `for i in range(1, n + 1)`, NOT `return`.'
         expl: |-
           A generator function uses `yield` instead of `return`. Each `yield` pauses the function and sends a value out. The next call to `next()` resumes right after the `yield`. `count_to(4)` yields `1`, then on the next call yields `2`, then `3`, then `4`.
         sol: |-
@@ -627,7 +627,7 @@ chapters:
         obj: 'Write `squares = (x**2 for x in range(5))`, then `print(list(squares))`.'
         hint: 'Generator expressions look like list comprehensions but use `( )` instead of `[ ]`.'
         expl: |-
-          A generator expression `(x**2 for x in range(5))` produces values lazily — it computes each square only when requested. `list(squares)` pulls all values into memory. This is more memory-efficient than a list comprehension when dealing with large sequences you only iterate once.
+          A generator expression `(x**2 for x in range(5))` produces values lazily: it computes each square only when requested. `list(squares)` pulls all values into memory. This is more memory-efficient than a list comprehension when dealing with large sequences you only iterate once.
         sol: |-
           squares = (x**2 for x in range(5))
           print(list(squares))
@@ -669,7 +669,7 @@ chapters:
         max: 7/1
       - name: Generator with Send
         obj: 'Define `def accumulate():` that uses `val = yield total` to receive values via `.send()`. Initialize with `next(acc)` then `print(acc.send(10))`, `acc.send(5)`, `acc.send(3)`.'
-        hint: '`val = yield total` — `yield` both produces and receives. The first `.send()` won''t work without an initial `next(acc)` (to advance to the first yield).'
+        hint: '`val = yield total`, `yield` both produces and receives. The first `.send()` won''t work without an initial `next(acc)` (to advance to the first yield).'
         expl: |-
           `generator.send(val)` sends a value into a generator, where it becomes the result of the `yield` expression. The first call must be `next(acc)` (or `acc.send(None)`) to advance to the first `yield`. After that, each `acc.send(val)` sends the next value and receives back the new running total. `yield total` returns the current total, then `val =` captures the sent value, and `total += val` updates it.
         sol: |-
@@ -780,7 +780,7 @@ chapters:
         obj: 'Open `"test.txt"` with `with open("test.txt", "w") as f:` and write `f.write("Hello, Context!")`. Then read it back with `with open("test.txt") as f: print(f.read())`.'
         hint: '`with open("test.txt", "w") as f:` to write. Then a separate `with open("test.txt") as f:` to read.'
         expl: |-
-          A `with` statement automatically closes the file when the block ends, even if an error occurs. Use `"w"` mode for writing (creates/overwrites), no mode argument for reading (default `"r"`). Always use `with` for file I/O — never `f = open(...)` without closing.
+          A `with` statement automatically closes the file when the block ends, even if an error occurs. Use `"w"` mode for writing (creates/overwrites), no mode argument for reading (default `"r"`). Always use `with` for file I/O, never `f = open(...)` without closing.
         sol: |-
           with open("test.txt", "w") as f:
               f.write("Hello, Context!")
@@ -871,7 +871,7 @@ chapters:
         start: ''
       - name: Exception Handling in CM
         obj: 'Define a `class Suppressor:` with `__exit__` that checks `if exc_type is ValueError: print("Handled"); return True`. The `with` block raises `ValueError("oops")`; it must be suppressed and "Still running" printed after.'
-        hint: '`__exit__(self, exc_type, exc_val, exc_tb):` — check `if exc_type is ValueError`, `print("Handled")`, `return True` to suppress.'
+        hint: '`__exit__(self, exc_type, exc_val, exc_tb):`, check `if exc_type is ValueError`, `print("Handled")`, `return True` to suppress.'
         expl: |-
           Inside `__exit__`, `exc_type` is the exception class (e.g., `ValueError`). If `__exit__` returns `True`, Python swallows the exception and continues past the `with` block. If it returns `False` (or `None`), the exception propagates. Here we catch `ValueError`, print "Handled", and return `True` so `print("Still running")` executes.
         sol: |-
@@ -968,7 +968,7 @@ chapters:
         obj: 'Read `name = input()`. Use `ExitStack` to dynamically enter two `redirect_stdout` contexts (with `buf1` and `buf2`). `print(f"Hello, {name}")` while first redirect active, `print(f"Welcome, {name}")` after second redirect active. Print both buffers'' contents.'
         hint: '`from contextlib import ExitStack, redirect_stdout`. `with ExitStack() as stack: stack.enter_context(redirect_stdout(buf1))` etc.'
         expl: |-
-          `ExitStack` manages context managers dynamically. Use `stack.enter_context(cm)` to enter a context manager at any point — it returns the `__enter__` result. When the `with ExitStack()` block exits, all entered contexts are cleaned up in reverse order. This is useful when you don't know how many context managers you'll need at runtime.
+          `ExitStack` manages context managers dynamically. Use `stack.enter_context(cm)` to enter a context manager at any point, it returns the `__enter__` result. When the `with ExitStack()` block exits, all entered contexts are cleaned up in reverse order. This is useful when you don't know how many context managers you'll need at runtime.
         sol: |-
           from contextlib import ExitStack, redirect_stdout
           from io import StringIO
@@ -1067,7 +1067,7 @@ chapters:
         start: ''
       - name: Test Class
         obj: 'Define `class TestMath:` with `def test_add(self): assert 1 + 1 == 2` and `def test_mul(self): assert 2 * 3 == 6`. Instantiate `t = TestMath()`, call both methods, then `print("All class tests passed")`.'
-        hint: '`class TestMath:` — methods need `self` param. Create `t = TestMath()`, then `t.test_add(); t.test_mul()`.'
+        hint: '`class TestMath:`, methods need `self` param. Create `t = TestMath()`, then `t.test_add(); t.test_mul()`.'
         expl: |-
           Classes group related tests. Each test is a method that takes `self` (the instance) and uses `assert`. Instantiate the class and call each test method individually. The class name typically starts with `Test` to signal its purpose, and each method starts with `test_` as a convention.
         sol: |-
@@ -1089,7 +1089,7 @@ chapters:
         obj: 'Define `class TestList:` with `def setup(self): self.data = [1,2,3]`, `def teardown(self): print("Clean")`, `def test_length(self): assert len(self.data) == 3`, `def test_sum(self): assert sum(self.data) == 6`. Call `setup(); test_...(); teardown()` for each test.'
         hint: 'Call `t.setup()` before each test and `t.teardown()` after. Use `self.data` to pass data between methods.'
         expl: |-
-          `setup()` prepares fresh test data before each test method. `teardown()` cleans up after. Each test gets a clean state because we call `setup()` again before the second test. Store shared data in `self` attributes so methods can access them. This pattern keeps tests independent — one test's data doesn't leak into another.
+          `setup()` prepares fresh test data before each test method. `teardown()` cleans up after. Each test gets a clean state because we call `setup()` again before the second test. Store shared data in `self` attributes so methods can access them. This pattern keeps tests independent: one test's data doesn't leak into another.
         sol: |-
           class TestList:
               def setup(self):
@@ -1137,9 +1137,9 @@ chapters:
         start: ''
       - name: Multiple Test Cases
         obj: 'Define `def is_even(n): return n % 2 == 0`. Write `cases = [(2,True),(3,False),(0,True),(-2,True),(-3,False)]`. Loop `for n, expected in cases: assert is_even(n) == expected`. Then `print("All cases passed")`.'
-        hint: '`[(2, True), (3, False), …]` — each pair is `(input, expected_output)`. Loop and assert.'
+        hint: '`[(2, True), (3, False), …]`, each pair is `(input, expected_output)`. Loop and assert.'
         expl: |-
-          Parameterized testing: store a list of `(input, expected_output)` tuples, then loop through them running the same assertion. This avoids writing a separate test for each case. If any case fails, `assert` raises `AssertionError` and the "All cases passed" message never prints — so if you see it, all cases passed.
+          Parameterized testing: store a list of `(input, expected_output)` tuples, then loop through them running the same assertion. This avoids writing a separate test for each case. If any case fails, `assert` raises `AssertionError` and the "All cases passed" message never prints, so if you see it, all cases passed.
         sol: |-
           def is_even(n):
               return n % 2 == 0
@@ -1176,7 +1176,7 @@ chapters:
         obj: 'Define `def test_add(): assert 1+1==2` and `def test_sub(): assert 3-1==2`. Define `def run_tests():` that iterates `globals()` items, finds names starting with `"test_"` that are `callable`, runs them, counts passes. Call `run_tests()`.'
         hint: '`for name, func in globals().items(): if name.startswith("test_") and callable(func): func(); passed += 1`'
         expl: |-
-          `globals()` returns a dict of everything in the global scope. By filtering for names that start with `"test_"` and are callable (functions), you can auto-discover tests without listing them manually. This is the same idea behind how `pytest` discovers tests — it scans for `test_*` functions.
+          `globals()` returns a dict of everything in the global scope. By filtering for names that start with `"test_"` and are callable (functions), you can auto-discover tests without listing them manually. This is the same idea behind how `pytest` discovers tests, it scans for `test_*` functions.
         sol: |-
           def test_add():
               assert 1 + 1 == 2
@@ -1289,7 +1289,7 @@ chapters:
         obj: '`@dataclass(frozen=True) class Point:` with `x: int, y: int`. `print(Point(1, 2))`. Attempting `p.x = 5` would raise `FrozenInstanceError`.'
         hint: 'Add `(frozen=True)` after `@dataclass`. The class becomes read-only.'
         expl: |-
-          `frozen=True` makes the instance immutable — you cannot assign to fields after creation (`p.x = 5` raises an error). This is useful for value objects that should never change (like coordinates). Frozen dataclasses are also hashable by default, so they can be used in sets and as dict keys.
+          `frozen=True` makes the instance immutable: you cannot assign to fields after creation (`p.x = 5` raises an error). This is useful for value objects that should never change (like coordinates). Frozen dataclasses are also hashable by default, so they can be used in sets and as dict keys.
         sol: |-
           from dataclasses import dataclass
           @dataclass(frozen=True)
@@ -1323,7 +1323,7 @@ chapters:
         obj: '`@dataclass class Rectangle:` with `width: float, height: float`. Add `def area(self) -> float: return self.width * self.height`. Create `r = Rectangle(5.0, 3.0); print(r.area())`.'
         hint: 'Methods in dataclasses work exactly like regular classes. Just `def area(self): …`.'
         expl: |-
-          A dataclass is still a regular class — it just auto-generates `__init__`, `__repr__`, etc. You can add any custom methods alongside the fields. `r = Rectangle(5.0, 3.0)` calls the auto-generated `__init__`, then `r.area()` calls your custom method that computes `width * height`.
+          A dataclass is still a regular class: it just auto-generates `__init__`, `__repr__`, etc. You can add any custom methods alongside the fields. `r = Rectangle(5.0, 3.0)` calls the auto-generated `__init__`, then `r.area()` calls your custom method that computes `width * height`.
         sol: |-
           from dataclasses import dataclass
           @dataclass
@@ -1378,7 +1378,7 @@ chapters:
         max: 8/1
       - name: Dataclass with Property
         obj: '`@dataclass class Triangle:` with `a: float, b: float`. Add `@property def hypotenuse(self) -> float: return sqrt(self.a**2 + self.b**2)`. `print(Triangle(3.0, 4.0).hypotenuse)`.'
-        hint: '`from math import sqrt`. Use `@property` above the method — call it without `()`: `t.hypotenuse` not `t.hypotenuse()`.'
+        hint: '`from math import sqrt`. Use `@property` above the method, call it without `()`: `t.hypotenuse` not `t.hypotenuse()`.'
         expl: |-
           `@property` turns a method into a read-only attribute. `t.hypotenuse` calls the method and returns the result, but you access it without parentheses. Inside the method, `sqrt(a**2 + b**2)` computes the Pythagorean theorem: sqrt(3² + 4²) = sqrt(9 + 16) = sqrt(25) = 5.0.
         sol: |-
@@ -1475,7 +1475,7 @@ chapters:
         max: 12/1
         start: n = int(input())
       - name: The Lambda's Crucible
-        obj: 'Read `n = int(input())`. For each student: `name, s1, s2 = input().split()` then `avg = float(s1)*0.4 + float(s2)*0.6`. Store `(name, avg)` in a list. Sort with `sorted(students, key=lambda s: (-s[1], s[0]))` — negative for descending avg, then ascending name. Print list of names.'
+        obj: 'Read `n = int(input())`. For each student: `name, s1, s2 = input().split()` then `avg = float(s1)*0.4 + float(s2)*0.6`. Store `(name, avg)` in a list. Sort with `sorted(students, key=lambda s: (-s[1], s[0]))`, negative for descending avg, then ascending name. Print list of names.'
         example:
           in:
             - '3'

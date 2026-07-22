@@ -3,7 +3,7 @@ import { splitStatements } from "./parseUtils";
 // Interpreter for the two hashing-pattern lessons: a frequency counter
 // (build a dict of counts while scanning a string) and two-sum (build a
 // value -> index map and look up complements). It actually computes the
-// values — HashViz only stores the raw right-hand-side text — so the dict
+// values, HashViz only stores the raw right-hand-side text, so the dict
 // fills in with real counts/indices and lookups highlight correctly.
 
 const getIndent = (s) => s.length - s.trimStart().length;

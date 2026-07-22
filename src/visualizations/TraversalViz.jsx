@@ -71,7 +71,7 @@ function VizBody({ state }) {
       </svg>
       <div className="flex flex-wrap items-center justify-center gap-1 mt-2 pt-2" style={{ borderTop: "1px solid var(--border)" }}>
         <span className="text-[10px] mr-1" style={{ color: "var(--text-muted)" }}>visited:</span>
-        {state.sequence.length === 0 && <span className="text-[10px]" style={{ color: "var(--text-muted)" }}>—</span>}
+        {state.sequence.length === 0 && <span className="text-[10px]" style={{ color: "var(--text-muted)" }}>-</span>}
         {state.sequence.map((v, i) => {
           const isLast = i === state.sequence.length - 1;
           return (

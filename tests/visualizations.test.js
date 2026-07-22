@@ -63,7 +63,7 @@ describe("data-structures track visualizations", () => {
       expect(Array.isArray(states)).toBe(true);
       expect(
         states.length,
-        `parser produced no state changes beyond the initial empty snapshot for "${level.name}" — the level's own solution never animates`
+        `parser produced no state changes beyond the initial empty snapshot for "${level.name}", the level's own solution never animates`
       ).toBeGreaterThan(1);
     });
   }
@@ -90,7 +90,7 @@ describe("data-structures track visualizations", () => {
     const states = parseTreeStates((level.start || "") + "\n" + level.sol);
     const final = states[states.length - 1];
     // Inserting 5, 3, 7, 2, 8 into an empty BST: 5 at root, 3/7 as its
-    // children, 2 left of 3, 8 right of 7 — matches the level's expected
+    // children, 2 left of 3, 8 right of 7, matches the level's expected
     // in-order output of 2, 3, 5, 7, 8.
     expect(final.tree.val).toBe("5");
     expect(final.tree.left.val).toBe("3");
@@ -103,7 +103,7 @@ describe("data-structures track visualizations", () => {
     const level = levels.find((l) => l.level.name === "Collections Deque").level;
     const states = parseQueueStates((level.start || "") + "\n" + level.sol);
     // The solution drains the deque with a trailing `while dq:` loop, so the
-    // last snapshot is empty — check the peak (right after appendleft) instead.
+    // last snapshot is empty, check the peak (right after appendleft) instead.
     const peak = states.find((s) => (s.dq || []).length === 4);
     expect(peak, "expected a state with all 4 items present after appendleft").toBeTruthy();
     expect(peak.dq.map((item) => item.val)).toEqual(["0", "1", "2", "3"]);
@@ -163,7 +163,7 @@ describe("data-structures track visualizations", () => {
       ["Bob", "30"],
       ["Charlie", "35"],
     ]);
-    // Alice was read a step ago, then Charlie was added — Alice's "read"
+    // Alice was read a step ago, then Charlie was added, Alice's "read"
     // badge should have cleared once a later, unrelated step happened.
     const alice = final.ages.find((p) => p.key === "Alice");
     expect(alice.accessed).toBeFalsy();

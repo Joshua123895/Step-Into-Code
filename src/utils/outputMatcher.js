@@ -5,7 +5,7 @@
 // Deliberate decisions:
 // - NO suffix matching (the old `a.endsWith(e)` rule). Output must match exactly
 //   after normalization. If correct solutions start failing because the runner
-//   prepends noise to stdout, fix the runner — do not loosen this matcher.
+//   prepends noise to stdout, fix the runner. Do not loosen this matcher.
 // - expectAnyOf candidates are normalized before comparison (YAML block scalars
 //   carry trailing newlines).
 // - Regexes are compiled identically everywhere, with the "s" flag.
@@ -33,7 +33,7 @@ export function matchOutput(actual, expected) {
 
 /**
  * Check one program output against one level test.
- * `test` shape: { expected?, expectAnyOf?, expectMatch? } — the same shape
+ * `test` shape: { expected?, expectAnyOf?, expectMatch? }, the same shape
  * produced by parseTests() in tracks.js and normalizeTest() in the test suite.
  */
 export function checkOutput(output, test) {

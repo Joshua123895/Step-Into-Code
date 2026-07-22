@@ -196,7 +196,7 @@ export function parseSortStates(code) {
     const fn = functions[name];
     if (!fn) return;
     const scope = {};
-    // Param 0 is always the array by convention in these lessons — the
+    // Param 0 is always the array by convention in these lessons, the
     // array itself is tracked globally (name-agnostic), so only the
     // remaining scalar params need real binding.
     for (let p = 1; p < fn.params.length && p < argExprTexts.length; p++) {
@@ -337,7 +337,7 @@ export function parseSortStates(code) {
   // this line-based interpreter. Recognizing the call by name and running a
   // canonical simulation mirrors the precedent already set by
   // LinkedListViz's insert_head/insert_tail/delete_node/search and
-  // TreeViz's insert_bst — trust the required function name, since the
+  // TreeViz's insert_bst, trust the required function name, since the
   // level's actual grading runs the student's real code, not this
   // animation.
   function rangeArray(lo, hi) {
@@ -428,7 +428,7 @@ export function parseSortStates(code) {
       }
     }
 
-    // fn([1, 2, 3]) — an inline list literal passed straight into the call,
+    // fn([1, 2, 3]), an inline list literal passed straight into the call,
     // with no separate variable at all (e.g. `print(selection_sort([64, 25,
     // 12, 22, 11]))`). Just as valid Python as the named-variable form above,
     // and arguably the more natural way to write a quick one-off test call.

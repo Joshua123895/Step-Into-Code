@@ -1,8 +1,8 @@
-// Interpreter for the Dynamic Programming lessons — Fibonacci by memoization
+// Interpreter for the Dynamic Programming lessons, Fibonacci by memoization
 // (top-down) and tabulation (bottom-up). Both compute f(i) = f(i-1) + f(i-2),
 // and both effectively fill index 2..n in order (memoization's recursion
 // bottoms out and caches upward in the same sequence), so a single left-to-
-// right table fill models both — each step highlighting the cell being
+// right table fill models both, each step highlighting the cell being
 // computed and the two cells it depends on.
 
 export function detectDPType(code) {

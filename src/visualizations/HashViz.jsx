@@ -36,7 +36,7 @@ function extractPairs(body) {
   return pairs;
 }
 
-// A deterministic, illustrative hash — NOT Python's real hash(), which is
+// A deterministic, illustrative hash, NOT Python's real hash(), which is
 // randomized per process and can't be reproduced here. This exists purely
 // to place keys into consistent buckets so re-inserting the same key
 // visibly lands in the same slot (letting collision/update behavior show
@@ -243,7 +243,7 @@ function BucketTable({ name, table }) {
           <div key={bi} className="rounded-lg p-1.5" style={{ border: "1.5px solid var(--border)", background: "var(--bg)" }}>
             <div className="text-[9px] mb-1" style={{ color: "var(--text-muted)" }}>#{bi}</div>
             {bucket.length === 0 ? (
-              <div className="text-[9px]" style={{ color: "var(--text-muted)" }}>—</div>
+              <div className="text-[9px]" style={{ color: "var(--text-muted)" }}>-</div>
             ) : (
               <div className="flex flex-col gap-0.5">
                 {bucket.map((pair) => {

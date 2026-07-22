@@ -41,7 +41,7 @@ describe("greedy-algorithm visualization (track 5)", () => {
     expect(final.picked.reduce((a, b) => a + b, 0)).toBe(63);
   });
 
-  it("Jump Game: both calls trace — [2,3,1,1,4] reaches the end (True), [3,2,1,0,4] gets stuck (False)", () => {
+  it("Jump Game: both calls trace, [2,3,1,1,4] reaches the end (True), [3,2,1,0,4] gets stuck (False)", () => {
     const { states } = run("Jump Game");
     const run1 = states.filter((s) => s.run === 1);
     const run2 = states.filter((s) => s.run === 2);

@@ -25,7 +25,7 @@ describe("norm", () => {
   });
 });
 
-describe("exact match (test.expected) — suffix loophole must stay dead", () => {
+describe("exact match (test.expected), suffix loophole must stay dead", () => {
   const test = { expected: "5\n" };
 
   it("accepts the exact answer", () => {
@@ -75,7 +75,7 @@ describe("matchOutput (solution-diff levels)", () => {
   });
 });
 
-describe("expectAnyOf — YAML block-scalar candidates must be matchable", () => {
+describe("expectAnyOf, YAML block-scalar candidates must be matchable", () => {
   // YAML `- |` block scalars produce candidates WITH trailing newlines.
   // The old app compared raw candidates against normalized output, so a
   // correct solution could NEVER pass (permanent false reject).
@@ -95,7 +95,7 @@ describe("expectAnyOf — YAML block-scalar candidates must be matchable", () =>
   });
 });
 
-describe("expectMatch — regex semantics are consistent and anchorable", () => {
+describe("expectMatch, regex semantics are consistent and anchorable", () => {
   it("compiles with the s flag so `.` can span lines (parity with old CI behavior)", () => {
     expect(checkOutput("a\nb", { expectMatch: "a.b" })).toBe(true);
   });

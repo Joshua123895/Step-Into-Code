@@ -1,7 +1,7 @@
 import { splitStatements } from "./parseUtils";
 
 // ---------------------------------------------------------------------------
-// Interpreter for pointer-over-array algorithms — linear/binary search, two
+// Interpreter for pointer-over-array algorithms, linear/binary search, two
 // pointers, sliding window. These need things the sort interpreter doesn't:
 // real `return` that stops the function, `enumerate`, index-vs-value
 // comparisons, and tracking of named index pointers (low/mid/high, left/right)
@@ -82,7 +82,7 @@ function parseTokens(tokens) {
     if (t === "(") { const e = parseOr(); expect(")"); return e; }
     if (t === "len") { expect("("); const e = parseOr(); expect(")"); return { type: "len", expr: e }; }
     if (t === "sum") {
-      // sum(arr[:k]) / sum(arr[a:b]) / sum(arr) — the argument parses as an
+      // sum(arr[:k]) / sum(arr[a:b]) / sum(arr), the argument parses as an
       // arrslice (or a bare var), handled in evalNode.
       expect("(");
       const arg = parseOr();
@@ -437,7 +437,7 @@ export function parseSearchStates(code) {
 
       // Scalar assignment. LHS is guaranteed a bare name by the regex, so a
       // RHS containing `[` is an array *read* (e.g. current = arr[left] +
-      // arr[right]), never an element write — search algorithms don't mutate
+      // arr[right]), never an element write, search algorithms don't mutate
       // the array. Highlighting those reads is what makes the two-pointer sum
       // and the sliding-window edges light up.
       const scalarMatch = t.match(/^(\w+)\s*=\s*(.+)$/);
@@ -523,7 +523,7 @@ export function parseSearchStates(code) {
   }
 
   // -------- top level --------
-  // Trace EVERY call to a defined function, in order — a level that calls
+  // Trace EVERY call to a defined function, in order, a level that calls
   // linear_search twice (found, then not-found) should animate both, not
   // just the first. Between calls, callFunction resets the board.
   let i = 0;
@@ -553,7 +553,7 @@ export function parseSearchStates(code) {
       continue;
     }
 
-    // fn([...], ...) — inline list literal (re-seeds the array each time).
+    // fn([...], ...), inline list literal (re-seeds the array each time).
     const inlineArr = t.match(/(\w+)\s*\(\s*\[([^\]]*)\]\s*(?:,\s*(.+?))?\)/);
     if (inlineArr && functions[inlineArr[1]]) {
       const vals = inlineArr[2].split(",").map((s) => s.trim()).filter(Boolean);
@@ -565,7 +565,7 @@ export function parseSearchStates(code) {
       continue;
     }
 
-    // fn(nums, ...) — array passed by name.
+    // fn(nums, ...), array passed by name.
     if (arr) {
       const named = t.match(/(\w+)\s*\(\s*(\w+)\s*(?:,\s*(.+?))?\)/);
       if (named && functions[named[1]]) {

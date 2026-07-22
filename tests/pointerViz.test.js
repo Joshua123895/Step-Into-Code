@@ -26,7 +26,7 @@ describe("pointer/search visualization (track 5)", () => {
     }
   });
 
-  it("Linear Search: traces BOTH calls — the found search then the not-found one", () => {
+  it("Linear Search: traces BOTH calls, the found search then the not-found one", () => {
     const states = run("Searching", "Linear Search");
     expect(states.length).toBeGreaterThan(1);
 
@@ -102,7 +102,7 @@ describe("pointer/search visualization (track 5)", () => {
   });
 
   it("recognizes a probe named `middle` (not just `mid`) as a pointer", () => {
-    // A common student variant of binary search — the probe should still
+    // A common student variant of binary search, the probe should still
     // render as a pointer inside the active range.
     const code = `def binary_search(arr, target):
     low = 0

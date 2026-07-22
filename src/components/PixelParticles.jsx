@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 
 export default function PixelParticles() {
-  // Halve the animated-element load on phones — 36 infinitely-floating divs is
+  // Halve the animated-element load on phones, 36 infinitely-floating divs is
   // wasteful on a small screen where most of them fall off-canvas anyway.
   const count = typeof window !== "undefined" && window.innerWidth < 640 ? 18 : 36;
 

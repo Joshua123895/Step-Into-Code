@@ -11,7 +11,7 @@ chapters:
         obj: 'Define an empty `class Dog:` with `pass` inside. Then print `Dog.__name__`.'
         hint: 'Write `class Dog:` on one line, then `pass` indented on the next line.'
         expl: |-
-          A class is a blueprint for creating objects. The `class` keyword creates a new type. `pass` is a placeholder that does nothing — it fills the body so Python doesn't complain about an empty class.
+          A class is a blueprint for creating objects. The `class` keyword creates a new type. `pass` is a placeholder that does nothing: it fills the body so Python doesn't complain about an empty class.
         sol: |-
           class Dog:
               pass
@@ -36,7 +36,7 @@ chapters:
         max: 5/1
       - name: The Constructor
         obj: 'Add `def __init__(self):` to `Dog` that prints `"A dog is born!"`.'
-        hint: '`def __init__(self): print("A dog is born!")` — `__init__` runs automatically on creation.'
+        hint: '`def __init__(self): print("A dog is born!")`, `__init__` runs automatically on creation.'
         expl: |-
           `__init__` is the constructor method. Python calls it automatically right after creating a new instance. `self` is the newly created instance itself. Code inside `__init__` runs once per object at creation time.
         sol: |-
@@ -85,9 +85,9 @@ chapters:
         max: 6/1
       - name: Instance Methods
         obj: 'Add `def bark(self):` that prints `"Woof!"`. Create `Dog("Rex")` and call `dog.bark()`.'
-        hint: '`def bark(self): print("Woof!")` — methods always take `self` as the first parameter.'
+        hint: '`def bark(self): print("Woof!")`, methods always take `self` as the first parameter.'
         expl: |-
-          Methods are functions defined inside a class. They always take `self` as the first parameter, which refers to the instance calling the method. Call them with `instance.method()` — Python automatically passes `self`.
+          Methods are functions defined inside a class. They always take `self` as the first parameter, which refers to the instance calling the method. Call them with `instance.method()`. Python automatically passes `self`.
         sol: |-
           class Dog:
               def __init__(self, name):
@@ -121,7 +121,7 @@ chapters:
         max: 8/1
       - name: Method Return Values
         obj: 'Define `class Circle:` with `__init__(self, radius)` and `def area(self) -> float:` returning `3.14 * self.radius ** 2`. Print the area.'
-        hint: '`return 3.14159 * self.radius ** 2` — use `return` to give a value back to the caller.'
+        hint: '`return 3.14159 * self.radius ** 2`, use `return` to give a value back to the caller.'
         expl: |-
           Methods can return values using `return`. The caller receives the returned value. Here `area()` computes and returns the circle's area. `print(circle.area())` prints the returned number.
         sol: |-
@@ -221,7 +221,7 @@ chapters:
         max: 5/1
       - name: Static Methods
         obj: 'Add `@staticmethod def info():` that returns `"Dogs are loyal"`. Call `Dog.info()`.'
-        hint: '`@staticmethod` creates a method that takes neither `self` nor `cls` — it is just a function in the class namespace.'
+        hint: '`@staticmethod` creates a method that takes neither `self` nor `cls`, it is just a function in the class namespace.'
         expl: |-
           A static method is a regular function placed inside a class for organizational purposes. Use `@staticmethod` and omit `self`/`cls`. Call it on the class: `Dog.info()`. It cannot access class or instance data.
         sol: |-
@@ -237,9 +237,9 @@ chapters:
         max: 5/1
       - name: Property Getter
         obj: 'Define `class Circle:` with `radius` and a `@property` called `diameter` that returns `radius * 2`. Print `c.diameter`.'
-        hint: '`@property def diameter(self): return self.radius * 2` — access it without parentheses: `c.diameter`.'
+        hint: '`@property def diameter(self): return self.radius * 2`, access it without parentheses: `c.diameter`.'
         expl: |-
-          `@property` turns a method into a read-only computed attribute. You access it without parentheses: `c.diameter` not `c.diameter()`. The value is computed on-the-fly — change `radius` and `diameter` changes too.
+          `@property` turns a method into a read-only computed attribute. You access it without parentheses: `c.diameter` not `c.diameter()`. The value is computed on-the-fly: change `radius` and `diameter` changes too.
         sol: |-
           class Circle:
               def __init__(self, radius):
@@ -281,7 +281,7 @@ chapters:
         obj: 'Define `class Secret:` with `__secret = "hidden"` and `def reveal(self):` returning `self.__secret`. Access via method but demonstrate direct access fails.'
         hint: '`__secret` (double underscore) triggers name mangling to `_Secret__secret`. Access it via a method.'
         expl: |-
-          Double underscore prefix `__attr` triggers name mangling. Python renames it to `_ClassName__attr` internally. This prevents accidental access from outside the class — `obj.__secret` raises AttributeError but `obj._Secret__secret` works.
+          Double underscore prefix `__attr` triggers name mangling. Python renames it to `_ClassName__attr` internally. This prevents accidental access from outside the class: `obj.__secret` raises AttributeError but `obj._Secret__secret` works.
         sol: |-
           class Secret:
               __secret = "hidden"
@@ -316,7 +316,7 @@ chapters:
         obj: 'Define `class Person:` with `__init__(self, name, age)`. Create an instance and `print(person.__dict__)`.'
         hint: '`instance.__dict__` returns a dictionary of all instance attributes and their values.'
         expl: |-
-          Every instance has a `__dict__` attribute that stores all its instance attributes as a dictionary. `person.__dict__` returns `{"name": "Alice", "age": 30}`. This is how attribute lookup works internally — Python checks `__dict__` first.
+          Every instance has a `__dict__` attribute that stores all its instance attributes as a dictionary. `person.__dict__` returns `{"name": "Alice", "age": 30}`. This is how attribute lookup works internally. Python checks `__dict__` first.
         sol: |-
           class Person:
               def __init__(self, name, age):
@@ -368,7 +368,7 @@ chapters:
     levels:
       - name: Basic Inheritance
         obj: 'Define `class Animal:` with `__init__(self, name)` and `class Dog(Animal): pass`. Create `Dog("Rex")` and print its name.'
-        hint: '`class Dog(Animal):` — put the parent class in parentheses after the child class name.'
+        hint: '`class Dog(Animal):`, put the parent class in parentheses after the child class name.'
         expl: |-
           Inheritance lets a child class reuse the parent's code. `class Dog(Animal):` means Dog inherits all attributes and methods from Animal. Since `__init__` is not defined in Dog, Python looks up the chain and uses Animal's `__init__`.
         sol: |-
@@ -408,7 +408,7 @@ chapters:
         obj: 'Define `class Animal:` with `def speak(self): print("...")` and `class Dog(Animal):` overriding `speak` to print `"Woof!"`.'
         hint: 'Define a method with the exact same name in the child class. It replaces the parent version.'
         expl: |-
-          When a child class defines a method with the same name as the parent, it overrides the parent's version. Calling `dog.speak()` runs Dog's version, not Animal's. This is how polymorphism works — each subclass can provide its own behavior.
+          When a child class defines a method with the same name as the parent, it overrides the parent's version. Calling `dog.speak()` runs Dog's version, not Animal's. This is how polymorphism works: each subclass can provide its own behavior.
         sol: |-
           class Animal:
               def speak(self):
@@ -463,9 +463,9 @@ chapters:
         max: 7/1
       - name: Multiple Inheritance
         obj: 'Define `class Flyer:` with `def fly(self): print("Flying")`, `class Swimmer:` with `def swim(self): print("Swimming")`, and `class Duck(Flyer, Swimmer): pass`. Call both methods.'
-        hint: '`class Duck(Flyer, Swimmer):` — list multiple parents in parentheses. Duck inherits methods from both.'
+        hint: '`class Duck(Flyer, Swimmer):`, list multiple parents in parentheses. Duck inherits methods from both.'
         expl: |-
-          Python supports multiple inheritance — a class can inherit from several parent classes. `Duck(Flyer, Swimmer)` inherits `fly()` from Flyer and `swim()` from Swimmer. Method lookup goes left-to-right, then up the hierarchy (MRO).
+          Python supports multiple inheritance: a class can inherit from several parent classes. `Duck(Flyer, Swimmer)` inherits `fly()` from Flyer and `swim()` from Swimmer. Method lookup goes left-to-right, then up the hierarchy (MRO).
         sol: |-
           class Flyer:
               def fly(self):
@@ -507,7 +507,7 @@ chapters:
         obj: 'Define mixins `JSONMixin` with `to_json(self)` and `LogMixin` with `log(self)`. Create `class User(JSONMixin, LogMixin):` with `__init__(self, name)`. Call both methods.'
         hint: 'Mixins are small classes that add specific reusable behavior. Combine them via multiple inheritance.'
         expl: |-
-          A mixin is a class that provides reusable methods intended to be combined with other classes. Mixins are not meant to stand alone — they add focused behavior. `JSONMixin` adds serialization, `LogMixin` adds logging. Combine several mixins for rich functionality.
+          A mixin is a class that provides reusable methods intended to be combined with other classes. Mixins are not meant to stand alone; they add focused behavior. `JSONMixin` adds serialization, `LogMixin` adds logging. Combine several mixins for rich functionality.
         sol: |-
           class JSONMixin:
               def to_json(self):
@@ -565,7 +565,7 @@ chapters:
         obj: 'Define `class Person:` with `__init__(self, name, age)`, `__str__` returning `f"{self.name} ({self.age})"`, and `__repr__` returning `f"Person({self.name!r}, {self.age})"`. Print the instance.'
         hint: '`__str__` is for display to users, `__repr__` is for developers/debugging. Return strings from both.'
         expl: |-
-          `__str__` is called by `print()` and `str()` — it should be human-readable. `__repr__` is called in the REPL and debugger — it should be unambiguous and ideally show how to recreate the object. `print(obj)` uses `__str__`; `repr(obj)` uses `__repr__`.
+          `__str__` is called by `print()` and `str()`; it should be human-readable. `__repr__` is called in the REPL and debugger; it should be unambiguous and ideally show how to recreate the object. `print(obj)` uses `__str__`; `repr(obj)` uses `__repr__`.
         sol: |-
           class Person:
               def __init__(self, name, age):
@@ -610,7 +610,7 @@ chapters:
         max: 10/1
       - name: Comparison Methods
         obj: 'Define `class Score:` with `__init__(self, value)`, `__lt__`, `__le__`, `__gt__`, `__ge__` comparing `self.value` to `other.value`. Test with `Score(5) < Score(10)`.'
-        hint: '`def __lt__(self, other): return self.value < other.value` — implement all four for full comparison support.'
+        hint: '`def __lt__(self, other): return self.value < other.value`, implement all four for full comparison support.'
         expl: |-
           `__lt__` (<), `__le__` (<=), `__gt__` (>), `__ge__` (>=) let you use comparison operators on custom objects. Implement at least `__lt__` and `__eq__`, then use `@functools.total_ordering` to fill in the rest automatically.
         sol: |-
@@ -711,7 +711,7 @@ chapters:
         obj: 'Define `class ManagedFile:` with `__enter__(self)` printing "Open" and `__exit__(self, *args)` printing "Close". Use it with `with`.'
         hint: '`__enter__` runs when entering `with` block. `__exit__` runs when leaving (even on exceptions). It receives `(exc_type, exc_val, exc_tb)`.'
         expl: |-
-          `__enter__` sets up the resource and returns it (here the object itself). `__exit__` cleans up when the `with` block ends, even if an exception occurred. Parameters of `__exit__` are `(exc_type, exc_val, exc_tb)` — all None if no error.
+          `__enter__` sets up the resource and returns it (here the object itself). `__exit__` cleans up when the `with` block ends, even if an exception occurred. Parameters of `__exit__` are `(exc_type, exc_val, exc_tb)`, all None if no error.
         sol: |-
           class ManagedFile:
               def __enter__(self):
@@ -847,9 +847,9 @@ chapters:
         max: 9/1
       - name: Protocol
         obj: 'Define `from typing import Protocol`. Create `class Drawable(Protocol):` with `def draw(self) -> str: ...`. Then `def render(obj: Drawable): print(obj.draw())`. Create a class that satisfies the protocol without explicit inheritance.'
-        hint: 'Protocols use structural subtyping — if a class has the right methods, it satisfies the protocol without inheriting.'
+        hint: 'Protocols use structural subtyping, if a class has the right methods, it satisfies the protocol without inheriting.'
         expl: |-
-          Protocols are "duck typing" interfaces. A class satisfies a Protocol if it has all the methods/attributes with matching signatures — no explicit inheritance needed. This is structural subtyping. Three dots `...` are the method body (placeholder).
+          Protocols are "duck typing" interfaces. A class satisfies a Protocol if it has all the methods/attributes with matching signatures: no explicit inheritance needed. This is structural subtyping. Three dots `...` are the method body (placeholder).
         sol: |-
           from typing import Protocol
           class Drawable(Protocol):
@@ -918,7 +918,7 @@ chapters:
         max: 12/1
       - name: Virtual Subclass
         obj: 'Use `Shape.register(Circle)` to make `Circle` a virtual subclass without inheritance. Then check `issubclass(Circle, Shape)`.'
-        hint: '`register()` adds a class as a virtual subclass. No actual inheritance — just makes `issubclass`/`isinstance` return True.'
+        hint: '`register()` adds a class as a virtual subclass. No actual inheritance, just makes `issubclass`/`isinstance` return True.'
         expl: |-
           `register()` creates a virtual subclass: `issubclass(Circle, Shape)` returns True even though Circle doesn't inherit from Shape. No methods are inherited. Useful for adapting external classes to your interface without modifying them.
         sol: |-
@@ -1028,7 +1028,7 @@ chapters:
         max: 12/1
       - name: Property as Descriptor
         obj: 'Create a descriptor `class Celsius:` with `__get__` returning the value and `__set__` converting Fahrenheit to Celsius. Use it in a class. Show how `property()` works similarly.'
-        hint: '`property()` is a built-in descriptor. Your custom descriptor works the same way — intercepting `obj.attr` access.'
+        hint: '`property()` is a built-in descriptor. Your custom descriptor works the same way, intercepting `obj.attr` access.'
         expl: |-
           `property()` is implemented as a descriptor. Understanding descriptors demystifies properties. Here `Celsius` is a custom descriptor that could convert units on assignment. Every time you use `@property`, Python creates a descriptor behind the scenes.
         sol: |-
@@ -1267,7 +1267,7 @@ chapters:
         obj: 'Define `class Strategy:` with `@abstractmethod def execute(self, a, b)`. `class Add(Strategy):` and `class Multiply(Strategy):`. `class Context:` that takes a Strategy and calls it. Test both strategies.'
         hint: 'Strategy pattern lets you swap algorithms at runtime. Each strategy is a class with a common interface.'
         expl: |-
-          The Strategy pattern defines a family of interchangeable algorithms. Each strategy implements the same interface. The context uses a strategy without knowing the concrete implementation. You can swap strategies at runtime — `Context(Add())` vs `Context(Multiply())`.
+          The Strategy pattern defines a family of interchangeable algorithms. Each strategy implements the same interface. The context uses a strategy without knowing the concrete implementation. You can swap strategies at runtime: `Context(Add())` vs `Context(Multiply())`.
         sol: |-
           from abc import ABC, abstractmethod
           class Strategy(ABC):
@@ -1668,7 +1668,7 @@ chapters:
         max: 16/1
         start: ''
       - name: The Singleton Protocol
-        obj: 'Create a metaclass `SingletonMeta` that enforces singleton behavior. Then define `class Config(metaclass=SingletonMeta):` with `__init__(self)` printing "Init once". Create two instances — `__init__` should run only once. Print identity comparison.'
+        obj: 'Create a metaclass `SingletonMeta` that enforces singleton behavior. Then define `class Config(metaclass=SingletonMeta):` with `__init__(self)` printing "Init once". Create two instances. `__init__` should run only once. Print identity comparison.'
         example:
           in: []
           out: |

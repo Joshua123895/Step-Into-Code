@@ -58,7 +58,7 @@ export function parseTreeStates(code) {
   }
 
   // Standard BST insert, simulated directly rather than interpreted from
-  // the student's actual `insert_bst` body — the same "trust the
+  // the student's actual `insert_bst` body, the same "trust the
   // recognized call shape" approach LinkedListViz already uses for
   // insert_head/insert_tail/delete_node/search, since real recursive
   // evaluation with return-value threading is out of reach for this
@@ -85,7 +85,7 @@ export function parseTreeStates(code) {
     if (t.startsWith("#") || t.startsWith("class ") || t.startsWith("def ") || /\bself\./.test(t)) return;
 
     // Matches both a bare `root = TreeNode(1)` and a dotted assignment like
-    // `root.left = TreeNode(2)` or `root.left.right = TreeNode(4)` — the
+    // `root.left = TreeNode(2)` or `root.left.right = TreeNode(4)`, the
     // dotted path is resolved and linked as a child instead of being
     // (mis)parsed as a brand new top-level variable named "left"/"right".
     const init = t.match(/^([\w.]+)\s*=\s*(?:TreeNode|Node)\s*\(\s*(\d+)\s*\)$/);
@@ -164,7 +164,7 @@ export function parseTreeStates(code) {
 // what makes this safe: two single-child branches that are mirror images of
 // each other (e.g. inserting [5, 3, 7, 2, 8] into a BST, where 3's only child
 // is on its left and 7's only child is on its right) would otherwise land
-// their parent nodes on the exact same x and render on top of each other —
+// their parent nodes on the exact same x and render on top of each other;
 // offsetting by a fixed half-slot alone doesn't see that collision coming.
 const NODE_SPACING = 46;
 const ROW_HEIGHT = 50;
@@ -215,7 +215,7 @@ export function layoutTree(root) {
   const rootX = positioned ? positioned.x : 0;
   // The tree can lean further to one side of the root than the other (e.g. a
   // deep left subtree with a lone right leaf). Sizing the viewBox symmetrically
-  // around the root's own x — rather than around the overall footprint — keeps
+  // around the root's own x, rather than around the overall footprint, keeps
   // the root lined up with the "root" name label above it, which is centered
   // independently via flexbox.
   const halfSpan = result
@@ -333,7 +333,7 @@ export default function TreeViz({ code }) {
     : null;
 
   // Derive which vars just disappeared by comparing against the previously
-  // rendered state, right here during render rather than in a useEffect —
+  // rendered state, right here during render rather than in a useEffect,
   // React's documented pattern for adjusting state when a derived value
   // changes (tracked with useState, not a ref: refs can't be read during
   // render). The 300ms auto-clear below is the only genuine side effect

@@ -2,7 +2,7 @@
 // scheduling), Greedy Coin Change (largest-denomination-first), and Jump Game
 // (farthest-reachable tracking). Each has a genuinely different shape, so
 // rather than one generic executor this detects the problem from the code and
-// runs a small dedicated trace for each — real execution over the parsed
+// runs a small dedicated trace for each, real execution over the parsed
 // input, not a hardcoded "textbook" answer, so results always match the
 // level's actual data.
 

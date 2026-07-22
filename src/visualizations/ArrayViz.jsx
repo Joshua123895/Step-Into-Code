@@ -96,7 +96,7 @@ export function parseArrayStates(code) {
       if (!isSlice && /^-?\d+$/.test(inner)) {
         const norm = Number(inner) < 0 ? len + Number(inner) : Number(inner);
         if (norm >= 0 && norm < len) {
-          // Reset every item's sel (not just set the matched one) — these are
+          // Reset every item's sel (not just set the matched one), these are
           // throwaway reads like `print(nums[0])`, not stored sub-arrays, so
           // each new access should show only its own target, not accumulate
           // stale highlighting from a previous unrelated access/slice.

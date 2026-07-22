@@ -68,7 +68,7 @@ describe("Sorting chapter visualization (track 5)", () => {
   });
 
   it("triggers on a list literal passed straight into the call, not just a named variable", () => {
-    // `print(selection_sort([64, 25, 12, 22, 11]))` — no separate
+    // `print(selection_sort([64, 25, 12, 22, 11]))`, no separate
     // `nums = [...]` line at all. Previously this never matched either
     // trigger pattern, so the array stayed unset and nothing animated.
     const code = `def selection_sort(arr):

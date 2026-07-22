@@ -4,7 +4,7 @@ import VizControls from "./VizControls";
 import { parseSearchStates } from "./searchInterp";
 
 // Lower-bound pointers are green, upper-bound red, the probe amber, scan
-// indices blue/purple — so in binary search low/high visibly bracket the
+// indices blue/purple, so in binary search low/high visibly bracket the
 // active range with mid probing between them.
 const POINTER_STYLE = {
   low: "#28CA41", left: "#28CA41", lo: "#28CA41", l: "#28CA41",

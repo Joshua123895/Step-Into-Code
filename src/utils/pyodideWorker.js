@@ -1,7 +1,7 @@
 // Runs Pyodide inside a Web Worker instead of the main thread. A synchronous
 // infinite loop in student code (e.g. `while True: pass`) blocks whatever
 // thread is running it with no way for JS to interrupt it from inside that
-// same thread — so running on the main thread means a hung tab with no
+// same thread, so running on the main thread means a hung tab with no
 // recovery but a hard reload. Isolating execution in a worker lets the client
 // (pyodideWorkerClient.js) enforce a timeout by calling worker.terminate(),
 // which kills the stuck interpreter outright.
@@ -50,7 +50,7 @@ function readTrackedFiles(pyodide, trackedFiles) {
 // `needsIOShim` mirrors runPythonWithIO's contract (raise a sentinel when the
 // script asks for more input() values than we've supplied, so the caller can
 // prompt the user and re-run from scratch) instead of runPythonReal's silent
-// "" fallback — the two callers need different behavior on missing input.
+// "" fallback, the two callers need different behavior on missing input.
 function buildWrappedCode(code, inputs, needsIOShim) {
   if (needsIOShim) {
     return `

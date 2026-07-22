@@ -1,4 +1,4 @@
-// Interpreter for the Backtracking lessons — subsets, permutations, and
+// Interpreter for the Backtracking lessons, subsets, permutations, and
 // combination sum. Arbitrary recursion is out of reach for a line parser, so
 // it recognizes which of the three problems the code is and runs a canonical
 // version, recording the explore -> solution -> backtrack rhythm: the partial

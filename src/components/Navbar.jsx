@@ -126,7 +126,7 @@ export default function Navbar() {
         </button>
       </nav>
 
-      {/* Backdrop scrim — dims the page and closes the menu on outside tap */}
+      {/* Backdrop scrim, dims the page and closes the menu on outside tap */}
       <div
         className="md:hidden fixed inset-0 z-30 transition-opacity duration-300"
         style={{
@@ -138,7 +138,7 @@ export default function Navbar() {
         aria-hidden="true"
       />
 
-      {/* Mobile aside — hidden off-screen right, slides left when open */}
+      {/* Mobile aside, hidden off-screen right, slides left when open */}
       <aside
         className="fixed top-0 right-0 z-40 h-full w-64"
         style={{

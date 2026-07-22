@@ -113,7 +113,7 @@ export default function LevelPage() {
   useEffect(() => {
     // Production has no /api/run-python server, so every run/submit falls back
     // to in-browser Pyodide. Loading its ~20MB WASM runtime is a multi-second
-    // one-time cost — without this warm-up it lands inside the first submit's
+    // one-time cost, without this warm-up it lands inside the first submit's
     // timed execution and can fail the speed star through no fault of the
     // student's code. Dev-server users never need Pyodide, so skip it there.
     if (import.meta.env.PROD) ensurePyodide();
@@ -297,7 +297,7 @@ export default function LevelPage() {
 
       // Speed star: when the batch runner reports per-test timings, grade the
       // student's CODE (slowest single test, measured inside Python) instead of
-      // wall-clock — which included process spawn, HTTP, and antivirus overhead
+      // wall-clock, which included process spawn, HTTP, and antivirus overhead
       // and therefore graded the student's hardware.
       execTime = batch?.timings?.length
         ? Math.max(...batch.timings)
@@ -766,7 +766,7 @@ export default function LevelPage() {
 
                 </div>
 
-                {/* Desktop action buttons — on mobile these move to the sticky bottom bar */}
+                {/* Desktop action buttons, on mobile these move to the sticky bottom bar */}
                 <div className="hidden lg:flex flex-col gap-2 pt-3" style={{ borderTop: "1px solid var(--border)" }}>
                   <PixelButton onClick={handleRun} size="md" variant="primary" disabled={testing}>
                     {testing ? "Running..." : "Submit Code"}
@@ -898,7 +898,7 @@ export default function LevelPage() {
           </div>
         </div>
 
-        {/* Mobile sticky action bar — thumb-reachable Hint + Submit (Run lives in the editor header) */}
+        {/* Mobile sticky action bar, thumb-reachable Hint + Submit (Run lives in the editor header) */}
         <div
           className="lg:hidden fixed bottom-0 left-0 right-0 z-40 flex gap-2 px-4 pt-3"
           style={{

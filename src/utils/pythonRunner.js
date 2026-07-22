@@ -3,7 +3,7 @@ import { runInPyodideWorker, TIMEOUT_MESSAGE } from "./pyodideWorkerClient";
 // Runs `code` with the given already-known input values. If the script calls
 // input() more times than there are values in `inputs`, execution stops early
 // (via a sentinel exception) and `needsInput: true` is returned instead of
-// silently feeding it "" — the caller is expected to prompt for one more
+// silently feeding it "", the caller is expected to prompt for one more
 // value, append it to `inputs`, and call this again (see CodeEditorContainer,
 // which reruns from scratch each time to simulate a live console since Pyodide
 // can't block synchronously on user input).

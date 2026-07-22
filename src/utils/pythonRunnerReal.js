@@ -2,7 +2,7 @@ import { runInPyodideWorker, TIMEOUT_MESSAGE } from "./pyodideWorkerClient";
 
 // Run one code submission against MANY input-sets in a single server process.
 // Returns { stdouts: string[], files } or null if batch mode is unavailable
-// (older server, production build, network error) — callers must fall back to
+// (older server, production build, network error), callers must fall back to
 // per-test runPythonReal calls.
 export async function runPythonRealBatch(code, initialFiles = {}, trackedFiles = [], batchInputs = []) {
   try {

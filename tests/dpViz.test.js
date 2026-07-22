@@ -52,7 +52,7 @@ describe("dynamic-programming visualization (track 5)", () => {
     }
   });
 
-  it("cells are empty until filled — the frontier advances left to right", () => {
+  it("cells are empty until filled, the frontier advances left to right", () => {
     const { states } = run("Tabulation");
     const mid = states[5]; // filling index 6
     expect(mid.cells[6].value).not.toBeNull(); // just filled

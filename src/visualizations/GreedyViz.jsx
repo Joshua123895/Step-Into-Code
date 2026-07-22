@@ -56,7 +56,7 @@ function CoinsBody({ state }) {
         amount: <span style={{ color: "var(--text)" }}>{amount}</span> · remaining: <span style={{ color: remaining === 0 ? KEPT : CURRENT }}>{remaining}</span>
       </div>
       <div className="flex flex-wrap justify-center gap-1 min-h-[30px]">
-        {picked.length === 0 && <span className="text-[10px]" style={{ color: "var(--text-muted)" }}>—</span>}
+        {picked.length === 0 && <span className="text-[10px]" style={{ color: "var(--text-muted)" }}>-</span>}
         {picked.map((coin, i) => {
           const isLast = i === picked.length - 1;
           return (

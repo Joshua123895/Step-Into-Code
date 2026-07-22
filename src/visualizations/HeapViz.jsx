@@ -41,7 +41,7 @@ function heapifyArr(arr) {
   return a;
 }
 
-// Real heapq semantics: new item goes to the end, then sifts up — this is
+// Real heapq semantics: new item goes to the end, then sifts up, this is
 // what makes the visualized array match what `print(heap)` actually shows,
 // instead of just displaying insertion order.
 function heapPush(arr, value, itemId) {
@@ -51,7 +51,7 @@ function heapPush(arr, value, itemId) {
 
 // Real extract-min: swap the root with the last element (both still present,
 // so the swap itself is a visible frame), then drop that displaced root value
-// and sift the new root down — not just "drop the front", which would
+// and sift the new root down, not just "drop the front", which would
 // silently desync from real heapq as soon as a push interleaves with pops.
 // Returning the swapped array separately (instead of only the final result)
 // lets the caller snapshot the swap before the displaced item disappears,

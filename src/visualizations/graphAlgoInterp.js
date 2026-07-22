@@ -2,7 +2,7 @@
 // Dijkstra shortest paths, and Prim's MST. Rather than interpret the student's
 // exact code (recursion + heaps + sets are out of reach for a line parser), it
 // parses the adjacency-dict literal, recognizes which algorithm the code is,
-// and runs a canonical version — the same "trust the recognized algorithm"
+// and runs a canonical version, the same "trust the recognized algorithm"
 // approach used for merge/quick sort. Grading still runs the student's real
 // code; this animation shows the textbook algorithm over their graph.
 
@@ -73,7 +73,7 @@ function detectAlgo(code) {
 // Parses the traversal's start node from a call like graph_dfs(graph, 0) or
 // dijkstra(graph, "a"). Topological sort has no single start.
 function parseStart(code, graphName) {
-  // Match the CALL, e.g. graph_dfs(graph, 0) — skipping the def line, whose
+  // Match the CALL, e.g. graph_dfs(graph, 0), skipping the def line, whose
   // second parameter is literally named `start` and would be captured instead.
   const re = new RegExp("\\w+\\s*\\(\\s*" + graphName + "\\s*,\\s*[\"']?(\\w+)[\"']?");
   for (const line of code.split("\n")) {

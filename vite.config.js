@@ -36,7 +36,7 @@ const runningProcesses = new Map();
 // Python input wrappers, declared at MODULE scope on purpose: they are used by
 // both /api/run-python-stream and /api/run-python. They previously lived inside
 // the stream handler's closure, so /api/run-python threw
-// "ReferenceError: quietInputWrapper is not defined" on every request — which
+// "ReferenceError: quietInputWrapper is not defined" on every request, which
 // the error path returned as a clean { stdout: "" } success.
 const inputWrapper = `
 import sys, builtins
@@ -208,7 +208,7 @@ export default defineConfig({
               // A short, non-interactive script (print once and exit) can finish
               // before the frontend's SSE connection is even open: the client
               // has to await the POST above, parse the JSON, and only *then*
-              // create the EventSource — a full extra round trip the child
+              // create the EventSource, a full extra round trip the child
               // process doesn't have to wait for. If `close` deletes the entry
               // immediately, that late connection 404s, EventSource fires
               // onerror, and runPython() resolves silently with no output at
@@ -278,7 +278,7 @@ export default defineConfig({
           res.flushHeaders();
 
           // The process may have already finished by the time this connects
-          // (see the `finish` grace-period comment above) — replay its
+          // (see the `finish` grace-period comment above), replay its
           // buffered output and the done event immediately instead of the
           // client waiting forever for events that already happened.
           if (proc.completed) {
@@ -434,7 +434,7 @@ export default defineConfig({
                       stderr = cleanTraceback(errOut || '', tmpDir);
                       if (err && err.killed) {
                         // Old code resolved here, returning {stdout: ""} as a
-                        // clean success — the user saw a wrong-answer with no
+                        // clean success, the user saw a wrong-answer with no
                         // output and no explanation.
                         stderr = stderr || 'Execution timed out (10 second limit). Check for infinite loops or a blocking input().';
                         stdout += '\n' + stderr;

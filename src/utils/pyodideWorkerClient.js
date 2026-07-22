@@ -1,5 +1,5 @@
 // Main-thread RPC wrapper around pyodideWorker.js. A timeout here isn't a
-// vague "give up and hope" — calling worker.terminate() on a genuinely stuck
+// vague "give up and hope", calling worker.terminate() on a genuinely stuck
 // worker actually kills the OS-level thread running the infinite loop,
 // which a Promise.race timeout alone could never do (the main thread would
 // just be waiting on a message that's never coming because the worker's own

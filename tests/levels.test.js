@@ -107,7 +107,7 @@ describe("Python Fundamentals", () => {
           const test = normalizeTest(rawTest);
           const input = test.input !== undefined ? (Array.isArray(test.input) ? test.input : [test.input]) : [];
           const label = input.length > 0
-            ? `${level.name}${level.id !== undefined ? ` (id:${level.id})` : ""} — input: ${JSON.stringify(input)}`
+            ? `${level.name}${level.id !== undefined ? ` (id:${level.id})` : ""}, input: ${JSON.stringify(input)}`
             : `${level.name}${level.id !== undefined ? ` (id:${level.id})` : ""}`;
 
           it(label, () => {
@@ -122,7 +122,7 @@ describe("Python Fundamentals", () => {
         expect(output.trim()).not.toBe("");
       });
     } else {
-      it.skip(`${makeTestName(chapter, level)} — no tests, no print in solution`);
+      it.skip(`${makeTestName(chapter, level)}, no tests, no print in solution`);
     }
   }
 });
@@ -139,7 +139,7 @@ describe("Python Advance", () => {
           const test = normalizeTest(rawTest);
           const input = test.input !== undefined ? (Array.isArray(test.input) ? test.input : [test.input]) : [];
           const label = input.length > 0
-            ? `${level.name}${level.id !== undefined ? ` (id:${level.id})` : ""} — input: ${JSON.stringify(input)}`
+            ? `${level.name}${level.id !== undefined ? ` (id:${level.id})` : ""}, input: ${JSON.stringify(input)}`
             : `${level.name}${level.id !== undefined ? ` (id:${level.id})` : ""}`;
 
           it(label, () => {
@@ -154,7 +154,7 @@ describe("Python Advance", () => {
         expect(output.trim()).not.toBe("");
       });
     } else {
-      it.skip(`${makeTestName(chapter, level)} — no tests, no print in solution`);
+      it.skip(`${makeTestName(chapter, level)}, no tests, no print in solution`);
     }
   }
 });
@@ -171,7 +171,7 @@ describe("Object-Oriented Programming", () => {
           const test = normalizeTest(rawTest);
           const input = test.input !== undefined ? (Array.isArray(test.input) ? test.input : [test.input]) : [];
           const label = input.length > 0
-            ? `${level.name}${level.id !== undefined ? ` (id:${level.id})` : ""} — input: ${JSON.stringify(input)}`
+            ? `${level.name}${level.id !== undefined ? ` (id:${level.id})` : ""}, input: ${JSON.stringify(input)}`
             : `${level.name}${level.id !== undefined ? ` (id:${level.id})` : ""}`;
 
           it(label, () => {
@@ -186,7 +186,7 @@ describe("Object-Oriented Programming", () => {
         expect(output.trim()).not.toBe("");
       });
     } else {
-      it.skip(`${makeTestName(chapter, level)} — no tests, no print in solution`);
+      it.skip(`${makeTestName(chapter, level)}, no tests, no print in solution`);
     }
   }
 });
@@ -203,7 +203,7 @@ describe("Data Structures", () => {
           const test = normalizeTest(rawTest);
           const input = test.input !== undefined ? (Array.isArray(test.input) ? test.input : [test.input]) : [];
           const label = input.length > 0
-            ? `${level.name}${level.id !== undefined ? ` (id:${level.id})` : ""} — input: ${JSON.stringify(input)}`
+            ? `${level.name}${level.id !== undefined ? ` (id:${level.id})` : ""}, input: ${JSON.stringify(input)}`
             : `${level.name}${level.id !== undefined ? ` (id:${level.id})` : ""}`;
 
           it(label, () => {
@@ -218,7 +218,7 @@ describe("Data Structures", () => {
         expect(output.trim()).not.toBe("");
       });
     } else {
-      it.skip(`${makeTestName(chapter, level)} — no tests, no print in solution`);
+      it.skip(`${makeTestName(chapter, level)}, no tests, no print in solution`);
     }
   }
 });
@@ -235,7 +235,7 @@ describe("Algorithm Design & Patterns", () => {
           const test = normalizeTest(rawTest);
           const input = test.input !== undefined ? (Array.isArray(test.input) ? test.input : [test.input]) : [];
           const label = input.length > 0
-            ? `${level.name}${level.id !== undefined ? ` (id:${level.id})` : ""} — input: ${JSON.stringify(input)}`
+            ? `${level.name}${level.id !== undefined ? ` (id:${level.id})` : ""}, input: ${JSON.stringify(input)}`
             : `${level.name}${level.id !== undefined ? ` (id:${level.id})` : ""}`;
 
           it(label, () => {
@@ -250,7 +250,7 @@ describe("Algorithm Design & Patterns", () => {
         expect(output.trim()).not.toBe("");
       });
     } else {
-      it.skip(`${makeTestName(chapter, level)} — no tests, no print in solution`);
+      it.skip(`${makeTestName(chapter, level)}, no tests, no print in solution`);
     }
   }
 });
