@@ -13,17 +13,23 @@ export function buildStructHarness(code) {
   const indented = code.split("\n").map((l) => "    " + l).join("\n");
   return `import json, sys
 _SNAPS = []
+def _flatlist(v):
+    if (isinstance(v, list) or type(v).__name__ == 'deque') and all(isinstance(x, (int, float, str, bool)) for x in v):
+        return [str(x) for x in v]
+    return None
 def _sv(v):
     try:
-        if isinstance(v, list) and all(isinstance(x, (int, float, str, bool)) for x in v):
-            return [str(x) for x in v]
+        _d = _flatlist(v)
+        if _d is not None:
+            return _d
     except Exception:
         return None
     for _a in ('items', 'stack', 'queue', 'data', '_items', '_data', 'elements', 'container', '_list', 'arr'):
         _inner = getattr(v, _a, None)
         try:
-            if isinstance(_inner, list) and all(isinstance(x, (int, float, str, bool)) for x in _inner):
-                return [str(x) for x in _inner]
+            _d = _flatlist(_inner)
+            if _d is not None:
+                return _d
         except Exception:
             pass
     return None
