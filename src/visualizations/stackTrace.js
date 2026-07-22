@@ -10,6 +10,9 @@ import { traceRun, TRACE_START, TRACE_END } from "./traceRun";
 // line. A "stack-like" value is a flat list, or an object with a flat-list
 // attribute (items/stack/data/...).
 export function buildStructHarness(code) {
+  // The user code is wrapped in _run() and traced there. sys.settrace only
+  // fires line events for frames ENTERED after it's set, so module-level code
+  // (already running) would never be traced — a function called afterwards is.
   const indented = code.split("\n").map((l) => "    " + l).join("\n");
   return `import json, sys
 _SNAPS = []
@@ -34,7 +37,9 @@ def _sv(v):
             pass
     return None
 def _tr(frame, event, arg):
-    if event == 'line' and frame.f_code.co_name == '<module>':
+    if frame.f_code.co_name != '_run':
+        return None
+    if event == 'line' or event == 'return':
         _snap = {}
         for _k, _v in list(frame.f_locals.items()):
             if _k.startswith('_'):
@@ -44,9 +49,11 @@ def _tr(frame, event, arg):
                 _snap[_k] = _s
         _SNAPS.append(_snap)
     return _tr
+def _run():
+${indented}
 sys.settrace(_tr)
 try:
-${indented}
+    _run()
 except Exception:
     pass
 sys.settrace(None)
