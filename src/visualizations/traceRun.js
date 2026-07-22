@@ -47,9 +47,19 @@ export function buildSettraceHarness(code, targetFn) {
 def _ser(v):
     if isinstance(v, bool) or isinstance(v, (int, float, str)):
         return v
+    if isinstance(v, tuple):
+        v = list(v)
     if isinstance(v, list) and len(v) <= 200:
         try:
-            return list(v) if all(isinstance(x, (int, float, str, bool)) for x in v) else None
+            out = []
+            for x in v:
+                if isinstance(x, bool) or isinstance(x, (int, float, str)):
+                    out.append(x)
+                elif isinstance(x, (list, tuple)) and len(x) <= 16 and all(isinstance(y, (int, float, str, bool)) for y in x):
+                    out.append(list(x))
+                else:
+                    return None
+            return out
         except Exception:
             return None
     if isinstance(v, dict) and len(v) <= 200:
