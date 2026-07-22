@@ -67,6 +67,67 @@ describe("Sorting chapter visualization (track 5)", () => {
     expect(final).toEqual([...arr].sort((a, b) => a - b));
   });
 
+  it("optimized bubble sort with a boolean flag (swapped = True/False, break) animates and sorts", () => {
+    // The classic early-exit optimization: a `swapped`/`sorted` flag plus a
+    // `break`. Previously `swapped = True` threw `unbound name "True"` and the
+    // whole visualization errored out.
+    const code = `def bubble_sort(arr):
+    n = len(arr)
+    for i in range(n):
+        swapped = False
+        for j in range(n - i - 1):
+            if arr[j] > arr[j + 1]:
+                arr[j], arr[j + 1] = arr[j + 1], arr[j]
+                swapped = True
+        if not swapped:
+            break
+    return arr
+
+nums = [5, 1, 4, 2, 8]
+bubble_sort(nums)
+`;
+    const states = parseSortStates(code);
+    expect(states.length, "optimized bubble sort never animated").toBeGreaterThan(1);
+    const final = states[states.length - 1].items.map((i) => Number(i.value));
+    expect(final).toEqual([1, 2, 4, 5, 8]);
+  });
+
+  it("break actually exits early once the array is already sorted", () => {
+    // Already-sorted input: the first pass makes no swaps, so `break` should
+    // fire and stop all further passes. Without break support it would keep
+    // scanning every pass and produce extra (redundant) compare frames.
+    const optimized = `def bubble_sort(arr):
+    n = len(arr)
+    for i in range(n):
+        swapped = False
+        for j in range(n - i - 1):
+            if arr[j] > arr[j + 1]:
+                arr[j], arr[j + 1] = arr[j + 1], arr[j]
+                swapped = True
+        if not swapped:
+            break
+    return arr
+
+nums = [1, 2, 3, 4, 5]
+bubble_sort(nums)
+`;
+    const naive = `def bubble_sort(arr):
+    n = len(arr)
+    for i in range(n):
+        for j in range(n - i - 1):
+            if arr[j] > arr[j + 1]:
+                arr[j], arr[j + 1] = arr[j + 1], arr[j]
+    return arr
+
+nums = [1, 2, 3, 4, 5]
+bubble_sort(nums)
+`;
+    const optSteps = parseSortStates(optimized).length;
+    const naiveSteps = parseSortStates(naive).length;
+    // Early break means far fewer compare frames than scanning all passes.
+    expect(optSteps).toBeLessThan(naiveSteps);
+  });
+
   it("triggers on a list literal passed straight into the call, not just a named variable", () => {
     // `print(selection_sort([64, 25, 12, 22, 11]))`, no separate
     // `nums = [...]` line at all. Previously this never matched either

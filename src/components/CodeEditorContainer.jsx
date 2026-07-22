@@ -105,15 +105,12 @@ export default function CodeEditorContainer({ code, setCode, language, files, fi
         setWaitingInput(true);
       };
 
-      try {
-        await runPython(userCode, onInput, onOutput);
-      } catch {
-        // Streaming API unavailable (Vercel), use batch Pyodide instead.
-        // The number of input() calls can't be known statically (e.g. a loop
-        // calling input() N times), so rerun from scratch each time the
-        // script asks for more input than we've collected so far, replacing
-        // (not appending to) the displayed output since each rerun recomputes
-        // the full transcript up to that point.
+      // Streaming API unavailable on Vercel, use batch Pyodide instead. The
+      // number of input() calls can't be known statically (e.g. a loop calling
+      // input() N times), so rerun from scratch each time the script asks for
+      // more input than we've collected so far, replacing (not appending to)
+      // the displayed output since each rerun recomputes the full transcript.
+      const runViaPyodide = async () => {
         let inputs = [];
         while (true) {
           const { stdout, needsInput } = await runPythonWithIO(userCode, inputs);
@@ -126,6 +123,18 @@ export default function CodeEditorContainer({ code, setCode, language, files, fi
             setWaitingInput(true);
           });
           inputs.push(value);
+        }
+      };
+
+      // On production there is no streaming server, so skip the POST that would
+      // just 405 in the console and go straight to Pyodide.
+      if (import.meta.env.PROD) {
+        await runViaPyodide();
+      } else {
+        try {
+          await runPython(userCode, onInput, onOutput);
+        } catch {
+          await runViaPyodide();
         }
       }
     }

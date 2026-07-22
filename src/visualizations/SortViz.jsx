@@ -2,6 +2,7 @@ import { useState, useCallback } from "react";
 import usePlayback from "./usePlayback";
 import VizControls from "./VizControls";
 import { parseSortStates } from "./sortInterp";
+import { runSortViz } from "./sortTrace";
 
 const HIGHLIGHT_COLOR = {
   compare: "#7AA2F7",
@@ -77,26 +78,38 @@ function Legend() {
 export default function SortViz({ code }) {
   const playback = usePlayback();
   const [parsed, setParsed] = useState(null);
+  const [loading, setLoading] = useState(false);
 
-  const ensureParsed = useCallback(() => {
+  // Run the student's REAL code in Pyodide and animate the captured trace. If
+  // it can't be instrumented (or errors), fall back to the JS interpreter so
+  // the panel is never blank.
+  const ensureParsed = useCallback(async () => {
     if (parsed && parsed.code === code) return parsed.states;
-    const s = parseSortStates(code);
-    setParsed({ code, states: s });
-    playback.configure(s.length);
-    return s;
+    setLoading(true);
+    let states = null;
+    try {
+      states = await runSortViz(code);
+    } catch {
+      // instrumentation failed (syntax error, timeout); fall through below
+    }
+    if (!states || states.length <= 1) states = parseSortStates(code);
+    setParsed({ code, states });
+    playback.configure(states.length);
+    setLoading(false);
+    return states;
   }, [code, parsed, playback]);
 
-  const handleToggle = useCallback(() => {
+  const handleToggle = useCallback(async () => {
     if (playback.playing) {
       playback.pause();
-    } else {
-      ensureParsed();
-      playback.play();
+      return;
     }
+    await ensureParsed();
+    playback.play();
   }, [playback, ensureParsed]);
 
-  const handleStep = useCallback(() => {
-    ensureParsed();
+  const handleStep = useCallback(async () => {
+    await ensureParsed();
     playback.stepForward();
   }, [playback, ensureParsed]);
 
@@ -105,13 +118,14 @@ export default function SortViz({ code }) {
       <div className="flex items-center justify-center h-full min-h-50">
         <button
           onClick={handleToggle}
-          className="text-xs px-4 py-2 rounded font-bold hover:brightness-110 active:brightness-90 active:scale-[0.98]"
+          disabled={loading}
+          className="text-xs px-4 py-2 rounded font-bold hover:brightness-110 active:brightness-90 active:scale-[0.98] disabled:opacity-60"
           style={{
             background: "#6AAE6F",
             color: "#fff",
           }}
         >
-          ▶ Run
+          {loading ? "running…" : "▶ Run"}
         </button>
       </div>
     );

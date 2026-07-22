@@ -76,6 +76,11 @@ function parseTokens(tokens) {
     const t = next();
     if (t === undefined) throw new Error("unexpected end of expression");
     if (/^\d+$/.test(t)) return { type: "num", value: Number(t) };
+    // Python boolean/None literals — the optimized bubble sort's `swapped`/
+    // `sorted` flag (`swapped = True`, `if not swapped:`) relies on these.
+    if (t === "True") return { type: "lit", value: true };
+    if (t === "False") return { type: "lit", value: false };
+    if (t === "None") return { type: "lit", value: null };
     if (t === "(") { const e = parseOr(); expect(")"); return e; }
     if (t === "len") { expect("("); const e = parseOr(); expect(")"); return { type: "len", expr: e }; }
     if (peek() === "[") { next(); const idx = parseOr(); expect("]"); return { type: "index", index: idx }; }
@@ -130,6 +135,7 @@ export function parseSortStates(code) {
   function evalNode(node, scope, touched) {
     switch (node.type) {
       case "num": return node.value;
+      case "lit": return node.value;
       case "var": {
         if (!(node.name in scope)) throw new Error(`unbound name "${node.name}"`);
         return scope[node.name];
@@ -215,6 +221,9 @@ export function parseSortStates(code) {
 
       if (!t || t.startsWith("#")) { idx++; continue; }
       if (t.startsWith("return")) { idx++; continue; }
+      // Loop control: bubble the signal up to the nearest enclosing loop.
+      if (t === "break") return "break";
+      if (t === "continue") return "continue";
 
       const ifMatch = t.match(/^if\s+(.+):$/);
       if (ifMatch) {
@@ -222,7 +231,7 @@ export function parseSortStates(code) {
         const condResult = evalCondition(ifMatch[1], scope);
         idx++;
         const { lines: trueBlock, nextIdx: tbNext } = collectBlock(blockLines, idx, bodyIndent);
-        if (condResult) execBlock(trueBlock, scope);
+        if (condResult) { const sig = execBlock(trueBlock, scope); if (sig) return sig; }
         idx = tbNext;
         let handled = condResult;
         while (idx < blockLines.length) {
@@ -234,12 +243,12 @@ export function parseSortStates(code) {
             idx++;
             const { lines: elBlock, nextIdx: elNext } = collectBlock(blockLines, idx, bodyIndent);
             const elResult = !handled && evalCondition(elCond, scope);
-            if (elResult) { execBlock(elBlock, scope); handled = true; }
+            if (elResult) { handled = true; const sig = execBlock(elBlock, scope); if (sig) return sig; }
             idx = elNext;
           } else if (nt === "else:") {
             idx++;
             const { lines: elseBlock, nextIdx: esNext } = collectBlock(blockLines, idx, bodyIndent);
-            if (!handled) execBlock(elseBlock, scope);
+            if (!handled) { const sig = execBlock(elseBlock, scope); if (sig) return sig; }
             idx = esNext;
             break;
           } else break;
@@ -253,7 +262,7 @@ export function parseSortStates(code) {
         const { lines: bodyLines, nextIdx } = collectBlock(blockLines, idx + 1, bodyIndent);
         let whileGuard = 2000;
         while (evalCondition(whileMatch[1], scope) && whileGuard-- > 0) {
-          execBlock(bodyLines, scope);
+          if (execBlock(bodyLines, scope) === "break") break;
         }
         idx = nextIdx;
         continue;
@@ -270,9 +279,9 @@ export function parseSortStates(code) {
         else { start = argVals[0]; stop = argVals[1]; step = argVals[2]; }
         const varName = forMatch[1];
         if (step > 0) {
-          for (let v = start; v < stop; v += step) { scope[varName] = v; execBlock(bodyLines, scope); }
+          for (let v = start; v < stop; v += step) { scope[varName] = v; if (execBlock(bodyLines, scope) === "break") break; }
         } else if (step < 0) {
-          for (let v = start; v > stop; v += step) { scope[varName] = v; execBlock(bodyLines, scope); }
+          for (let v = start; v > stop; v += step) { scope[varName] = v; if (execBlock(bodyLines, scope) === "break") break; }
         }
         idx = nextIdx;
         continue;
