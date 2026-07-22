@@ -2,6 +2,7 @@ import { useState, useCallback } from "react";
 import usePlayback from "./usePlayback";
 import VizControls from "./VizControls";
 import { parseDPStates, DP_LABEL } from "./dpInterp";
+import { runDPViz } from "./dpTrace";
 
 const CURRENT = "#E9B44C"; // cell being computed
 const DEP = "#7AA2F7";     // the two cells it depends on
@@ -66,30 +67,42 @@ export default function DPViz({ code }) {
   const playback = usePlayback();
   const [parsed, setParsed] = useState(null);
 
-  const ensureParsed = useCallback(() => {
+  const [loading, setLoading] = useState(false);
+
+  const ensureParsed = useCallback(async () => {
     if (parsed && parsed.code === code) return parsed.states;
-    const s = parseDPStates(code);
-    setParsed({ code, states: s });
-    playback.configure(s.length);
-    return s;
+    setLoading(true);
+    let states = null;
+    try {
+      states = await runDPViz(code);
+    } catch {
+      // instrumentation failed; fall through to the interpreter below
+    }
+    if (!states || states.length <= 1) states = parseDPStates(code);
+    setParsed({ code, states });
+    playback.configure(states.length);
+    setLoading(false);
+    return states;
   }, [code, parsed, playback]);
 
-  const handleToggle = useCallback(() => {
-    if (playback.playing) playback.pause();
-    else { ensureParsed(); playback.play(); }
+  const handleToggle = useCallback(async () => {
+    if (playback.playing) { playback.pause(); return; }
+    await ensureParsed();
+    playback.play();
   }, [playback, ensureParsed]);
 
-  const handleStep = useCallback(() => { ensureParsed(); playback.stepForward(); }, [playback, ensureParsed]);
+  const handleStep = useCallback(async () => { await ensureParsed(); playback.stepForward(); }, [playback, ensureParsed]);
 
   if (!parsed) {
     return (
       <div className="flex items-center justify-center h-full min-h-50">
         <button
           onClick={handleToggle}
-          className="text-xs px-4 py-2 rounded font-bold hover:brightness-110 active:brightness-90 active:scale-[0.98]"
+          disabled={loading}
+          className="text-xs px-4 py-2 rounded font-bold hover:brightness-110 active:brightness-90 active:scale-[0.98] disabled:opacity-60"
           style={{ background: "#6AAE6F", color: "#fff" }}
         >
-          ▶ Run
+          {loading ? "running…" : "▶ Run"}
         </button>
       </div>
     );
