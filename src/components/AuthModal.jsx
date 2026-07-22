@@ -7,6 +7,7 @@ export default function AuthModal({ open, onClose }) {
   const [mode, setMode] = useState("signin"); // "signin" | "signup"
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirm, setConfirm] = useState("");
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
 
@@ -15,6 +16,7 @@ export default function AuthModal({ open, onClose }) {
   const reset = () => {
     setError("");
     setPassword("");
+    setConfirm("");
     setBusy(false);
   };
 
@@ -28,6 +30,10 @@ export default function AuthModal({ open, onClose }) {
     setError("");
     if (!email || !password) {
       setError("Enter an email and a password.");
+      return;
+    }
+    if (mode === "signup" && password !== confirm) {
+      setError("Passwords don't match.");
       return;
     }
     setBusy(true);
@@ -129,6 +135,17 @@ export default function AuthModal({ open, onClose }) {
             className="w-full px-3 py-2.5 rounded-lg text-sm outline-none focus:brightness-105"
             style={inputStyle}
           />
+          {mode === "signup" && (
+            <input
+              type="password"
+              autoComplete="new-password"
+              placeholder="Retype password"
+              value={confirm}
+              onChange={(e) => setConfirm(e.target.value)}
+              className="w-full px-3 py-2.5 rounded-lg text-sm outline-none focus:brightness-105"
+              style={inputStyle}
+            />
+          )}
 
           {error && (
             <div className="text-xs" style={{ color: "#FF5F57" }}>
@@ -145,6 +162,7 @@ export default function AuthModal({ open, onClose }) {
           onClick={() => {
             setMode(mode === "signup" ? "signin" : "signup");
             setError("");
+            setConfirm("");
           }}
           className="w-full text-center text-xs mt-4 hover:brightness-125"
           style={{ color: "#6AAE6F", fontFamily: "'Courier New', monospace" }}
