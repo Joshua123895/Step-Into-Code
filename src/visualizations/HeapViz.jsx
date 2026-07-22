@@ -3,6 +3,7 @@ import usePlayback from "./usePlayback";
 import VizControls from "./VizControls";
 import AnimatedItem from "./AnimatedItem";
 import { splitStatements } from "./parseUtils";
+import { runHeapViz } from "./heapTrace";
 
 const cmp = (a, b) => Number(a.value) - Number(b.value);
 
@@ -335,12 +336,22 @@ export default function HeapViz({ code }) {
   const prevRef = useRef(null);
   const ghostTimerRef = useRef(null);
 
-  const ensureParsed = useCallback(() => {
+  const [loading, setLoading] = useState(false);
+
+  const ensureParsed = useCallback(async () => {
     if (parsed && parsed.code === code) return parsed.states;
-    const s = parseHeapStates(code);
-    setParsed({ code, states: s });
-    playback.configure(s.length);
-    return s;
+    setLoading(true);
+    let states = null;
+    try {
+      states = await runHeapViz(code);
+    } catch {
+      // instrumentation failed; fall through to the interpreter below
+    }
+    if (!states || states.length <= 1) states = parseHeapStates(code);
+    setParsed({ code, states });
+    playback.configure(states.length);
+    setLoading(false);
+    return states;
   }, [code, parsed, playback]);
 
   useEffect(() => {
@@ -360,17 +371,17 @@ export default function HeapViz({ code }) {
     }
   }, [parsed, playback.step]);
 
-  const handleToggle = useCallback(() => {
+  const handleToggle = useCallback(async () => {
     if (playback.playing) {
       playback.pause();
-    } else {
-      ensureParsed();
-      playback.play();
+      return;
     }
+    await ensureParsed();
+    playback.play();
   }, [playback, ensureParsed]);
 
-  const handleStep = useCallback(() => {
-    ensureParsed();
+  const handleStep = useCallback(async () => {
+    await ensureParsed();
     playback.stepForward();
   }, [playback, ensureParsed]);
 
@@ -386,13 +397,14 @@ export default function HeapViz({ code }) {
       <div className="flex items-center justify-center h-full min-h-[200px]">
         <button
           onClick={handleToggle}
-          className="text-xs px-4 py-2 rounded font-bold hover:brightness-110 active:brightness-90 active:scale-[0.98]"
+          disabled={loading}
+          className="text-xs px-4 py-2 rounded font-bold hover:brightness-110 active:brightness-90 active:scale-[0.98] disabled:opacity-60"
           style={{
             background: "#6AAE6F",
             color: "#fff",
           }}
         >
-          ▶ Run
+          {loading ? "running…" : "▶ Run"}
         </button>
       </div>
     );
