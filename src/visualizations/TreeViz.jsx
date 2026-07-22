@@ -2,6 +2,7 @@ import { useState, useCallback, useEffect } from "react";
 import usePlayback from "./usePlayback";
 import VizControls from "./VizControls";
 import { splitStatements } from "./parseUtils";
+import { runTreeViz } from "./treeTrace";
 
 // eslint-disable-next-line react-refresh/only-export-components -- exported for unit tests
 export function parseTreeStates(code) {
@@ -320,12 +321,22 @@ export default function TreeViz({ code }) {
   const [ghostVars, setGhostVars] = useState({});
   const [prevState, setPrevState] = useState(null);
 
-  const ensureParsed = useCallback(() => {
+  const [loading, setLoading] = useState(false);
+
+  const ensureParsed = useCallback(async () => {
     if (parsed && parsed.code === code) return parsed.states;
-    const s = parseTreeStates(code);
-    setParsed({ code, states: s });
-    playback.configure(s.length);
-    return s;
+    setLoading(true);
+    let states = null;
+    try {
+      states = await runTreeViz(code);
+    } catch {
+      // instrumentation failed; fall through to the interpreter below
+    }
+    if (!states || states.length <= 1) states = parseTreeStates(code);
+    setParsed({ code, states });
+    playback.configure(states.length);
+    setLoading(false);
+    return states;
   }, [code, parsed, playback]);
 
   const currentState = parsed
@@ -358,17 +369,17 @@ export default function TreeViz({ code }) {
     return () => clearTimeout(timer);
   }, [ghostVars]);
 
-  const handleToggle = useCallback(() => {
+  const handleToggle = useCallback(async () => {
     if (playback.playing) {
       playback.pause();
-    } else {
-      ensureParsed();
-      playback.play();
+      return;
     }
+    await ensureParsed();
+    playback.play();
   }, [playback, ensureParsed]);
 
-  const handleStep = useCallback(() => {
-    ensureParsed();
+  const handleStep = useCallback(async () => {
+    await ensureParsed();
     playback.stepForward();
   }, [playback, ensureParsed]);
 
@@ -377,13 +388,14 @@ export default function TreeViz({ code }) {
       <div className="flex items-center justify-center h-full min-h-50">
         <button
           onClick={handleToggle}
-          className="text-xs px-4 py-2 rounded font-bold hover:brightness-110 active:brightness-90 active:scale-[0.98]"
+          disabled={loading}
+          className="text-xs px-4 py-2 rounded font-bold hover:brightness-110 active:brightness-90 active:scale-[0.98] disabled:opacity-60"
           style={{
             background: "#6AAE6F",
             color: "#fff",
           }}
         >
-          ▶ Run
+          {loading ? "running…" : "▶ Run"}
         </button>
       </div>
     );
