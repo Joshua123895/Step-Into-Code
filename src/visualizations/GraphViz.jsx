@@ -2,6 +2,7 @@ import { useState, useCallback, useEffect, useRef } from "react";
 import usePlayback from "./usePlayback";
 import VizControls from "./VizControls";
 import { splitStatements } from "./parseUtils";
+import { runGraphDSViz } from "./graphDSTrace";
 
 const COLORS = ["#FF5F57", "#E9B44C", "#28CA41", "#7AA2F7", "#BB9AF7", "#FF75A0", "#86E1F9", "#A6E3A1"];
 
@@ -196,12 +197,22 @@ export default function GraphViz({ code }) {
   const prevRef = useRef(null);
   const ghostTimerRef = useRef(null);
 
-  const ensureParsed = useCallback(() => {
+  const [loading, setLoading] = useState(false);
+
+  const ensureParsed = useCallback(async () => {
     if (parsed && parsed.code === code) return parsed.states;
-    const s = parseGraphStates(code);
-    setParsed({ code, states: s });
-    playback.configure(s.length);
-    return s;
+    setLoading(true);
+    let states = null;
+    try {
+      states = await runGraphDSViz(code);
+    } catch {
+      // instrumentation failed; fall through to the interpreter below
+    }
+    if (!states || states.length <= 1) states = parseGraphStates(code);
+    setParsed({ code, states });
+    playback.configure(states.length);
+    setLoading(false);
+    return states;
   }, [code, parsed, playback]);
 
   useEffect(() => {
@@ -234,17 +245,17 @@ export default function GraphViz({ code }) {
     }
   }, [parsed, playback.step]);
 
-  const handleToggle = useCallback(() => {
+  const handleToggle = useCallback(async () => {
     if (playback.playing) {
       playback.pause();
-    } else {
-      ensureParsed();
-      playback.play();
+      return;
     }
+    await ensureParsed();
+    playback.play();
   }, [playback, ensureParsed]);
 
-  const handleStep = useCallback(() => {
-    ensureParsed();
+  const handleStep = useCallback(async () => {
+    await ensureParsed();
     playback.stepForward();
   }, [playback, ensureParsed]);
 
@@ -261,13 +272,14 @@ export default function GraphViz({ code }) {
       <div className="flex items-center justify-center h-full min-h-[200px]">
         <button
           onClick={handleToggle}
-          className="text-xs px-4 py-2 rounded font-bold hover:brightness-110 active:brightness-90 active:scale-[0.98]"
+          disabled={loading}
+          className="text-xs px-4 py-2 rounded font-bold hover:brightness-110 active:brightness-90 active:scale-[0.98] disabled:opacity-60"
           style={{
             background: "#6AAE6F",
             color: "#fff",
           }}
         >
-          ▶ Run
+          {loading ? "running…" : "▶ Run"}
         </button>
       </div>
     );
