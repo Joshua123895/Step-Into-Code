@@ -1,16 +1,16 @@
 name: Game Development
 slug: game-dev
 icon: challenge
-desc: 'Write real games in Python with a pygame-style API, running live in your browser. An experimental track.'
+desc: 'Learn to make games in Python, one gentle step at a time, from painting a window to building Pong, Breakout, and Snake. Runs live in your browser.'
 difficulty: 2
 chapters:
-  - name: Getting Started
-    icon: graph
+  - name: Drawing
+    icon: output
     levels:
-      - name: Bouncing Ball
+      - name: Hello Window
         game: true
-        obj: 'Your first game loop. Click "Run Game": a ball bounces around the canvas. Every frame the loop clears the screen, moves the ball, bounces it off the walls, and draws it. Try changing the speed or color, then run it again.'
-        hint: 'A pygame loop repeats: handle events, update positions, clear the screen with `screen.fill(...)`, draw everything, then `pygame.display.flip()`. In the browser build each frame ends with `await asyncio.sleep(1 / 60)`.'
+        obj: 'Every game lives in a window. This little program opens one and paints it sky blue. The `while running:` loop runs many times every second, that is your game''s heartbeat. Click "Run Game" to see it, then try changing the three numbers in `screen.fill` to pick your own color!'
+        hint: 'Colors are three numbers: (red, green, blue). Each goes from 0 (none) to 255 (lots). (255, 0, 0) is bright red.'
         start: |-
           import asyncio
           import pygame
@@ -19,7 +19,157 @@ chapters:
           async def main():
               pygame.init()
               screen = pygame.display.set_mode((480, 320))
-              pygame.display.set_caption("Bouncing Ball")
+              pygame.display.set_caption("Hello Window")
+
+              running = True
+              while running:
+                  for event in pygame.event.get():
+                      if event.type == pygame.QUIT:
+                          running = False
+
+                  screen.fill((90, 160, 230))   # try your own color!
+                  pygame.display.flip()
+
+                  await asyncio.sleep(1 / 60)
+
+
+          asyncio.run(main())
+      - name: Draw a Circle
+        game: true
+        obj: 'Time to draw! `pygame.draw.circle` needs three things: where the middle is `(x, y)`, and how big `radius`. The window is 480 wide and 320 tall, so the middle is about `(240, 160)`. Try moving the circle or making it bigger.'
+        hint: 'x goes left (small) to right (big). y goes top (small) to bottom (big). The radius is how far the edge is from the middle.'
+        start: |-
+          import asyncio
+          import pygame
+
+
+          async def main():
+              pygame.init()
+              screen = pygame.display.set_mode((480, 320))
+              pygame.display.set_caption("Draw a Circle")
+
+              running = True
+              while running:
+                  for event in pygame.event.get():
+                      if event.type == pygame.QUIT:
+                          running = False
+
+                  screen.fill((30, 30, 40))
+                  pygame.draw.circle(screen, (255, 210, 80), (240, 160), 60)
+                  pygame.display.flip()
+
+                  await asyncio.sleep(1 / 60)
+
+
+          asyncio.run(main())
+      - name: Draw a Rectangle
+        game: true
+        obj: 'A rectangle is drawn from its top-left corner: `(x, y, width, height)`. So `(180, 110, 120, 100)` starts at x=180, y=110 and is 120 wide and 100 tall. Try changing the width and height.'
+        hint: 'The first two numbers are the top-left corner. The last two are the size (how wide, how tall).'
+        start: |-
+          import asyncio
+          import pygame
+
+
+          async def main():
+              pygame.init()
+              screen = pygame.display.set_mode((480, 320))
+              pygame.display.set_caption("Draw a Rectangle")
+
+              running = True
+              while running:
+                  for event in pygame.event.get():
+                      if event.type == pygame.QUIT:
+                          running = False
+
+                  screen.fill((30, 30, 40))
+                  pygame.draw.rect(screen, (250, 120, 120), (180, 110, 120, 100))
+                  pygame.display.flip()
+
+                  await asyncio.sleep(1 / 60)
+
+
+          asyncio.run(main())
+      - name: Draw a Face
+        game: true
+        obj: 'Now put shapes together to make a picture! This draws a smiley face from circles and a rectangle. Shapes drawn later sit on top of earlier ones, that is why the eyes appear over the head. Can you add rosy cheeks with two more circles?'
+        hint: 'Add another `pygame.draw.circle(...)` line before `pygame.display.flip()`. Pick a pink color like (250, 150, 150).'
+        start: |-
+          import asyncio
+          import pygame
+
+
+          async def main():
+              pygame.init()
+              screen = pygame.display.set_mode((480, 320))
+              pygame.display.set_caption("Draw a Face")
+
+              running = True
+              while running:
+                  for event in pygame.event.get():
+                      if event.type == pygame.QUIT:
+                          running = False
+
+                  screen.fill((250, 240, 230))
+                  pygame.draw.circle(screen, (255, 220, 120), (240, 160), 90)   # head
+                  pygame.draw.circle(screen, (40, 40, 40), (210, 140), 12)      # left eye
+                  pygame.draw.circle(screen, (40, 40, 40), (270, 140), 12)      # right eye
+                  pygame.draw.rect(screen, (200, 80, 80), (205, 195, 70, 12))   # mouth
+                  pygame.display.flip()
+
+                  await asyncio.sleep(1 / 60)
+
+
+          asyncio.run(main())
+  - name: Movement
+    icon: mechanism
+    levels:
+      - name: Make It Move
+        game: true
+        obj: 'How do things move? We change a number a tiny bit every frame. Here `x` grows by 3 each loop, so the ball slides right. When it goes off the edge we send it back to the start. Try a bigger number to make it faster.'
+        hint: 'Because the loop runs ~60 times a second, adding 3 to `x` each time makes smooth movement. Bigger step = faster.'
+        start: |-
+          import asyncio
+          import pygame
+
+
+          async def main():
+              pygame.init()
+              screen = pygame.display.set_mode((480, 320))
+              pygame.display.set_caption("Make It Move")
+
+              x = 40
+              running = True
+              while running:
+                  for event in pygame.event.get():
+                      if event.type == pygame.QUIT:
+                          running = False
+
+                  x += 3
+                  if x > 500:
+                      x = -20
+
+                  screen.fill((25, 25, 35))
+                  pygame.draw.circle(screen, (120, 200, 120), (x, 160), 20)
+                  pygame.display.flip()
+
+                  await asyncio.sleep(1 / 60)
+
+
+          asyncio.run(main())
+      - name: Bounce off the Walls
+        game: true
+        obj: 'A real bouncing ball! It has a speed sideways `dx` and a speed up-down `dy`. When it reaches a wall we flip that speed to the opposite direction with `dx = -dx`. That is a bounce. Try changing the starting speeds.'
+        hint: 'Flipping a speed from positive to negative (or back) reverses the direction. That is all a bounce is.'
+        start: |-
+          import asyncio
+          import pygame
+
+
+          async def main():
+              pygame.init()
+              screen = pygame.display.set_mode((480, 320))
+              pygame.display.set_caption("Bounce off the Walls")
 
               x, y = 240, 160
               dx, dy = 3, 2
@@ -46,10 +196,10 @@ chapters:
 
 
           asyncio.run(main())
-      - name: Move the Square
+      - name: Falling with Gravity
         game: true
-        obj: 'Now you control something. Click "Run Game", click the game, then use the arrow keys to move the blue square. `pygame.key.get_pressed()` tells you which keys are held down right now, so the square moves smoothly while you hold a key.'
-        hint: '`keys = pygame.key.get_pressed()` then check `keys[pygame.K_LEFT]`, `keys[pygame.K_RIGHT]`, `keys[pygame.K_UP]`, `keys[pygame.K_DOWN]`. Add or subtract from the position for each key held.'
+        obj: 'Gravity pulls things down. We do it by adding a little to the falling speed `dy` every frame, so the ball falls faster and faster. When it hits the floor it bounces, but loses a bit of bounce each time, just like a real ball settling down.'
+        hint: '`dy += 0.4` speeds up the fall. On a bounce, `dy = -dy * 0.8` flips it up but keeps only 80 percent of the speed.'
         start: |-
           import asyncio
           import pygame
@@ -58,7 +208,47 @@ chapters:
           async def main():
               pygame.init()
               screen = pygame.display.set_mode((480, 320))
-              pygame.display.set_caption("Move the Square")
+              pygame.display.set_caption("Falling with Gravity")
+
+              y = 40
+              dy = 0
+              running = True
+
+              while running:
+                  for event in pygame.event.get():
+                      if event.type == pygame.QUIT:
+                          running = False
+
+                  dy += 0.4          # gravity
+                  y += dy
+                  if y > 296:
+                      y = 296
+                      dy = -dy * 0.8   # bounce, lose a little energy
+
+                  screen.fill((25, 25, 35))
+                  pygame.draw.circle(screen, (240, 180, 90), (240, int(y)), 24)
+                  pygame.display.flip()
+
+                  await asyncio.sleep(1 / 60)
+
+
+          asyncio.run(main())
+  - name: Player Controls
+    icon: challenge
+    levels:
+      - name: Move with Arrow Keys
+        game: true
+        obj: 'Now YOU are in control. Click the game, then hold the arrow keys. `pygame.key.get_pressed()` tells you which keys are held down right now, so the square glides while you hold a key. Try changing `speed` to move faster.'
+        hint: '`keys = pygame.key.get_pressed()` then check `keys[pygame.K_LEFT]`, `keys[pygame.K_RIGHT]`, `keys[pygame.K_UP]`, `keys[pygame.K_DOWN]`.'
+        start: |-
+          import asyncio
+          import pygame
+
+
+          async def main():
+              pygame.init()
+              screen = pygame.display.set_mode((480, 320))
+              pygame.display.set_caption("Move with Arrow Keys")
 
               x, y = 220, 140
               speed = 4
@@ -87,10 +277,170 @@ chapters:
 
 
           asyncio.run(main())
+      - name: Stay on Screen
+        game: true
+        obj: 'Uh oh, in the last level the square could wander off the edge! Here we keep it inside using `min` and `max`. If `x` gets below 0 we push it back to 0; if it goes past the right edge we stop it there. Good games keep the player where you can see them.'
+        hint: '`x = max(0, x)` never lets x go below 0. `x = min(440, x)` never lets it go past 440 (that is 480 minus the 40-wide square).'
+        start: |-
+          import asyncio
+          import pygame
+
+
+          async def main():
+              pygame.init()
+              screen = pygame.display.set_mode((480, 320))
+              pygame.display.set_caption("Stay on Screen")
+
+              x, y = 220, 140
+              speed = 4
+              running = True
+
+              while running:
+                  for event in pygame.event.get():
+                      if event.type == pygame.QUIT:
+                          running = False
+
+                  keys = pygame.key.get_pressed()
+                  if keys[pygame.K_LEFT]:
+                      x -= speed
+                  if keys[pygame.K_RIGHT]:
+                      x += speed
+                  if keys[pygame.K_UP]:
+                      y -= speed
+                  if keys[pygame.K_DOWN]:
+                      y += speed
+
+                  x = max(0, min(440, x))
+                  y = max(0, min(280, y))
+
+                  screen.fill((20, 20, 30))
+                  pygame.draw.rect(screen, (90, 180, 240), (x, y, 40, 40))
+                  pygame.display.flip()
+
+                  await asyncio.sleep(1 / 60)
+
+
+          asyncio.run(main())
+      - name: Follow the Mouse
+        game: true
+        obj: 'Your mouse can control the game too! `pygame.mouse.get_pos()` gives the mouse position as `(x, y)`. Here a circle sits wherever your mouse is. Move your mouse over the game and watch it follow.'
+        hint: '`mx, my = pygame.mouse.get_pos()` then draw your shape at `(mx, my)`.'
+        start: |-
+          import asyncio
+          import pygame
+
+
+          async def main():
+              pygame.init()
+              screen = pygame.display.set_mode((480, 320))
+              pygame.display.set_caption("Follow the Mouse")
+
+              running = True
+              while running:
+                  for event in pygame.event.get():
+                      if event.type == pygame.QUIT:
+                          running = False
+
+                  mx, my = pygame.mouse.get_pos()
+
+                  screen.fill((28, 24, 34))
+                  pygame.draw.circle(screen, (240, 160, 90), (mx, my), 22)
+                  pygame.display.flip()
+
+                  await asyncio.sleep(1 / 60)
+
+
+          asyncio.run(main())
+      - name: Press Space to Jump
+        game: true
+        obj: 'Some actions should happen once per press, not while held, like a jump. For that we listen for the `KEYDOWN` event, which fires the moment a key goes down. Click the game and press Space to jump. Gravity brings you back down.'
+        hint: 'Inside the event loop: `if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE`. Only jump when `on_ground` is True.'
+        start: |-
+          import asyncio
+          import pygame
+
+
+          async def main():
+              pygame.init()
+              screen = pygame.display.set_mode((480, 320))
+              pygame.display.set_caption("Press Space to Jump")
+
+              y = 250
+              dy = 0
+              on_ground = True
+              running = True
+
+              while running:
+                  for event in pygame.event.get():
+                      if event.type == pygame.QUIT:
+                          running = False
+                      if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE and on_ground:
+                          dy = -11
+                          on_ground = False
+
+                  dy += 0.6          # gravity
+                  y += dy
+                  if y >= 250:
+                      y = 250
+                      dy = 0
+                      on_ground = True
+
+                  screen.fill((22, 26, 34))
+                  pygame.draw.rect(screen, (60, 60, 80), (0, 290, 480, 30))   # ground
+                  pygame.draw.rect(screen, (240, 200, 90), (220, int(y), 40, 40))
+                  pygame.display.flip()
+
+                  await asyncio.sleep(1 / 60)
+
+
+          asyncio.run(main())
+  - name: Collisions & Score
+    icon: graph
+    levels:
+      - name: Meet the Rectangle
+        game: true
+        obj: 'A `pygame.Rect(x, y, width, height)` bundles a shape''s position and size into one handy object. You can draw it directly and move it with `box.x`. Rects are the secret to collisions, which is the next big idea. Move this one with the arrow keys.'
+        hint: 'A Rect remembers `.x`, `.y`, `.width`, `.height`, and helpers like `.left`, `.right`, `.centerx`. `pygame.draw.rect(screen, color, box)` draws it.'
+        start: |-
+          import asyncio
+          import pygame
+
+
+          async def main():
+              pygame.init()
+              screen = pygame.display.set_mode((480, 320))
+              pygame.display.set_caption("Meet the Rectangle")
+
+              box = pygame.Rect(200, 130, 80, 60)
+              running = True
+
+              while running:
+                  for event in pygame.event.get():
+                      if event.type == pygame.QUIT:
+                          running = False
+
+                  keys = pygame.key.get_pressed()
+                  if keys[pygame.K_LEFT]:
+                      box.x -= 5
+                  if keys[pygame.K_RIGHT]:
+                      box.x += 5
+                  if keys[pygame.K_UP]:
+                      box.y -= 5
+                  if keys[pygame.K_DOWN]:
+                      box.y += 5
+
+                  screen.fill((22, 22, 30))
+                  pygame.draw.rect(screen, (120, 200, 160), box)
+                  pygame.display.flip()
+
+                  await asyncio.sleep(1 / 60)
+
+
+          asyncio.run(main())
       - name: Catch the Dots
         game: true
-        obj: 'A real little game. Move the paddle with the left/right arrow keys to catch the falling dots. Each catch scores a point, shown on screen. This uses `pygame.Rect` for the paddle and dot, `dot.colliderect(paddle)` to detect a catch, and `pygame.font` to draw the score.'
-        hint: 'A `pygame.Rect(x, y, w, h)` has handy fields like `.x`, `.left`, `.right`. `a.colliderect(b)` is True when two rects overlap. Draw text with `font.render("Score: " + str(score), True, color)` then `screen.blit(label, (x, y))`.'
+        obj: 'Your first game with a goal! Move the paddle with the left/right arrow keys to catch the falling dots. `dot.colliderect(paddle)` is True when the two rectangles touch, that is a catch, and the score goes up. The score is drawn with `pygame.font`.'
+        hint: '`a.colliderect(b)` returns True when rects `a` and `b` overlap. Draw text with `font.render("Score: " + str(score), True, color)` then `screen.blit(label, (x, y))`.'
         start: |-
           import asyncio
           import random
@@ -118,10 +468,8 @@ chapters:
                       paddle.x -= 6
                   if keys[pygame.K_RIGHT]:
                       paddle.x += 6
-                  if paddle.left < 0:
-                      paddle.left = 0
-                  if paddle.right > 480:
-                      paddle.right = 480
+                  paddle.left = max(0, paddle.left)
+                  paddle.right = min(480, paddle.right)
 
                   dot.y += 4
                   if dot.colliderect(paddle):
@@ -137,6 +485,309 @@ chapters:
                   pygame.draw.rect(screen, (90, 200, 130), paddle)
                   label = font.render("Score: " + str(score), True, (240, 240, 240))
                   screen.blit(label, (12, 10))
+                  pygame.display.flip()
+
+                  await asyncio.sleep(1 / 60)
+
+
+          asyncio.run(main())
+      - name: Dodge the Blocks
+        game: true
+        obj: 'Now collisions mean danger! Move with the arrow keys and dodge the falling red blocks. Touch one and it is Game Over, press R to try again. Your score counts how long you survive. This mixes everything: input, movement, collision, text, and game state.'
+        hint: 'Loop over the blocks and check `player.colliderect(block)`. Keep a `dead` flag; when the player presses `pygame.K_r`, reset everything.'
+        start: |-
+          import asyncio
+          import random
+          import pygame
+
+
+          def new_block():
+              return pygame.Rect(random.randint(0, 450), -30, 30, 30)
+
+
+          async def main():
+              pygame.init()
+              screen = pygame.display.set_mode((480, 320))
+              pygame.display.set_caption("Dodge the Blocks")
+              font = pygame.font.SysFont(None, 28)
+
+              player = pygame.Rect(220, 270, 36, 36)
+              blocks = [new_block()]
+              score = 0
+              frame = 0
+              dead = False
+              running = True
+
+              while running:
+                  for event in pygame.event.get():
+                      if event.type == pygame.QUIT:
+                          running = False
+
+                  keys = pygame.key.get_pressed()
+                  if not dead:
+                      if keys[pygame.K_LEFT]:
+                          player.x -= 6
+                      if keys[pygame.K_RIGHT]:
+                          player.x += 6
+                      player.left = max(0, player.left)
+                      player.right = min(480, player.right)
+
+                      frame += 1
+                      if frame % 30 == 0:
+                          blocks.append(new_block())
+
+                      for b in blocks:
+                          b.y += 4
+                          if b.colliderect(player):
+                              dead = True
+                      blocks = [b for b in blocks if b.top < 320]
+                      score = frame // 6
+                  else:
+                      if keys[pygame.K_r]:
+                          player = pygame.Rect(220, 270, 36, 36)
+                          blocks = [new_block()]
+                          score = 0
+                          frame = 0
+                          dead = False
+
+                  screen.fill((20, 18, 24))
+                  for b in blocks:
+                      pygame.draw.rect(screen, (230, 90, 90), b)
+                  pygame.draw.rect(screen, (110, 200, 240), player)
+                  label = font.render("Score: " + str(score), True, (240, 240, 240))
+                  screen.blit(label, (10, 8))
+                  if dead:
+                      over = font.render("Game Over - press R", True, (240, 200, 120))
+                      screen.blit(over, (135, 150))
+                  pygame.display.flip()
+
+                  await asyncio.sleep(1 / 60)
+
+
+          asyncio.run(main())
+  - name: Build a Real Game
+    icon: algorithm
+    levels:
+      - name: Pong
+        game: true
+        obj: 'The classic! You are the green paddle on the left, use the W and S keys to move up and down. The blue paddle plays itself. The ball bounces off paddles and the top and bottom walls, and the score goes up when it gets past a paddle. Read the code, then tweak the ball speed or paddle size.'
+        hint: 'Each paddle is a Rect you move with W/S. The ball flips `bx` when it hits a paddle and `by` when it hits the top or bottom. A point is scored when the ball passes the left or right edge.'
+        start: |-
+          import asyncio
+          import pygame
+
+
+          async def main():
+              pygame.init()
+              screen = pygame.display.set_mode((480, 320))
+              pygame.display.set_caption("Pong")
+              font = pygame.font.SysFont(None, 34)
+
+              left = pygame.Rect(20, 125, 12, 70)
+              right = pygame.Rect(448, 125, 12, 70)
+              ball = pygame.Rect(234, 154, 12, 12)
+              bx, by = 4, 3
+              score_l, score_r = 0, 0
+              running = True
+
+              while running:
+                  for event in pygame.event.get():
+                      if event.type == pygame.QUIT:
+                          running = False
+
+                  keys = pygame.key.get_pressed()
+                  if keys[pygame.K_w]:
+                      left.y -= 6
+                  if keys[pygame.K_s]:
+                      left.y += 6
+                  left.top = max(0, left.top)
+                  left.bottom = min(320, left.bottom)
+
+                  # the right paddle follows the ball on its own
+                  if right.centery < ball.centery:
+                      right.y += 4
+                  if right.centery > ball.centery:
+                      right.y -= 4
+                  right.top = max(0, right.top)
+                  right.bottom = min(320, right.bottom)
+
+                  ball.x += bx
+                  ball.y += by
+                  if ball.top < 0 or ball.bottom > 320:
+                      by = -by
+                  if ball.colliderect(left) or ball.colliderect(right):
+                      bx = -bx
+                  if ball.left < 0:
+                      score_r += 1
+                      ball.x, ball.y = 234, 154
+                      bx = 4
+                  if ball.right > 480:
+                      score_l += 1
+                      ball.x, ball.y = 234, 154
+                      bx = -4
+
+                  screen.fill((15, 15, 22))
+                  pygame.draw.rect(screen, (90, 200, 130), left)
+                  pygame.draw.rect(screen, (90, 160, 240), right)
+                  pygame.draw.rect(screen, (240, 240, 240), ball)
+                  label = font.render(str(score_l) + "   " + str(score_r), True, (230, 230, 230))
+                  screen.blit(label, (215, 14))
+                  pygame.display.flip()
+
+                  await asyncio.sleep(1 / 60)
+
+
+          asyncio.run(main())
+      - name: Breakout
+        game: true
+        obj: 'Smash all the bricks! Move the paddle with the left/right arrow keys and keep the ball alive. When the ball hits a brick, that brick disappears. Clear them all to win. Notice how the bricks are made with a loop, and removed from the list when hit.'
+        hint: 'The bricks are a list of Rects built with two loops. Each frame, check if the ball hits any brick; if so, remove it with `bricks.pop(i)` and bounce the ball.'
+        start: |-
+          import asyncio
+          import pygame
+
+
+          async def main():
+              pygame.init()
+              screen = pygame.display.set_mode((480, 320))
+              pygame.display.set_caption("Breakout")
+              font = pygame.font.SysFont(None, 28)
+
+              paddle = pygame.Rect(200, 300, 80, 12)
+              ball = pygame.Rect(236, 200, 12, 12)
+              bx, by = 3, -3
+
+              bricks = []
+              for row in range(4):
+                  for col in range(8):
+                      bricks.append(pygame.Rect(10 + col * 58, 30 + row * 24, 50, 16))
+
+              won = False
+              running = True
+
+              while running:
+                  for event in pygame.event.get():
+                      if event.type == pygame.QUIT:
+                          running = False
+
+                  keys = pygame.key.get_pressed()
+                  if keys[pygame.K_LEFT]:
+                      paddle.x -= 6
+                  if keys[pygame.K_RIGHT]:
+                      paddle.x += 6
+                  paddle.left = max(0, paddle.left)
+                  paddle.right = min(480, paddle.right)
+
+                  if not won:
+                      ball.x += bx
+                      ball.y += by
+                      if ball.left < 0 or ball.right > 480:
+                          bx = -bx
+                      if ball.top < 0:
+                          by = -by
+                      if ball.colliderect(paddle) and by > 0:
+                          by = -by
+
+                      hit = -1
+                      for i in range(len(bricks)):
+                          if ball.colliderect(bricks[i]):
+                              hit = i
+                              break
+                      if hit >= 0:
+                          bricks.pop(hit)
+                          by = -by
+
+                      if ball.top > 320:
+                          ball.x, ball.y = 236, 200
+                          bx, by = 3, -3
+                      if len(bricks) == 0:
+                          won = True
+
+                  screen.fill((18, 18, 26))
+                  for b in bricks:
+                      pygame.draw.rect(screen, (230, 150, 70), b)
+                  pygame.draw.rect(screen, (90, 200, 130), paddle)
+                  pygame.draw.rect(screen, (240, 240, 240), ball)
+                  if won:
+                      label = font.render("You cleared them all!", True, (240, 240, 120))
+                      screen.blit(label, (120, 150))
+                  pygame.display.flip()
+
+                  await asyncio.sleep(1 / 60)
+
+
+          asyncio.run(main())
+      - name: Snake
+        game: true
+        obj: 'The final boss: Snake! Click the game and steer with the arrow keys. Eat the red food to grow longer and score. If you hit a wall or your own tail, it is Game Over, press R to restart. The snake is a list of grid squares; each move adds a new head and drops the tail, unless you just ate.'
+        hint: 'On each move, insert a new head at the front of the `snake` list. If the head landed on the food, keep the tail (you grew); otherwise `snake.pop()` to drop the tail. Game over if the head hits a wall or is already in the snake.'
+        start: |-
+          import asyncio
+          import random
+          import pygame
+
+
+          async def main():
+              pygame.init()
+              screen = pygame.display.set_mode((480, 320))
+              pygame.display.set_caption("Snake")
+              font = pygame.font.SysFont(None, 28)
+
+              cell = 20
+              cols, rows = 24, 16
+
+              def reset():
+                  return [(12, 8), (11, 8), (10, 8)], 1, 0, (16, 8), 0
+
+              snake, dx, dy, food, score = reset()
+              dead = False
+              frame = 0
+              running = True
+
+              while running:
+                  for event in pygame.event.get():
+                      if event.type == pygame.QUIT:
+                          running = False
+                      if event.type == pygame.KEYDOWN:
+                          if event.key == pygame.K_LEFT and dx != 1:
+                              dx, dy = -1, 0
+                          elif event.key == pygame.K_RIGHT and dx != -1:
+                              dx, dy = 1, 0
+                          elif event.key == pygame.K_UP and dy != 1:
+                              dx, dy = 0, -1
+                          elif event.key == pygame.K_DOWN and dy != -1:
+                              dx, dy = 0, 1
+
+                  keys = pygame.key.get_pressed()
+                  if dead and keys[pygame.K_r]:
+                      snake, dx, dy, food, score = reset()
+                      dead = False
+
+                  frame += 1
+                  if not dead and frame % 8 == 0:
+                      head = (snake[0][0] + dx, snake[0][1] + dy)
+                      if (head[0] < 0 or head[0] >= cols or head[1] < 0
+                              or head[1] >= rows or head in snake):
+                          dead = True
+                      else:
+                          snake.insert(0, head)
+                          if head == food:
+                              score += 1
+                              food = (random.randint(0, cols - 1), random.randint(0, rows - 1))
+                          else:
+                              snake.pop()
+
+                  screen.fill((16, 20, 16))
+                  pygame.draw.rect(screen, (230, 90, 90),
+                                   (food[0] * cell, food[1] * cell, cell, cell))
+                  for part in snake:
+                      pygame.draw.rect(screen, (110, 210, 120),
+                                       (part[0] * cell, part[1] * cell, cell - 2, cell - 2))
+                  label = font.render("Score: " + str(score), True, (235, 235, 235))
+                  screen.blit(label, (10, 8))
+                  if dead:
+                      over = font.render("Game Over - press R", True, (240, 200, 120))
+                      screen.blit(over, (140, 150))
                   pygame.display.flip()
 
                   await asyncio.sleep(1 / 60)
