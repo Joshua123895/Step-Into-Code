@@ -145,14 +145,12 @@ def _bg_run(coro):
 asyncio.run = _bg_run
 `;
 
-export function runGame(code) {
-  const win = window.open("", "_blank", "width=520,height=460");
-  if (!win) {
-    alert("Popup blocked — allow popups for this site to run the game.");
-    return;
-  }
-
-  const html = `<!doctype html>
+// Returns a fully self-contained HTML document that runs the given pygame code
+// on its own Pyodide instance and canvas. Rendered inside an <iframe srcDoc>
+// (see GameModal), so it is isolated from the React app and torn down cleanly by
+// unmounting the iframe.
+export function buildGameHTML(code) {
+  return `<!doctype html>
 <html>
 <head>
 <meta charset="utf-8" />
@@ -187,7 +185,9 @@ export function runGame(code) {
     });
     document.getElementById('stop').onclick = function () {
       window._pygame_events.push({ type: 256, key: 0 });
-      setTimeout(function () { window.close(); }, 100);
+      setTimeout(function () {
+        if (window.parent) window.parent.postMessage('game-stop', '*');
+      }, 100);
     };
     const USER_CODE = ${JSON.stringify(code)};
     const SHIM = ${JSON.stringify(PYGAME_SHIM)};
@@ -215,8 +215,4 @@ export function runGame(code) {
   </script>
 </body>
 </html>`;
-
-  win.document.open();
-  win.document.write(html);
-  win.document.close();
 }

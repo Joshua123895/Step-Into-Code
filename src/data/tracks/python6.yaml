@@ -9,7 +9,7 @@ chapters:
     levels:
       - name: Test Level
         game: true
-        obj: 'A proof-of-concept pygame level. Click "Run Game" to launch the program in a popup window: a ball bounces around the canvas. Edit the code and run it again to see your changes. Close the window (or press Stop) to end it.'
+        obj: 'A proof-of-concept pygame level. Click "Run Game" to launch the program: a ball bounces around the canvas in a window over the page. Edit the code and run it again to see your changes. Press Stop, the X, or Esc to end it.'
         hint: 'pygame games use a loop: clear the screen, move things, draw them, then flip the display. In the browser build the loop is async, so each frame ends with `await asyncio.sleep(1 / 60)`.'
         start: |-
           import asyncio
