@@ -953,9 +953,11 @@ export default function LevelPage() {
           </div>
         </div>
 
-        {/* Mobile sticky action bar, thumb-reachable Hint + Submit (Run lives in the editor header) */}
+        {/* Mobile sticky action bar, thumb-reachable Hint + Submit (Run lives in the editor header).
+            Game levels get two rows (Hint full-width, then Run + Check) instead of cramming three
+            buttons into one row, which left too little width for their labels on a phone screen. */}
         <div
-          className="lg:hidden fixed bottom-0 left-0 right-0 z-40 flex gap-2 px-4 pt-3"
+          className="lg:hidden fixed bottom-0 left-0 right-0 z-40 px-4 pt-3"
           style={{
             background: "color-mix(in srgb, var(--bg-card) 92%, transparent)",
             backdropFilter: "blur(8px)",
@@ -963,24 +965,33 @@ export default function LevelPage() {
             paddingBottom: "calc(0.75rem + env(safe-area-inset-bottom))",
           }}
         >
-          {level.hint && level.hint.length > 0 && (
-            <PixelButton onClick={handleHintToggle} size="md" variant="accent" className="flex-[0_0_38%]">
-              {showHint ? "Hide" : "💡 Hint"}
-            </PixelButton>
-          )}
           {level.game ? (
-            <>
-              <PixelButton onClick={() => setGameOpen(true)} size="md" variant="secondary" className="flex-1">
-                ▶ Run
-              </PixelButton>
-              <PixelButton onClick={handleGameCheck} size="md" variant="primary" disabled={testing} className="flex-1">
-                {testing ? "..." : "✓ Check"}
-              </PixelButton>
-            </>
+            <div className="flex flex-col gap-2">
+              {level.hint && level.hint.length > 0 && (
+                <PixelButton onClick={handleHintToggle} size="md" variant="accent" className="w-full">
+                  {showHint ? "Hide Hint" : "💡 Hint"}
+                </PixelButton>
+              )}
+              <div className="flex gap-2">
+                <PixelButton onClick={() => setGameOpen(true)} size="md" variant="secondary" className="flex-1">
+                  ▶ Run Game
+                </PixelButton>
+                <PixelButton onClick={handleGameCheck} size="md" variant="primary" disabled={testing} className="flex-1">
+                  {testing ? "Checking..." : "✓ Check Goal"}
+                </PixelButton>
+              </div>
+            </div>
           ) : (
-            <PixelButton onClick={handleRun} size="md" variant="primary" disabled={testing} className="flex-1">
-              {testing ? "Running..." : "Submit Code"}
-            </PixelButton>
+            <div className="flex gap-2">
+              {level.hint && level.hint.length > 0 && (
+                <PixelButton onClick={handleHintToggle} size="md" variant="accent" className="flex-[0_0_38%]">
+                  {showHint ? "Hide" : "💡 Hint"}
+                </PixelButton>
+              )}
+              <PixelButton onClick={handleRun} size="md" variant="primary" disabled={testing} className="flex-1">
+                {testing ? "Running..." : "Submit Code"}
+              </PixelButton>
+            </div>
           )}
         </div>
       </div>
