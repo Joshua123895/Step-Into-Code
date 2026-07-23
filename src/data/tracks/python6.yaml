@@ -9,7 +9,10 @@ chapters:
     levels:
       - name: Hello Window
         game: true
-        obj: 'Every game lives in a window. This little program opens one and paints it sky blue. The `while running:` loop runs many times every second, that is your game''s heartbeat. Click "Run Game" to see it, then try changing the three numbers in `screen.fill` to pick your own color!'
+        obj: 'GOAL: paint the window sunset orange. Click "Run Game" to see it now (sky blue), then change the color inside `screen.fill(...)` to `(240, 140, 60)` and click "Check Goal". Colors are (red, green, blue), each from 0 to 255.'
+        checks:
+          has: ['240,\s*140,\s*60']
+          msg: 'Not yet! Change the screen.fill color to (240, 140, 60) for a sunset sky, then Check again.'
         hint: 'Colors are three numbers: (red, green, blue). Each goes from 0 (none) to 255 (lots). (255, 0, 0) is bright red.'
         start: |-
           import asyncio
@@ -36,7 +39,10 @@ chapters:
           asyncio.run(main())
       - name: Draw a Circle
         game: true
-        obj: 'Time to draw! `pygame.draw.circle` needs three things: where the middle is `(x, y)`, and how big `radius`. The window is 480 wide and 320 tall, so the middle is about `(240, 160)`. Try moving the circle or making it bigger.'
+        obj: 'GOAL: make the sun bigger. The last number in `pygame.draw.circle(...)` is the radius (now 60). Change it to `100`, then click "Check Goal".'
+        checks:
+          has: ['\),\s*100\)']
+          msg: 'Not yet! Change the circle radius (the last number) to 100.'
         hint: 'x goes left (small) to right (big). y goes top (small) to bottom (big). The radius is how far the edge is from the middle.'
         start: |-
           import asyncio
@@ -64,7 +70,10 @@ chapters:
           asyncio.run(main())
       - name: Draw a Rectangle
         game: true
-        obj: 'A rectangle is drawn from its top-left corner: `(x, y, width, height)`. So `(180, 110, 120, 100)` starts at x=180, y=110 and is 120 wide and 100 tall. Try changing the width and height.'
+        obj: 'GOAL: turn the rectangle into a tall doorway. The size part is `(x, y, width, height)`. Change it to `(180, 110, 80, 200)` so it is 80 wide and 200 tall, then click "Check Goal".'
+        checks:
+          has: ['180,\s*110,\s*80,\s*200']
+          msg: 'Not yet! Set the rectangle to (180, 110, 80, 200).'
         hint: 'The first two numbers are the top-left corner. The last two are the size (how wide, how tall).'
         start: |-
           import asyncio
@@ -92,7 +101,10 @@ chapters:
           asyncio.run(main())
       - name: Draw a Face
         game: true
-        obj: 'Now put shapes together to make a picture! This draws a smiley face from circles and a rectangle. Shapes drawn later sit on top of earlier ones, that is why the eyes appear over the head. Can you add rosy cheeks with two more circles?'
+        obj: 'GOAL: give the face a nose. Add one more `pygame.draw.circle(...)` line before `pygame.display.flip()`, centered at `(240, 165)`, then click "Check Goal". Shapes drawn later sit on top.'
+        checks:
+          has: ['240,\s*165']
+          msg: 'Not yet! Add a circle at position (240, 165) for the nose.'
         hint: 'Add another `pygame.draw.circle(...)` line before `pygame.display.flip()`. Pick a pink color like (250, 150, 150).'
         start: |-
           import asyncio
@@ -126,7 +138,10 @@ chapters:
     levels:
       - name: Make It Move
         game: true
-        obj: 'How do things move? We change a number a tiny bit every frame. Here `x` grows by 3 each loop, so the ball slides right. When it goes off the edge we send it back to the start. Try a bigger number to make it faster.'
+        obj: 'GOAL: make the ball zoom. It moves with `x += 3` each frame. Change the 3 to `8` so it slides faster, then click "Check Goal".'
+        checks:
+          has: ['x\s*\+=\s*8']
+          msg: 'Not yet! Change x += 3 to x += 8.'
         hint: 'Because the loop runs ~60 times a second, adding 3 to `x` each time makes smooth movement. Bigger step = faster.'
         start: |-
           import asyncio
@@ -159,7 +174,10 @@ chapters:
           asyncio.run(main())
       - name: Bounce off the Walls
         game: true
-        obj: 'A real bouncing ball! It has a speed sideways `dx` and a speed up-down `dy`. When it reaches a wall we flip that speed to the opposite direction with `dx = -dx`. That is a bounce. Try changing the starting speeds.'
+        obj: 'GOAL: speed up the bounce. The starting speeds are `dx, dy = 3, 2`. Change them to `6, 4`, then click "Check Goal". A wall flips a speed with `dx = -dx`, that is a bounce.'
+        checks:
+          has: ['dx,\s*dy\s*=\s*6,\s*4']
+          msg: 'Not yet! Set dx, dy = 6, 4.'
         hint: 'Flipping a speed from positive to negative (or back) reverses the direction. That is all a bounce is.'
         start: |-
           import asyncio
@@ -198,7 +216,10 @@ chapters:
           asyncio.run(main())
       - name: Falling with Gravity
         game: true
-        obj: 'Gravity pulls things down. We do it by adding a little to the falling speed `dy` every frame, so the ball falls faster and faster. When it hits the floor it bounces, but loses a bit of bounce each time, just like a real ball settling down.'
+        obj: 'GOAL: make gravity stronger. Gravity is `dy += 0.4` each frame. Change it to `dy += 0.8` so the ball falls faster, then click "Check Goal".'
+        checks:
+          has: ['dy\s*\+=\s*0\.8']
+          msg: 'Not yet! Change the gravity to dy += 0.8.'
         hint: '`dy += 0.4` speeds up the fall. On a bounce, `dy = -dy * 0.8` flips it up but keeps only 80 percent of the speed.'
         start: |-
           import asyncio
@@ -238,7 +259,10 @@ chapters:
     levels:
       - name: Move with Arrow Keys
         game: true
-        obj: 'Now YOU are in control. Click the game, then hold the arrow keys. `pygame.key.get_pressed()` tells you which keys are held down right now, so the square glides while you hold a key. Try changing `speed` to move faster.'
+        obj: 'GOAL: make the player faster. Click the game and use the arrow keys to move. `speed` is 4. Change it to `8`, then click "Check Goal".'
+        checks:
+          has: ['speed\s*=\s*8\b']
+          msg: 'Not yet! Set speed = 8.'
         hint: '`keys = pygame.key.get_pressed()` then check `keys[pygame.K_LEFT]`, `keys[pygame.K_RIGHT]`, `keys[pygame.K_UP]`, `keys[pygame.K_DOWN]`.'
         start: |-
           import asyncio
@@ -279,7 +303,10 @@ chapters:
           asyncio.run(main())
       - name: Stay on Screen
         game: true
-        obj: 'Uh oh, in the last level the square could wander off the edge! Here we keep it inside using `min` and `max`. If `x` gets below 0 we push it back to 0; if it goes past the right edge we stop it there. Good games keep the player where you can see them.'
+        obj: 'GOAL: shrink the play area. The square is stopped near the right edge with `min(440, x)`. Change 440 to `400` so it stops sooner, then click "Check Goal".'
+        checks:
+          has: ['min\(400,']
+          msg: 'Not yet! Change min(440, x) to min(400, x).'
         hint: '`x = max(0, x)` never lets x go below 0. `x = min(440, x)` never lets it go past 440 (that is 480 minus the 40-wide square).'
         start: |-
           import asyncio
@@ -323,7 +350,10 @@ chapters:
           asyncio.run(main())
       - name: Follow the Mouse
         game: true
-        obj: 'Your mouse can control the game too! `pygame.mouse.get_pos()` gives the mouse position as `(x, y)`. Here a circle sits wherever your mouse is. Move your mouse over the game and watch it follow.'
+        obj: 'GOAL: make the cursor circle bigger. Its radius is 22. Change it to `40`, then click "Check Goal". Move your mouse over the game to see it follow.'
+        checks:
+          has: ['my\),\s*40']
+          msg: 'Not yet! Change the circle radius to 40.'
         hint: '`mx, my = pygame.mouse.get_pos()` then draw your shape at `(mx, my)`.'
         start: |-
           import asyncio
@@ -353,7 +383,10 @@ chapters:
           asyncio.run(main())
       - name: Press Space to Jump
         game: true
-        obj: 'Some actions should happen once per press, not while held, like a jump. For that we listen for the `KEYDOWN` event, which fires the moment a key goes down. Click the game and press Space to jump. Gravity brings you back down.'
+        obj: 'GOAL: jump higher. Pressing Space sets `dy = -11`. Change it to `dy = -16` for a bigger jump, then click "Check Goal". (Click the game, press Space to test.)'
+        checks:
+          has: ['dy\s*=\s*-16']
+          msg: 'Not yet! Set the jump strength to dy = -16.'
         hint: 'Inside the event loop: `if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE`. Only jump when `on_ground` is True.'
         start: |-
           import asyncio
@@ -399,7 +432,10 @@ chapters:
     levels:
       - name: Meet the Rectangle
         game: true
-        obj: 'A `pygame.Rect(x, y, width, height)` bundles a shape''s position and size into one handy object. You can draw it directly and move it with `box.x`. Rects are the secret to collisions, which is the next big idea. Move this one with the arrow keys.'
+        obj: 'GOAL: make the box a big square. It is `pygame.Rect(200, 130, 80, 60)`. Change it to `pygame.Rect(200, 130, 100, 100)`, then click "Check Goal". (Arrow keys move it.)'
+        checks:
+          has: ['Rect\(200,\s*130,\s*100,\s*100\)']
+          msg: 'Not yet! Set the box to pygame.Rect(200, 130, 100, 100).'
         hint: 'A Rect remembers `.x`, `.y`, `.width`, `.height`, and helpers like `.left`, `.right`, `.centerx`. `pygame.draw.rect(screen, color, box)` draws it.'
         start: |-
           import asyncio
@@ -439,7 +475,10 @@ chapters:
           asyncio.run(main())
       - name: Catch the Dots
         game: true
-        obj: 'Your first game with a goal! Move the paddle with the left/right arrow keys to catch the falling dots. `dot.colliderect(paddle)` is True when the two rectangles touch, that is a catch, and the score goes up. The score is drawn with `pygame.font`.'
+        obj: 'GOAL: make it harder by speeding up the dots. They fall with `dot.y += 4`. Change it to `dot.y += 8`, then click "Check Goal". (Catch them with the left/right arrow keys.)'
+        checks:
+          has: ['dot\.y\s*\+=\s*8']
+          msg: 'Not yet! Change the falling speed to dot.y += 8.'
         hint: '`a.colliderect(b)` returns True when rects `a` and `b` overlap. Draw text with `font.render("Score: " + str(score), True, color)` then `screen.blit(label, (x, y))`.'
         start: |-
           import asyncio
@@ -493,7 +532,10 @@ chapters:
           asyncio.run(main())
       - name: Dodge the Blocks
         game: true
-        obj: 'Now collisions mean danger! Move with the arrow keys and dodge the falling red blocks. Touch one and it is Game Over, press R to try again. Your score counts how long you survive. This mixes everything: input, movement, collision, text, and game state.'
+        obj: 'GOAL: make it more intense. A new block spawns when `frame % 30 == 0`. Change 30 to `15` so blocks come twice as often, then click "Check Goal". (Arrow keys to dodge, R to retry.)'
+        checks:
+          has: ['frame\s*%\s*15\s*==\s*0']
+          msg: 'Not yet! Change frame % 30 == 0 to frame % 15 == 0.'
         hint: 'Loop over the blocks and check `player.colliderect(block)`. Keep a `dead` flag; when the player presses `pygame.K_r`, reset everything.'
         start: |-
           import asyncio
@@ -570,7 +612,10 @@ chapters:
     levels:
       - name: Pong
         game: true
-        obj: 'The classic! You are the green paddle on the left, use the W and S keys to move up and down. The blue paddle plays itself. The ball bounces off paddles and the top and bottom walls, and the score goes up when it gets past a paddle. Read the code, then tweak the ball speed or paddle size.'
+        obj: 'GOAL: speed up the rally. The ball starts at `bx, by = 4, 3`. Change it to `bx, by = 6, 5`, then click "Check Goal". (You are the green paddle, use W and S. The blue paddle plays itself.)'
+        checks:
+          has: ['bx,\s*by\s*=\s*6,\s*5']
+          msg: 'Not yet! Set the starting ball speed to bx, by = 6, 5.'
         hint: 'Each paddle is a Rect you move with W/S. The ball flips `bx` when it hits a paddle and `by` when it hits the top or bottom. A point is scored when the ball passes the left or right edge.'
         start: |-
           import asyncio
@@ -640,7 +685,10 @@ chapters:
           asyncio.run(main())
       - name: Breakout
         game: true
-        obj: 'Smash all the bricks! Move the paddle with the left/right arrow keys and keep the ball alive. When the ball hits a brick, that brick disappears. Clear them all to win. Notice how the bricks are made with a loop, and removed from the list when hit.'
+        obj: 'GOAL: add more bricks. The rows are built with `for row in range(4)`. Change 4 to `6` for two extra rows, then click "Check Goal". (Move the paddle with the arrow keys.)'
+        checks:
+          has: ['range\(6\)']
+          msg: 'Not yet! Change for row in range(4) to for row in range(6).'
         hint: 'The bricks are a list of Rects built with two loops. Each frame, check if the ball hits any brick; if so, remove it with `bricks.pop(i)` and bounce the ball.'
         start: |-
           import asyncio
@@ -719,7 +767,10 @@ chapters:
           asyncio.run(main())
       - name: Snake
         game: true
-        obj: 'The final boss: Snake! Click the game and steer with the arrow keys. Eat the red food to grow longer and score. If you hit a wall or your own tail, it is Game Over, press R to restart. The snake is a list of grid squares; each move adds a new head and drops the tail, unless you just ate.'
+        obj: 'GOAL: make the snake faster. It moves when `frame % 8 == 0`. Change 8 to `4` so it moves twice as often, then click "Check Goal". (Click the game, steer with arrow keys, R to restart.)'
+        checks:
+          has: ['frame\s*%\s*4\s*==\s*0']
+          msg: 'Not yet! Change frame % 8 == 0 to frame % 4 == 0.'
         hint: 'On each move, insert a new head at the front of the `snake` list. If the head landed on the food, keep the tail (you grew); otherwise `snake.pop()` to drop the tail. Game over if the head hits a wall or is already in the snake.'
         start: |-
           import asyncio

@@ -122,6 +122,13 @@ function parseChecks(checks) {
   if (checks.functions) c.functions = checks.functions;
   if (checks.methods) c.methods = checks.methods;
   if (checks.inheritance) c.inheritance = checks.inheritance;
+  // Code-pattern checks (game goals): `has` = must contain, `no` = must not,
+  // `msg` = friendly message shown on failure.
+  if (checks.has) c.contains = Array.isArray(checks.has) ? checks.has : [checks.has];
+  if (checks.no) c.absent = Array.isArray(checks.no) ? checks.no : [checks.no];
+  if (checks.contains) c.contains = Array.isArray(checks.contains) ? checks.contains : [checks.contains];
+  if (checks.absent) c.absent = Array.isArray(checks.absent) ? checks.absent : [checks.absent];
+  if (checks.msg) c.failMessage = checks.msg;
   return c;
 }
 

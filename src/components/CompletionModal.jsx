@@ -5,11 +5,15 @@ import StarIcon from "./StarIcon";
 export default function CompletionModal({ level, stars, resultInfo, onContinue, onRetry }) {
   const { lineCount, maxLines, execTime, maxTime } = resultInfo || {};
 
-  const criteria = [
-    { label: "Complete the level", met: true },
-    { label: `≤ ${maxLines} lines (yours: ${lineCount})`, met: lineCount <= maxLines },
-    { label: `≤ ${maxTime}s execution (yours: ${execTime?.toFixed(2)}s)`, met: execTime <= maxTime },
-  ];
+  // Game levels are graded by a goal check (no line-count or run-time), so they
+  // show a single "Goal reached" criterion instead of the coding-level rules.
+  const criteria = level.game
+    ? [{ label: "Goal reached", met: true }]
+    : [
+        { label: "Complete the level", met: true },
+        { label: `≤ ${maxLines} lines (yours: ${lineCount})`, met: lineCount <= maxLines },
+        { label: `≤ ${maxTime}s execution (yours: ${execTime?.toFixed(2)}s)`, met: execTime <= maxTime },
+      ];
 
   const allThree = stars === 3;
 
@@ -38,7 +42,7 @@ export default function CompletionModal({ level, stars, resultInfo, onContinue, 
 
         <h2 className="text-2xl font-bold mb-1"
           style={{ color: "var(--text)", fontFamily: "'Courier New', monospace" }}>
-          Quest Complete!
+          {level.game ? "Goal Complete!" : "Quest Complete!"}
         </h2>
         <p className="text-sm mb-5" style={{ color: "var(--text-secondary)" }}>
           {level.name} completed!

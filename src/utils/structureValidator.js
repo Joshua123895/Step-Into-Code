@@ -3,6 +3,43 @@ import { ensurePyodide } from "./pyodide";
 export async function validateStructure(code, sourceChecks) {
   if (!sourceChecks) return { valid: true };
 
+  // Code-pattern checks (value-based, used by game goals). These run as plain
+  // JS regexes against the raw code, so no Pyodide load is needed for levels
+  // that only use them. `contains` = every pattern must appear; `absent` = none
+  // may appear. A friendly `failMessage` is shown when a check fails.
+  const patternFail = sourceChecks.failMessage || "Not quite yet, check the goal and try again.";
+  if (sourceChecks.contains) {
+    for (const pat of sourceChecks.contains) {
+      let re;
+      try {
+        re = new RegExp(pat);
+      } catch {
+        continue;
+      }
+      if (!re.test(code)) return { valid: false, error: patternFail };
+    }
+  }
+  if (sourceChecks.absent) {
+    for (const pat of sourceChecks.absent) {
+      let re;
+      try {
+        re = new RegExp(pat);
+      } catch {
+        continue;
+      }
+      if (re.test(code)) return { valid: false, error: patternFail };
+    }
+  }
+
+  // Only the AST-based checks below need Pyodide; skip loading it otherwise.
+  const needsAst =
+    sourceChecks.classes ||
+    sourceChecks.functions ||
+    sourceChecks.methods ||
+    sourceChecks.inheritance ||
+    sourceChecks.not;
+  if (!needsAst) return { valid: true };
+
   const pyodide = await ensurePyodide();
 
   try {

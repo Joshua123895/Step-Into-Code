@@ -486,6 +486,30 @@ export default function LevelPage() {
     }
   };
 
+  // Game levels have no output to grade, so completing them is a "goal" check:
+  // validate the student's code against the level's sourceChecks and, on pass,
+  // award the full 3 stars.
+  const handleGameCheck = async () => {
+    if (testing) return;
+    setTesting(true);
+    try {
+      const res = await validateStructure(code, level.sourceChecks);
+      if (res.valid) {
+        playCompleteSound(3);
+        completeLevel(trackName, level.id, 3);
+        clearSavedCode(trackName, level.id);
+        setEarnedStars(3);
+        setResultInfo(null);
+        setShowModal(true);
+      } else {
+        playWrongSound();
+        setTestFailure({ input: "", expected: "Goal", actual: res.error });
+      }
+    } finally {
+      setTesting(false);
+    }
+  };
+
   const handleHintToggle = () => {
     setShowHint((prev) => !prev);
   };
@@ -789,9 +813,14 @@ export default function LevelPage() {
                 {/* Desktop action buttons, on mobile these move to the sticky bottom bar */}
                 <div className="hidden lg:flex flex-col gap-2 pt-3" style={{ borderTop: "1px solid var(--border)" }}>
                   {level.game ? (
-                    <PixelButton onClick={() => setGameOpen(true)} size="md" variant="primary">
-                      ▶ Run Game
-                    </PixelButton>
+                    <>
+                      <PixelButton onClick={() => setGameOpen(true)} size="md" variant="secondary">
+                        ▶ Run Game
+                      </PixelButton>
+                      <PixelButton onClick={handleGameCheck} size="md" variant="primary" disabled={testing}>
+                        {testing ? "Checking..." : "✓ Check Goal"}
+                      </PixelButton>
+                    </>
                   ) : (
                     <PixelButton onClick={handleRun} size="md" variant="primary" disabled={testing}>
                       {testing ? "Running..." : "Submit Code"}
@@ -940,9 +969,14 @@ export default function LevelPage() {
             </PixelButton>
           )}
           {level.game ? (
-            <PixelButton onClick={() => setGameOpen(true)} size="md" variant="primary" className="flex-1">
-              ▶ Run Game
-            </PixelButton>
+            <>
+              <PixelButton onClick={() => setGameOpen(true)} size="md" variant="secondary" className="flex-1">
+                ▶ Run
+              </PixelButton>
+              <PixelButton onClick={handleGameCheck} size="md" variant="primary" disabled={testing} className="flex-1">
+                {testing ? "..." : "✓ Check"}
+              </PixelButton>
+            </>
           ) : (
             <PixelButton onClick={handleRun} size="md" variant="primary" disabled={testing} className="flex-1">
               {testing ? "Running..." : "Submit Code"}
