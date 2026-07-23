@@ -1,4 +1,14 @@
+import { useState } from "react";
+import { isMuted, setMuted } from "./vizSound";
+
 export default function VizControls({ onToggle, onStep, onPrev, playing, step, total }) {
+  const [muted, setMutedState] = useState(isMuted());
+  const handleMuteToggle = () => {
+    const next = !muted;
+    setMuted(next);
+    setMutedState(next);
+  };
+
   return (
     <div className="flex items-center justify-center gap-3 py-2">
       <button
@@ -33,6 +43,14 @@ export default function VizControls({ onToggle, onStep, onPrev, playing, step, t
       <span className="text-xs font-mono min-w-10 text-center" style={{ color: "var(--text-muted)" }}>
         {total > 0 ? `${Math.max(0, step + 1)}/${total}` : ""}
       </span>
+      <button
+        onClick={handleMuteToggle}
+        className="flex items-center justify-center transition-all duration-100 hover:brightness-110 active:translate-y-0.5"
+        style={{ width: 32, height: 32, borderRadius: 8, background: "var(--bg)", border: "1.5px solid var(--border-strong)", color: "var(--text-muted)" }}
+        title={muted ? "Unmute step sounds" : "Mute step sounds"}
+      >
+        <span style={{ fontSize: 14 }}>{muted ? "🔇" : "🔊"}</span>
+      </button>
     </div>
   );
 }

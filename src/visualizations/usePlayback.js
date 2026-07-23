@@ -1,10 +1,29 @@
 import { useState, useRef, useCallback, useEffect } from "react";
+import { playTick, playDone } from "./vizSound";
 
 export default function usePlayback() {
   const [step, setStep] = useState(-1);
   const [playing, setPlaying] = useState(false);
   const [total, setTotal] = useState(0);
   const totalRef = useRef(0);
+  const lastSoundedStepRef = useRef(-1);
+
+  // A step change (forward, backward, or from the play interval) plays a soft
+  // tick; landing on the final frame plays a brighter finish chime instead.
+  // Resetting to -1 (idle/replay) re-arms the ref so the next run sounds again.
+  useEffect(() => {
+    if (step < 0) {
+      lastSoundedStepRef.current = -1;
+      return;
+    }
+    if (lastSoundedStepRef.current === step) return;
+    lastSoundedStepRef.current = step;
+    if (totalRef.current > 0 && step === totalRef.current - 1) {
+      playDone();
+    } else {
+      playTick();
+    }
+  }, [step]);
 
   const configure = useCallback((n) => {
     totalRef.current = n;
