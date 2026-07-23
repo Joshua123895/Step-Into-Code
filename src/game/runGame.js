@@ -160,7 +160,7 @@ export function buildGameHTML(code) {
   #bar { display: flex; align-items: center; gap: 10px; padding: 8px 12px; }
   #title { font-weight: 700; font-size: 14px; }
   #stop { margin-left: auto; background: #FF5F57; color: #fff; border: none; border-radius: 6px; padding: 5px 12px; font-weight: 700; cursor: pointer; }
-  canvas { display: block; margin: 0 auto; background: #000; border-top: 1px solid #2a2a3a; }
+  canvas { display: block; margin: 0 auto; background: #000; border-top: 1px solid #2a2a3a; max-width: 100%; height: auto; }
   #status { font-size: 11px; color: #7f849c; padding: 6px 12px; margin: 0; }
 </style>
 </head>
@@ -173,6 +173,12 @@ export function buildGameHTML(code) {
     window._pygame_held = {};
     const KEYMAP = { 37:37, 38:38, 39:39, 40:40, 32:32, 65:65, 68:68, 87:87, 83:83 };
     window.addEventListener('keydown', function (e) {
+      // Esc closes the modal even when the game (this iframe) holds focus, since
+      // the parent window can't see keydowns that land inside the iframe.
+      if (e.key === 'Escape') {
+        if (window.parent) window.parent.postMessage('game-stop', '*');
+        return;
+      }
       const k = KEYMAP[e.keyCode] || e.keyCode;
       window._pygame_events.push({ type: 768, key: k });
       window._pygame_held[k] = 1;

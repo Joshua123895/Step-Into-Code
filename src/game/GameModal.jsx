@@ -44,6 +44,7 @@ export default function GameModal({ code, onClose }) {
           background: "var(--bg)",
           border: "3px solid #6AAE6F",
           boxShadow: "0 20px 60px rgba(0,0,0,0.3)",
+          width: "min(500px, 94vw)",
           maxHeight: "90vh",
         }}
       >
@@ -54,7 +55,7 @@ export default function GameModal({ code, onClose }) {
           <span className="text-sm font-bold" style={{ color: "var(--text)" }}>
             🎮 Game
           </span>
-          <span className="text-xs" style={{ color: "var(--text-muted)" }}>
+          <span className="text-xs hidden sm:inline" style={{ color: "var(--text-muted)" }}>
             click the game to use the keyboard
           </span>
           <button
@@ -72,7 +73,7 @@ export default function GameModal({ code, onClose }) {
           srcDoc={srcDoc}
           tabIndex={0}
           className="block"
-          style={{ width: "500px", height: "400px", border: "none", background: "#14141c" }}
+          style={{ width: "100%", height: "min(400px, 72vh)", border: "none", background: "#14141c" }}
         />
       </div>
     </div>
