@@ -1,16 +1,42 @@
-// Lightweight sound effects for visualization playback: a soft tick on each
-// animation step, and a brighter two-note chime when playback finishes. These
-// are synthesized directly with the Web Audio API (no sound asset files), kept
-// separate from LevelPage's mp3-based complete/collect/wrong sounds since a
-// visualization step fires far more often and needs a much shorter, subtler cue.
+// Sound effects for visualization playback, loaded from real audio files (not
+// synthesized) so real sound assets can be dropped in. Files live in /public,
+// referenced by URL string rather than an ES import, so a file that doesn't
+// exist yet just fails its fetch quietly instead of breaking the build.
+//
+// Expected files (add your own with these exact names):
+//   public/sounds/viz-tick.mp3      short step sound, plays very often - keep it brief and quiet
+//   public/sounds/viz-fail.mp3      plays once when a search/lookup ends without finding its target
+//   public/sounds/viz-complete.mp3  plays once when playback finishes successfully
+//
+// Until a file is added, playing it is silently a no-op (no console errors).
 
 const MUTE_KEY = "step-into-code_vizSoundMuted";
+
+const SOUND_URLS = {
+  tick: "/sounds/viz-tick.mp3",
+  fail: "/sounds/viz-fail.mp3",
+  complete: "/sounds/viz-complete.mp3",
+};
 
 let ctx = null;
 function getCtx() {
   if (!ctx) ctx = new (window.AudioContext || window.webkitAudioContext)();
   if (ctx.state === "suspended") ctx.resume();
   return ctx;
+}
+
+const bufferCache = {};
+function loadBuffer(name) {
+  if (bufferCache[name]) return bufferCache[name];
+  const audio = getCtx();
+  bufferCache[name] = fetch(SOUND_URLS[name])
+    .then((res) => {
+      if (!res.ok) throw new Error("missing sound file");
+      return res.arrayBuffer();
+    })
+    .then((data) => audio.decodeAudioData(data))
+    .catch(() => null);
+  return bufferCache[name];
 }
 
 export function isMuted() {
@@ -29,38 +55,29 @@ export function setMuted(muted) {
   }
 }
 
-function tone(audio, freq, startTime, duration, peak, type) {
-  const osc = audio.createOscillator();
-  const gain = audio.createGain();
-  osc.type = type;
-  osc.frequency.value = freq;
-  gain.gain.setValueAtTime(0, startTime);
-  gain.gain.linearRampToValueAtTime(peak, startTime + 0.005);
-  gain.gain.exponentialRampToValueAtTime(0.0001, startTime + duration);
-  osc.connect(gain);
-  gain.connect(audio.destination);
-  osc.start(startTime);
-  osc.stop(startTime + duration);
-}
-
-export function playTick() {
+async function play(name) {
   if (isMuted()) return;
   try {
     const audio = getCtx();
-    tone(audio, 720, audio.currentTime, 0.08, 0.06, "triangle");
+    const buffer = await loadBuffer(name);
+    if (!buffer) return; // file not added yet, or failed to decode
+    const source = audio.createBufferSource();
+    source.buffer = buffer;
+    source.connect(audio.destination);
+    source.start(0);
   } catch {
     // Audio can fail before a user gesture unlocks the context; skip silently.
   }
 }
 
-export function playDone() {
-  if (isMuted()) return;
-  try {
-    const audio = getCtx();
-    const t = audio.currentTime;
-    tone(audio, 660, t, 0.12, 0.09, "sine");
-    tone(audio, 880, t + 0.1, 0.18, 0.09, "sine");
-  } catch {
-    // See playTick.
-  }
+export function playTick() {
+  play("tick");
+}
+
+export function playFail() {
+  play("fail");
+}
+
+export function playComplete() {
+  play("complete");
 }

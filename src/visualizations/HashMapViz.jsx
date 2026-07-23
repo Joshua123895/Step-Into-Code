@@ -115,7 +115,8 @@ export default function HashMapViz({ code }) {
     }
     if (!states || states.length <= 1) states = parseHashMapStates(code);
     setParsed({ code, states });
-    playback.configure(states.length);
+    const lastStatus = states[states.length - 1]?.status || "";
+    playback.configure(states.length, { failed: /no pair found/i.test(lastStatus) });
     setLoading(false);
     return states;
   }, [code, parsed, playback]);

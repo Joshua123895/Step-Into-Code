@@ -1,16 +1,19 @@
 import { useState, useRef, useCallback, useEffect } from "react";
-import { playTick, playDone } from "./vizSound";
+import { playTick, playFail, playComplete } from "./vizSound";
 
 export default function usePlayback() {
   const [step, setStep] = useState(-1);
   const [playing, setPlaying] = useState(false);
   const [total, setTotal] = useState(0);
   const totalRef = useRef(0);
+  const failedRef = useRef(false);
   const lastSoundedStepRef = useRef(-1);
 
   // A step change (forward, backward, or from the play interval) plays a soft
-  // tick; landing on the final frame plays a brighter finish chime instead.
-  // Resetting to -1 (idle/replay) re-arms the ref so the next run sounds again.
+  // tick; landing on the final frame plays "fail" or "complete" depending on
+  // what configure() was told about this run's outcome (e.g. a search that
+  // never found its target). Resetting to -1 (idle/replay) re-arms the ref so
+  // the next run sounds again.
   useEffect(() => {
     if (step < 0) {
       lastSoundedStepRef.current = -1;
@@ -19,14 +22,19 @@ export default function usePlayback() {
     if (lastSoundedStepRef.current === step) return;
     lastSoundedStepRef.current = step;
     if (totalRef.current > 0 && step === totalRef.current - 1) {
-      playDone();
+      if (failedRef.current) playFail();
+      else playComplete();
     } else {
       playTick();
     }
   }, [step]);
 
-  const configure = useCallback((n) => {
+  // `options.failed`: pass true when this run's last state represents a
+  // negative outcome (e.g. "Not found") so the finish sound reflects that
+  // instead of always sounding like success. Defaults to false.
+  const configure = useCallback((n, options = {}) => {
     totalRef.current = n;
+    failedRef.current = !!options.failed;
     setTotal(n);
     setStep(-1);
     setPlaying(false);
