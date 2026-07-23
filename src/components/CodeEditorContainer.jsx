@@ -30,7 +30,7 @@ function useColors() {
   };
 }
 
-export default function CodeEditorContainer({ code, setCode, language, files, fileEntries = {}, fileStore: fileStoreRef, onFileUpdate, fileEntriesBefore = {}, initialFileSnapshot = {} }) {
+export default function CodeEditorContainer({ code, setCode, language, files, fileEntries = {}, fileStore: fileStoreRef, onFileUpdate, fileEntriesBefore = {}, initialFileSnapshot = {}, onRunOverride }) {
   const c = useColors();
   const dynamicTheme = useMemo(() => makeDynamicEditorTheme(c), [c.isDark]);
 
@@ -190,8 +190,8 @@ export default function CodeEditorContainer({ code, setCode, language, files, fi
           {language}
         </div>
         <button
-          onClick={handleRun}
-          disabled={running}
+          onClick={onRunOverride || handleRun}
+          disabled={running && !onRunOverride}
           className="
             text-xs px-3 py-1 rounded font-bold
             bg-[#6AAE6F]

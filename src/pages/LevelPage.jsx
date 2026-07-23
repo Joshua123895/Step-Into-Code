@@ -12,6 +12,7 @@ import { ensurePyodide } from "../utils/pyodide";
 import CompletionModal from "../components/CompletionModal";
 import { getVisualization } from "../visualizations";
 import CodeEditorContainer from "../components/CodeEditorContainer";
+import { runGame } from "../game/runGame";
 import ProgressBar from "../components/ProgressBar";
 import PixelButton from "../components/PixelButton";
 import Icon from "../components/Icon";
@@ -784,9 +785,15 @@ export default function LevelPage() {
 
                 {/* Desktop action buttons, on mobile these move to the sticky bottom bar */}
                 <div className="hidden lg:flex flex-col gap-2 pt-3" style={{ borderTop: "1px solid var(--border)" }}>
-                  <PixelButton onClick={handleRun} size="md" variant="primary" disabled={testing}>
-                    {testing ? "Running..." : "Submit Code"}
-                  </PixelButton>
+                  {level.game ? (
+                    <PixelButton onClick={() => runGame(code)} size="md" variant="primary">
+                      ▶ Run Game
+                    </PixelButton>
+                  ) : (
+                    <PixelButton onClick={handleRun} size="md" variant="primary" disabled={testing}>
+                      {testing ? "Running..." : "Submit Code"}
+                    </PixelButton>
+                  )}
 
                   {level.hint && level.hint.length > 0 && (
                     <PixelButton
@@ -803,7 +810,7 @@ export default function LevelPage() {
             </div>
 
             <div className="lg:col-span-6 lg:self-start">
-              <CodeEditorContainer code={code} setCode={setCode} language={"Python"} files={level.files} fileEntries={fileEntries} fileStore={fileStore} onFileUpdate={syncFileStore} fileEntriesBefore={fileEntriesBefore} initialFileSnapshot={initialFileSnapshot} />
+              <CodeEditorContainer code={code} setCode={setCode} language={"Python"} files={level.files} fileEntries={fileEntries} fileStore={fileStore} onFileUpdate={syncFileStore} fileEntriesBefore={fileEntriesBefore} initialFileSnapshot={initialFileSnapshot} onRunOverride={level.game ? () => runGame(code) : undefined} />
 
               <p className="text-xs mt-4 text-center" style={{ color: "var(--text-muted)" }}>
                 Write your code above, then click Run to test or Submit to check your answer.
@@ -929,9 +936,15 @@ export default function LevelPage() {
               {showHint ? "Hide" : "💡 Hint"}
             </PixelButton>
           )}
-          <PixelButton onClick={handleRun} size="md" variant="primary" disabled={testing} className="flex-1">
-            {testing ? "Running..." : "Submit Code"}
-          </PixelButton>
+          {level.game ? (
+            <PixelButton onClick={() => runGame(code)} size="md" variant="primary" className="flex-1">
+              ▶ Run Game
+            </PixelButton>
+          ) : (
+            <PixelButton onClick={handleRun} size="md" variant="primary" disabled={testing} className="flex-1">
+              {testing ? "Running..." : "Submit Code"}
+            </PixelButton>
+          )}
         </div>
       </div>
     </>

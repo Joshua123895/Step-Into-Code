@@ -1,0 +1,48 @@
+name: Game Development
+slug: game-dev
+icon: challenge
+desc: 'Build games in Python with pygame, running live in your browser. An experimental track.'
+difficulty: 2
+chapters:
+  - name: Test Chapter
+    icon: graph
+    levels:
+      - name: Test Level
+        game: true
+        obj: 'A proof-of-concept pygame level. Click "Run Game" to launch the program in a popup window: a ball bounces around the canvas. Edit the code and run it again to see your changes. Close the window (or press Stop) to end it.'
+        hint: 'pygame games use a loop: clear the screen, move things, draw them, then flip the display. In the browser build the loop is async, so each frame ends with `await asyncio.sleep(1 / 60)`.'
+        start: |-
+          import asyncio
+          import pygame
+
+
+          async def main():
+              pygame.init()
+              screen = pygame.display.set_mode((480, 320))
+              pygame.display.set_caption("Test Level")
+
+              x, y = 240, 160
+              dx, dy = 3, 2
+              radius = 24
+              running = True
+
+              while running:
+                  for event in pygame.event.get():
+                      if event.type == pygame.QUIT:
+                          running = False
+
+                  x += dx
+                  y += dy
+                  if x - radius < 0 or x + radius > 480:
+                      dx = -dx
+                  if y - radius < 0 or y + radius > 320:
+                      dy = -dy
+
+                  screen.fill((25, 25, 35))
+                  pygame.draw.circle(screen, (120, 200, 120), (x, y), radius)
+                  pygame.display.flip()
+
+                  await asyncio.sleep(1 / 60)
+
+
+          asyncio.run(main())
