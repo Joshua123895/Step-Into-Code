@@ -94,7 +94,7 @@ export default function LevelPage() {
   }
 
   const navigate = useNavigate();
-  const { getLevelStatus, getStars, completeLevel, getTotalStars } = useProgress();
+  const { getLevelStatus, getStars, completeLevel, getTotalStars, codeSyncTick } = useProgress();
 
   const track = TRACKS.find((t) => t.slug === trackName);
   const chapter = track?.chapters.find((c) => c.id === Number(chapterId));
@@ -195,11 +195,27 @@ export default function LevelPage() {
 
   useEffect(() => {
     if (trackName == null || level == null) return;
+    // Don't autosave the pristine starting code. On a fresh device this effect
+    // fires on mount and would otherwise clobber the code the cloud-sync is
+    // still pulling in (local + cloud) with the empty template.
+    if (code === (level.startingCode ?? "")) return;
     const timer = setTimeout(() => {
       saveCode(trackName, level.id, code);
     }, 500);
     return () => clearTimeout(timer);
   }, [code, level, trackName]);
+
+  // When the login cloud-merge writes newly-synced saved code, pull it into the
+  // editor — but only if the student hasn't started typing (editor still shows
+  // the pristine template), so we never overwrite their in-progress work.
+  useEffect(() => {
+    if (!level || codeSyncTick === 0) return;
+    const saved = getSavedCode(trackName, level.id);
+    if (saved && getStars(trackName, level.id) !== 3 && code === (level.startingCode ?? "")) {
+      setCode(saved);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [codeSyncTick]);
 
   const runInFlightRef = useRef(false);
 

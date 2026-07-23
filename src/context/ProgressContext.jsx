@@ -91,6 +91,9 @@ const ProgressContext = createContext(null);
 export function ProgressProvider({ children }) {
   const { user } = useAuth();
   const [progress, setProgress] = useState(load);
+  // Bumped after the login-merge writes cloud saved code into localStorage, so
+  // an open LevelPage can pull the freshly-synced code into its editor.
+  const [codeSyncTick, setCodeSyncTick] = useState(0);
 
   const userId = user?.id ?? null;
 
@@ -117,6 +120,7 @@ export function ProgressProvider({ children }) {
         const mergedCodes = mergeSavedCodes(cloudCodes, loadCodes());
         if (cancelled) return;
         writeAllCodes(mergedCodes);
+        setCodeSyncTick((t) => t + 1);
         await pushCloudCodes(userId, mergedCodes);
       } catch {
         // Saved-code sync is best-effort; local code still works.
@@ -190,6 +194,7 @@ export function ProgressProvider({ children }) {
     getCompletedCount,
     getTotalStars,
     getTrackProgress,
+    codeSyncTick,
   };
 
   return <ProgressContext.Provider value={value}>{children}</ProgressContext.Provider>;
