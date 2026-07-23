@@ -44,11 +44,13 @@ export async function runPythonReal(code, initialFiles = {}, trackedFiles = [], 
       if (!res.ok) throw new Error(`API returned ${res.status}`);
 
       const result = await res.json();
+      // A server-side failure (e.g. the local machine's python command is
+      // broken) still responds 200 with an `error` field, not a real program
+      // result. Treat it like runPythonRealBatch does: fall through to
+      // Pyodide instead of showing the raw server error as program output.
+      if (result.error) throw new Error(result.error);
       result.stdout = (result.stdout || "").replace(/\r\n/g, "\n");
       result.source = "server";
-      if (result.error && import.meta.env.DEV) {
-        console.warn("[runner] server reported an error:", result.error);
-      }
       return result;
     } catch (fallbackReason) {
       if (import.meta.env.DEV) {
