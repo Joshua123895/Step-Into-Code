@@ -1,8 +1,8 @@
 name: Game Development
 slug: game-dev
 icon: challenge
-desc: 'Learn to make games in Python, one gentle step at a time, from painting a window to building Pong, Breakout, and Snake. Runs live in your browser.'
-difficulty: 2
+desc: 'Make real games in Python, from your very first window to complete builds of Pong, Breakout, and Snake. Every level teaches one new idea and runs live in your browser, no setup required.'
+difficulty: 3
 chapters:
   - name: Drawing
     icon: output
