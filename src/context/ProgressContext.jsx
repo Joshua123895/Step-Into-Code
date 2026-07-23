@@ -1,6 +1,7 @@
 import { createContext, useContext, useCallback, useEffect, useState } from "react";
 import { supabase } from "../lib/supabase";
 import { useAuth } from "./AuthContext";
+import { loadCodes, mergeSavedCodes, writeAllCodes, registerCloudSaver } from "../lib/savedCode";
 
 const STORAGE_KEY = "step-into-code_progress";
 
@@ -66,6 +67,25 @@ async function pushCloud(userId, data) {
   if (error) throw error;
 }
 
+async function fetchCloudCodes(userId) {
+  const { data, error } = await supabase
+    .from("progress")
+    .select("saved_code")
+    .eq("user_id", userId)
+    .maybeSingle();
+  if (error) throw error;
+  return data?.saved_code ?? {};
+}
+
+// Upserts only the saved_code column, so it never clobbers `data` (an upsert
+// updates just the columns it's given on an existing row).
+async function pushCloudCodes(userId, savedCode) {
+  const { error } = await supabase
+    .from("progress")
+    .upsert({ user_id: userId, saved_code: savedCode, updated_at: new Date().toISOString() });
+  if (error) throw error;
+}
+
 const ProgressContext = createContext(null);
 
 export function ProgressProvider({ children }) {
@@ -74,16 +94,16 @@ export function ProgressProvider({ children }) {
 
   const userId = user?.id ?? null;
 
-  // On login: pull the cloud copy, merge it with whatever this device has
-  // (promoting any local anonymous progress into the account), then push the
-  // merged result back up so both sides converge.
+  // On login: pull the cloud copies of BOTH progress and saved code, merge each
+  // with whatever this device has, then push the merged results back so both
+  // sides converge. Progress keeps the best stars; saved code lets this device's
+  // work win on conflict.
   useEffect(() => {
     if (!userId || !supabase) return;
     let cancelled = false;
     (async () => {
       try {
         const cloud = await fetchCloud(userId);
-        // localStorage is the authoritative local copy at login time.
         const merged = mergeProgress(cloud, load());
         if (cancelled) return;
         setProgress(merged);
@@ -92,10 +112,29 @@ export function ProgressProvider({ children }) {
       } catch {
         // Offline or misconfigured: stay on local progress, no crash.
       }
+      try {
+        const cloudCodes = await fetchCloudCodes(userId);
+        const mergedCodes = mergeSavedCodes(cloudCodes, loadCodes());
+        if (cancelled) return;
+        writeAllCodes(mergedCodes);
+        await pushCloudCodes(userId, mergedCodes);
+      } catch {
+        // Saved-code sync is best-effort; local code still works.
+      }
     })();
     return () => {
       cancelled = true;
     };
+  }, [userId]);
+
+  // While logged in, let saveCode/clearSavedCode push to the cloud (debounced).
+  useEffect(() => {
+    if (!userId || !supabase) {
+      registerCloudSaver(null);
+      return;
+    }
+    registerCloudSaver((codes) => pushCloudCodes(userId, codes).catch(() => {}));
+    return () => registerCloudSaver(null);
   }, [userId]);
 
   const completeLevel = useCallback(
