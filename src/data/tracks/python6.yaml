@@ -1,16 +1,16 @@
 name: Game Development
 slug: game-dev
 icon: challenge
-desc: 'Build games in Python with pygame, running live in your browser. An experimental track.'
+desc: 'Write real games in Python with a pygame-style API, running live in your browser. An experimental track.'
 difficulty: 2
 chapters:
-  - name: Test Chapter
+  - name: Getting Started
     icon: graph
     levels:
-      - name: Test Level
+      - name: Bouncing Ball
         game: true
-        obj: 'A proof-of-concept pygame level. Click "Run Game" to launch the program: a ball bounces around the canvas in a window over the page. Edit the code and run it again to see your changes. Press Stop, the X, or Esc to end it.'
-        hint: 'pygame games use a loop: clear the screen, move things, draw them, then flip the display. In the browser build the loop is async, so each frame ends with `await asyncio.sleep(1 / 60)`.'
+        obj: 'Your first game loop. Click "Run Game": a ball bounces around the canvas. Every frame the loop clears the screen, moves the ball, bounces it off the walls, and draws it. Try changing the speed or color, then run it again.'
+        hint: 'A pygame loop repeats: handle events, update positions, clear the screen with `screen.fill(...)`, draw everything, then `pygame.display.flip()`. In the browser build each frame ends with `await asyncio.sleep(1 / 60)`.'
         start: |-
           import asyncio
           import pygame
@@ -19,7 +19,7 @@ chapters:
           async def main():
               pygame.init()
               screen = pygame.display.set_mode((480, 320))
-              pygame.display.set_caption("Test Level")
+              pygame.display.set_caption("Bouncing Ball")
 
               x, y = 240, 160
               dx, dy = 3, 2
@@ -40,6 +40,103 @@ chapters:
 
                   screen.fill((25, 25, 35))
                   pygame.draw.circle(screen, (120, 200, 120), (x, y), radius)
+                  pygame.display.flip()
+
+                  await asyncio.sleep(1 / 60)
+
+
+          asyncio.run(main())
+      - name: Move the Square
+        game: true
+        obj: 'Now you control something. Click "Run Game", click the game, then use the arrow keys to move the blue square. `pygame.key.get_pressed()` tells you which keys are held down right now, so the square moves smoothly while you hold a key.'
+        hint: '`keys = pygame.key.get_pressed()` then check `keys[pygame.K_LEFT]`, `keys[pygame.K_RIGHT]`, `keys[pygame.K_UP]`, `keys[pygame.K_DOWN]`. Add or subtract from the position for each key held.'
+        start: |-
+          import asyncio
+          import pygame
+
+
+          async def main():
+              pygame.init()
+              screen = pygame.display.set_mode((480, 320))
+              pygame.display.set_caption("Move the Square")
+
+              x, y = 220, 140
+              speed = 4
+              running = True
+
+              while running:
+                  for event in pygame.event.get():
+                      if event.type == pygame.QUIT:
+                          running = False
+
+                  keys = pygame.key.get_pressed()
+                  if keys[pygame.K_LEFT]:
+                      x -= speed
+                  if keys[pygame.K_RIGHT]:
+                      x += speed
+                  if keys[pygame.K_UP]:
+                      y -= speed
+                  if keys[pygame.K_DOWN]:
+                      y += speed
+
+                  screen.fill((20, 20, 30))
+                  pygame.draw.rect(screen, (90, 180, 240), (x, y, 40, 40))
+                  pygame.display.flip()
+
+                  await asyncio.sleep(1 / 60)
+
+
+          asyncio.run(main())
+      - name: Catch the Dots
+        game: true
+        obj: 'A real little game. Move the paddle with the left/right arrow keys to catch the falling dots. Each catch scores a point, shown on screen. This uses `pygame.Rect` for the paddle and dot, `dot.colliderect(paddle)` to detect a catch, and `pygame.font` to draw the score.'
+        hint: 'A `pygame.Rect(x, y, w, h)` has handy fields like `.x`, `.left`, `.right`. `a.colliderect(b)` is True when two rects overlap. Draw text with `font.render("Score: " + str(score), True, color)` then `screen.blit(label, (x, y))`.'
+        start: |-
+          import asyncio
+          import random
+          import pygame
+
+
+          async def main():
+              pygame.init()
+              screen = pygame.display.set_mode((480, 320))
+              pygame.display.set_caption("Catch the Dots")
+              font = pygame.font.SysFont(None, 28)
+
+              paddle = pygame.Rect(205, 292, 70, 14)
+              dot = pygame.Rect(random.randint(0, 460), 0, 20, 20)
+              score = 0
+              running = True
+
+              while running:
+                  for event in pygame.event.get():
+                      if event.type == pygame.QUIT:
+                          running = False
+
+                  keys = pygame.key.get_pressed()
+                  if keys[pygame.K_LEFT]:
+                      paddle.x -= 6
+                  if keys[pygame.K_RIGHT]:
+                      paddle.x += 6
+                  if paddle.left < 0:
+                      paddle.left = 0
+                  if paddle.right > 480:
+                      paddle.right = 480
+
+                  dot.y += 4
+                  if dot.colliderect(paddle):
+                      score += 1
+                      dot.x = random.randint(0, 460)
+                      dot.y = 0
+                  elif dot.top > 320:
+                      dot.x = random.randint(0, 460)
+                      dot.y = 0
+
+                  screen.fill((18, 18, 28))
+                  pygame.draw.rect(screen, (240, 200, 80), dot)
+                  pygame.draw.rect(screen, (90, 200, 130), paddle)
+                  label = font.render("Score: " + str(score), True, (240, 240, 240))
+                  screen.blit(label, (12, 10))
                   pygame.display.flip()
 
                   await asyncio.sleep(1 / 60)
