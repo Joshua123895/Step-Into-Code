@@ -1,21 +1,28 @@
 // Sound effects for visualization playback, loaded from real audio files (not
-// synthesized) so real sound assets can be dropped in. Files live in /public,
-// referenced by URL string rather than an ES import, so a file that doesn't
-// exist yet just fails its fetch quietly instead of breaking the build.
+// synthesized) so real sound assets can be dropped in. Files live in
+// src/assets/sounds and are picked up by Vite's import.meta.glob, so a file
+// that doesn't exist yet simply isn't included instead of breaking the build.
 //
 // Expected files (add your own with these exact names):
-//   public/sounds/viz-tick.mp3      short step sound, plays very often - keep it brief and quiet
-//   public/sounds/viz-fail.mp3      plays once when a search/lookup ends without finding its target
-//   public/sounds/viz-complete.mp3  plays once when playback finishes successfully
+//   src/assets/sounds/viz_tick.mp3      short step sound, plays very often - keep it brief and quiet
+//   src/assets/sounds/viz_fail.mp3      plays once when a search/lookup ends without finding its target
+//   src/assets/sounds/viz_complete.mp3  plays once when playback finishes successfully
 //
 // Until a file is added, playing it is silently a no-op (no console errors).
 
 const MUTE_KEY = "step-into-code_vizSoundMuted";
 
+// Eagerly resolve the URL for each viz_*.mp3 that exists at build time.
+const soundModules = import.meta.glob("../assets/sounds/viz_*.mp3", {
+  eager: true,
+  query: "?url",
+  import: "default",
+});
+
 const SOUND_URLS = {
-  tick: "/sounds/viz-tick.mp3",
-  fail: "/sounds/viz-fail.mp3",
-  complete: "/sounds/viz-complete.mp3",
+  tick: soundModules["../assets/sounds/viz_tick.mp3"],
+  fail: soundModules["../assets/sounds/viz_fail.mp3"],
+  complete: soundModules["../assets/sounds/viz_complete.mp3"],
 };
 
 let ctx = null;
@@ -28,6 +35,7 @@ function getCtx() {
 const bufferCache = {};
 function loadBuffer(name) {
   if (bufferCache[name]) return bufferCache[name];
+  if (!SOUND_URLS[name]) return Promise.resolve(null); // file not added yet
   const audio = getCtx();
   bufferCache[name] = fetch(SOUND_URLS[name])
     .then((res) => {
