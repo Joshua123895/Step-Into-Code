@@ -8,6 +8,7 @@ export default function usePlayback() {
   const [total, setTotal] = useState(0);
   const totalRef = useRef(0);
   const soundKindsRef = useRef([]);
+  const statusesRef = useRef([]);
   const lastSoundedStepRef = useRef(-1);
 
   // A step change (forward, backward, or from the play interval) plays the
@@ -22,6 +23,9 @@ export default function usePlayback() {
     if (lastSoundedStepRef.current === step) return;
     lastSoundedStepRef.current = step;
     const kind = soundKindsRef.current[step] || "tick";
+    if (import.meta.env.DEV) {
+      console.log(`[VIZ-SOUND] step ${step} -> ${kind}`, statusesRef.current[step] ?? "");
+    }
     if (kind === "fail") playFail();
     else if (kind === "complete") playComplete();
     else playTick();
@@ -37,6 +41,17 @@ export default function usePlayback() {
     soundKindsRef.current = states
       ? classifyStepSounds(states)
       : Array.from({ length: Math.max(n, 0) }, (_, i) => (i === n - 1 ? "complete" : "tick"));
+    statusesRef.current = states
+      ? states.map((s) => (typeof s?.status === "string" ? s.status : ""))
+      : [];
+    if (import.meta.env.DEV) {
+      const kinds = soundKindsRef.current;
+      const tally = kinds.reduce((acc, k) => ({ ...acc, [k]: (acc[k] || 0) + 1 }), {});
+      console.log(`[VIZ-SOUND] plan for ${n} steps`, tally);
+      console.table(
+        kinds.map((kind, i) => ({ step: i, sound: kind, status: statusesRef.current[i] || "" })),
+      );
+    }
     setTotal(n);
     setStep(-1);
     setPlaying(false);
