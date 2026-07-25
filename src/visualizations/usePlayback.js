@@ -1,19 +1,20 @@
 import { useState, useRef, useCallback, useEffect } from "react";
 import { playTick, playFail, playComplete } from "./vizSound";
+import { classifyStepSounds } from "./vizStepSound";
 
 export default function usePlayback() {
   const [step, setStep] = useState(-1);
   const [playing, setPlaying] = useState(false);
   const [total, setTotal] = useState(0);
   const totalRef = useRef(0);
-  const failedRef = useRef(false);
+  const soundKindsRef = useRef([]);
+  const statusesRef = useRef([]);
   const lastSoundedStepRef = useRef(-1);
 
-  // A step change (forward, backward, or from the play interval) plays a soft
-  // tick; landing on the final frame plays "fail" or "complete" depending on
-  // what configure() was told about this run's outcome (e.g. a search that
-  // never found its target). Resetting to -1 (idle/replay) re-arms the ref so
-  // the next run sounds again.
+  // A step change (forward, backward, or from the play interval) plays the
+  // sound classified for that step: a soft tick for ordinary moves, "fail" for
+  // deletions and negative outcomes, "complete" for finds and the final frame.
+  // Resetting to -1 (idle/replay) re-arms the ref so the next run sounds again.
   useEffect(() => {
     if (step < 0) {
       lastSoundedStepRef.current = -1;
@@ -21,20 +22,36 @@ export default function usePlayback() {
     }
     if (lastSoundedStepRef.current === step) return;
     lastSoundedStepRef.current = step;
-    if (totalRef.current > 0 && step === totalRef.current - 1) {
-      if (failedRef.current) playFail();
-      else playComplete();
-    } else {
-      playTick();
+    const kind = soundKindsRef.current[step] || "tick";
+    if (import.meta.env.DEV) {
+      console.log(`[VIZ-SOUND] step ${step} -> ${kind}`, statusesRef.current[step] ?? "");
     }
+    if (kind === "fail") playFail();
+    else if (kind === "complete") playComplete();
+    else playTick();
   }, [step]);
 
-  // `options.failed`: pass true when this run's last state represents a
-  // negative outcome (e.g. "Not found") so the finish sound reflects that
-  // instead of always sounding like success. Defaults to false.
-  const configure = useCallback((n, options = {}) => {
+  // Accepts the states array (preferred — lets each step get its own sound) or
+  // a bare step count, in which case every step ticks and only the last one
+  // resolves as "complete".
+  const configure = useCallback((statesOrCount) => {
+    const states = Array.isArray(statesOrCount) ? statesOrCount : null;
+    const n = states ? states.length : statesOrCount;
     totalRef.current = n;
-    failedRef.current = !!options.failed;
+    soundKindsRef.current = states
+      ? classifyStepSounds(states)
+      : Array.from({ length: Math.max(n, 0) }, (_, i) => (i === n - 1 ? "complete" : "tick"));
+    statusesRef.current = states
+      ? states.map((s) => (typeof s?.status === "string" ? s.status : ""))
+      : [];
+    if (import.meta.env.DEV) {
+      const kinds = soundKindsRef.current;
+      const tally = kinds.reduce((acc, k) => ({ ...acc, [k]: (acc[k] || 0) + 1 }), {});
+      console.log(`[VIZ-SOUND] plan for ${n} steps`, tally);
+      console.table(
+        kinds.map((kind, i) => ({ step: i, sound: kind, status: statusesRef.current[i] || "" })),
+      );
+    }
     setTotal(n);
     setStep(-1);
     setPlaying(false);

@@ -94,7 +94,7 @@ export default function SortViz({ code }) {
     }
     if (!states || states.length <= 1) states = parseSortStates(code);
     setParsed({ code, states });
-    playback.configure(states.length);
+    playback.configure(states);
     setLoading(false);
     return states;
   }, [code, parsed, playback]);

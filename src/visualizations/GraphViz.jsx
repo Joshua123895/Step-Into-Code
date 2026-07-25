@@ -210,7 +210,7 @@ export default function GraphViz({ code }) {
     }
     if (!states || states.length <= 1) states = parseGraphStates(code);
     setParsed({ code, states });
-    playback.configure(states.length);
+    playback.configure(states);
     setLoading(false);
     return states;
   }, [code, parsed, playback]);
