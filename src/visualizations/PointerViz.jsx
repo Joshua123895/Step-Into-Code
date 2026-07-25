@@ -128,8 +128,7 @@ export default function PointerViz({ code }) {
     }
     if (!states || states.length <= 1) states = parseSearchStates(code);
     setParsed({ code, states });
-    const lastStatus = states[states.length - 1]?.status || "";
-    playback.configure(states.length, { failed: /not found|no result/i.test(lastStatus) });
+    playback.configure(states);
     setLoading(false);
     return states;
   }, [code, parsed, playback]);

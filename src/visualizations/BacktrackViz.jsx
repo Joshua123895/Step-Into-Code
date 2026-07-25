@@ -102,7 +102,7 @@ export default function BacktrackViz({ code }) {
     }
     if (!states || states.length <= 1) states = parseBacktrackStates(code);
     setParsed({ code, states });
-    playback.configure(states.length);
+    playback.configure(states);
     setLoading(false);
     return states;
   }, [code, parsed, playback]);
